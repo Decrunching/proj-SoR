@@ -6,37 +6,36 @@ namespace SoR
 {
     public class Game1 : Game
     {
+        private GraphicsDeviceManager _graphics;
+        private GraphicsDevice graphicsDevice;
         public Game1 game;
-        private Gfx gfx;
         private Player player;
         public Chara chara;
+        protected int screenWidth;
+        protected int screenHeight;
 
         public Game1()
         {
             IsMouseVisible = true;
             game = this;
-            gfx = new Gfx(game);
+            _graphics = new GraphicsDeviceManager(game);
+            _graphics.IsFullScreen = false;
+            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 600;
+            screenWidth = _graphics.PreferredBackBufferWidth;
+            screenHeight = _graphics.PreferredBackBufferHeight;
             Content.RootDirectory = "Content";
         }
 
-        public GraphicsDeviceManager GetGraphicsDeviceManager()
+        public GraphicsDeviceManager GetGraphicsDeviceManager(Game1 game)
         {
-            return gfx.GetGraphicsDeviceManagerGfx();
+            return game._graphics;
         }
 
-        public GraphicsDevice GetGraphicsDevice()
+        public GraphicsDevice GetGraphicsDevice(Game1 game)
         {
-            return gfx.GetGraphicsDeviceGfx();
-        }
-
-        public int GetScreenWidth()
-        {
-            return gfx.GetScreenWidthGfx();
-        }
-
-        public int GetScreenHeight()
-        {
-            return gfx.GetScreenHeightGfx();
+            graphicsDevice = game.GraphicsDevice;
+            return game.graphicsDevice;
         }
 
         protected override void Initialize()

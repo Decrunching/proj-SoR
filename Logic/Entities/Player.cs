@@ -18,7 +18,7 @@ namespace SoR.Logic.Entities
         public Player(Game1 game) : base(game)
         {
             // Initialise skeleton renderer with premultiplied alpha
-            skeletonRenderer = new SkeletonRenderer(game.GetGraphicsDevice());
+            skeletonRenderer = new SkeletonRenderer(game.GetGraphicsDevice(game));
             skeletonRenderer.PremultipliedAlpha = true;
 
             // Load texture atlas and attachment loader
@@ -93,18 +93,18 @@ namespace SoR.Logic.Entities
                 }
             }
 
-            if (position.X > game.GetScreenWidth() - skeletonData.Width)
+            if (position.X > screenWidth - skeletonData.Width)
             {
-                position.X = game.GetScreenWidth() - skeletonData.Width;
+                position.X = screenWidth - skeletonData.Width;
             }
             else if (position.X < skeletonData.Width)
             {
                 position.X = skeletonData.Width;
             }
 
-            if (position.Y > game.GetScreenHeight() + skeletonData.Height / 3)
+            if (position.Y > screenHeight + skeletonData.Height / 3)
             {
-                position.Y = game.GetScreenHeight() + skeletonData.Height / 3;
+                position.Y = screenHeight + skeletonData.Height / 3;
             }
             else if (position.Y < skeletonData.Height * 3)
             {
@@ -125,11 +125,11 @@ namespace SoR.Logic.Entities
             skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
 
             // Clear the screen and set up the skeleton renderer's projection matrix
-            game.GetGraphicsDevice().Clear(Color.CornflowerBlue);
+            GetGraphicsDevice(game).Clear(Color.CornflowerBlue);
             ((BasicEffect)GetSkeletonRenderer().Effect).Projection = Matrix.CreateOrthographicOffCenter(
                 0,
-                game.GraphicsDevice.Viewport.Width,
-                game.GraphicsDevice.Viewport.Height,
+                GetGraphicsDevice(game).Viewport.Width,
+                GetGraphicsDevice(game).Viewport.Height,
                 0, 1, 0);
 
             // Draw skeletons
