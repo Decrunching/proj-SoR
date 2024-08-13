@@ -2,11 +2,10 @@
 using Microsoft.Xna.Framework.Input;
 using Spine;
 
-namespace SoR.Logic.Scenes
+namespace SoR.Logic.Entities
 {
-    public abstract class Chara
+    public abstract class Chara : Game1
     {
-        private Game1 game;
         private SkeletonRenderer skeletonRenderer;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
@@ -17,7 +16,6 @@ namespace SoR.Logic.Scenes
 
         public Chara(Game1 game)
         {
-            this.game = game;
             position = new Vector2(game.GetGraphics().PreferredBackBufferWidth / 2,
                 game.GetGraphics().PreferredBackBufferHeight / 2);
 
@@ -46,5 +44,7 @@ namespace SoR.Logic.Scenes
 
             lastKeyState = keyState;
         }
+
+        public abstract void Render(GameTime gameTime, Game1 game);
     }
 }

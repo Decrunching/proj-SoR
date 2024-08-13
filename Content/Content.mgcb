@@ -13,13 +13,13 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin skeleton.atlas
-/copy:skeleton.atlas
+#begin Entities/Player/skeleton.atlas
+/copy:Entities/Player/skeleton.atlas
 
-#begin skeleton.json
-/copy:skeleton.json
+#begin Entities/Player/skeleton.json
+/copy:Entities/Player/skeleton.json
 
-#begin skeleton.png
+#begin Entities/Player/skeleton.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -29,5 +29,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:skeleton.png
+/build:Entities/Player/skeleton.png
 

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
+using SoR.Logic.Entities;
 
 namespace SoR.Logic
 {
@@ -18,35 +19,35 @@ namespace SoR.Logic
             deadZone = 4096;
         }
 
-        public void GetUserInput(GameTime gameTime, Game1 game)
+        public void GetUserInput(GameTime gameTime, Player player)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
 
-            if (game.screen.GetKeyState().IsKeyDown(Keys.Up))
+            if (player.GetKeyState().IsKeyDown(Keys.Up))
             {
                 keyPressed = true;
                 position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 lastKey = "up";
             }
 
-            if (game.screen.GetKeyState().IsKeyDown(Keys.Down))
+            if (player.GetKeyState().IsKeyDown(Keys.Down))
             {
                 keyPressed = true;
                 position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 lastKey = "down";
             }
 
-            if (game.screen.GetKeyState().IsKeyDown(Keys.Left))
+            if (player.GetKeyState().IsKeyDown(Keys.Left))
             {
                 keyPressed = true;
                 position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 lastKey = "left";
             }
 
-            if (game.screen.GetKeyState().IsKeyDown(Keys.Right))
+            if (player.GetKeyState().IsKeyDown(Keys.Right))
             {
                 keyPressed = true;
                 position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;

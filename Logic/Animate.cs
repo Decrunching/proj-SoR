@@ -70,16 +70,6 @@ namespace SoR.Logic
             {
                 position.Y = skeletonData.Height * 3;
             }
-
-            // Update animation state and apply animations to the skeleton
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
-            animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            animState.Apply(skeleton);
-
-            // Update skeletal transformations
-            skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
         }
     }
 }
