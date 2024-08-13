@@ -10,7 +10,6 @@ namespace SoR.Logic.Entities
         private AtlasAttachmentLoader atlasAttachmentLoader;
         private Atlas atlas;
         private SkeletonJson json;
-        private BoneData root;
         protected SkeletonData skeletonData;
         protected Skeleton skeleton;
         protected AnimationState animState;

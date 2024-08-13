@@ -6,17 +6,29 @@ namespace SoR.Logic
 {
     internal class Input : Player
     {
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
+        protected bool keyPressed;
+        private bool enterPressed;
+        private bool enterReleased;
         private float speed;
         private int deadZone;
         protected string lastKey;
-        protected bool keyPressed;
 
         public Input(Game1 game) : base(game)
         {
+            keyState = Keyboard.GetState();
+            enterPressed = keyState.IsKeyDown(Keys.Enter);
+            enterReleased = keyState.IsKeyUp(Keys.Enter);
             lastKey = "down";
             keyPressed = false;
             speed = 400f;
             deadZone = 4096;
+        }
+
+        public KeyboardState GetKeyState()
+        {
+            return keyState;
         }
 
         public void GetUserInput(GameTime gameTime, Player player)
@@ -26,28 +38,28 @@ namespace SoR.Logic
 
             //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
 
-            if (player.GetKeyState().IsKeyDown(Keys.Up))
+            if (keyState.IsKeyDown(Keys.Up))
             {
                 keyPressed = true;
                 position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 lastKey = "up";
             }
 
-            if (player.GetKeyState().IsKeyDown(Keys.Down))
+            if (keyState.IsKeyDown(Keys.Down))
             {
                 keyPressed = true;
                 position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 lastKey = "down";
             }
 
-            if (player.GetKeyState().IsKeyDown(Keys.Left))
+            if (keyState.IsKeyDown(Keys.Left))
             {
                 keyPressed = true;
                 position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 lastKey = "left";
             }
 
-            if (player.GetKeyState().IsKeyDown(Keys.Right))
+            if (keyState.IsKeyDown(Keys.Right))
             {
                 keyPressed = true;
                 position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -78,6 +90,16 @@ namespace SoR.Logic
                     position.X += updatedcharSpeed;
                 }
             }
+
+            lastKeyState = keyState;
+        }
+
+        public void UpdateInput()
+        {
+            keyPressed = lastKeyState.Equals(keyState.IsKeyDown(Keys.Enter)) == enterPressed
+                && keyState.Equals(keyState.IsKeyDown(Keys.Enter)) == enterReleased;
+
+            lastKeyState = keyState;
         }
     }
 }

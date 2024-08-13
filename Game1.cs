@@ -59,7 +59,7 @@ namespace SoR
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-            player.UpdateInput();
+            input.UpdateInput();
             input.GetUserInput(gameTime, player);
             animate.UpdateAnimations(gameTime, animate);
 
