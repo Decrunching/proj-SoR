@@ -1,42 +1,42 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SoR.Logic;
 using SoR.Logic.Entities;
 
 namespace SoR
 {
     public class Game1 : Game
     {
-        private GraphicsDeviceManager _graphics;
-        public Chara chara;
         public Game1 game;
+        private Gfx gfx;
         private Player player;
-        protected int screenWidth;
-        protected int screenHeight;
+        public Chara chara;
 
         public Game1()
         {
             IsMouseVisible = true;
-            _graphics = new GraphicsDeviceManager(this);
-            _graphics.IsFullScreen = false;
-            _graphics.PreferredBackBufferWidth = 800;
-            _graphics.PreferredBackBufferHeight = 600;
-            screenWidth = _graphics.PreferredBackBufferWidth;
-            screenHeight = _graphics.PreferredBackBufferHeight;
-
             game = this;
-
+            gfx = new Gfx(game);
             Content.RootDirectory = "Content";
         }
 
-        public GraphicsDeviceManager GetGraphics()
+        public GraphicsDeviceManager GetGraphicsDeviceManager()
         {
-            return game._graphics;
+            return gfx.GetGraphicsDeviceManagerGfx();
         }
 
         public GraphicsDevice GetGraphicsDevice()
         {
-            return GraphicsDevice;
+            return gfx.GetGraphicsDeviceGfx();
+        }
+
+        public int GetScreenWidth()
+        {
+            return gfx.GetScreenWidthGfx();
+        }
+
+        public int GetScreenHeight()
+        {
+            return gfx.GetScreenHeightGfx();
         }
 
         protected override void Initialize()
@@ -56,7 +56,7 @@ namespace SoR
         {
             // TODO: Add your update logic here
             player.GetUserInput(gameTime);
-            player.UpdateAnimations(gameTime);
+            player.UpdateAnimations(gameTime, game);
 
             base.Update(gameTime);
         }

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 
 namespace SoR.Logic
 {
-    public abstract class Input : Game1
+    public abstract class Input : Gfx
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
@@ -15,7 +15,7 @@ namespace SoR.Logic
         private int deadZone;
         protected string lastKey;
 
-        public Input()
+        public Input(Game1 game) : base(game)
         {
             enterPressed = keyState.IsKeyDown(Keys.Enter);
             enterReleased = keyState.IsKeyUp(Keys.Enter);
@@ -23,8 +23,8 @@ namespace SoR.Logic
             keyPressed = false;
             speed = 400f;
             deadZone = 4096;
-            position = new Vector2(game.GetGraphics().PreferredBackBufferWidth / 2,
-                game.GetGraphics().PreferredBackBufferHeight / 2);
+            position = new Vector2(game.GetGraphicsDeviceManager().PreferredBackBufferWidth / 2,
+                game.GetGraphicsDeviceManager().PreferredBackBufferHeight / 2);
         }
 
         public KeyboardState GetKeyState()

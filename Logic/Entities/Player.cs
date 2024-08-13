@@ -15,7 +15,7 @@ namespace SoR.Logic.Entities
         protected AnimationState animState;
         protected AnimationStateData animStateData;
 
-        public Player(Game1 game)
+        public Player(Game1 game) : base(game)
         {
             // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(game.GetGraphicsDevice());
@@ -49,7 +49,7 @@ namespace SoR.Logic.Entities
         {
             return skeletonRenderer;
         }
-        public void UpdateAnimations(GameTime gameTime)
+        public void UpdateAnimations(GameTime gameTime, Game1 game)
         {
             //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
             if (!keyPressed)
@@ -93,18 +93,18 @@ namespace SoR.Logic.Entities
                 }
             }
 
-            if (position.X > screenWidth - skeletonData.Width)
+            if (position.X > game.GetScreenWidth() - skeletonData.Width)
             {
-                position.X = screenWidth - skeletonData.Width;
+                position.X = game.GetScreenWidth() - skeletonData.Width;
             }
             else if (position.X < skeletonData.Width)
             {
                 position.X = skeletonData.Width;
             }
 
-            if (position.Y > screenHeight + skeletonData.Height / 3)
+            if (position.Y > game.GetScreenHeight() + skeletonData.Height / 3)
             {
-                position.Y = screenHeight + skeletonData.Height / 3;
+                position.Y = game.GetScreenHeight() + skeletonData.Height / 3;
             }
             else if (position.Y < skeletonData.Height * 3)
             {
@@ -114,7 +114,7 @@ namespace SoR.Logic.Entities
 
         public void Render(GameTime gameTime, Game1 game)
         {
-            UpdateAnimations(gameTime);
+            UpdateAnimations(gameTime, game);
 
             // Update the animation state and apply animations to skeletons
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -125,7 +125,7 @@ namespace SoR.Logic.Entities
             skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
 
             // Clear the screen and set up the skeleton renderer's projection matrix
-            game.GraphicsDevice.Clear(Color.CornflowerBlue);
+            game.GetGraphicsDevice().Clear(Color.CornflowerBlue);
             ((BasicEffect)GetSkeletonRenderer().Effect).Projection = Matrix.CreateOrthographicOffCenter(
                 0,
                 game.GraphicsDevice.Viewport.Width,

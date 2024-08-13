@@ -3,33 +3,42 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace SoR
 {
-    internal class Gfx : Game
+    public class Gfx : Game
     {
         private GraphicsDeviceManager _graphics;
+        private GraphicsDevice graphicsDevice;
         protected int screenWidth;
         protected int screenHeight;
-        private Game1 game;
-        private Gfx gfx;
 
         public Gfx(Game1 game)
         {
-            this.game = game;
             _graphics = new GraphicsDeviceManager(game);
             _graphics.IsFullScreen = false;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 600;
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
+            graphicsDevice = game.GraphicsDevice;
         }
 
-        public GraphicsDeviceManager GetGraphics()
+        public GraphicsDeviceManager GetGraphicsDeviceManagerGfx()
         {
             return _graphics;
         }
 
-        public GraphicsDevice GetGraphicsDevice()
+        public GraphicsDevice GetGraphicsDeviceGfx()
         {
-            return GraphicsDevice;
+            return graphicsDevice;
+        }
+
+        public int GetScreenWidthGfx()
+        {
+            return screenWidth;
+        }
+
+        public int GetScreenHeightGfx()
+        {
+            return screenHeight;
         }
     }
 }
