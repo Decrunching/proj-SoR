@@ -12,14 +12,13 @@ namespace SoR.Logic
 
         public Input(Game1 game) : base(game)
         {
-            this.game = game;
             lastKey = "down";
             keyPressed = false;
             speed = 400f;
             deadZone = 4096;
         }
 
-        public void GetUserInput(GameTime gameTime)
+        public void GetUserInput(GameTime gameTime, Game1 game)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();

@@ -2,18 +2,17 @@
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic;
 using SoR.Logic.Scenes;
-using Spine;
 
 namespace SoR
 {
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        public Screen screen;
+        public Chara screen;
         public Game1 game;
-        private Player player;
-        private Input input;
         private Animate animate;
+        private Player chara;
+        private Input input;
         protected int screenWidth;
         protected int screenHeight;
 
@@ -28,6 +27,7 @@ namespace SoR
             screenHeight = _graphics.PreferredBackBufferHeight;
 
             game = this;
+
             Content.RootDirectory = "Content";
         }
 
@@ -41,7 +41,7 @@ namespace SoR
             return GraphicsDevice;
         }
 
-        public Screen GetScreen()
+        public Chara GetScreen()
         {
             return screen;
         }
@@ -49,7 +49,7 @@ namespace SoR
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            player = new Player(game);
+            chara = new Player(game);
             input = new Input(game);
             animate = new Animate(game);
 
@@ -60,15 +60,14 @@ namespace SoR
         {
             // TODO: use this.Content to load your game content here
             screen = new MainScreen(this);
-            player.SetupSkeleton();
-            animate.SetupAnimation();
+            chara.CreateSkeleton(game);
         }
 
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-            input.GetUserInput(gameTime);
-            animate.UpdateAnimations(gameTime);
+            input.GetUserInput(gameTime, game);
+            animate.UpdateAnimations(gameTime, animate);
 
             base.Update(gameTime);
         }
@@ -76,14 +75,14 @@ namespace SoR
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
-            ((BasicEffect)player.GetSkeletonRenderer().Effect).Projection = Matrix.CreateOrthographicOffCenter(
+            ((BasicEffect)chara.GetSkeletonRenderer().Effect).Projection = Matrix.CreateOrthographicOffCenter(
                 0,
                 GraphicsDevice.Viewport.Width,
                 GraphicsDevice.Viewport.Height,
                 0, 1, 0);
 
             // TODO: Add your drawing code here
-            player.DrawSkeletons();
+            chara.DrawSkeletons();
 
             base.Draw(gameTime);
         }

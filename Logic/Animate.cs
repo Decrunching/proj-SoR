@@ -7,37 +7,28 @@ namespace SoR.Logic
     {
         public Animate(Game1 game) : base(game)
         {
-            this.game = game;
         }
 
-        public void SetupAnimation()
+        public void UpdateAnimations(GameTime gameTime, Animate animate)
         {
-            // Set the "fidle" animation on track 1 and leave it looping forever
-            animState.SetAnimation(0, "fdownidle", true);
-
-            // 0.2 seconds of mixing time between animation transitions
-            animStateData.DefaultMix = 0.2f;
-        }
-
-        public void UpdateAnimations(GameTime gameTime)
-        {
+            //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
             if (!keyPressed)
             {
                 switch (lastKey)
                 {
                     case "up":
-                        animState.SetAnimation(0, "fupidle", true);
+                        animate.animState.SetAnimation(0, "fupidle", true);
                         break;
                     case "down":
-                        animState.SetAnimation(0, "fdownidle", true);
+                        animate.animState.SetAnimation(0, "fdownidle", true);
                         break;
                     case "left":
                         skeleton.ScaleX = -1;
-                        animState.SetAnimation(0, "fsideidle", true);
+                        animate.animState.SetAnimation(0, "fsideidle", true);
                         break;
                     case "right":
                         skeleton.ScaleX = 1;
-                        animState.SetAnimation(0, "fsideidle", true);
+                        animate.animState.SetAnimation(0, "fsideidle", true);
                         break;
                 }
             }
@@ -46,17 +37,17 @@ namespace SoR.Logic
                 switch (lastKey)
                 {
                     case "up":
-                        animState.AddAnimation(0, "fup", true, 0);
+                        animate.animState.AddAnimation(0, "fup", true, 0);
                         break;
                     case "down":
-                        animState.AddAnimation(0, "fdown", true, 0);
+                        animate.animState.AddAnimation(0, "fdown", true, 0);
                         break;
                     case "left":
-                        animState.AddAnimation(0, "fside", true, 0);
+                        animate.animState.AddAnimation(0, "fside", true, 0);
                         skeleton.ScaleX = -1;
                         break;
                     case "right":
-                        animState.AddAnimation(0, "fside", true, 0);
+                        animate.animState.AddAnimation(0, "fside", true, 0);
                         skeleton.ScaleX = 1;
                         break;
                 }

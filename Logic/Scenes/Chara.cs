@@ -1,23 +1,34 @@
-﻿using Microsoft.Xna.Framework.Input;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
 using Spine;
 
 namespace SoR.Logic.Scenes
 {
-    public abstract class Screen
+    public abstract class Chara
     {
         private Game1 game;
         private SkeletonRenderer skeletonRenderer;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
+        protected Vector2 position;
         private bool keyPressed;
         private bool enterPressed;
         private bool enterReleased;
 
-        public Screen(Game1 game)
+        public Chara(Game1 game)
         {
             this.game = game;
-            skeletonRenderer = new SkeletonRenderer(game.GraphicsDevice);
+            position = new Vector2(game.GetGraphics().PreferredBackBufferWidth / 2,
+                game.GetGraphics().PreferredBackBufferHeight / 2);
+
+            // Initialise skeleton renderer with premultiplied alpha
+            skeletonRenderer = new SkeletonRenderer(game.GetGraphicsDevice());
             skeletonRenderer.PremultipliedAlpha = true;
+        }
+
+        public SkeletonRenderer GetSkeletonRenderer()
+        {
+            return skeletonRenderer;
         }
 
         public KeyboardState GetKeyState()
