@@ -10,9 +10,7 @@ namespace SoR
         private GraphicsDeviceManager _graphics;
         public Chara chara;
         public Game1 game;
-        private Animate animate;
         private Player player;
-        private Input input;
         protected int screenWidth;
         protected int screenHeight;
 
@@ -44,8 +42,6 @@ namespace SoR
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
-            input = new Input(this);
-            animate = new Animate(this);
 
             base.Initialize();
         }
@@ -59,9 +55,8 @@ namespace SoR
         protected override void Update(GameTime gameTime)
         {
             // TODO: Add your update logic here
-            input.UpdateInput();
-            input.GetUserInput(gameTime, player);
-            animate.UpdateAnimations(gameTime, animate);
+            player.GetUserInput(gameTime);
+            player.UpdateAnimations(gameTime);
 
             base.Update(gameTime);
         }

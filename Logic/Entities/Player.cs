@@ -1,12 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Spine;
-using System.Numerics;
 
 namespace SoR.Logic.Entities
 {
-    internal class Player : Chara
+    internal class Player : Input, Chara
     {
+        private SkeletonRenderer skeletonRenderer;
         private AtlasAttachmentLoader atlasAttachmentLoader;
         private Atlas atlas;
         private SkeletonJson json;
@@ -15,8 +15,12 @@ namespace SoR.Logic.Entities
         protected AnimationState animState;
         protected AnimationStateData animStateData;
 
-        public Player(Game1 game) : base(game)
+        public Player(Game1 game)
         {
+            // Initialise skeleton renderer with premultiplied alpha
+            skeletonRenderer = new SkeletonRenderer(game.GetGraphicsDevice());
+            skeletonRenderer.PremultipliedAlpha = true;
+
             // Load texture atlas and attachment loader
             atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.atlas", new XnaTextureLoader(game.GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
@@ -41,8 +45,77 @@ namespace SoR.Logic.Entities
             animStateData.DefaultMix = 0.2f;
         }
 
-        public override void Render(GameTime gameTime, Game1 game)
+        public SkeletonRenderer GetSkeletonRenderer()
         {
+            return skeletonRenderer;
+        }
+        public void UpdateAnimations(GameTime gameTime)
+        {
+            //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
+            if (!keyPressed)
+            {
+                switch (lastKey)
+                {
+                    case "up":
+                        animState.SetAnimation(0, "fupidle", true);
+                        break;
+                    case "down":
+                        animState.SetAnimation(0, "fdownidle", true);
+                        break;
+                    case "left":
+                        skeleton.ScaleX = -1;
+                        animState.SetAnimation(0, "fsideidle", true);
+                        break;
+                    case "right":
+                        skeleton.ScaleX = 1;
+                        animState.SetAnimation(0, "fsideidle", true);
+                        break;
+                }
+            }
+            else if (keyPressed)
+            {
+                switch (lastKey)
+                {
+                    case "up":
+                        animState.AddAnimation(0, "fup", true, 0);
+                        break;
+                    case "down":
+                        animState.AddAnimation(0, "fdown", true, 0);
+                        break;
+                    case "left":
+                        animState.AddAnimation(0, "fside", true, 0);
+                        skeleton.ScaleX = -1;
+                        break;
+                    case "right":
+                        animState.AddAnimation(0, "fside", true, 0);
+                        skeleton.ScaleX = 1;
+                        break;
+                }
+            }
+
+            if (position.X > screenWidth - skeletonData.Width)
+            {
+                position.X = screenWidth - skeletonData.Width;
+            }
+            else if (position.X < skeletonData.Width)
+            {
+                position.X = skeletonData.Width;
+            }
+
+            if (position.Y > screenHeight + skeletonData.Height / 3)
+            {
+                position.Y = screenHeight + skeletonData.Height / 3;
+            }
+            else if (position.Y < skeletonData.Height * 3)
+            {
+                position.Y = skeletonData.Height * 3;
+            }
+        }
+
+        public void Render(GameTime gameTime, Game1 game)
+        {
+            UpdateAnimations(gameTime);
+
             // Update the animation state and apply animations to skeletons
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);

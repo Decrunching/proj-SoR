@@ -1,13 +1,13 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework;
-using SoR.Logic.Entities;
 
 namespace SoR.Logic
 {
-    internal class Input : Player
+    public abstract class Input : Game1
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
+        protected Vector2 position;
         protected bool keyPressed;
         private bool enterPressed;
         private bool enterReleased;
@@ -15,15 +15,16 @@ namespace SoR.Logic
         private int deadZone;
         protected string lastKey;
 
-        public Input(Game1 game) : base(game)
+        public Input()
         {
-            keyState = Keyboard.GetState();
             enterPressed = keyState.IsKeyDown(Keys.Enter);
             enterReleased = keyState.IsKeyUp(Keys.Enter);
             lastKey = "down";
             keyPressed = false;
             speed = 400f;
             deadZone = 4096;
+            position = new Vector2(game.GetGraphics().PreferredBackBufferWidth / 2,
+                game.GetGraphics().PreferredBackBufferHeight / 2);
         }
 
         public KeyboardState GetKeyState()
@@ -31,10 +32,12 @@ namespace SoR.Logic
             return keyState;
         }
 
-        public void GetUserInput(GameTime gameTime, Player player)
+        public void GetUserInput(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            keyState = Keyboard.GetState();
 
             //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
 
