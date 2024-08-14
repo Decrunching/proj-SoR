@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
 
 namespace SoR
@@ -10,6 +11,7 @@ namespace SoR
         private GraphicsDevice graphicsDevice;
         public Game1 game;
         private Player player;
+        private KeyboardState keyState;
         public Chara chara;
         protected int screenWidth;
         protected int screenHeight;
@@ -38,9 +40,16 @@ namespace SoR
             return game.graphicsDevice;
         }
 
+        public KeyboardState GetKeyState()
+        {
+            return keyState;
+        }
+
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
+
+            keyState = Keyboard.GetState();
 
             base.Initialize();
         }
