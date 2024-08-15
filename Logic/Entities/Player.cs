@@ -12,6 +12,7 @@ namespace SoR.Logic.Entities
         protected SkeletonJson json;
         protected SkeletonData skeletonData;
         protected Skeleton skeleton;
+        protected BoneData rootBone;
         protected Skin skin;
         protected AnimationState animState;
         protected AnimationStateData animStateData;
@@ -20,35 +21,35 @@ namespace SoR.Logic.Entities
         {
             // Load texture atlas and attachment loader
             atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.atlas", new XnaTextureLoader(game.GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(game.GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
-            // Initialise skeleton json to be loaded at 0.5x scale
+            // Initialise skeleton json
             skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
             //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
-            //Add a new skin
-            SetSkin("1");
+            // Set the skin (can be moved to a dependent class later)
+            SetInitialSkin("1");
+
+            // Set the required skin (needs to be its own function later if using this class as a base for other entities)
+            skeleton.SetSkin(skin);
+            skeleton.SetSlotsToSetupPose();
 
             // Setup animation
             animStateData = new AnimationStateData(skeleton.Data);
             animState = new AnimationState(animStateData);
+            animState.Apply(skeleton);
 
             // Set the "fidle" animation on track 1 and leave it looping forever
-            skeleton.SetSkin(skin);
-            skeleton.SetSlotsToSetupPose();
-            animState.Apply(skeleton);
             animState.SetAnimation(0, "idle", true);
 
             // 0.2 seconds of mixing time between animation transitions
             animStateData.DefaultMix = 0.6f;
         }
 
-        public void SetSkin(string skinName)
+        public void SetInitialSkin(string skinName)
         {
             skin = skeletonData.FindSkin(skinName);
             if (skin == null) throw new System.ArgumentException("Can't find skin: " + skinName);
@@ -69,13 +70,11 @@ namespace SoR.Logic.Entities
             if (keyState.IsKeyDown(Keys.Left) & !lastKeyState.IsKeyDown(Keys.Left))
             {
                 animState.AddAnimation(0, "runleft", true, 0);
-                //skeleton.ScaleX = -1;
             }
 
             if (keyState.IsKeyDown(Keys.Right) & !lastKeyState.IsKeyDown(Keys.Right))
             {
                 animState.AddAnimation(0, "runright", true, 0);
-                //skeleton.ScaleX = 1;
             }
         }
 

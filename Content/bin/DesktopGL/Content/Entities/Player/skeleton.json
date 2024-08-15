@@ -1,7 +1,7 @@
 {
-"skeleton": { "hash": "7yGkslcXyu8", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
+"skeleton": { "hash": "6Syn8YhmlG0", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
 "bones": [
-	{ "name": "root" },
+	{ "name": "root", "scaleX": 4, "scaleY": 4 },
 	{ "name": "bone", "parent": "root", "y": 9 }
 ],
 "slots": [
