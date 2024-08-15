@@ -1,33 +1,37 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Spine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SoR.Logic.Entities;
 
 namespace SoR
 {
     public class Game1 : Game
     {
         private GraphicsDeviceManager _graphics;
-        private GraphicsDevice graphicsDevice;
-        public Game1 game;
-        private Player player;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
         private Vector2 position;
-        public Chara chara;
-        protected int screenWidth;
-        protected int screenHeight;
-        protected string lastKey;
-        protected bool keyPressed;
         private float speed;
         private int deadZone;
+        private int screenWidth;
+        private int screenHeight;
+        private string lastKey;
+        private bool keyPressed;
+
+        protected SkeletonRenderer skeletonRenderer;
+        protected AtlasAttachmentLoader atlasAttachmentLoader;
+        protected Atlas atlas;
+        protected SkeletonJson json;
+        protected SkeletonData skeletonData;
+        protected Skeleton skeleton;
+        protected AnimationState animState;
+        protected AnimationStateData animStateData;
 
         public Game1()
         {
+            _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            game = this;
-            _graphics = new GraphicsDeviceManager(game);
             _graphics.IsFullScreen = false;
             _graphics.PreferredBackBufferWidth = 800;
             _graphics.PreferredBackBufferHeight = 600;
@@ -35,44 +39,8 @@ namespace SoR
             screenHeight = _graphics.PreferredBackBufferHeight;
             lastKey = "down";
             keyPressed = false;
-            speed = 100f;
+            speed = 300f;
             deadZone = 4096;
-        }
-
-        public GraphicsDeviceManager GetGraphicsDeviceManager(Game1 game)
-        {
-            return game._graphics;
-        }
-
-        public GraphicsDevice GetGraphicsDevice(Game1 game)
-        {
-            graphicsDevice = game.GraphicsDevice;
-            return game.graphicsDevice;
-        }
-
-        public void SetPositionY(float positionY)
-        {
-            position.Y += positionY;
-        }
-
-        public float GetPositionY()
-        {
-            return position.Y;
-        }
-
-        public float GetPositionX()
-        {
-            return position.X;
-        }
-
-        public KeyboardState GetKeyState()
-        {
-            return game.keyState;
-        }
-
-        public KeyboardState GetLastKeyState()
-        {
-            return game.lastKeyState;
         }
 
         protected override void Initialize()
@@ -86,8 +54,30 @@ namespace SoR
 
         protected override void LoadContent()
         {
-            // TODO: use this.Content to load your game content here
-            player = new Player(game);
+            // TODO: use this.Content to load your game content here// Initialise skeleton renderer with premultiplied alpha
+            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
+            skeletonRenderer.PremultipliedAlpha = true;
+
+            // Load texture atlas and attachment loader
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.atlas", new XnaTextureLoader(game.GraphicsDevice));
+            atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
+            json = new SkeletonJson(atlasAttachmentLoader);
+
+            // Initialise skeleton json to be loaded at 0.5x scale
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeleton = new Skeleton(skeletonData);
+
+            // Setup animation
+            animStateData = new AnimationStateData(skeleton.Data);
+            animState = new AnimationState(animStateData);
+
+            // Set the "fidle" animation on track 1 and leave it looping forever
+            animState.SetAnimation(0, "fdownidle", true);
+
+            // 0.2 seconds of mixing time between animation transitions
+            animStateData.DefaultMix = 0.2f;
         }
 
         protected override void Update(GameTime gameTime)
@@ -95,8 +85,7 @@ namespace SoR
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
-            //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
+            // TODO: Add your update logic here//Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
 
             keyState = Keyboard.GetState();
 
@@ -104,6 +93,10 @@ namespace SoR
             {
                 //keyPressed = true;
                 position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (!lastKeyState.IsKeyDown(Keys.Up))
+                {
+                    animState.AddAnimation(0, "fup", true, 0);
+                }
                 //lastKey = "up";
             }
 
@@ -111,6 +104,10 @@ namespace SoR
             {
                 //keyPressed = true;
                 position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (!lastKeyState.IsKeyDown(Keys.Down))
+                {
+                    animState.AddAnimation(0, "fdown", true, 0);
+                }
                 //lastKey = "down";
             }
 
@@ -118,6 +115,11 @@ namespace SoR
             {
                 //keyPressed = true;
                 position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (!lastKeyState.IsKeyDown(Keys.Left))
+                {
+                    animState.AddAnimation(0, "fside", true, 0);
+                    skeleton.ScaleX = -1;
+                }
                 //lastKey = "left";
             }
 
@@ -125,6 +127,11 @@ namespace SoR
             {
                 //keyPressed = true;
                 position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (!lastKeyState.IsKeyDown(Keys.Right))
+                {
+                    animState.AddAnimation(0, "fside", true, 0);
+                    skeleton.ScaleX = 1;
+                }
                 //lastKey = "right";
             }
 
@@ -153,17 +160,36 @@ namespace SoR
                 }
             }
 
-            player.UpdateAnimations();
-
             lastKeyState = keyState;
+
+            // Update the animation state and apply animations to skeletons
+            skeleton.X = position.X;
+            skeleton.Y = position.Y;
+            animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            animState.Apply(skeleton);
+
+            // Update skeletal transformations
+            skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
+            GraphicsDevice.Clear(Color.DarkSeaGreen);
+
             // TODO: Add your drawing code here
-            player.Render(gameTime, game);
+            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
+            0,
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height,
+                0, 1, 0);
+
+            // Draw skeletons
+            skeletonRenderer.Begin();
+            skeletonRenderer.Draw(skeleton);
+            skeletonRenderer.End();
 
             base.Draw(gameTime);
         }
