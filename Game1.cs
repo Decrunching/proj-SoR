@@ -24,6 +24,7 @@ namespace SoR
 
         public Game1()
         {
+            Content.RootDirectory = "Content";
             IsMouseVisible = true;
             game = this;
             _graphics = new GraphicsDeviceManager(game);
@@ -32,7 +33,6 @@ namespace SoR
             _graphics.PreferredBackBufferHeight = 600;
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
-            Content.RootDirectory = "Content";
             lastKey = "down";
             keyPressed = false;
             speed = 100f;
