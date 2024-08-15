@@ -12,7 +12,6 @@ namespace SoR.Logic.Entities
         protected SkeletonJson json;
         protected SkeletonData skeletonData;
         protected Skeleton skeleton;
-        protected BoneData rootBone;
         protected Skin skin;
         protected AnimationState animState;
         protected AnimationStateData animStateData;
@@ -20,14 +19,14 @@ namespace SoR.Logic.Entities
         public Player(GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(game.GraphicsDevice));
+            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin (can be moved to a dependent class later)
@@ -57,24 +56,32 @@ namespace SoR.Logic.Entities
 
         public void SetAnimState(KeyboardState keyState, KeyboardState lastKeyState)
         {
+            if (!keyState.IsKeyDown(Keys.Up) &
+                !keyState.IsKeyDown(Keys.Down) &
+                !keyState.IsKeyDown(Keys.Left) &
+                !keyState.IsKeyDown(Keys.Right))
+            {
+                animState.SetAnimation(0, "idle", true);
+            }
+
             if (keyState.IsKeyDown(Keys.Up) & !lastKeyState.IsKeyDown(Keys.Up))
             {
-                animState.AddAnimation(0, "runup", true, 0);
+                animState.SetAnimation(0, "runup", true);
             }
 
             if (keyState.IsKeyDown(Keys.Down) & !lastKeyState.IsKeyDown(Keys.Down))
             {
-                animState.AddAnimation(0, "rundown", true, 0);
+                animState.SetAnimation(0, "rundown", true);
             }
 
             if (keyState.IsKeyDown(Keys.Left) & !lastKeyState.IsKeyDown(Keys.Left))
             {
-                animState.AddAnimation(0, "runleft", true, 0);
+                animState.SetAnimation(0, "runleft", true);
             }
 
             if (keyState.IsKeyDown(Keys.Right) & !lastKeyState.IsKeyDown(Keys.Right))
             {
-                animState.AddAnimation(0, "runright", true, 0);
+                animState.SetAnimation(0, "runright", true);
             }
         }
 

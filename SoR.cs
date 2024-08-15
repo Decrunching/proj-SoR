@@ -7,7 +7,7 @@ using Spine;
 
 namespace SoR
 {
-    public class Game1 : Game
+    public class SoR : Game
     {
         private GraphicsDeviceManager _graphics;
         private KeyboardState keyState;
@@ -17,15 +17,13 @@ namespace SoR
         private int deadZone;
         private int screenWidth;
         private int screenHeight;
-        private string lastKey;
-        private bool keyPressed;
 
         protected SkeletonRenderer skeletonRenderer;
 
-        private Game1 game;
+        private SoR game;
         private Player player;
 
-        public Game1()
+        public SoR()
         {
             _graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -35,8 +33,6 @@ namespace SoR
             _graphics.PreferredBackBufferHeight = 600;
             screenWidth = _graphics.PreferredBackBufferWidth;
             screenHeight = _graphics.PreferredBackBufferHeight;
-            lastKey = "down";
-            keyPressed = false;
             speed = 300f;
             deadZone = 4096;
             game = this;

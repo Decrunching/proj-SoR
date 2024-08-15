@@ -1,4 +1,3 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/haltija.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Player/haltija.atlas","CopyItem","File",6106,6106,0.0009628
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/haltija.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Player/haltija.xnb","TextureProcessor","Texture2DContent",65189,2274421,0.1826784
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Player/skeleton.json","CopyItem","File",9011,9011,0.0004948
+"D:/GitHub projects/Proj-SoR/Content/Entities/Player/haltija.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Content\Entities/Player/haltija.atlas","CopyItem","File",6427,6427,0.0014894
+"D:/GitHub projects/Proj-SoR/Content/Entities/Player/haltija.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Content/Entities/Player/haltija.xnb","TextureProcessor","Texture2DContent",65189,2274421,0.2340186
