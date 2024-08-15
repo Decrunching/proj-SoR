@@ -39,25 +39,25 @@ namespace SoR.Logic.Entities
             animStateData.DefaultMix = 0.2f;
         }
 
-        public void SetAnimState(KeyboardState lastKeyState)
+        public void SetAnimState(KeyboardState keyState, KeyboardState lastKeyState)
         {
-            if (!lastKeyState.IsKeyDown(Keys.Up))
+            if (keyState.IsKeyDown(Keys.Up) & !lastKeyState.IsKeyDown(Keys.Up))
             {
                 animState.AddAnimation(0, "fup", true, 0);
             }
 
-            if (!lastKeyState.IsKeyDown(Keys.Down))
+            if (keyState.IsKeyDown(Keys.Down) & !lastKeyState.IsKeyDown(Keys.Down))
             {
                 animState.AddAnimation(0, "fdown", true, 0);
             }
 
-            if (!lastKeyState.IsKeyDown(Keys.Left))
+            if (keyState.IsKeyDown(Keys.Left) & !lastKeyState.IsKeyDown(Keys.Left))
             {
                 animState.AddAnimation(0, "fside", true, 0);
                 skeleton.ScaleX = -1;
             }
 
-            if (!lastKeyState.IsKeyDown(Keys.Right))
+            if (keyState.IsKeyDown(Keys.Right) & !lastKeyState.IsKeyDown(Keys.Right))
             {
                 animState.AddAnimation(0, "fside", true, 0);
                 skeleton.ScaleX = 1;

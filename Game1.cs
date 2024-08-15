@@ -74,7 +74,7 @@ namespace SoR
             {
                 //keyPressed = true;
                 position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                player.SetAnimState(lastKeyState);
+                player.SetAnimState(keyState, lastKeyState);
                 //lastKey = "up";
             }
 
@@ -82,7 +82,7 @@ namespace SoR
             {
                 //keyPressed = true;
                 position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                player.SetAnimState(lastKeyState);
+                player.SetAnimState(keyState, lastKeyState);
                 //lastKey = "down";
             }
 
@@ -90,7 +90,7 @@ namespace SoR
             {
                 //keyPressed = true;
                 position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                player.SetAnimState(lastKeyState);
+                player.SetAnimState(keyState, lastKeyState);
                 //lastKey = "left";
             }
 
@@ -98,7 +98,7 @@ namespace SoR
             {
                 //keyPressed = true;
                 position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                player.SetAnimState(lastKeyState);
+                player.SetAnimState(keyState, lastKeyState);
                 //lastKey = "right";
             }
 
