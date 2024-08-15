@@ -13,13 +13,10 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Entities/Player/skeleton.atlas
-/copy:Entities/Player/skeleton.atlas
+#begin Entities/Player/haltija.atlas
+/copy:Entities/Player/haltija.atlas
 
-#begin Entities/Player/skeleton.json
-/copy:Entities/Player/skeleton.json
-
-#begin Entities/Player/skeleton.png
+#begin Entities/Player/haltija.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -29,5 +26,8 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Entities/Player/skeleton.png
+/build:Entities/Player/haltija.png
+
+#begin Entities/Player/skeleton.json
+/copy:Entities/Player/skeleton.json
 

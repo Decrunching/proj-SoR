@@ -1,0 +1,317 @@
+haltija.png
+size:46,900
+filter:MipMap,MipMap
+pma:true
+flags/blue/01
+bounds:24,59,19,19
+offsets:10,7,32,32
+flags/blue/02
+bounds:25,233,20,19
+offsets:10,7,32,32
+rotate:90
+flags/blue/03
+bounds:26,360,19,18
+offsets:10,7,32,32
+rotate:90
+flags/blue/04
+bounds:26,339,19,18
+offsets:10,7,32,32
+rotate:90
+flags/blue/05
+bounds:26,447,20,18
+offsets:10,7,32,32
+rotate:90
+flags/green/01
+bounds:2,43,19,19
+offsets:10,7,32,32
+flags/green/02
+bounds:25,211,20,19
+offsets:10,7,32,32
+rotate:90
+flags/green/03
+bounds:26,318,19,18
+offsets:10,7,32,32
+rotate:90
+flags/green/04
+bounds:26,297,19,18
+offsets:10,7,32,32
+rotate:90
+flags/green/05
+bounds:26,425,20,18
+offsets:10,7,32,32
+rotate:90
+flags/purple/01
+bounds:23,38,19,19
+offsets:10,7,32,32
+flags/purple/02
+bounds:25,189,20,19
+offsets:10,7,32,32
+rotate:90
+flags/purple/03
+bounds:26,276,19,18
+offsets:10,7,32,32
+rotate:90
+flags/purple/04
+bounds:26,255,19,18
+offsets:10,7,32,32
+rotate:90
+flags/purple/05
+bounds:26,403,20,18
+offsets:10,7,32,32
+rotate:90
+flags/red/01
+bounds:2,22,19,19
+offsets:10,7,32,32
+flags/red/02
+bounds:25,167,20,19
+offsets:10,7,32,32
+rotate:90
+flags/red/03
+bounds:23,18,19,18
+offsets:10,7,32,32
+flags/red/04
+bounds:2,2,19,18
+offsets:10,7,32,32
+flags/red/05
+bounds:26,381,20,18
+offsets:10,7,32,32
+rotate:90
+player/boy/idle/01
+bounds:2,244,20,21
+offsets:4,5,32,32
+rotate:90
+player/boy/idle/02
+bounds:2,128,20,20
+offsets:4,5,32,32
+player/boy/idle/03
+bounds:24,123,20,20
+offsets:4,5,32,32
+player/boy/idle/04
+bounds:25,145,20,19
+offsets:4,5,32,32
+rotate:90
+player/boy/idle/05
+bounds:2,85,20,19
+offsets:4,5,32,32
+player/boy/run down/01
+bounds:26,538,18,21
+offsets:6,5,32,32
+player/boy/run down/02
+bounds:2,634,18,22
+offsets:6,5,32,32
+rotate:90
+player/boy/run down/03
+bounds:2,879,19,23
+offsets:5,5,32,32
+rotate:90
+player/boy/run down/04
+bounds:2,614,18,22
+offsets:6,5,32,32
+rotate:90
+player/boy/run down/05
+bounds:27,826,17,22
+offsets:7,5,32,32
+player/boy/run down/06
+bounds:2,798,16,23
+offsets:8,5,32,32
+rotate:90
+player/boy/run down/07
+bounds:27,802,17,22
+offsets:7,5,32,32
+player/boy/run left/01
+bounds:2,204,16,21
+offsets:8,5,32,32
+rotate:90
+player/boy/run left/02
+bounds:2,536,16,22
+offsets:8,5,32,32
+rotate:90
+player/boy/run left/03
+bounds:2,780,16,23
+offsets:8,5,32,32
+rotate:90
+player/boy/run left/04
+bounds:2,518,16,22
+offsets:8,5,32,32
+rotate:90
+player/boy/run left/05
+bounds:2,500,16,22
+offsets:8,5,32,32
+rotate:90
+player/boy/run left/06
+bounds:2,762,16,23
+offsets:8,5,32,32
+rotate:90
+player/boy/run left/07
+bounds:2,482,16,22
+offsets:8,5,32,32
+rotate:90
+player/boy/run right/01
+bounds:2,186,16,21
+offsets:8,5,32,32
+rotate:90
+player/boy/run right/02
+bounds:2,464,16,22
+offsets:8,5,32,32
+rotate:90
+player/boy/run right/03
+bounds:27,875,17,23
+offsets:7,5,32,32
+player/boy/run right/04
+bounds:2,446,16,22
+offsets:8,5,32,32
+rotate:90
+player/boy/run right/05
+bounds:2,428,16,22
+offsets:8,5,32,32
+rotate:90
+player/boy/run right/06
+bounds:2,744,16,23
+offsets:8,5,32,32
+rotate:90
+player/boy/run right/07
+bounds:2,410,16,22
+offsets:8,5,32,32
+rotate:90
+player/boy/run up/01
+bounds:26,515,18,21
+offsets:6,5,32,32
+player/boy/run up/02
+bounds:26,609,18,22
+offsets:6,5,32,32
+player/boy/run up/03
+bounds:2,858,19,23
+offsets:5,5,32,32
+rotate:90
+player/boy/run up/04
+bounds:2,594,18,22
+offsets:6,5,32,32
+rotate:90
+player/boy/run up/05
+bounds:27,778,17,22
+offsets:7,5,32,32
+player/boy/run up/06
+bounds:2,726,16,23
+offsets:8,5,32,32
+rotate:90
+player/boy/run up/07
+bounds:27,754,17,22
+offsets:7,5,32,32
+player/girl/idle/01
+bounds:2,222,20,21
+offsets:4,5,32,32
+rotate:90
+player/girl/idle/02
+bounds:2,106,20,20
+offsets:4,5,32,32
+player/girl/idle/03
+bounds:24,101,20,20
+offsets:4,5,32,32
+player/girl/idle/04
+bounds:24,80,20,19
+offsets:4,5,32,32
+player/girl/idle/05
+bounds:2,64,20,19
+offsets:4,5,32,32
+player/girl/run down/01
+bounds:26,492,18,21
+offsets:6,5,32,32
+player/girl/run down/02
+bounds:26,585,18,22
+offsets:6,5,32,32
+player/girl/run down/03
+bounds:2,837,19,23
+offsets:5,5,32,32
+rotate:90
+player/girl/run down/04
+bounds:2,574,18,22
+offsets:6,5,32,32
+rotate:90
+player/girl/run down/05
+bounds:27,730,17,22
+offsets:7,5,32,32
+player/girl/run down/06
+bounds:2,708,16,23
+offsets:8,5,32,32
+rotate:90
+player/girl/run down/07
+bounds:27,706,17,22
+offsets:7,5,32,32
+player/girl/run left/01
+bounds:2,168,16,21
+offsets:8,5,32,32
+rotate:90
+player/girl/run left/02
+bounds:2,392,16,22
+offsets:8,5,32,32
+rotate:90
+player/girl/run left/03
+bounds:2,690,16,23
+offsets:8,5,32,32
+rotate:90
+player/girl/run left/04
+bounds:2,374,16,22
+offsets:8,5,32,32
+rotate:90
+player/girl/run left/05
+bounds:2,356,16,22
+offsets:8,5,32,32
+rotate:90
+player/girl/run left/06
+bounds:2,672,16,23
+offsets:8,5,32,32
+rotate:90
+player/girl/run left/07
+bounds:2,338,16,22
+offsets:8,5,32,32
+rotate:90
+player/girl/run right/01
+bounds:2,150,16,21
+offsets:8,5,32,32
+rotate:90
+player/girl/run right/02
+bounds:2,320,16,22
+offsets:8,5,32,32
+rotate:90
+player/girl/run right/03
+bounds:27,850,17,23
+offsets:7,5,32,32
+player/girl/run right/04
+bounds:2,302,16,22
+offsets:8,5,32,32
+rotate:90
+player/girl/run right/05
+bounds:2,284,16,22
+offsets:8,5,32,32
+rotate:90
+player/girl/run right/06
+bounds:2,654,16,23
+offsets:8,5,32,32
+rotate:90
+player/girl/run right/07
+bounds:2,266,16,22
+offsets:8,5,32,32
+rotate:90
+player/girl/run up/01
+bounds:26,469,18,21
+offsets:6,5,32,32
+player/girl/run up/02
+bounds:26,561,18,22
+offsets:6,5,32,32
+player/girl/run up/03
+bounds:2,816,19,23
+offsets:5,5,32,32
+rotate:90
+player/girl/run up/04
+bounds:2,554,18,22
+offsets:6,5,32,32
+rotate:90
+player/girl/run up/05
+bounds:27,682,17,22
+offsets:7,5,32,32
+player/girl/run up/06
+bounds:27,633,16,23
+offsets:8,5,32,32
+player/girl/run up/07
+bounds:27,658,17,22
+offsets:7,5,32,32
