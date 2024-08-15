@@ -1,0 +1,4 @@
+Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
+"F:/MonoGame/SoR/SoR/Content/Entities/Player/skeleton.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Player/skeleton.atlas","CopyItem","File",1242,1242,0.000978
+"F:/MonoGame/SoR/SoR/Content/Entities/Player/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Player/skeleton.json","CopyItem","File",4574,4574,0.0004321
+"F:/MonoGame/SoR/SoR/Content/Entities/Player/skeleton.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Player/skeleton.xnb","TextureProcessor","Texture2DContent",4785,139205,0.1253373
