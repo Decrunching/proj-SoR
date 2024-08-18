@@ -1,11 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using SoR.Logic.Input;
 using Spine;
 
 namespace SoR.Logic.Entities
 {
-    internal class Player
+    internal class Player : KeyboardInput
     {
         protected AtlasAttachmentLoader atlasAttachmentLoader;
         protected Atlas atlas;
@@ -54,35 +55,29 @@ namespace SoR.Logic.Entities
             if (skin == null) throw new System.ArgumentException("Can't find skin: " + skinName);
         }
 
-        public void SetAnimState(KeyboardState keyState, KeyboardState lastKeyState)
+        public void SetRunAnim(KeyboardState keyState, KeyboardState lastKeyState)
         {
-            if (!keyState.IsKeyDown(Keys.Up) &
-                !keyState.IsKeyDown(Keys.Down) &
-                !keyState.IsKeyDown(Keys.Left) &
-                !keyState.IsKeyDown(Keys.Right))
-            {
-                animState.SetAnimation(0, "idle", true);
-            }
-
             if (keyState.IsKeyDown(Keys.Up) & !lastKeyState.IsKeyDown(Keys.Up))
             {
                 animState.SetAnimation(0, "runup", true);
             }
-
             if (keyState.IsKeyDown(Keys.Down) & !lastKeyState.IsKeyDown(Keys.Down))
             {
                 animState.SetAnimation(0, "rundown", true);
             }
-
             if (keyState.IsKeyDown(Keys.Left) & !lastKeyState.IsKeyDown(Keys.Left))
             {
                 animState.SetAnimation(0, "runleft", true);
             }
-
             if (keyState.IsKeyDown(Keys.Right) & !lastKeyState.IsKeyDown(Keys.Right))
             {
                 animState.SetAnimation(0, "runright", true);
             }
+        }
+
+        public void SetIdle()
+        {
+            animState.SetAnimation(0, "idle", true);
         }
 
         public void UpdateSkeletalAnimations(GameTime gameTime, Vector2 position)
