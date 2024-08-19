@@ -3,17 +3,21 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
 
-
 namespace SoR
-{
+{/*
+ * The main game class, through which all other code runs. Graphics are currently handled here,
+ * but everything else is called from and handled by other classes.
+ */
     public class SoR : Game
     {
         private GraphicsDeviceManager _graphics;
-        private KeyboardState keyState;
+        private KeyboardState keyState; // Gets the current keyboard state
 
-        private SoR game;
-        private Player player;
+        private Player player; // Creates a player instance
 
+        /*
+         * Constructor for the main game class. Initialises the graphics and mouse visibility.
+         */
         public SoR()
         {
             _graphics = new GraphicsDeviceManager(this);
@@ -22,7 +26,6 @@ namespace SoR
             _graphics.IsFullScreen = false;
             _graphics.PreferredBackBufferWidth = 1400;
             _graphics.PreferredBackBufferHeight = 900;
-            game = this;
         }
 
         protected override void Initialize()
@@ -44,8 +47,7 @@ namespace SoR
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here//Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
-
+            // TODO: Add your update logic here
             keyState = Keyboard.GetState();
 
             player.SetAnimRunning(gameTime, keyState);

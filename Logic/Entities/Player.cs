@@ -3,10 +3,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace SoR.Logic.Entities
-{
+{/*
+ * The Player object class. Used to create and update the Player object. Currently includes
+ * initialisation, position/movement and animation.
+ */
     internal class Player
     {
         private SkeletonData skeletonData;
@@ -108,6 +110,8 @@ namespace SoR.Logic.Entities
          */
         public void SetAnimRunning(GameTime gameTime, KeyboardState keyState)
         {
+            //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
+
             Keys[] keysPressed = keyState.GetPressedKeys(); // Collect a list of keys currently being pressed
             Keys[] lastKeysPressed = new Keys[0]; // Collect a list of previously pressed keys that have just been released
 
@@ -121,43 +125,48 @@ namespace SoR.Logic.Entities
                     { Keys.Right, keyState.IsKeyUp(Keys.Right) }
                 };
 
-            if (keyState.IsKeyDown(Keys.Up) & !lastKeyState.IsKeyDown(Keys.Up))
-            {
-                animState.SetAnimation(0, "runup", true);
-            }
-            if (keyState.IsKeyDown(Keys.Down) & !lastKeyState.IsKeyDown(Keys.Down))
-            {
-                animState.SetAnimation(0, "rundown", true);
-            }
-            if (keyState.IsKeyDown(Keys.Left) & !lastKeyState.IsKeyDown(Keys.Left))
-            {
-                animState.SetAnimation(0, "runleft", true);
-            }
-            if (keyState.IsKeyDown(Keys.Right) & !lastKeyState.IsKeyDown(Keys.Right))
-            {
-                animState.SetAnimation(0, "runright", true);
-            }
-
+            /* Set player animation and position according to keyboard input.
+             * 
+             * TO DO:
+             * Adjust to retain current track number for incoming animations.
+             */
             if (keyState.IsKeyDown(Keys.Up))
             {
                 position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (!lastKeyState.IsKeyDown(Keys.Up))
+                {
+                    animState.SetAnimation(0, "runup", true);
+                }
             }
             if (keyState.IsKeyDown(Keys.Down))
             {
                 position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (!lastKeyState.IsKeyDown(Keys.Down))
+                {
+                    animState.SetAnimation(0, "rundown", true);
+                }
             }
             if (keyState.IsKeyDown(Keys.Left))
             {
                 position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (!lastKeyState.IsKeyDown(Keys.Left))
+                {
+                    animState.SetAnimation(0, "runleft", true);
+                }
             }
             if (keyState.IsKeyDown(Keys.Right))
             {
                 position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                if (!lastKeyState.IsKeyDown(Keys.Right))
+                {
+                    animState.SetAnimation(0, "runright", true);
+                }
             }
 
             /*
-             * If a key has just been released, set the running animation back to a direction the character
-             * is currently moving in.
+             * If a key has just been released, set the running animation back to the direction the character
+             * is currently moving in. If two keys are being pressed simultaneously, set it to the direction
+             * of the most recently pressed key.
              */
             foreach (Keys key in keyIsUp.Keys)
             {
@@ -183,16 +192,17 @@ namespace SoR.Logic.Entities
                     {
                         animState.SetAnimation(0, "runup", true);
                     }
-                    else if (!keyIsUp.Values.Contains(false))
+                    else if (!keyIsUp.ContainsValue(false))
                     {
                         animState.SetAnimation(0, "idle", true);
                     }
                 }
             }
 
-            lastKeyState = keyState;
-            lastKeysPressed = keysPressed;
+            lastKeyState = keyState; // The previous keyboard state
+            lastKeysPressed = keysPressed; // An array of keys that were previously being pressed
 
+            // Change the player's position on the screen according to joypad inputs
             if (Joystick.LastConnectedIndex == 0)
             {
                 JoystickState jstate = Joystick.GetState(0);
@@ -219,6 +229,9 @@ namespace SoR.Logic.Entities
             }
         }
 
+        /*
+         * Update the player position, animation state and skeleton.
+         */
         public void UpdateSkeletalAnimations(GameTime gameTime)
         {
             // Update the animation state and apply animations to skeletons
