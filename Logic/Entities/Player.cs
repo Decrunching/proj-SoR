@@ -1,8 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Spine;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SoR.Logic.Input;
-using Spine;
 using System.Collections.Generic;
 
 namespace SoR.Logic.Entities
@@ -30,20 +29,20 @@ namespace SoR.Logic.Entities
                 _graphics.PreferredBackBufferHeight / 2);
 
             // Set the player's speed
-            speed = 300f;
+            speed = 200f;
 
             // Set the joystick deadzone
             deadZone = 4096;
 
             // Load texture atlas and attachment loader
-            Atlas atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
+            //Atlas atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
+            Atlas atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
             AtlasAttachmentLoader atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             SkeletonJson json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin (can be moved to a dependent class later)
@@ -114,77 +113,77 @@ namespace SoR.Logic.Entities
             Keys[] keysPressed = keyState.GetPressedKeys(); // Collect a list of keys currently being pressed
             Keys[] lastKeysPressed = new Keys[0]; // Collect a list of previously pressed keys that have just been released
 
+            // Dictionary to store the input keys and whether they are currently up or pressed.
             Dictionary<Keys, bool> keyIsUp =
                 new Dictionary<Keys, bool>()
                 {
                     { Keys.Up, keyState.IsKeyUp(Keys.Up) },
-                    { Keys.Down,  keyState.IsKeyUp(Keys.Down) },
-                    { Keys.Left,  keyState.IsKeyUp(Keys.Left) },
-                    { Keys.Right,  keyState.IsKeyUp(Keys.Right) }
+                    { Keys.Down, keyState.IsKeyUp(Keys.Down) },
+                    { Keys.Left, keyState.IsKeyUp(Keys.Left) },
+                    { Keys.Right, keyState.IsKeyUp(Keys.Right) }
                 };
 
+            if (keyState.IsKeyDown(Keys.Up) & !lastKeyState.IsKeyDown(Keys.Up))
+            {
+                animState.SetAnimation(0, "runup", true);
+            }
+            if (keyState.IsKeyDown(Keys.Down) & !lastKeyState.IsKeyDown(Keys.Down))
+            {
+                animState.SetAnimation(0, "rundown", true);
+            }
+            if (keyState.IsKeyDown(Keys.Left) & !lastKeyState.IsKeyDown(Keys.Left))
+            {
+                animState.SetAnimation(0, "runleft", true);
+            }
+            if (keyState.IsKeyDown(Keys.Right) & !lastKeyState.IsKeyDown(Keys.Right))
+            {
+                animState.SetAnimation(0, "runright", true);
+            }
+
+            if (keyState.IsKeyDown(Keys.Up))
+            {
+                position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (keyState.IsKeyDown(Keys.Down))
+            {
+                position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (keyState.IsKeyDown(Keys.Left))
+            {
+                position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+            if (keyState.IsKeyDown(Keys.Right))
+            {
+                position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            }
+
+            /*
+             * Check each key in the dictionary is not one of the currently pressed keys and 
+             */
             foreach (Keys key in keyIsUp.Keys)
             {
-                foreach (Keys pressed in keysPressed)
+                if (!keyState.IsKeyDown(key) & lastKeyState.IsKeyDown(key))
                 {
-                    if (keyState.IsKeyDown(Keys.Up) & !lastKeyState.IsKeyDown(Keys.Up))
-                    {
-                        animState.SetAnimation(0, "runup", true);
-                    }
-                    if (keyState.IsKeyDown(Keys.Down) & !lastKeyState.IsKeyDown(Keys.Down))
-                    {
-                        animState.SetAnimation(0, "rundown", true);
-                    }
-                    if (keyState.IsKeyDown(Keys.Left) & !lastKeyState.IsKeyDown(Keys.Left))
-                    {
-                        animState.SetAnimation(0, "runleft", true);
-                    }
-                    if (keyState.IsKeyDown(Keys.Right) & !lastKeyState.IsKeyDown(Keys.Right))
+                    if (keyState.IsKeyDown(Keys.Right) &
+                        !keyState.IsKeyDown(Keys.Left))
                     {
                         animState.SetAnimation(0, "runright", true);
                     }
-
-                    if (key == Keys.Up & key == pressed)
+                    if (keyState.IsKeyDown(Keys.Left) &
+                        !keyState.IsKeyDown(Keys.Right))
                     {
-                        position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        animState.SetAnimation(0, "runleft", true);
                     }
-                    if (key == Keys.Down & key == pressed)
+                    if (keyState.IsKeyDown(Keys.Down) &
+                        !keyState.IsKeyDown(Keys.Up))
                     {
-                        position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        animState.SetAnimation(0, "rundown", true);
                     }
-                    if (key == Keys.Left & key == pressed)
+                    if (keyState.IsKeyDown(Keys.Up) &
+                        !keyState.IsKeyDown(Keys.Down))
                     {
-                        position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                        animState.SetAnimation(0, "runup", true);
                     }
-                    if (key == Keys.Right & key == pressed)
-                    {
-                        position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    }
-
-                    if (key != pressed & lastKeyState.IsKeyDown(key))
-                    {
-                        if (keyState.IsKeyDown(Keys.Right) &
-                            !keyState.IsKeyDown(Keys.Left))
-                        {
-                            animState.SetAnimation(0, "runright", true);
-                        }
-                        if (keyState.IsKeyDown(Keys.Left) &
-                            !keyState.IsKeyDown(Keys.Right))
-                        {
-                            animState.SetAnimation(0, "runleft", true);
-                        }
-                        if (keyState.IsKeyDown(Keys.Down) &
-                            !keyState.IsKeyDown(Keys.Up))
-                        {
-                            animState.SetAnimation(0, "rundown", true);
-                        }
-                        if (keyState.IsKeyDown(Keys.Up) &
-                            !keyState.IsKeyDown(Keys.Down))
-                        {
-                            animState.SetAnimation(0, "runup", true);
-                        }
-                    }
-
                 }
             }
 

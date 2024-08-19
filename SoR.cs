@@ -21,7 +21,7 @@ namespace SoR
             IsMouseVisible = true;
             _graphics.IsFullScreen = false;
             _graphics.PreferredBackBufferWidth = 1400;
-            _graphics.PreferredBackBufferHeight = 1100;
+            _graphics.PreferredBackBufferHeight = 900;
             game = this;
         }
 

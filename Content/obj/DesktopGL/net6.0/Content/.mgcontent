@@ -4,7 +4,7 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>F:/MonoGame/SoR/SoR/Content/Entities/Player/haltija.png</File>
+    <File>D:/GitHub projects/Proj-SoR/Content/Entities/Player/haltija.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
