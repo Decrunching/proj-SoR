@@ -20,14 +20,14 @@ namespace SoR.Logic.Entities
         public Player(GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin (can be moved to a dependent class later)
@@ -55,7 +55,7 @@ namespace SoR.Logic.Entities
             if (skin == null) throw new System.ArgumentException("Can't find skin: " + skinName);
         }
 
-        public void SetRunAnim(KeyboardState keyState, KeyboardState lastKeyState)
+        public void SetAnimRunning(KeyboardState keyState, KeyboardState lastKeyState)
         {
             if (keyState.IsKeyDown(Keys.Up) & !lastKeyState.IsKeyDown(Keys.Up))
             {
@@ -72,6 +72,26 @@ namespace SoR.Logic.Entities
             if (keyState.IsKeyDown(Keys.Right) & !lastKeyState.IsKeyDown(Keys.Right))
             {
                 animState.SetAnimation(0, "runright", true);
+            }
+        }
+
+        public void ChangeRunDirection(KeyboardState keyState)
+        {
+            if (keyState.IsKeyDown(Keys.Left))
+            {
+                animState.SetAnimation(0, "runleft", true);
+            }
+            else if (keyState.IsKeyDown(Keys.Right))
+            {
+                animState.SetAnimation(0, "runright", true);
+            }
+            else if (keyState.IsKeyDown(Keys.Down))
+            {
+                animState.SetAnimation(0, "rundown", true);
+            }
+            else if (keyState.IsKeyDown(Keys.Up))
+            {
+                animState.SetAnimation(0, "runup", true);
             }
         }
 

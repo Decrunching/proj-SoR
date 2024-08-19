@@ -3,7 +3,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
 using Spine;
-using System.Diagnostics;
+using System.Collections.Generic;
+using System.Linq;
 
 
 namespace SoR
@@ -67,34 +68,62 @@ namespace SoR
 
             keyState = Keyboard.GetState();
 
-            if (keyState.IsKeyDown(Keys.Up))
+            Keys[] keysPressed = keyState.GetPressedKeys();
+            Keys[] lastKeysPressed = new Keys[0];
+
+            bool up = true;
+
+            Dictionary<Keys, bool> keyIsUp =
+                new Dictionary<Keys, bool>()
+                {
+                    { Keys.Up, up },
+                    { Keys.Down, up },
+                    { Keys.Left, up },
+                    { Keys.Right, up }
+                };
+            
+            foreach (Keys pressed in keysPressed)
             {
-                //keyPressed = true;
-                position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                player.SetRunAnim(keyState, lastKeyState);
-                //lastKey = "up";
+                foreach (Keys lastPressed in lastKeysPressed)
+                {
+                    if (pressed == lastPressed)
+                    {
+                        up = false;
+                        keyIsUp[pressed] = up;
+                    }
+                }
             }
-            if (keyState.IsKeyDown(Keys.Down))
+
+            foreach (Keys key in keyIsUp.Keys)
             {
-                //keyPressed = true;
-                position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                player.SetRunAnim(keyState, lastKeyState);
-                //lastKey = "down";
+                foreach (Keys pressed in keysPressed)
+                {
+                    player.SetAnimRunning(keyState, lastKeyState);
+
+                    if (key == Keys.Up & key == pressed)
+                    {
+                        position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    if (key == Keys.Down & key == pressed)
+                    {
+                        position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    if (key == Keys.Left & key == pressed)
+                    {
+                        position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+                    if (key == Keys.Right & key == pressed)
+                    {
+                        position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    }
+
+                    if (key != pressed & lastKeyState.IsKeyDown(key))
+                    {
+                        player.ChangeRunDirection(keyState);
+                    }
+                }
             }
-            if (keyState.IsKeyDown(Keys.Left))
-            {
-                //keyPressed = true;
-                position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                player.SetRunAnim(keyState, lastKeyState);
-                //lastKey = "left";
-            }
-            if (keyState.IsKeyDown(Keys.Right))
-            {
-                //keyPressed = true;
-                position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                player.SetRunAnim(keyState, lastKeyState);
-                //lastKey = "right";
-            }
+
             if (!keyState.IsKeyDown(Keys.Up) &&
                 !keyState.IsKeyDown(Keys.Down) &&
                 !keyState.IsKeyDown(Keys.Left) &&
@@ -103,7 +132,7 @@ namespace SoR
                 player.SetIdle();
             }
 
-                if (Joystick.LastConnectedIndex == 0)
+            if (Joystick.LastConnectedIndex == 0)
             {
                 JoystickState jstate = Joystick.GetState(0);
 
@@ -129,6 +158,7 @@ namespace SoR
             }
 
             lastKeyState = keyState;
+            lastKeysPressed = keysPressed;
 
             player.UpdateSkeletalAnimations(gameTime, position);
 
