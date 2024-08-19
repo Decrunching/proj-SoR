@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SoR.Logic.Entities
 {
@@ -13,7 +14,6 @@ namespace SoR.Logic.Entities
         private Skin skin;
         private AnimationState animState;
         private SkeletonRenderer skeletonRenderer;
-        private bool animStateChange;
         private Vector2 position;
         private KeyboardState lastKeyState;
         private float speed;
@@ -59,9 +59,7 @@ namespace SoR.Logic.Entities
 
             // Set the "fidle" animation on track 1 and leave it looping forever
             animState.SetAnimation(0, "idle", true);
-
-            // The animation has not changed state yet
-            animStateChange = false;
+            
         }
 
         /*
@@ -158,7 +156,8 @@ namespace SoR.Logic.Entities
             }
 
             /*
-             * Check each key in the dictionary is not one of the currently pressed keys and 
+             * If a key has just been released, set the running animation back to a direction the character
+             * is currently moving in.
              */
             foreach (Keys key in keyIsUp.Keys)
             {
@@ -184,15 +183,11 @@ namespace SoR.Logic.Entities
                     {
                         animState.SetAnimation(0, "runup", true);
                     }
+                    else if (!keyIsUp.Values.Contains(false))
+                    {
+                        animState.SetAnimation(0, "idle", true);
+                    }
                 }
-            }
-
-            if (!keyState.IsKeyDown(Keys.Up) &&
-                !keyState.IsKeyDown(Keys.Down) &&
-                !keyState.IsKeyDown(Keys.Left) &&
-                !keyState.IsKeyDown(Keys.Right))
-            {
-                SetIdle();
             }
 
             lastKeyState = keyState;
@@ -222,11 +217,6 @@ namespace SoR.Logic.Entities
                     position.X += updatedcharSpeed;
                 }
             }
-        }
-
-        public void SetIdle()
-        {
-            animState.SetAnimation(0, "idle", true);
         }
 
         public void UpdateSkeletalAnimations(GameTime gameTime)
