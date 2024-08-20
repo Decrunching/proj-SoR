@@ -16,6 +16,7 @@ namespace SoR.Logic.Entities
         private Skin skin;
         private AnimationState animState;
         private SkeletonRenderer skeletonRenderer;
+        private TrackEntry trackEntry;
         private Vector2 position;
         private KeyboardState lastKeyState;
         private float speed;
@@ -30,11 +31,8 @@ namespace SoR.Logic.Entities
             position = new Vector2(_graphics.PreferredBackBufferWidth / 2,
                 _graphics.PreferredBackBufferHeight / 2);
 
-            // Set the player's speed
-            speed = 200f;
-
-            // Set the joystick deadzone
-            deadZone = 4096;
+            speed = 200f; // Set the player's speed
+            deadZone = 4096; // Set the joystick deadzone
 
             // Load texture atlas and attachment loader
             //Atlas atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
@@ -60,8 +58,7 @@ namespace SoR.Logic.Entities
             animState.Apply(skeleton);
 
             // Set the "fidle" animation on track 1 and leave it looping forever
-            animState.SetAnimation(0, "idle", true);
-            
+            trackEntry = animState.SetAnimation(0, "idle", true);
         }
 
         /*
@@ -125,6 +122,9 @@ namespace SoR.Logic.Entities
                     { Keys.Right, keyState.IsKeyUp(Keys.Right) }
                 };
 
+            // Get the amount of time the current animation has been playing
+            float animTime = trackEntry.AnimationTime;
+
             /* Set player animation and position according to keyboard input.
              * 
              * TO DO:
@@ -135,7 +135,7 @@ namespace SoR.Logic.Entities
                 position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (!lastKeyState.IsKeyDown(Keys.Up))
                 {
-                    animState.SetAnimation(0, "runup", true);
+                    trackEntry = animState.SetAnimation(0, "runup", true);
                 }
             }
             if (keyState.IsKeyDown(Keys.Down))
@@ -143,7 +143,7 @@ namespace SoR.Logic.Entities
                 position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (!lastKeyState.IsKeyDown(Keys.Down))
                 {
-                    animState.SetAnimation(0, "rundown", true);
+                    trackEntry = animState.SetAnimation(0, "rundown", true);
                 }
             }
             if (keyState.IsKeyDown(Keys.Left))
@@ -151,7 +151,7 @@ namespace SoR.Logic.Entities
                 position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (!lastKeyState.IsKeyDown(Keys.Left))
                 {
-                    animState.SetAnimation(0, "runleft", true);
+                    trackEntry = animState.SetAnimation(0, "runleft", true);
                 }
             }
             if (keyState.IsKeyDown(Keys.Right))
@@ -159,7 +159,7 @@ namespace SoR.Logic.Entities
                 position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (!lastKeyState.IsKeyDown(Keys.Right))
                 {
-                    animState.SetAnimation(0, "runright", true);
+                    trackEntry = animState.SetAnimation(0, "runright", true);
                 }
             }
 
@@ -175,26 +175,26 @@ namespace SoR.Logic.Entities
                     if (keyState.IsKeyDown(Keys.Right) &
                         !keyState.IsKeyDown(Keys.Left))
                     {
-                        animState.SetAnimation(0, "runright", true);
+                        trackEntry = animState.SetAnimation(0, "runright", true);
                     }
                     if (keyState.IsKeyDown(Keys.Left) &
                         !keyState.IsKeyDown(Keys.Right))
                     {
-                        animState.SetAnimation(0, "runleft", true);
+                        trackEntry = animState.SetAnimation(0, "runleft", true);
                     }
                     if (keyState.IsKeyDown(Keys.Down) &
                         !keyState.IsKeyDown(Keys.Up))
                     {
-                        animState.SetAnimation(0, "rundown", true);
+                        trackEntry = animState.SetAnimation(0, "rundown", true);
                     }
                     if (keyState.IsKeyDown(Keys.Up) &
                         !keyState.IsKeyDown(Keys.Down))
                     {
-                        animState.SetAnimation(0, "runup", true);
+                        trackEntry = animState.SetAnimation(0, "runup", true);
                     }
                     else if (!keyIsUp.ContainsValue(false))
                     {
-                        animState.SetAnimation(0, "idle", true);
+                        trackEntry = animState.SetAnimation(0, "idle", true);
                     }
                 }
             }
@@ -226,7 +226,18 @@ namespace SoR.Logic.Entities
                 {
                     position.X += updatedcharSpeed;
                 }
+
+                // Set the animation start time to the time the previous animation has been playing for
+                trackEntry.TrackTime = animTime;
             }
+        }
+
+        /*
+         * Get the time the current animation has been playing in seconds.
+         */
+        public int GetAnimTime()
+        {
+            return (int)animState.GetCurrent(0).AnimationTime;
         }
 
         /*

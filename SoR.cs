@@ -28,6 +28,9 @@ namespace SoR
             _graphics.PreferredBackBufferHeight = 900;
         }
 
+        /*
+         * Initialise the game.
+         */
         protected override void Initialize()
         {
             // TODO: Add your initialization logic here
@@ -35,33 +38,43 @@ namespace SoR
             base.Initialize();
         }
 
+        /*
+         * Load game content.
+         */
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
-            player = new Player(_graphics, GraphicsDevice);
-            player.CreateSkeletonRenderer(GraphicsDevice);
+            player = new Player(_graphics, GraphicsDevice); // Create the player object
+            player.CreateSkeletonRenderer(GraphicsDevice); // Create the skeleton renderer
         }
 
+        /*
+         * Update game components.
+         */
         protected override void Update(GameTime gameTime)
         {
+            // If the back button on the game pad or the escape key on the keyboard are pressed, exit the game
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
             // TODO: Add your update logic here
-            keyState = Keyboard.GetState();
+            keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            player.SetAnimRunning(gameTime, keyState);
-            player.UpdateSkeletalAnimations(gameTime);
+            player.SetAnimRunning(gameTime, keyState); // Set the running animation according to current keyboard input
+            player.UpdateSkeletalAnimations(gameTime); // Update the player skeleton to apply animations and movement
 
             base.Update(gameTime);
         }
 
+        /*
+         * Draw game components to the screen.
+         */
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkSeaGreen);
+            GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
 
             // TODO: Add your drawing code here
-            player.RenderSkeleton(GraphicsDevice);
+            player.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
 
             base.Draw(gameTime);
         }
