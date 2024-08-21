@@ -29,14 +29,14 @@ namespace SoR.Logic.Entities
             keyboardInput = new PlayerInput(_graphics);
 
             // Load texture atlas and attachment loader
-            //Atlas atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
-            Atlas atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
+            Atlas atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
+            //Atlas atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\haltija.atlas", new XnaTextureLoader(GraphicsDevice));
             AtlasAttachmentLoader atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             SkeletonJson json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin (can be moved to a dependent class later)
@@ -53,6 +53,13 @@ namespace SoR.Logic.Entities
 
             // Set the "fidle" animation on track 1 and leave it looping forever
             animState.SetAnimation(0, "idle", true);
+        }
+
+        /*
+         * Prevent the player from leaving the visible screen area.
+         */
+        public void CheckScreenEdges(GraphicsDeviceManager _graphics, GraphicsDevice GraphicsDevice)
+        {
         }
 
         /*
@@ -97,10 +104,11 @@ namespace SoR.Logic.Entities
         /*
          * Update the player position, animation state and skeleton.
          */
-        public void UpdatePlayerAnimations(GameTime gameTime, KeyboardState keyState)
+        public void UpdatePlayerAnimations(GameTime gameTime, KeyboardState keyState, GraphicsDeviceManager _graphics, GraphicsDevice GraphicsDevice)
         {
             keyboardInput.ProcessKeyboardInputs(gameTime, keyState, animState);
             keyboardInput.ProcessJoypadInputs(gameTime);
+            keyboardInput.CheckScreenEdges(_graphics, GraphicsDevice, skeleton);
 
             // Update the animation state and apply animations to skeletons
             skeleton.X = keyboardInput.GetPositionX();

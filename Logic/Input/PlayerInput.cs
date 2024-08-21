@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace SoR.Logic.Input
 {
@@ -21,8 +22,8 @@ namespace SoR.Logic.Input
             position = new Vector2(_graphics.PreferredBackBufferWidth / 2,
                 _graphics.PreferredBackBufferHeight / 2);
 
-            speed = 200f;    // Set the player's speed
-            deadZone = 4096; // Set the joystick deadzone}
+            speed = 200f;            // Set the player's speed
+            deadZone = 4096;         // Set the joystick deadzone
         }
 
         /*
@@ -47,6 +48,8 @@ namespace SoR.Logic.Input
                     { Keys.Right, keyState.IsKeyUp(Keys.Right) }
                 };
 
+            float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             /* Set player animation and position according to keyboard input.
              * 
              * TO DO?:
@@ -54,7 +57,7 @@ namespace SoR.Logic.Input
              */
             if (keyState.IsKeyDown(Keys.Up))
             {
-                position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.Y -= newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Up))
                 {
                     animState.SetAnimation(0, "runup", true);
@@ -62,7 +65,7 @@ namespace SoR.Logic.Input
             }
             if (keyState.IsKeyDown(Keys.Down))
             {
-                position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.Y += newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Down))
                 {
                     animState.SetAnimation(0, "rundown", true);
@@ -70,7 +73,7 @@ namespace SoR.Logic.Input
             }
             if (keyState.IsKeyDown(Keys.Left))
             {
-                position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.X -= newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Left))
                 {
                     animState.SetAnimation(0, "runleft", true);
@@ -78,7 +81,7 @@ namespace SoR.Logic.Input
             }
             if (keyState.IsKeyDown(Keys.Right))
             {
-                position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position.X += newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Right))
                 {
                     animState.SetAnimation(0, "runright", true);
@@ -123,6 +126,30 @@ namespace SoR.Logic.Input
 
             lastKeyState = keyState; // The previous keyboard state
             lastKeysPressed = keysPressed; // An array of keys that were previously being pressed
+        }
+
+        /*
+         * Prevent the player from leaving the visible screen area.
+         */
+        public void CheckScreenEdges(GraphicsDeviceManager _graphics, GraphicsDevice GraphicsDevice, Skeleton skeleton)
+        {
+            if (position.X > _graphics.PreferredBackBufferWidth - 5)
+            {
+                position.X = _graphics.PreferredBackBufferWidth - 5;
+            }
+            else if (position.X < 5)
+            {
+                position.X = 5;
+            }
+
+            if (position.Y > _graphics.PreferredBackBufferHeight - 8)
+            {
+                position.Y = _graphics.PreferredBackBufferHeight - 8;
+            }
+            else if (position.Y < 8)
+            {
+                position.Y = 8;
+            }
         }
 
         /*

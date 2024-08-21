@@ -61,7 +61,7 @@ namespace SoR
             // TODO: Add your update logic here
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            player.UpdatePlayerAnimations(gameTime, keyState);
+            player.UpdatePlayerAnimations(gameTime, keyState, _graphics, GraphicsDevice);
 
             base.Update(gameTime);
         }
