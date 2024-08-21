@@ -108,7 +108,7 @@ namespace SoR.Logic.Entities
         {
             keyboardInput.ProcessKeyboardInputs(gameTime, keyState, animState);
             keyboardInput.ProcessJoypadInputs(gameTime);
-            keyboardInput.CheckScreenEdges(_graphics, GraphicsDevice, skeleton);
+            keyboardInput.CheckScreenEdges(_graphics, GraphicsDevice);
 
             // Update the animation state and apply animations to skeletons
             skeleton.X = keyboardInput.GetPositionX();

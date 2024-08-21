@@ -131,7 +131,7 @@ namespace SoR.Logic.Input
         /*
          * Prevent the player from leaving the visible screen area.
          */
-        public void CheckScreenEdges(GraphicsDeviceManager _graphics, GraphicsDevice GraphicsDevice, Skeleton skeleton)
+        public void CheckScreenEdges(GraphicsDeviceManager _graphics, GraphicsDevice GraphicsDevice)
         {
             if (position.X > _graphics.PreferredBackBufferWidth - 5)
             {
