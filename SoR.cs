@@ -45,7 +45,7 @@ namespace SoR
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
-            player = new Player(_graphics, GraphicsDevice); // Create the player object
+            player = new Player(_graphics, GraphicsDevice); // Instantiate the player
             player.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer
         }
 
@@ -61,9 +61,7 @@ namespace SoR
             // TODO: Add your update logic here
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            player.ProcessKeyboardInputs(gameTime, keyState);
-            player.ProcessJoypadInputs(gameTime);
-            player.UpdateSkeletalAnimations(gameTime);
+            player.UpdatePlayerAnimations(gameTime, keyState);
 
             base.Update(gameTime);
         }
