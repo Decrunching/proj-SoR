@@ -5,10 +5,11 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 
 namespace SoR.Logic.Entities
-{/*
- * The Player object class. Used to create and update the Player object. Currently includes
- * initialisation, position/movement and animation.
- */
+{
+    /*
+     * The Player object class. Used to create and update the Player object. Currently includes
+     * initialisation, position/movement and animation.
+     */
     internal class Player
     {
         private SkeletonData skeletonData;
@@ -16,7 +17,6 @@ namespace SoR.Logic.Entities
         private Skin skin;
         private AnimationState animState;
         private SkeletonRenderer skeletonRenderer;
-        private TrackEntry trackEntry;
         private Vector2 position;
         private KeyboardState lastKeyState;
         private float speed;
@@ -58,7 +58,7 @@ namespace SoR.Logic.Entities
             animState.Apply(skeleton);
 
             // Set the "fidle" animation on track 1 and leave it looping forever
-            trackEntry = animState.SetAnimation(0, "idle", true);
+            animState.SetAnimation(0, "idle", true);
         }
 
         /*
@@ -105,7 +105,7 @@ namespace SoR.Logic.Entities
          * to keyboard inputs. Set back to the idle animation if there are no current valid movement
          * inputs.
          */
-        public void SetAnimRunning(GameTime gameTime, KeyboardState keyState)
+        public void ProcessKeyboardInputs(GameTime gameTime, KeyboardState keyState)
         {
             //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
 
@@ -122,12 +122,9 @@ namespace SoR.Logic.Entities
                     { Keys.Right, keyState.IsKeyUp(Keys.Right) }
                 };
 
-            // Get the amount of time the current animation has been playing
-            float animTime = trackEntry.AnimationTime;
-
             /* Set player animation and position according to keyboard input.
              * 
-             * TO DO:
+             * TO DO?:
              * Adjust to retain current track number for incoming animations.
              */
             if (keyState.IsKeyDown(Keys.Up))
@@ -135,7 +132,7 @@ namespace SoR.Logic.Entities
                 position.Y -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (!lastKeyState.IsKeyDown(Keys.Up))
                 {
-                    trackEntry = animState.SetAnimation(0, "runup", true);
+                    animState.SetAnimation(0, "runup", true);
                 }
             }
             if (keyState.IsKeyDown(Keys.Down))
@@ -143,7 +140,7 @@ namespace SoR.Logic.Entities
                 position.Y += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (!lastKeyState.IsKeyDown(Keys.Down))
                 {
-                    trackEntry = animState.SetAnimation(0, "rundown", true);
+                    animState.SetAnimation(0, "rundown", true);
                 }
             }
             if (keyState.IsKeyDown(Keys.Left))
@@ -151,7 +148,7 @@ namespace SoR.Logic.Entities
                 position.X -= speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (!lastKeyState.IsKeyDown(Keys.Left))
                 {
-                    trackEntry = animState.SetAnimation(0, "runleft", true);
+                    animState.SetAnimation(0, "runleft", true);
                 }
             }
             if (keyState.IsKeyDown(Keys.Right))
@@ -159,7 +156,7 @@ namespace SoR.Logic.Entities
                 position.X += speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 if (!lastKeyState.IsKeyDown(Keys.Right))
                 {
-                    trackEntry = animState.SetAnimation(0, "runright", true);
+                    animState.SetAnimation(0, "runright", true);
                 }
             }
 
@@ -175,34 +172,39 @@ namespace SoR.Logic.Entities
                     if (keyState.IsKeyDown(Keys.Right) &
                         !keyState.IsKeyDown(Keys.Left))
                     {
-                        trackEntry = animState.SetAnimation(0, "runright", true);
+                        animState.SetAnimation(0, "runright", true);
                     }
                     if (keyState.IsKeyDown(Keys.Left) &
                         !keyState.IsKeyDown(Keys.Right))
                     {
-                        trackEntry = animState.SetAnimation(0, "runleft", true);
+                        animState.SetAnimation(0, "runleft", true);
                     }
                     if (keyState.IsKeyDown(Keys.Down) &
                         !keyState.IsKeyDown(Keys.Up))
                     {
-                        trackEntry = animState.SetAnimation(0, "rundown", true);
+                        animState.SetAnimation(0, "rundown", true);
                     }
                     if (keyState.IsKeyDown(Keys.Up) &
                         !keyState.IsKeyDown(Keys.Down))
                     {
-                        trackEntry = animState.SetAnimation(0, "runup", true);
+                        animState.SetAnimation(0, "runup", true);
                     }
                     else if (!keyIsUp.ContainsValue(false))
                     {
-                        trackEntry = animState.SetAnimation(0, "idle", true);
+                        animState.SetAnimation(0, "idle", true);
                     }
                 }
             }
 
             lastKeyState = keyState; // The previous keyboard state
             lastKeysPressed = keysPressed; // An array of keys that were previously being pressed
+        }
 
-            // Change the player's position on the screen according to joypad inputs
+        /*
+         * Change the player's position on the screen according to joypad inputs
+         */
+        public void ProcessJoypadInputs(GameTime gameTime)
+        {
             if (Joystick.LastConnectedIndex == 0)
             {
                 JoystickState jstate = Joystick.GetState(0);
@@ -226,18 +228,7 @@ namespace SoR.Logic.Entities
                 {
                     position.X += updatedcharSpeed;
                 }
-
-                // Set the animation start time to the time the previous animation has been playing for
-                trackEntry.TrackTime = animTime;
             }
-        }
-
-        /*
-         * Get the time the current animation has been playing in seconds.
-         */
-        public int GetAnimTime()
-        {
-            return (int)animState.GetCurrent(0).AnimationTime;
         }
 
         /*

@@ -4,16 +4,17 @@ using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
 
 namespace SoR
-{/*
- * The main game class, through which all other code runs. Graphics are currently handled here,
- * but everything else is called from and handled by other classes.
- */
+{
+    /*
+     * The main game class, through which all other code runs. Graphics are currently handled here,
+     * but everything else is called from and handled by other classes.
+     */
     public class SoR : Game
     {
         private GraphicsDeviceManager _graphics;
-        private KeyboardState keyState; // Gets the current keyboard state
+        private KeyboardState keyState;
 
-        private Player player; // Creates a player instance
+        private Player player;
 
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
@@ -45,7 +46,7 @@ namespace SoR
         {
             // TODO: use this.Content to load your game content here
             player = new Player(_graphics, GraphicsDevice); // Create the player object
-            player.CreateSkeletonRenderer(GraphicsDevice); // Create the skeleton renderer
+            player.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer
         }
 
         /*
@@ -60,8 +61,9 @@ namespace SoR
             // TODO: Add your update logic here
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            player.SetAnimRunning(gameTime, keyState); // Set the running animation according to current keyboard input
-            player.UpdateSkeletalAnimations(gameTime); // Update the player skeleton to apply animations and movement
+            player.ProcessKeyboardInputs(gameTime, keyState);
+            player.ProcessJoypadInputs(gameTime);
+            player.UpdateSkeletalAnimations(gameTime);
 
             base.Update(gameTime);
         }
