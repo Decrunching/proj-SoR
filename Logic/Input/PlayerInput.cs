@@ -11,19 +11,16 @@ namespace SoR.Logic.Input
      */
     internal class PlayerInput
     {
-        private Vector2 position;
         private KeyboardState lastKeyState;
-        private float speed;
         private int deadZone;
+        private float speed;
+        private float newPositionX;
+        private float newPositionY;
 
-        public PlayerInput(GraphicsDeviceManager _graphics)
+        public PlayerInput()
         {
-            // Set the player's current position on the screen
-            position = new Vector2(_graphics.PreferredBackBufferWidth / 2,
-                _graphics.PreferredBackBufferHeight / 2);
-
-            speed = 200f;            // Set the player's speed
-            deadZone = 4096;         // Set the joystick deadzone
+            // Set the joystick deadzone
+            deadZone = 4096;
         }
 
         /*
@@ -31,7 +28,13 @@ namespace SoR.Logic.Input
          * to keyboard inputs. Set back to the idle animation if there are no current valid movement
          * inputs.
          */
-        public void ProcessKeyboardInputs(GameTime gameTime, KeyboardState keyState, AnimationState animState)
+        public void ProcessKeyboardInputs(
+            GameTime gameTime,
+            KeyboardState keyState,
+            AnimationState animState,
+            float speed,
+            float positionX,
+            float positionY)
         {
             //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
 
@@ -50,6 +53,10 @@ namespace SoR.Logic.Input
 
             float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
+            this.speed = speed;
+            newPositionX = positionX;
+            newPositionY = positionY;
+
             /* Set player animation and position according to keyboard input.
              * 
              * TO DO?:
@@ -57,7 +64,7 @@ namespace SoR.Logic.Input
              */
             if (keyState.IsKeyDown(Keys.Up))
             {
-                position.Y -= newPlayerSpeed;
+                newPositionY -= newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Up))
                 {
                     animState.SetAnimation(0, "runup", true);
@@ -65,7 +72,7 @@ namespace SoR.Logic.Input
             }
             if (keyState.IsKeyDown(Keys.Down))
             {
-                position.Y += newPlayerSpeed;
+                newPositionY += newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Down))
                 {
                     animState.SetAnimation(0, "rundown", true);
@@ -73,7 +80,7 @@ namespace SoR.Logic.Input
             }
             if (keyState.IsKeyDown(Keys.Left))
             {
-                position.X -= newPlayerSpeed;
+                newPositionX -= newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Left))
                 {
                     animState.SetAnimation(0, "runleft", true);
@@ -81,7 +88,7 @@ namespace SoR.Logic.Input
             }
             if (keyState.IsKeyDown(Keys.Right))
             {
-                position.X += newPlayerSpeed;
+                newPositionX += newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Right))
                 {
                     animState.SetAnimation(0, "runright", true);
@@ -131,32 +138,40 @@ namespace SoR.Logic.Input
         /*
          * Prevent the player from leaving the visible screen area.
          */
-        public void CheckScreenEdges(GraphicsDeviceManager _graphics, GraphicsDevice GraphicsDevice)
+        public void CheckScreenEdges(GraphicsDeviceManager _graphics,
+            GraphicsDevice GraphicsDevice,
+            float positionX,
+            float positionY)
         {
-            if (position.X > _graphics.PreferredBackBufferWidth - 5)
+            newPositionX = positionX;
+            newPositionY = positionY;
+
+            if (newPositionX > _graphics.PreferredBackBufferWidth - 5)
             {
-                position.X = _graphics.PreferredBackBufferWidth - 5;
+                newPositionX = _graphics.PreferredBackBufferWidth - 5;
             }
-            else if (position.X < 5)
+            else if (newPositionX < 5)
             {
-                position.X = 5;
+                newPositionX = 5;
             }
 
-            if (position.Y > _graphics.PreferredBackBufferHeight - 8)
+            if (newPositionY > _graphics.PreferredBackBufferHeight - 8)
             {
-                position.Y = _graphics.PreferredBackBufferHeight - 8;
+                newPositionY = _graphics.PreferredBackBufferHeight - 8;
             }
-            else if (position.Y < 8)
+            else if (newPositionY < 8)
             {
-                position.Y = 8;
+                newPositionY = 8;
             }
         }
 
         /*
          * Change the player's position on the screen according to joypad inputs
          */
-        public void ProcessJoypadInputs(GameTime gameTime)
+        public void ProcessJoypadInputs(GameTime gameTime, float speed)
         {
+            this.speed = speed;
+
             if (Joystick.LastConnectedIndex == 0)
             {
                 JoystickState jstate = Joystick.GetState(0);
@@ -165,38 +180,38 @@ namespace SoR.Logic.Input
 
                 if (jstate.Axes[1] < -deadZone)
                 {
-                    position.Y -= updatedcharSpeed;
+                    newPositionY -= updatedcharSpeed;
                 }
                 else if (jstate.Axes[1] > deadZone)
                 {
-                    position.Y += updatedcharSpeed;
+                    newPositionY += updatedcharSpeed;
                 }
 
                 if (jstate.Axes[0] < -deadZone)
                 {
-                    position.X -= updatedcharSpeed;
+                    newPositionX -= updatedcharSpeed;
                 }
                 else if (jstate.Axes[0] > deadZone)
                 {
-                    position.X += updatedcharSpeed;
+                    newPositionX += updatedcharSpeed;
                 }
             }
         }
 
         /*
-         * Get the current X position.
+         * Get the new x-axis position.
          */
-        public float GetPositionX()
+        public float UpdatePositionX()
         {
-            return position.X;
+            return newPositionX;
         }
 
         /*
-         * Get the current Y position.
+         * Get the new y-axis position.
          */
-        public float GetPositionY()
+        public float UpdatePositionY()
         {
-            return position.Y;
+            return newPositionY;
         }
     }
 }
