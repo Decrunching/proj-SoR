@@ -4,26 +4,22 @@ namespace SoR.Logic.Entities
 {
     internal class Chara : Entity
     {
-        private Vector2 position;
-        private float positionX;
-        private float positionY;
-        private float speed;
-
         public Chara(GraphicsDeviceManager _graphics)
         {
             // Set the current position on the screen
-            position = new Vector2(_graphics.PreferredBackBufferWidth / 2,
+            Position = new Vector2(_graphics.PreferredBackBufferWidth / 2,
                 _graphics.PreferredBackBufferHeight / 2);
 
-            positionX = position.X; // Set the x-axis position
-            positionY = position.Y; // Set the y-axis position
+            PositionX = Position.X; // Set the x-axis position
+            PositionY = Position.Y; // Set the y-axis position
 
-            speed = 200f; // Set the entity's travel speed
+            Speed = 200f; // Set the entity's travel speed
         }
+
         /*
          * Get the Atlas path.
          */
-        public string GetAtlas()
+        public override string GetAtlas()
         {
             return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Chara\\savedit.atlas";
         }
@@ -31,7 +27,7 @@ namespace SoR.Logic.Entities
         /*
          * Get the json path.
          */
-        public string GetJson()
+        public override string GetJson()
         {
             return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Chara\\skeleton.json";
         }
@@ -39,7 +35,7 @@ namespace SoR.Logic.Entities
         /*
          * Get the starting skin.
          */
-        public string GetSkin()
+        public override string GetSkin()
         {
             return "default";
         }
@@ -47,52 +43,9 @@ namespace SoR.Logic.Entities
         /*
          * Get the starting animation.
          */
-        public string GetStartingAnim()
+        public override string GetStartingAnim()
         {
             return "idle";
-        }
-
-        /*
-         * Get the current travel speed.
-         */
-        public float GetSpeed()
-        {
-            return speed;
-        }
-
-        /*
-         * Get the current x-axis position.
-         */
-        public float GetPositionX()
-        {
-
-            return positionX;
-        }
-
-        /*
-         * Get the current y-axis position.
-         */
-        public float GetPositionY()
-        {
-            return positionY;
-        }
-
-        /*
-         * Set the current x-axis position.
-         */
-        public void SetPositionX(float newPositionX)
-        {
-            positionX = newPositionX;
-            position.X = positionX;
-        }
-
-        /*
-         * Set the current y-axis position.
-         */
-        public void SetPositionY(float newPositionY)
-        {
-            positionY = newPositionY;
-            position.Y = positionY;
         }
     }
 }

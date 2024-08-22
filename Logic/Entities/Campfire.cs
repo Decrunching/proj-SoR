@@ -2,9 +2,9 @@
 
 namespace SoR.Logic.Entities
 {
-    internal class Slime : Entity
+    internal class Campfire : Entity
     {
-        public Slime(GraphicsDeviceManager _graphics)
+        public Campfire(GraphicsDeviceManager _graphics)
         {
             // Set the current position on the screen
             Position = new Vector2(_graphics.PreferredBackBufferWidth / 2,
@@ -21,7 +21,8 @@ namespace SoR.Logic.Entities
          */
         public override string GetAtlas()
         {
-            return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas";
+            //return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas";
+            return "D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Campfire\\templecampfire.atlas";
         }
 
         /*
@@ -29,7 +30,8 @@ namespace SoR.Logic.Entities
          */
         public override string GetJson()
         {
-            return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json";
+            //return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json";
+            return "D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Campfire\\skeleton.json";
         }
 
         /*

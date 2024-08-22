@@ -12,6 +12,7 @@ namespace SoR.Logic
         private Entity pheasant;
         private Entity chara;
         private Entity slime;
+        private Entity campfire;
         private Entity entity;
         
         /*
@@ -50,7 +51,14 @@ namespace SoR.Logic
             return slime;
         }
 
-
+        /*
+         * Create campfire.
+         */
+        public Entity CreateCampfire(GraphicsDeviceManager _graphics)
+        {
+            campfire = new Campfire(_graphics);
+            return campfire;
+        }
 
         /*
          * Get the entity to be created.

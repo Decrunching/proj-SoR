@@ -2,51 +2,72 @@
 
 namespace SoR.Logic.Entities
 {
-    internal interface Entity
+    internal abstract class Entity
     {
+        public Vector2 Position {  get; set; }
+        public float PositionX { get; set; }
+        public float PositionY { get; set; }
+        public float Speed { get; set; }
+
         /*
          * Get the Atlas path.
          */
-        string GetAtlas();
+        public abstract string GetAtlas();
 
         /*
          * Get the json path.
          */
-        string GetJson();
+        public abstract string GetJson();
 
         /*
          * Get the starting skin.
          */
-        string GetSkin();
+        public abstract string GetSkin();
 
         /*
          * Get the starting animation.
          */
-        string GetStartingAnim();
+        public abstract string GetStartingAnim();
 
         /*
          * Get the current travel speed.
          */
-        float GetSpeed();
+        public float GetSpeed()
+        {
+            return Speed;
+        }
 
         /*
          * Get the current x-axis position.
          */
-        float GetPositionX();
+        public float GetPositionX()
+        {
+
+            return PositionX;
+        }
 
         /*
          * Get the current y-axis position.
          */
-        float GetPositionY();
+        public float GetPositionY()
+        {
+            return PositionY;
+        }
 
         /*
          * Set the current x-axis position.
          */
-        void SetPositionX(float positionX);
+        public void SetPositionX(float newPositionX)
+        {
+            PositionX = newPositionX;
+        }
 
         /*
          * Set the current y-axis position.
          */
-        void SetPositionY(float positionY);
+        public void SetPositionY(float newPositionY)
+        {
+            PositionY = newPositionY;
+        }
     }
 }

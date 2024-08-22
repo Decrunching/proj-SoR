@@ -24,7 +24,7 @@ namespace SoR.Logic
         private Entity entity;
 
         /*
-         * Constructor for creating the player object.
+         * Constructor for creating entities.
          */
         public SpineSetUp(GraphicsDeviceManager _graphics, GraphicsDevice GraphicsDevice)
         {
@@ -62,9 +62,9 @@ namespace SoR.Logic
         }
 
         /*
-         * Update the player position, animation state and skeleton.
+         * Update entity position according to player input.
          */
-        public void UpdatePlayerAnimations(
+        public void UpdateInputPosition(
             GameTime gameTime,
             KeyboardState keyState,
             GraphicsDeviceManager _graphics,
@@ -93,6 +93,13 @@ namespace SoR.Logic
             // Update the animation state and apply animations to skeletons
             skeleton.X = entity.GetPositionX();
             skeleton.Y = entity.GetPositionY();
+        }
+
+        /*
+         * Update the entity position, animation state and skeleton.
+         */
+        public void UpdateEntityAnimations(GameTime gameTime)
+        {
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             animState.Apply(skeleton);

@@ -11,8 +11,11 @@ namespace SoR
      */
     public class SoR : Game
     {
-        private GraphicsDeviceManager _graphics;
-        private KeyboardState keyState;
+        private GraphicsDeviceManager graphics
+        { get; }
+
+        private KeyboardState keyState
+        { get; set; }
 
         private SpineSetUp spineSetUp;
 
@@ -21,12 +24,12 @@ namespace SoR
          */
         public SoR()
         {
-            _graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
-            _graphics.IsFullScreen = false;
-            _graphics.PreferredBackBufferWidth = 1400;
-            _graphics.PreferredBackBufferHeight = 900;
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferWidth = 1400;
+            graphics.PreferredBackBufferHeight = 900;
         }
 
         /*
@@ -45,7 +48,7 @@ namespace SoR
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
-            spineSetUp = new SpineSetUp(_graphics, GraphicsDevice); // Instantiate the player
+            spineSetUp = new SpineSetUp(graphics, GraphicsDevice); // Instantiate Spine entities
             spineSetUp.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer
         }
 
@@ -61,7 +64,8 @@ namespace SoR
             // TODO: Add your update logic here
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            spineSetUp.UpdatePlayerAnimations(gameTime, keyState, _graphics, GraphicsDevice);
+            spineSetUp.UpdateInputPosition(gameTime, keyState, graphics, GraphicsDevice);
+            spineSetUp.UpdateEntityAnimations(gameTime);
 
             base.Update(gameTime);
         }
