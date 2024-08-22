@@ -1,13 +1,13 @@
 ﻿namespace SoR.Logic.Entities
 {
-    internal class Player : Entity
+    internal class Slime
     {
         /*
          * Get the entity Atlas path.
          */
         public string GetAtlas()
         {
-            return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas";
+            return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas";
         }
 
         /*
@@ -15,7 +15,7 @@
          */
         public string GetJson()
         {
-            return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json";
+            return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json";
         }
 
         /*
@@ -23,7 +23,7 @@
          */
         public string GetSkin()
         {
-            return "solarknight-0";
+            return "default";
         }
 
         /*
@@ -31,7 +31,7 @@
          */
         public string GetStartingAnim()
         {
-            return "idlebattle";
+            return "idle";
         }
     }
 }

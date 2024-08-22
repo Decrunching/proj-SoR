@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SoR.Logic.Entities;
+using SoR.Logic;
 
 namespace SoR
 {
@@ -14,7 +14,7 @@ namespace SoR
         private GraphicsDeviceManager _graphics;
         private KeyboardState keyState;
 
-        private Player player;
+        private SpineSetUp spineSetUp;
 
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
@@ -45,8 +45,8 @@ namespace SoR
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
-            player = new Player(_graphics, GraphicsDevice); // Instantiate the player
-            player.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer
+            spineSetUp = new SpineSetUp(_graphics, GraphicsDevice); // Instantiate the player
+            spineSetUp.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer
         }
 
         /*
@@ -61,7 +61,7 @@ namespace SoR
             // TODO: Add your update logic here
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            player.UpdatePlayerAnimations(gameTime, keyState, _graphics, GraphicsDevice);
+            spineSetUp.UpdatePlayerAnimations(gameTime, keyState, _graphics, GraphicsDevice);
 
             base.Update(gameTime);
         }
@@ -74,7 +74,7 @@ namespace SoR
             GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
 
             // TODO: Add your drawing code here
-            player.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
+            spineSetUp.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
 
             base.Draw(gameTime);
         }

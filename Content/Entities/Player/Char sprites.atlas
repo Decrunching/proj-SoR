@@ -1,0 +1,319 @@
+Char sprites.png
+size:1856,362
+filter:MipMap,MipMap
+pma:true
+scale:4.0
+empty/01
+bounds:550,81,1,1
+flags/red/01
+bounds:506,2,76,76
+offsets:40,28,128,128
+flags/red/02
+bounds:96,2,80,76
+offsets:40,28,128,128
+flags/red/03
+bounds:1778,206,76,72
+offsets:40,28,128,128
+flags/red/04
+bounds:1778,132,76,72
+offsets:40,28,128,128
+flags/red/05
+bounds:1778,50,80,72
+offsets:40,28,128,128
+rotate:90
+player/boy/idle/01
+bounds:584,2,80,84
+offsets:16,20,128,128
+rotate:90
+player/boy/idle/02
+bounds:1670,194,80,80
+offsets:16,20,128,128
+player/boy/idle/03
+bounds:1682,280,80,80
+offsets:16,20,128,128
+player/boy/idle/04
+bounds:178,2,80,76
+offsets:16,20,128,128
+player/boy/idle/05
+bounds:260,2,80,76
+offsets:16,20,128,128
+player/boy/run down/01
+bounds:1382,186,72,84
+offsets:24,20,128,128
+player/boy/run down/02
+bounds:550,84,72,88
+offsets:24,20,128,128
+player/boy/run down/03
+bounds:2,268,76,92
+offsets:20,20,128,128
+player/boy/run down/04
+bounds:492,272,72,88
+offsets:24,20,128,128
+player/boy/run down/05
+bounds:772,92,68,88
+offsets:28,20,128,128
+player/boy/run down/06
+bounds:158,174,64,92
+offsets:32,20,128,128
+player/boy/run down/07
+bounds:776,182,68,88
+offsets:28,20,128,128
+player/boy/run left/01
+bounds:1498,18,64,84
+offsets:32,20,128,128
+player/boy/run left/02
+bounds:982,92,64,88
+offsets:32,20,128,128
+player/boy/run left/03
+bounds:220,80,64,92
+offsets:32,20,128,128
+player/boy/run left/04
+bounds:986,182,64,88
+offsets:32,20,128,128
+player/boy/run left/05
+bounds:998,272,64,88
+offsets:32,20,128,128
+player/boy/run left/06
+bounds:224,174,64,92
+offsets:32,20,128,128
+player/boy/run left/07
+bounds:1028,2,64,88
+offsets:32,20,128,128
+player/boy/run right/01
+bounds:1534,104,64,84
+offsets:32,20,128,128
+player/boy/run right/02
+bounds:1048,92,64,88
+offsets:32,20,128,128
+player/boy/run right/03
+bounds:80,80,68,92
+offsets:28,20,128,128
+player/boy/run right/04
+bounds:1052,182,64,88
+offsets:32,20,128,128
+player/boy/run right/05
+bounds:1064,272,64,88
+offsets:32,20,128,128
+player/boy/run right/06
+bounds:228,268,64,92
+offsets:32,20,128,128
+player/boy/run right/07
+bounds:1094,2,64,88
+offsets:32,20,128,128
+player/boy/run up/01
+bounds:1394,276,72,84
+offsets:24,20,128,128
+player/boy/run up/02
+bounds:554,182,72,88
+offsets:24,20,128,128
+player/boy/run up/03
+bounds:2,174,76,92
+offsets:20,20,128,128
+player/boy/run up/04
+bounds:566,272,72,88
+offsets:24,20,128,128
+player/boy/run up/05
+bounds:788,272,68,88
+offsets:28,20,128,128
+player/boy/run up/06
+bounds:286,80,64,92
+offsets:32,20,128,128
+player/boy/run up/07
+bounds:818,2,68,88
+offsets:28,20,128,128
+player/girl/idle/01
+bounds:1378,96,80,84
+offsets:16,20,128,128
+player/girl/idle/02
+bounds:1764,280,80,80
+offsets:16,20,128,128
+player/girl/idle/03
+bounds:1696,22,80,80
+offsets:16,20,128,128
+player/girl/idle/04
+bounds:342,2,80,76
+offsets:16,20,128,128
+player/girl/idle/05
+bounds:424,2,80,76
+offsets:16,20,128,128
+player/girl/run down/01
+bounds:1456,190,72,84
+offsets:24,20,128,128
+player/girl/run down/02
+bounds:624,92,72,88
+offsets:24,20,128,128
+player/girl/run down/03
+bounds:2,80,76,92
+offsets:20,20,128,128
+player/girl/run down/04
+bounds:628,182,72,88
+offsets:24,20,128,128
+player/girl/run down/05
+bounds:842,92,68,88
+offsets:28,20,128,128
+player/girl/run down/06
+bounds:290,174,64,92
+offsets:32,20,128,128
+player/girl/run down/07
+bounds:846,182,68,88
+offsets:28,20,128,128
+player/girl/run left/01
+bounds:1564,18,64,84
+offsets:32,20,128,128
+player/girl/run left/02
+bounds:1114,92,64,88
+offsets:32,20,128,128
+player/girl/run left/03
+bounds:294,268,64,92
+offsets:32,20,128,128
+player/girl/run left/04
+bounds:1118,182,64,88
+offsets:32,20,128,128
+player/girl/run left/05
+bounds:1130,272,64,88
+offsets:32,20,128,128
+player/girl/run left/06
+bounds:352,80,64,92
+offsets:32,20,128,128
+player/girl/run left/07
+bounds:1160,2,64,88
+offsets:32,20,128,128
+player/girl/run right/01
+bounds:1600,104,64,84
+offsets:32,20,128,128
+player/girl/run right/02
+bounds:1180,92,64,88
+offsets:32,20,128,128
+player/girl/run right/03
+bounds:150,80,68,92
+offsets:28,20,128,128
+player/girl/run right/04
+bounds:1184,182,64,88
+offsets:32,20,128,128
+player/girl/run right/05
+bounds:1196,272,64,88
+offsets:32,20,128,128
+player/girl/run right/06
+bounds:356,174,64,92
+offsets:32,20,128,128
+player/girl/run right/07
+bounds:1226,2,64,88
+offsets:32,20,128,128
+player/girl/run up/01
+bounds:1468,276,72,84
+offsets:24,20,128,128
+player/girl/run up/02
+bounds:640,272,72,88
+offsets:24,20,128,128
+player/girl/run up/03
+bounds:2,2,76,92
+offsets:20,20,128,128
+rotate:90
+player/girl/run up/04
+bounds:670,2,72,88
+offsets:24,20,128,128
+player/girl/run up/05
+bounds:858,272,68,88
+offsets:28,20,128,128
+player/girl/run up/06
+bounds:418,80,64,92
+offsets:32,20,128,128
+player/girl/run up/07
+bounds:888,2,68,88
+offsets:28,20,128,128
+player/hooded char/idle/down
+bounds:1424,10,72,84
+offsets:24,20,128,128
+player/hooded char/idle/left
+bounds:1604,190,64,84
+offsets:32,20,128,128
+player/hooded char/idle/right
+bounds:1616,276,64,84
+offsets:32,20,128,128
+player/hooded char/idle/up
+bounds:1460,104,72,84
+offsets:32,20,128,128
+player/hooded char/run down/1
+bounds:1530,190,72,84
+offsets:24,20,128,128
+player/hooded char/run down/2
+bounds:698,92,72,88
+offsets:24,20,128,128
+player/hooded char/run down/3
+bounds:80,268,76,92
+offsets:20,20,128,128
+player/hooded char/run down/4
+bounds:702,182,72,88
+offsets:24,20,128,128
+player/hooded char/run down/5
+bounds:912,92,68,88
+offsets:28,20,128,128
+player/hooded char/run down/6
+bounds:360,268,64,92
+offsets:32,20,128,128
+player/hooded char/run down/7
+bounds:916,182,68,88
+offsets:28,20,128,128
+player/hooded char/run left/1
+bounds:1630,18,64,84
+offsets:32,20,128,128
+player/hooded char/run left/2
+bounds:1246,92,64,88
+offsets:32,20,128,128
+player/hooded char/run left/3
+bounds:422,174,64,92
+offsets:32,20,128,128
+player/hooded char/run left/4
+bounds:1250,182,64,88
+offsets:32,20,128,128
+player/hooded char/run left/5
+bounds:1262,272,64,88
+offsets:32,20,128,128
+player/hooded char/run left/6
+bounds:426,268,64,92
+offsets:32,20,128,128
+player/hooded char/run left/7
+bounds:1292,2,64,88
+offsets:32,20,128,128
+player/hooded char/run right/1
+bounds:1666,104,64,84
+offsets:32,20,128,128
+player/hooded char/run right/2
+bounds:1312,92,64,88
+offsets:32,20,128,128
+player/hooded char/run right/3
+bounds:158,268,68,92
+offsets:28,20,128,128
+player/hooded char/run right/4
+bounds:1316,182,64,88
+offsets:32,20,128,128
+player/hooded char/run right/5
+bounds:1328,272,64,88
+offsets:32,20,128,128
+player/hooded char/run right/6
+bounds:484,80,64,92
+offsets:32,20,128,128
+player/hooded char/run right/7
+bounds:1358,2,64,88
+offsets:32,20,128,128
+player/hooded char/run up/1
+bounds:1542,276,72,84
+offsets:32,20,128,128
+player/hooded char/run up/2
+bounds:714,272,72,88
+offsets:32,20,128,128
+player/hooded char/run up/3
+bounds:80,174,76,92
+offsets:32,20,128,128
+player/hooded char/run up/4
+bounds:744,2,72,88
+offsets:32,20,128,128
+player/hooded char/run up/5
+bounds:928,272,68,88
+offsets:32,20,128,128
+player/hooded char/run up/6
+bounds:488,174,64,92
+offsets:32,20,128,128
+player/hooded char/run up/7
+bounds:958,2,68,88
+offsets:32,20,128,128

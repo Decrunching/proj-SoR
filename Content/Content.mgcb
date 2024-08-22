@@ -13,10 +13,13 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Entities/Player/haltija.atlas
-/copy:Entities/Player/haltija.atlas
+#begin Entities/Campfire/skeleton.json
+/copy:Entities/Campfire/skeleton.json
 
-#begin Entities/Player/haltija.png
+#begin Entities/Campfire/templecampfire.atlas
+/copy:Entities/Campfire/templecampfire.atlas
+
+#begin Entities/Campfire/templecampfire.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -26,8 +29,77 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Entities/Player/haltija.png
+/build:Entities/Campfire/templecampfire.png
+
+#begin Entities/Chara/savedit.atlas
+/copy:Entities/Chara/savedit.atlas
+
+#begin Entities/Chara/savedit.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Entities/Chara/savedit.png
+
+#begin Entities/Chara/skeleton.json
+/copy:Entities/Chara/skeleton.json
+
+#begin Entities/Pheasant/savedthepheasant.atlas
+/copy:Entities/Pheasant/savedthepheasant.atlas
+
+#begin Entities/Pheasant/savedthepheasant.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Entities/Pheasant/savedthepheasant.png
+
+#begin Entities/Pheasant/skeleton.json
+/copy:Entities/Pheasant/skeleton.json
+
+#begin Entities/Player/Char sprites.atlas
+/copy:Entities/Player/Char sprites.atlas
+
+#begin Entities/Player/Char sprites.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Entities/Player/Char sprites.png
 
 #begin Entities/Player/skeleton.json
 /copy:Entities/Player/skeleton.json
+
+#begin Entities/Slime/skeleton.json
+/copy:Entities/Slime/skeleton.json
+
+#begin Entities/Slime/Slime.atlas
+/copy:Entities/Slime/Slime.atlas
+
+#begin Entities/Slime/Slime.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:Entities/Slime/Slime.png
 

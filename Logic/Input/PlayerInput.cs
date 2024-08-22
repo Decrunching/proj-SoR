@@ -119,7 +119,7 @@ namespace SoR.Logic.Input
                     }
                     else if (!keyIsUp.ContainsValue(false))
                     {
-                        animState.SetAnimation(0, "idle", true);
+                        animState.SetAnimation(0, "idlebattle", true);
                     }
                 }
             }

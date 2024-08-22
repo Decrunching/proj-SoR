@@ -4,9 +4,17 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>F:/MonoGame/SoR/SoR/Content/Entities/Player/haltija.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Entities/Campfire/templecampfire.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Entities/Chara/savedit.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/savedthepheasant.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Entities/Player/Char sprites.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Entities/Slime/Slime.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
   </DestFiles>
 </SourceFileCollection>
