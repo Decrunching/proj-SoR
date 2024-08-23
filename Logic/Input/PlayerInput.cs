@@ -9,7 +9,7 @@ namespace SoR.Logic.Input
     /*
      * This class handles player input and animation application.
      */
-    internal class PlayerInput
+    public class PlayerInput
     {
         private KeyboardState lastKeyState;
         private int deadZone;

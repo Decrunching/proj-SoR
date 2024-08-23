@@ -10,7 +10,7 @@ namespace SoR.Logic
     /*
      * Used to create and update Spine skeletons, skins and animations.
      */
-    internal class SpineSetUp
+    public class SpineSetUp
     {
         private SkeletonData skeletonData;
         private SkeletonRenderer skeletonRenderer;
@@ -30,7 +30,7 @@ namespace SoR.Logic
             gameLogic = new GameLogic();
 
             // Instantiate the entity
-            entity = gameLogic.CreatePlayer(_graphics);
+            entity = gameLogic.StartGame(_graphics);
 
             // Instantiate the keyboard input
             playerInput = new PlayerInput();

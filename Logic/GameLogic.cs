@@ -1,18 +1,20 @@
 ﻿using Microsoft.Xna.Framework;
 using SoR.Logic.Entities;
+using System;
 
 namespace SoR.Logic
 {
     /*
      * Placeholder class for handling game progression.
      */
-    internal class GameLogic
+    public class GameLogic
     {
         private Entity player;
         private Entity pheasant;
         private Entity chara;
         private Entity slime;
         private Entity campfire;
+        private Entity entity;
         
         /*
          * Create player.
@@ -62,9 +64,28 @@ namespace SoR.Logic
         /*
          * Placeholder game logic function
          */
-        public void StartGame()
+        public Entity StartGame(GraphicsDeviceManager _graphics)
         {
-
+            Random rand = new Random();
+            switch(rand.Next(1, 5))
+            {
+                case 1:
+                    entity = new Player(_graphics);
+                    break;
+                case 2:
+                    entity = new Pheasant(_graphics);
+                    break;
+                case 3:
+                    entity = new Chara(_graphics);
+                    break;
+                case 4:
+                    entity = new Slime(_graphics);
+                    break;
+                case 5:
+                    entity = new Campfire(_graphics);
+                    break;
+            }
+            return entity;
         }
     }
 }
