@@ -12,12 +12,11 @@ namespace SoR.Logic
      */
     internal class SpineSetUp
     {
-        protected SkeletonData skeletonData;
-        protected Skeleton skeleton;
-        protected Skin skin;
-        protected AnimationState animState;
-        protected SkeletonRenderer skeletonRenderer;
-
+        private SkeletonData skeletonData;
+        private SkeletonRenderer skeletonRenderer;
+        public Skeleton skeleton { get; private set; }
+        public Skin skin { get; private set; }
+        public AnimationState animState { get; set; }
         private PlayerInput playerInput;
         private GameLogic gameLogic;
         private Entity entity;

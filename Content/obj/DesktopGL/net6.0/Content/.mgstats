@@ -1,15 +1,1 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"D:/GitHub projects/Proj-SoR/Content/Entities/Campfire/skeleton.json","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Content\Entities/Campfire/skeleton.json","CopyItem","File",976,976,0.0020718
-"D:/GitHub projects/Proj-SoR/Content/Entities/Campfire/templecampfire.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Content\Entities/Campfire/templecampfire.atlas","CopyItem","File",193,193,0.0011992
-"D:/GitHub projects/Proj-SoR/Content/Entities/Campfire/templecampfire.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Content/Entities/Campfire/templecampfire.xnb","TextureProcessor","Texture2DContent",2522,90389,0.1737593
-"D:/GitHub projects/Proj-SoR/Content/Entities/Chara/savedit.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Content\Entities/Chara/savedit.atlas","CopyItem","File",1058,1058,0.001102
-"D:/GitHub projects/Proj-SoR/Content/Entities/Chara/savedit.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Content/Entities/Chara/savedit.xnb","TextureProcessor","Texture2DContent",6595,46085,0.0380995
-"D:/GitHub projects/Proj-SoR/Content/Entities/Chara/skeleton.json","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Content\Entities/Chara/skeleton.json","CopyItem","File",80153,80153,0.0010757
-"D:/GitHub projects/Proj-SoR/Content/Entities/Pheasant/savedthepheasant.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Content\Entities/Pheasant/savedthepheasant.atlas","CopyItem","File",592,592,0.0014587
-"D:/GitHub projects/Proj-SoR/Content/Entities/Pheasant/savedthepheasant.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Content/Entities/Pheasant/savedthepheasant.xnb","TextureProcessor","Texture2DContent",4613,50281,0.0102094
-"D:/GitHub projects/Proj-SoR/Content/Entities/Pheasant/skeleton.json","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Content\Entities/Pheasant/skeleton.json","CopyItem","File",29982,29982,0.0019384
-"D:/GitHub projects/Proj-SoR/Content/Entities/Player/Char sprites.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Content\Entities/Player/Char sprites.atlas","CopyItem","File",7354,7354,0.0022215
-"D:/GitHub projects/Proj-SoR/Content/Entities/Player/Char sprites.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Content/Entities/Player/Char sprites.xnb","TextureProcessor","Texture2DContent",81469,2687573,0.0700354
-"D:/GitHub projects/Proj-SoR/Content/Entities/Slime/skeleton.json","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Content\Entities/Slime/skeleton.json","CopyItem","File",1892,1892,0.0012592
-"D:/GitHub projects/Proj-SoR/Content/Entities/Slime/Slime.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Content\Entities/Slime/Slime.atlas","CopyItem","File",418,418,0.0015472
-"D:/GitHub projects/Proj-SoR/Content/Entities/Slime/Slime.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Content/Entities/Slime/Slime.xnb","TextureProcessor","Texture2DContent",2655,78421,0.0112709

@@ -13,7 +13,6 @@ namespace SoR.Logic
         private Entity chara;
         private Entity slime;
         private Entity campfire;
-        private Entity entity;
         
         /*
          * Create player.
@@ -61,11 +60,11 @@ namespace SoR.Logic
         }
 
         /*
-         * Get the entity to be created.
+         * Placeholder game logic function
          */
-        public Entity GetEntity()
+        public void StartGame()
         {
-            return entity;
+
         }
     }
 }

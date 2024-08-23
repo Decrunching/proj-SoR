@@ -13,6 +13,11 @@ namespace SoR.Logic.Entities
         public float Speed { get; set; }
 
         /*
+         * Create dictionary of entity objects?
+         */
+
+
+        /*
          * Get the Atlas path.
          */
         public abstract string GetAtlas();
