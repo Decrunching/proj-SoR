@@ -52,5 +52,13 @@ namespace SoR.Logic.Entities
         {
             return "idlebattle";
         }
+
+        /*
+         * Change animation state
+         */
+        public void ChangeAnimation()
+        {
+
+        }
     }
 }

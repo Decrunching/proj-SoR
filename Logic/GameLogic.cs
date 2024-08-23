@@ -15,7 +15,7 @@ namespace SoR.Logic
         private Entity slime;
         private Entity campfire;
         private Entity entity;
-        
+
         /*
          * Create player.
          */
@@ -67,7 +67,7 @@ namespace SoR.Logic
         public Entity StartGame(GraphicsDeviceManager _graphics)
         {
             Random rand = new Random();
-            switch(rand.Next(1, 5))
+            switch (rand.Next(1, 5))
             {
                 case 1:
                     entity = new Player(_graphics);
