@@ -1,8 +1,8 @@
 {
-"skeleton": { "hash": "QICpTjyiTM4", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
+"skeleton": { "hash": "bjYJnSvUdlk", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
 "bones": [
-	{ "name": "root", "scaleX": 1, "scaleY": 1 },
-	{ "name": "bone", "parent": "root", "y": 9, "scaleX": 1, "scaleY": 1 }
+	{ "name": "root", "scaleX": 4, "scaleY": 4 },
+	{ "name": "bone", "parent": "root", "y": 9 }
 ],
 "slots": [
 	{ "name": "idle-battle", "bone": "bone" },

@@ -1,16 +1,16 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"F:/MonoGame/SoR/SoR/Content/Entities/Campfire/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Entities/Campfire/skeleton.json","CopyItem","File",937,937,0.0013194
-"F:/MonoGame/SoR/SoR/Content/Entities/Campfire/templecampfire.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Entities/Campfire/templecampfire.atlas","CopyItem","File",178,178,0.0005566
-"F:/MonoGame/SoR/SoR/Content/Entities/Campfire/templecampfire.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Entities/Campfire/templecampfire.xnb","TextureProcessor","Texture2DContent",2522,90389,0.1231536
-"F:/MonoGame/SoR/SoR/Content/Entities/Chara/savedit.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Entities/Chara/savedit.atlas","CopyItem","File",996,996,0.0005147
-"F:/MonoGame/SoR/SoR/Content/Entities/Chara/savedit.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Entities/Chara/savedit.xnb","TextureProcessor","Texture2DContent",6595,46085,0.0051001
-"F:/MonoGame/SoR/SoR/Content/Entities/Chara/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Entities/Chara/skeleton.json","CopyItem","File",77868,77868,0.0005418
-"F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/savedthepheasant.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Entities/Pheasant/savedthepheasant.atlas","CopyItem","File",555,555,0.0005157
-"F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/savedthepheasant.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Entities/Pheasant/savedthepheasant.xnb","TextureProcessor","Texture2DContent",4613,50281,0.0028901
-"F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Entities/Pheasant/skeleton.json","CopyItem","File",29139,29139,0.0005121
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/Char sprites.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Entities/Player/Char sprites.atlas","CopyItem","File",6806,6806,0.0004729
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/Char sprites.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Entities/Player/Char sprites.xnb","TextureProcessor","Texture2DContent",10493,198069,0.0112361
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Entities/Player/skeleton.json","CopyItem","File",16342,16342,0.0004537
-"F:/MonoGame/SoR/SoR/Content/Entities/Slime/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Entities/Slime/skeleton.json","CopyItem","File",1823,1823,0.0004558
-"F:/MonoGame/SoR/SoR/Content/Entities/Slime/Slime.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Entities/Slime/Slime.atlas","CopyItem","File",398,398,0.0004917
-"F:/MonoGame/SoR/SoR/Content/Entities/Slime/Slime.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Entities/Slime/Slime.xnb","TextureProcessor","Texture2DContent",2655,78421,0.0035263
+"D:/GitHub projects/Proj-SoR/Content/Entities/Campfire/skeleton.json","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Entities/Campfire/skeleton.json","CopyItem","File",976,976,0.0016592
+"D:/GitHub projects/Proj-SoR/Content/Entities/Campfire/templecampfire.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Entities/Campfire/templecampfire.atlas","CopyItem","File",193,193,0.0009341
+"D:/GitHub projects/Proj-SoR/Content/Entities/Campfire/templecampfire.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Entities/Campfire/templecampfire.xnb","TextureProcessor","Texture2DContent",2522,90389,0.1401159
+"D:/GitHub projects/Proj-SoR/Content/Entities/Chara/savedit.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Entities/Chara/savedit.atlas","CopyItem","File",1084,1084,0.0010691
+"D:/GitHub projects/Proj-SoR/Content/Entities/Chara/savedit.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Entities/Chara/savedit.xnb","TextureProcessor","Texture2DContent",26708,611157,0.0215329
+"D:/GitHub projects/Proj-SoR/Content/Entities/Chara/skeleton.json","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Entities/Chara/skeleton.json","CopyItem","File",80335,80335,0.001009
+"D:/GitHub projects/Proj-SoR/Content/Entities/Pheasant/savedthepheasant.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Entities/Pheasant/savedthepheasant.atlas","CopyItem","File",597,597,0.0011016
+"D:/GitHub projects/Proj-SoR/Content/Entities/Pheasant/savedthepheasant.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Entities/Pheasant/savedthepheasant.xnb","TextureProcessor","Texture2DContent",18534,682861,0.0156546
+"D:/GitHub projects/Proj-SoR/Content/Entities/Pheasant/skeleton.json","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Entities/Pheasant/skeleton.json","CopyItem","File",30012,30012,0.0009935
+"D:/GitHub projects/Proj-SoR/Content/Entities/Player/Char sprites.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Entities/Player/Char sprites.atlas","CopyItem","File",7354,7354,0.0009674
+"D:/GitHub projects/Proj-SoR/Content/Entities/Player/Char sprites.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Entities/Player/Char sprites.xnb","TextureProcessor","Texture2DContent",81469,2687573,0.0662943
+"D:/GitHub projects/Proj-SoR/Content/Entities/Player/skeleton.json","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Entities/Player/skeleton.json","CopyItem","File",16913,16913,0.0008925
+"D:/GitHub projects/Proj-SoR/Content/Entities/Slime/skeleton.json","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Entities/Slime/skeleton.json","CopyItem","File",1863,1863,0.001034
+"D:/GitHub projects/Proj-SoR/Content/Entities/Slime/Slime.atlas","D:\GitHub projects\Proj-SoR\Content\bin\DesktopGL\Entities/Slime/Slime.atlas","CopyItem","File",449,449,0.0010724
+"D:/GitHub projects/Proj-SoR/Content/Entities/Slime/Slime.png","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Entities/Slime/Slime.xnb","TextureProcessor","Texture2DContent",8551,299461,0.0135714

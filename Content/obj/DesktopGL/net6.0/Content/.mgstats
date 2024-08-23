@@ -1,10 +1,1 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"F:/MonoGame/SoR/SoR/Content/Entities/Chara/savedit.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Chara/savedit.atlas","CopyItem","File",1025,1025,0.0011383
-"F:/MonoGame/SoR/SoR/Content/Entities/Chara/savedit.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Chara/savedit.xnb","TextureProcessor","Texture2DContent",26708,611157,0.1423817
-"F:/MonoGame/SoR/SoR/Content/Entities/Chara/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Chara/skeleton.json","CopyItem","File",78042,78042,0.000517
-"F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/savedthepheasant.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Pheasant/savedthepheasant.atlas","CopyItem","File",563,563,0.0011962
-"F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/savedthepheasant.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Pheasant/savedthepheasant.xnb","TextureProcessor","Texture2DContent",18534,682861,0.1460088
-"F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Pheasant/skeleton.json","CopyItem","File",29169,29169,0.0004992
-"F:/MonoGame/SoR/SoR/Content/Entities/Slime/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Slime/skeleton.json","CopyItem","File",1794,1794,0.0012328
-"F:/MonoGame/SoR/SoR/Content/Entities/Slime/Slime.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Slime/Slime.atlas","CopyItem","File",427,427,0.0004768
-"F:/MonoGame/SoR/SoR/Content/Entities/Slime/Slime.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Slime/Slime.xnb","TextureProcessor","Texture2DContent",8551,299461,0.1411484

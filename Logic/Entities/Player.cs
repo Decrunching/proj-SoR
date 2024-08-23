@@ -24,8 +24,8 @@ namespace SoR.Logic.Entities
          */
         public override string GetAtlas()
         {
-            return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas";
-            //return "D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas";
+            //return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas";
+            return "D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas";
         }
 
         /*
@@ -33,8 +33,8 @@ namespace SoR.Logic.Entities
          */
         public override string GetJson()
         {
-            return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json";
-            //return "D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json";
+            //return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json";
+            return "D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json";
         }
 
         /*

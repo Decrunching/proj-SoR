@@ -30,7 +30,7 @@ namespace SoR.Logic
             gameLogic = new GameLogic();
 
             // Instantiate the entity
-            entity = gameLogic.StartGame(_graphics);
+            entity = gameLogic.CreatePlayer(_graphics);
 
             // Instantiate the keyboard input
             playerInput = new PlayerInput();
