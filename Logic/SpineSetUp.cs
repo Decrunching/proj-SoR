@@ -8,8 +8,7 @@ using SoR.Logic.Entities;
 namespace SoR.Logic
 {
     /*
-     * The Player object class. Used to create and update the Player object. Currently includes
-     * initialisation, position/movement and animation.
+     * Used to create and update Spine skeletons, skins and animations.
      */
     internal class SpineSetUp
     {
@@ -24,7 +23,7 @@ namespace SoR.Logic
         private Entity entity;
 
         /*
-         * Constructor for creating entities.
+         * Constructor for instantiating entities and Spine animations.
          */
         public SpineSetUp(GraphicsDeviceManager _graphics, GraphicsDevice GraphicsDevice)
         {
@@ -70,6 +69,7 @@ namespace SoR.Logic
             GraphicsDeviceManager _graphics,
             GraphicsDevice GraphicsDevice)
         {
+            // Pass the speed, position and animation state to PlayerInput for keyboard input processing
             playerInput.ProcessKeyboardInputs(gameTime,
                 keyState,
                 animState,
@@ -77,16 +77,20 @@ namespace SoR.Logic
                 entity.GetPositionX(),
                 entity.GetPositionY());
 
+            // Pass the speed to PlayerInput for joypad input processing
             playerInput.ProcessJoypadInputs(gameTime, entity.GetSpeed());
 
+            // Set the new position according to player input
             entity.SetPositionX(playerInput.UpdatePositionX());
             entity.SetPositionY(playerInput.UpdatePositionY());
 
+            // Prevent the user from leaving the visible screen area
             playerInput.CheckScreenEdges(_graphics,
                 GraphicsDevice,
                 entity.GetPositionX(),
                 entity.GetPositionY());
 
+            // Set the new position according to player input
             entity.SetPositionX(playerInput.UpdatePositionX());
             entity.SetPositionY(playerInput.UpdatePositionY());
 
@@ -109,7 +113,7 @@ namespace SoR.Logic
         }
 
         /*
-         * Create the SkeletonRenderer for this player.
+         * Create the SkeletonRenderer.
          */
         public void CreateSkeletonRenderer(GraphicsDevice GraphicsDevice)
         {
@@ -119,7 +123,7 @@ namespace SoR.Logic
         }
 
         /*
-         * Render the current player skeleton to the screen.
+         * Render the current skeleton to the screen.
          */
         public void RenderSkeleton(GraphicsDevice GraphicsDevice)
         {
