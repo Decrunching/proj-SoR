@@ -2,6 +2,9 @@
 
 namespace SoR.Logic.Entities
 {
+    /*
+     * Stores information unique to the campfire entity.
+     */
     internal class Campfire : Entity
     {
         public Campfire(GraphicsDeviceManager _graphics)

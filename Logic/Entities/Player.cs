@@ -2,6 +2,9 @@
 
 namespace SoR.Logic.Entities
 {
+    /*
+     * Stores information unique to the player entity.
+     */
     internal class Player : Entity
     {
         public Player(GraphicsDeviceManager _graphics)

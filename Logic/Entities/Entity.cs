@@ -2,6 +2,9 @@
 
 namespace SoR.Logic.Entities
 {
+    /*
+     * All other entities are currently based on this class to reduce code repetition.
+     */
     internal abstract class Entity
     {
         public Vector2 Position {  get; set; }

@@ -2,6 +2,9 @@
 
 namespace SoR.Logic.Entities
 {
+    /*
+     * Stores information unique to the chara entity.
+     */
     internal class Chara : Entity
     {
         public Chara(GraphicsDeviceManager _graphics)

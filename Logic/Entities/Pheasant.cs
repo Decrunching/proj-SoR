@@ -2,6 +2,9 @@
 
 namespace SoR.Logic.Entities
 {
+    /*
+     * Stores information unique to the pheasant entity.
+     */
     internal class Pheasant : Entity
     {
         public Pheasant(GraphicsDeviceManager _graphics)

@@ -6,8 +6,7 @@ using SoR.Logic;
 namespace SoR
 {
     /*
-     * The main game class, through which all other code runs. Graphics are currently handled here,
-     * but everything else is called from and handled by other classes.
+     * The main game class, through which all other code runs.
      */
     public class SoR : Game
     {

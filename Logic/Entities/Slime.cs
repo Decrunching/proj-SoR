@@ -2,6 +2,9 @@
 
 namespace SoR.Logic.Entities
 {
+    /*
+     * Stores information unique to the slime entity.
+     */
     internal class Slime : Entity
     {
         public Slime(GraphicsDeviceManager _graphics)
