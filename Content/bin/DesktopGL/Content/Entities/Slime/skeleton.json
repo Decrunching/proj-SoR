@@ -1,0 +1,70 @@
+{
+"skeleton": {
+	"hash": "hqEmijyncG8",
+	"spine": "4.2.35",
+	"x": -27,
+	"y": -17.91,
+	"width": 54,
+	"height": 52,
+	"images": "../working/char animation/",
+	"audio": ""
+},
+"bones": [
+	{ "name": "root" },
+	{ "name": "jelly", "parent": "root" }
+],
+"slots": [
+	{ "name": "jellyanim-atkd and idle-01", "bone": "jelly", "attachment": "jellyanim/atkd and idle/01" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"jellyanim-atkd and idle-01": {
+				"jellyanim/atkd and idle/01": { "y": 8.09, "width": 54, "height": 52 },
+				"jellyanim/atkd and idle/02": { "y": 8.09, "width": 54, "height": 52 },
+				"jellyanim/atkd and idle/03": { "y": 8.09, "width": 54, "height": 52 },
+				"jellyanim/atkd and idle/04": { "y": 8.09, "width": 54, "height": 52 },
+				"jellyanim/atkd and idle/05": { "y": 8.09, "width": 54, "height": 52 }
+			}
+		}
+	}
+],
+"animations": {
+	"attack": {
+		"slots": {
+			"jellyanim-atkd and idle-01": {
+				"attachment": [
+					{ "name": "jellyanim/atkd and idle/01" },
+					{ "time": 0.5, "name": "jellyanim/atkd and idle/03" },
+					{ "time": 0.9667, "name": "jellyanim/atkd and idle/03" }
+				]
+			}
+		}
+	},
+	"hit": {
+		"slots": {
+			"jellyanim-atkd and idle-01": {
+				"attachment": [
+					{ "name": "jellyanim/atkd and idle/03" },
+					{ "time": 0.1667, "name": "jellyanim/atkd and idle/04" },
+					{ "time": 0.3333, "name": "jellyanim/atkd and idle/05" },
+					{ "time": 0.6667, "name": "jellyanim/atkd and idle/03" },
+					{ "time": 0.9333, "name": "jellyanim/atkd and idle/03" }
+				]
+			}
+		}
+	},
+	"idle": {
+		"slots": {
+			"jellyanim-atkd and idle-01": {
+				"attachment": [
+					{ "name": "jellyanim/atkd and idle/01" },
+					{ "time": 0.5, "name": "jellyanim/atkd and idle/02" },
+					{ "time": 0.9667, "name": "jellyanim/atkd and idle/02" }
+				]
+			}
+		}
+	}
+}
+}
