@@ -16,8 +16,7 @@ namespace SoR
         private KeyboardState keyState
         { get; set; }
 
-        //private GameLogic gameLogic;
-        private SpineSetUp spineSetUp;
+        private GameLogic gameLogic;
 
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
@@ -48,9 +47,8 @@ namespace SoR
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
-            //gameLogic.StartGame();
-            spineSetUp = new SpineSetUp(graphics, GraphicsDevice); // Instantiate Spine entities
-            spineSetUp.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer
+
+            gameLogic = new GameLogic(graphics, GraphicsDevice);
         }
 
         /*
@@ -65,8 +63,7 @@ namespace SoR
             // TODO: Add your update logic here
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            spineSetUp.UpdateInputPosition(gameTime, keyState, graphics, GraphicsDevice); // Update entity positions according to user input
-            spineSetUp.UpdateEntityAnimations(gameTime); // Update entity animations
+            gameLogic.SetUpSpine(gameTime, keyState, graphics, GraphicsDevice);
 
             base.Update(gameTime);
         }
@@ -77,7 +74,7 @@ namespace SoR
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
-            spineSetUp.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
+            gameLogic.SpineRenderSkeleton(GraphicsDevice);
 
             base.Draw(gameTime);
         }

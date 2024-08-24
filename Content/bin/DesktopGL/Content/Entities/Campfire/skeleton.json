@@ -1,40 +1,95 @@
 {
-"skeleton": { "hash": "9VuZ2LnIr/A", "spine": "4.2.35", "images": "../tiles/temple/fire/", "audio": "" },
-"bones": [
-	{ "name": "root", "scaleX": 4, "scaleY": 4 },
-	{ "name": "fire", "parent": "root" }
-],
-"slots": [
-	{ "name": "01", "bone": "fire" }
-],
-"skins": [
-	{
-		"name": "default",
-		"attachments": {
-			"01": {
-				"01": { "x": 16, "y": -16, "width": 32, "height": 32 },
-				"02": { "x": 16, "y": -16, "width": 32, "height": 32 },
-				"03": { "x": 16, "y": -16, "width": 32, "height": 32 },
-				"04": { "x": 16, "y": -16, "width": 32, "height": 32 },
-				"05": { "x": 16, "y": -16, "width": 32, "height": 32 }
-			}
-		}
-	}
-],
-"animations": {
-	"idle": {
-		"slots": {
-			"01": {
-				"attachment": [
-					{ "name": "01" },
-					{ "time": 0.1667, "name": "02" },
-					{ "time": 0.3333, "name": "03" },
-					{ "time": 0.5, "name": "04" },
-					{ "time": 0.6667, "name": "05" },
-					{ "time": 0.8, "name": "05" }
-				]
-			}
-		}
-	}
-}
+  "skeleton": {
+    "hash": "9VuZ2LnIr/A",
+    "spine": "4.2.35",
+    "images": "../tiles/temple/fire/",
+    "audio": ""
+  },
+  "bones": [
+    {
+      "name": "root",
+      "scaleX": 4,
+      "scaleY": 4
+    },
+    {
+      "name": "fire",
+      "parent": "root"
+    }
+  ],
+  "slots": [
+    {
+      "name": "01",
+      "bone": "fire"
+    }
+  ],
+  "skins": [
+    {
+      "name": "default",
+      "attachments": {
+        "01": {
+          "01": {
+            "x": 16,
+            "y": -16,
+            "width": 32,
+            "height": 32
+          },
+          "02": {
+            "x": 16,
+            "y": -16,
+            "width": 32,
+            "height": 32
+          },
+          "03": {
+            "x": 16,
+            "y": -16,
+            "width": 32,
+            "height": 32
+          },
+          "04": {
+            "x": 16,
+            "y": -16,
+            "width": 32,
+            "height": 32
+          },
+          "05": {
+            "x": 16,
+            "y": -16,
+            "width": 32,
+            "height": 32
+          }
+        }
+      }
+    }
+  ],
+  "animations": {
+    "idle": {
+      "slots": {
+        "01": {
+          "attachment": [
+            { "name": "01" },
+            {
+              "time": 0.1667,
+              "name": "02"
+            },
+            {
+              "time": 0.3333,
+              "name": "03"
+            },
+            {
+              "time": 0.5,
+              "name": "04"
+            },
+            {
+              "time": 0.6667,
+              "name": "05"
+            },
+            {
+              "time": 0.8,
+              "name": "05"
+            }
+          ]
+        }
+      }
+    }
+  }
 }

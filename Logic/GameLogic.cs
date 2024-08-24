@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
-using System;
 
 namespace SoR.Logic
 {
@@ -9,83 +10,88 @@ namespace SoR.Logic
      */
     public class GameLogic
     {
-        private Entity player;
+        private Entity playerChar;
         private Entity pheasant;
         private Entity chara;
         private Entity slime;
         private Entity campfire;
         private Entity entity;
+        private SpineSetUp spineSetUp;
+        private EntityType entityType;
 
         /*
-         * Create player.
+         * Temporary Enums for differentiating between entities
          */
-        public Entity CreatePlayer(GraphicsDeviceManager _graphics)
+        enum EntityType
         {
-            player = new Player(_graphics);
-            return player;
+            Player,
+            NPCPheasant,
+            NPCChara,
+            EnemySlime,
+            EnvironmentFire
+        }
+
+        public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        {
+            CreateEntity(graphics);
+            spineSetUp = new SpineSetUp(graphics, GraphicsDevice, playerChar); // Instantiate Spine entities
+            spineSetUp.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer
         }
 
         /*
-         * Create pheasant.
+         * Placeholder function for choosing which entity to create.
          */
-        public Entity CreatePheasant(GraphicsDeviceManager _graphics)
+        public void CreateEntity(GraphicsDeviceManager graphics)
         {
-            pheasant = new Pheasant(_graphics);
-            return pheasant;
-        }
+            EntityType entityType = EntityType.Player;
 
-        /*
-         * Create chara.
-         */
-        public Entity CreateChara(GraphicsDeviceManager _graphics)
-        {
-            chara = new Chara(_graphics);
-            return chara;
-        }
-
-        /*
-         * Create slime.
-         */
-        public Entity CreateSlime(GraphicsDeviceManager _graphics)
-        {
-            slime = new Slime(_graphics);
-            return slime;
-        }
-
-        /*
-         * Create campfire.
-         */
-        public Entity CreateCampfire(GraphicsDeviceManager _graphics)
-        {
-            campfire = new Campfire(_graphics);
-            return campfire;
-        }
-
-        /*
-         * Placeholder game logic function
-         */
-        public Entity StartGame(GraphicsDeviceManager _graphics)
-        {
-            Random rand = new Random();
-            switch (rand.Next(1, 5))
+            switch (entityType)
             {
-                case 1:
-                    entity = new Player(_graphics);
+                case EntityType.Player:
+                    playerChar = new PlayerChar(graphics);
                     break;
-                case 2:
-                    entity = new Pheasant(_graphics);
+                case EntityType.NPCPheasant:
+                    pheasant = new Pheasant(graphics);
                     break;
-                case 3:
-                    entity = new Chara(_graphics);
+                case EntityType.NPCChara:
+                    chara = new Chara(graphics);
                     break;
-                case 4:
-                    entity = new Slime(_graphics);
+                case EntityType.EnemySlime:
+                    slime = new Slime(graphics);
                     break;
-                case 5:
-                    entity = new Campfire(_graphics);
+                case EntityType.EnvironmentFire:
+                    campfire = new Campfire(graphics);
                     break;
             }
-            return entity;
+        }
+
+        /*
+         * Get the appropriate entity.
+         */
+        public Entity GetEntity()
+        {
+            return playerChar;
+        }
+
+        /*
+         * Set up Spine animations and skeletons.
+         */
+        public void SetUpSpine(
+            GameTime gameTime,
+            KeyboardState keyState,
+            GraphicsDeviceManager graphics,
+            GraphicsDevice GraphicsDevice)
+        {
+            spineSetUp.UpdateInputPosition(gameTime, keyState, graphics, GraphicsDevice); // Update entity positions according to user input
+            spineSetUp.UpdateEntityAnimations(gameTime); // Update entity animations
+        }
+
+        /*
+         * Render Spine skeletons.
+         */
+        public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
+        {
+            spineSetUp.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
         }
     }
 }

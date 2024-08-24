@@ -11,11 +11,43 @@
     <ApplicationIcon>Icon.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="Content\Entities\Campfire\skeleton.json" />
+    <None Remove="Content\Entities\Campfire\templecampfire.atlas" />
+    <None Remove="Content\Entities\Campfire\templecampfire.png" />
+    <None Remove="Content\Entities\Chara\savedit.atlas" />
+    <None Remove="Content\Entities\Chara\savedit.png" />
+    <None Remove="Content\Entities\Chara\skeleton.json" />
+    <None Remove="Content\Entities\Pheasant\savedthepheasant.atlas" />
+    <None Remove="Content\Entities\Pheasant\savedthepheasant.png" />
+    <None Remove="Content\Entities\Pheasant\skeleton.json" />
+    <None Remove="Content\Entities\Player\Char sprites.atlas" />
+    <None Remove="Content\Entities\Player\Char sprites.png" />
+    <None Remove="Content\Entities\Player\skeleton.json" />
+    <None Remove="Content\Entities\Slime\skeleton.json" />
+    <None Remove="Content\Entities\Slime\Slime.atlas" />
+    <None Remove="Content\Entities\Slime\Slime.png" />
     <None Remove="Content\haltija.atlas" />
     <None Remove="Content\haltija.png" />
     <None Remove="Content\skeleton.json" />
     <None Remove="Icon.ico" />
     <None Remove="Icon.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Content\Entities\Campfire\skeleton.json" />
+    <Resource Include="Content\Entities\Campfire\templecampfire.atlas" />
+    <Resource Include="Content\Entities\Campfire\templecampfire.png" />
+    <Resource Include="Content\Entities\Chara\savedit.atlas" />
+    <Resource Include="Content\Entities\Chara\savedit.png" />
+    <Resource Include="Content\Entities\Chara\skeleton.json" />
+    <Resource Include="Content\Entities\Pheasant\savedthepheasant.atlas" />
+    <Resource Include="Content\Entities\Pheasant\savedthepheasant.png" />
+    <Resource Include="Content\Entities\Pheasant\skeleton.json" />
+    <Resource Include="Content\Entities\Player\Char sprites.atlas" />
+    <Resource Include="Content\Entities\Player\Char sprites.png" />
+    <Resource Include="Content\Entities\Player\skeleton.json" />
+    <Resource Include="Content\Entities\Slime\skeleton.json" />
+    <Resource Include="Content\Entities\Slime\Slime.atlas" />
+    <Resource Include="Content\Entities\Slime\Slime.png" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Icon.ico" />

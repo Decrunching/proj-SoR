@@ -18,19 +18,15 @@ namespace SoR.Logic
         public Skin skin { get; private set; }
         public AnimationState animState { get; set; }
         private PlayerInput playerInput;
-        private GameLogic gameLogic;
         private Entity entity;
 
         /*
          * Constructor for instantiating entities and Spine animations.
          */
-        public SpineSetUp(GraphicsDeviceManager _graphics, GraphicsDevice GraphicsDevice)
+        public SpineSetUp(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, Entity playerChar)
         {
-            // Instantiate the game logic
-            gameLogic = new GameLogic();
-
             // Instantiate the entity
-            entity = gameLogic.CreatePlayer(_graphics);
+            entity = playerChar;
 
             // Instantiate the keyboard input
             playerInput = new PlayerInput();
@@ -65,7 +61,7 @@ namespace SoR.Logic
         public void UpdateInputPosition(
             GameTime gameTime,
             KeyboardState keyState,
-            GraphicsDeviceManager _graphics,
+            GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice)
         {
             // Pass the speed, position and animation state to PlayerInput for keyboard input processing
@@ -84,7 +80,7 @@ namespace SoR.Logic
             entity.SetPositionY(playerInput.UpdatePositionY());
 
             // Prevent the user from leaving the visible screen area
-            playerInput.CheckScreenEdges(_graphics,
+            playerInput.CheckScreenEdges(graphics,
                 GraphicsDevice,
                 entity.GetPositionX(),
                 entity.GetPositionY());
