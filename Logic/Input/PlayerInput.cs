@@ -11,25 +11,11 @@ namespace SoR.Logic.Input
      */
     public class PlayerInput
     {
-        public Direction EntityDirection { get; private set; }
         private KeyboardState lastKeyState;
         private int deadZone;
         private float speed;
         private float newPositionX;
         private float newPositionY;
-
-        public enum Direction
-        {
-            RunUp,
-            RunDown,
-            RunLeft,
-            RunRight,
-            IdleUp,
-            IdleDown,
-            IdleLeft,
-            IdleRight,
-            IdleBattle
-        }
 
         public PlayerInput()
         {
@@ -81,7 +67,7 @@ namespace SoR.Logic.Input
                 newPositionY -= newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Up))
                 {
-                    EntityDirection = Direction.RunUp;
+                    animState.SetAnimation(0, "runup", true);
                 }
             }
             if (keyState.IsKeyDown(Keys.Down))
@@ -89,7 +75,7 @@ namespace SoR.Logic.Input
                 newPositionY += newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Down))
                 {
-                    EntityDirection = Direction.RunDown;
+                    animState.SetAnimation(0, "rundown", true);
                 }
             }
             if (keyState.IsKeyDown(Keys.Left))
@@ -97,7 +83,7 @@ namespace SoR.Logic.Input
                 newPositionX -= newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Left))
                 {
-                    EntityDirection = Direction.RunLeft;
+                    animState.SetAnimation(0, "runleft", true);
                 }
             }
             if (keyState.IsKeyDown(Keys.Right))
@@ -105,7 +91,7 @@ namespace SoR.Logic.Input
                 newPositionX += newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Right))
                 {
-                    EntityDirection = Direction.RunRight;
+                    animState.SetAnimation(0, "runright", true);
                 }
             }
 
@@ -121,26 +107,26 @@ namespace SoR.Logic.Input
                     if (keyState.IsKeyDown(Keys.Right) &
                         !keyState.IsKeyDown(Keys.Left))
                     {
-                        EntityDirection = Direction.RunRight;
+                        animState.SetAnimation(0, "runright", true);
                     }
                     if (keyState.IsKeyDown(Keys.Left) &
                         !keyState.IsKeyDown(Keys.Right))
                     {
-                        EntityDirection = Direction.RunLeft;
+                        animState.SetAnimation(0, "runleft", true);
                     }
                     if (keyState.IsKeyDown(Keys.Down) &
                         !keyState.IsKeyDown(Keys.Up))
                     {
-                        EntityDirection = Direction.RunDown;
+                        animState.SetAnimation(0, "rundown", true);
                     }
                     if (keyState.IsKeyDown(Keys.Up) &
                         !keyState.IsKeyDown(Keys.Down))
                     {
-                        EntityDirection = Direction.RunUp;
+                        animState.SetAnimation(0, "runup", true);
                     }
                     else if (!keyIsUp.ContainsValue(false))
                     {
-                        EntityDirection = Direction.IdleBattle;
+                        animState.SetAnimation(0, "idlebattle", true);
                     }
                 }
             }

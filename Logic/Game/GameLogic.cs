@@ -2,6 +2,9 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
+using SoR.Logic.Input;
+using SoR.Logic.Spine;
+using Spine;
 
 namespace SoR.Logic.Game
 {
@@ -10,11 +13,13 @@ namespace SoR.Logic.Game
      */
     public class GameLogic
     {
-        private PlayerEntity playerChar;
-        private NonPlayerEntity pheasant;
-        private NonPlayerEntity chara;
-        private NonPlayerEntity slime;
-        private NonPlayerEntity campfire;
+        private Entity playerChar;
+        private Entity pheasant;
+        private Entity chara;
+        private Entity slime;
+        private Entity campfire;
+        private SpineSetUp spineSetUp;
+        private PlayerInput playerInput;
         private EntityType entityType;
         private bool gameStart;
 
@@ -38,11 +43,15 @@ namespace SoR.Logic.Game
             gameStart = true;
 
             entityType = EntityType.Player;
-            CreateEntity(graphics, GraphicsDevice);
-
+            CreateEntity(graphics);
+            spineSetUp = new SpineSetUp(graphics, GraphicsDevice, GetEntity(graphics)); // Instantiate Spine skeletons and animations
+            spineSetUp.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer
+            playerInput = new PlayerInput(); // Instantiate the keyboard input
 
             /*entityType = EntityType.EnemySlime;
-            CreateEntity(graphics);*/
+            CreateEntity(graphics);
+            spineSetUp = new SpineSetUp(graphics, GraphicsDevice, GetEntity(graphics)); // Instantiate Spine skeletons and animations
+            spineSetUp.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer*/
 
         }
 
@@ -50,24 +59,24 @@ namespace SoR.Logic.Game
          * Placeholder function for choosing which entity to create. Only use for permanent
          * entities - transient entities are fine being transient.
          */
-        public void CreateEntity(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public void CreateEntity(GraphicsDeviceManager graphics)
         {
             switch (entityType)
             {
                 case EntityType.Player:
-                    playerChar = new PlayerChar(graphics, GraphicsDevice);
+                    playerChar = new PlayerChar(graphics);
                     break;
                 case EntityType.NPCPheasant:
-                    pheasant = new Pheasant(graphics, GraphicsDevice);
+                    pheasant = new Pheasant(graphics);
                     break;
                 case EntityType.NPCChara:
-                    chara = new Chara(graphics, GraphicsDevice);
+                    chara = new Chara(graphics);
                     break;
                 case EntityType.EnemySlime:
-                    slime = new Slime(graphics, GraphicsDevice);
+                    slime = new Slime(graphics);
                     break;
                 case EntityType.EnvironmentFire:
-                    campfire = new Campfire(graphics, GraphicsDevice);
+                    campfire = new Campfire(graphics);
                     break;
             }
         }
@@ -75,21 +84,13 @@ namespace SoR.Logic.Game
         /*
          * Get a permanent entity.
          */
-        public PlayerEntity GetPlayerEntity(GraphicsDeviceManager graphics)
+        public Entity GetEntity(GraphicsDeviceManager graphics)
         {
             if (entityType == EntityType.Player)
             {
                 return playerChar;
             }
-            else throw new System.EntryPointNotFoundException("No valid entity type received");
-        }
-
-        /*
-         * Get a permanent entity.
-         */
-        public NonPlayerEntity GetNonPlayerEntity(GraphicsDeviceManager graphics)
-        {
-            if (entityType == EntityType.NPCPheasant)
+            else if (entityType == EntityType.NPCPheasant)
             {
                 return pheasant;
             }
@@ -109,20 +110,69 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Render Spine skeletons.
+         * Update entity position according to player input.
          */
-        public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
+        public void UpdateEntityPosition(
+            GameTime gameTime,
+            KeyboardState keyState,
+            GraphicsDeviceManager graphics,
+            GraphicsDevice GraphicsDevice,
+            AnimationState animState,
+            Skeleton skeleton)
         {
-            playerChar.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
+            // Pass the speed, position and animation state to PlayerInput for keyboard input processing
+            playerInput.ProcessKeyboardInputs(gameTime,
+                keyState,
+                animState,
+                playerChar.GetSpeed(),
+                playerChar.GetPositionX(),
+                playerChar.GetPositionY());
+
+            // Pass the speed to PlayerInput for joypad input processing
+            playerInput.ProcessJoypadInputs(gameTime, playerChar.GetSpeed());
+
+            // Set the new position according to player input
+            playerChar.SetPositionX(playerInput.UpdatePositionX());
+            playerChar.SetPositionY(playerInput.UpdatePositionY());
+
+            // Prevent the user from leaving the visible screen area
+            playerInput.CheckScreenEdges(graphics,
+                GraphicsDevice,
+                playerChar.GetPositionX(),
+                playerChar.GetPositionY());
+
+            // Set the new position according to player input
+            playerChar.SetPositionX(playerInput.UpdatePositionX());
+            playerChar.SetPositionY(playerInput.UpdatePositionY());
         }
 
-        public void UpdateSkeletonAndPosition(
+        /*
+         * Set up Spine animations and skeletons.
+         */
+        public void UpdatePlayerInput(
             GameTime gameTime,
             KeyboardState keyState,
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice)
         {
-            playerChar.UpdatePositionAndAnimation(gameTime, keyState, graphics, GraphicsDevice);
+            // Update position according to user input
+            UpdateEntityPosition(
+                gameTime,
+                keyState, graphics,
+                GraphicsDevice,
+                spineSetUp.GetAnimState(),
+                spineSetUp.GetSkeleton());
+
+            // Update animations
+            spineSetUp.UpdateEntityAnimations(gameTime);
+        }
+
+        /*
+         * Render Spine skeletons.
+         */
+        public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
+        {
+            spineSetUp.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
         }
     }
 }

@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 
 namespace SoR.Logic.Entities
 {
     /*
      * All other entities are currently based on this class to reduce code repetition.
      */
-    public abstract class PlayerEntity
+    public abstract class Entity
     {
         protected Vector2 position;
         protected float positionX;
@@ -15,7 +13,7 @@ namespace SoR.Logic.Entities
         public float Speed { get; set; }
 
         /*
-         * Get the atlas path.
+         * Get the Atlas path.
          */
         public abstract string GetAtlas();
 
@@ -33,25 +31,6 @@ namespace SoR.Logic.Entities
          * Get the starting animation.
          */
         public abstract string GetStartingAnim();
-
-        /*
-         * Create the SkeletonRenderer.
-         */
-        public abstract void CreateSkeletonRenderer(GraphicsDevice GraphicsDevice);
-
-        /*
-         * Render the current skeleton to the screen.
-         */
-        public abstract void RenderSkeleton(GraphicsDevice GraphicsDevice);
-
-        /*
-         * Set up Spine animations and skeletons.
-         */
-        public abstract void UpdatePositionAndAnimation(
-            GameTime gameTime,
-            KeyboardState keyState,
-            GraphicsDeviceManager graphics,
-            GraphicsDevice GraphicsDevice);
 
         /*
          * Get the current travel speed.

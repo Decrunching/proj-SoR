@@ -10,8 +10,12 @@ namespace SoR
      */
     public class SoR : Game
     {
-        private GraphicsDeviceManager graphics { get; }
-        private KeyboardState keyState { get; set; }
+        private GraphicsDeviceManager graphics
+        { get; }
+
+        private KeyboardState keyState
+        { get; set; }
+
         private GameLogic gameLogic;
 
         /*
@@ -60,7 +64,7 @@ namespace SoR
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
             // Update player input and animations
-            gameLogic.UpdateSkeletonAndPosition(gameTime, keyState, graphics, GraphicsDevice);
+            gameLogic.UpdatePlayerInput(gameTime, keyState, graphics, GraphicsDevice);
 
             base.Update(gameTime);
         }
