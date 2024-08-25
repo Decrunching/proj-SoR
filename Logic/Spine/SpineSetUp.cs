@@ -1,11 +1,9 @@
 ﻿using Spine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using SoR.Logic.Input;
 using SoR.Logic.Entities;
 
-namespace SoR.Logic
+namespace SoR.Logic.Spine
 {
     /*
      * Used to create and update Spine skeletons, skins and animations.
@@ -14,10 +12,9 @@ namespace SoR.Logic
     {
         private SkeletonData skeletonData;
         private SkeletonRenderer skeletonRenderer;
-        public Skeleton skeleton { get; private set; }
-        public Skin skin { get; private set; }
-        public AnimationState animState { get; set; }
-        private PlayerInput playerInput;
+        private Skeleton skeleton;
+        private Skin skin;
+        private AnimationState animState;
         private Entity entity;
 
         /*
@@ -27,9 +24,6 @@ namespace SoR.Logic
         {
             // Instantiate the entity
             entity = playerChar;
-
-            // Instantiate the keyboard input
-            playerInput = new PlayerInput();
 
             // Load texture atlas and attachment loader
             Atlas atlas = new Atlas(entity.GetAtlas(), new XnaTextureLoader(GraphicsDevice));
@@ -55,43 +49,14 @@ namespace SoR.Logic
             animState.SetAnimation(0, entity.GetStartingAnim(), true);
         }
 
-        /*
-         * Update entity position according to player input.
-         */
-        public void UpdateInputPosition(
-            GameTime gameTime,
-            KeyboardState keyState,
-            GraphicsDeviceManager graphics,
-            GraphicsDevice GraphicsDevice)
+        public AnimationState GetAnimState()
         {
-            // Pass the speed, position and animation state to PlayerInput for keyboard input processing
-            playerInput.ProcessKeyboardInputs(gameTime,
-                keyState,
-                animState,
-                entity.GetSpeed(),
-                entity.GetPositionX(),
-                entity.GetPositionY());
+            return animState;
+        }
 
-            // Pass the speed to PlayerInput for joypad input processing
-            playerInput.ProcessJoypadInputs(gameTime, entity.GetSpeed());
-
-            // Set the new position according to player input
-            entity.SetPositionX(playerInput.UpdatePositionX());
-            entity.SetPositionY(playerInput.UpdatePositionY());
-
-            // Prevent the user from leaving the visible screen area
-            playerInput.CheckScreenEdges(graphics,
-                GraphicsDevice,
-                entity.GetPositionX(),
-                entity.GetPositionY());
-
-            // Set the new position according to player input
-            entity.SetPositionX(playerInput.UpdatePositionX());
-            entity.SetPositionY(playerInput.UpdatePositionY());
-
-            // Update the animation state and apply animations to skeletons
-            skeleton.X = entity.GetPositionX();
-            skeleton.Y = entity.GetPositionY();
+        public Skeleton GetSkeleton()
+        {
+            return skeleton;
         }
 
         /*
@@ -99,6 +64,10 @@ namespace SoR.Logic
          */
         public void UpdateEntityAnimations(GameTime gameTime)
         {
+            // Update the animation state and apply animations to skeletons
+            skeleton.X = entity.GetPositionX();
+            skeleton.Y = entity.GetPositionY();
+
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             animState.Apply(skeleton);

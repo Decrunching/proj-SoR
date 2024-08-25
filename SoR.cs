@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SoR.Logic;
+using SoR.Logic.Game;
 
 namespace SoR
 {
@@ -63,7 +63,8 @@ namespace SoR
             // TODO: Add your update logic here
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            gameLogic.SetUpSpine(gameTime, keyState, graphics, GraphicsDevice);
+            // Update player input and animations
+            gameLogic.UpdatePlayerInput(gameTime, keyState, graphics, GraphicsDevice);
 
             base.Update(gameTime);
         }

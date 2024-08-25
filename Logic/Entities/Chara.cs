@@ -10,11 +10,11 @@ namespace SoR.Logic.Entities
         public Chara(GraphicsDeviceManager _graphics)
         {
             // Set the current position on the screen
-            Position = new Vector2(_graphics.PreferredBackBufferWidth / 2,
+            position = new Vector2(_graphics.PreferredBackBufferWidth / 2,
                 _graphics.PreferredBackBufferHeight / 2);
 
-            PositionX = Position.X; // Set the x-axis position
-            PositionY = Position.Y; // Set the y-axis position
+            positionX = position.X; // Set the x-axis position
+            positionY = position.Y; // Set the y-axis position
 
             Speed = 200f; // Set the entity's travel speed
         }

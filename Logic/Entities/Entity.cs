@@ -7,15 +7,10 @@ namespace SoR.Logic.Entities
      */
     public abstract class Entity
     {
-        public Vector2 Position {  get; set; }
-        public float PositionX { get; set; }
-        public float PositionY { get; set; }
+        protected Vector2 position;
+        protected float positionX;
+        protected float positionY;
         public float Speed { get; set; }
-
-        /*
-         * Create dictionary of entity objects?
-         */
-
 
         /*
          * Get the Atlas path.
@@ -51,7 +46,7 @@ namespace SoR.Logic.Entities
         public float GetPositionX()
         {
 
-            return PositionX;
+            return positionX;
         }
 
         /*
@@ -59,7 +54,7 @@ namespace SoR.Logic.Entities
          */
         public float GetPositionY()
         {
-            return PositionY;
+            return positionY;
         }
 
         /*
@@ -67,7 +62,7 @@ namespace SoR.Logic.Entities
          */
         public void SetPositionX(float newPositionX)
         {
-            PositionX = newPositionX;
+            positionX = newPositionX;
         }
 
         /*
@@ -75,7 +70,7 @@ namespace SoR.Logic.Entities
          */
         public void SetPositionY(float newPositionY)
         {
-            PositionY = newPositionY;
+            positionY = newPositionY;
         }
     }
 }
