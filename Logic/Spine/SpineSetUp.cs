@@ -1,7 +1,6 @@
 ﻿using Spine;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SoR.Logic.Entities;
 
 namespace SoR.Logic.Spine
 {
@@ -14,97 +13,62 @@ namespace SoR.Logic.Spine
         private AtlasAttachmentLoader atlasAttachmentLoader;
         private SkeletonJson json;
         private SkeletonData skeletonData;
-        private SkeletonRenderer skeletonRenderer;
         private Skeleton skeleton;
         private Skin skin;
-        private AnimationStateData animStateData;
-        private AnimationState animState;
-        private Entity entity;
 
         /*
          * Constructor for instantiating entities and Spine animations.
          */
-        public SpineSetUp(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, Entity playerChar)
+        public SpineSetUp(GraphicsDeviceManager graphics,
+            GraphicsDevice GraphicsDevice,
+            string atlasPath,
+            string jsonPath,
+            string skinPath,
+            string idlePath)
         {
-            // Instantiate the entity
-            entity = playerChar;
-
             // Load texture atlas and attachment loader
-            atlas = new Atlas(entity.GetAtlas(), new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas(atlasPath, new XnaTextureLoader(GraphicsDevice)); // Create the atlas
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData(entity.GetJson());
+            skeletonData = json.ReadSkeletonData(jsonPath);
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
-            skin = skeletonData.FindSkin(entity.GetSkin());
-            if (skin == null) throw new System.ArgumentException("Can't find skin: " + entity.GetSkin());
+            skin = skeletonData.FindSkin(skinPath);
+            if (skin == null) throw new System.ArgumentException("Can't find skin: " + skinPath);
             skeleton.SetSkin(skin);
-
-            // Setup animation
-            animStateData = new AnimationStateData(skeleton.Data);
-            animState = new AnimationState(animStateData);
-            animState.Apply(skeleton);
-
-            // Set the "fidle" animation on track 1 and leave it looping forever
-            animState.SetAnimation(0, entity.GetStartingAnim(), true);
         }
 
-        public AnimationState GetAnimState()
-        {
-            return animState;
-        }
-
+        /*
+         * Get the skeleton's position.
+         */
         public Skeleton GetSkeleton()
         {
             return skeleton;
         }
 
         /*
+         * Set the position of the skeleton according to player input.
+         */
+        public void SetSkeleton(float positionX, float positionY)
+        {
+            skeleton.X = positionX;
+            skeleton.Y = positionY;
+        }
+
+        /*
          * Update the entity position, animation state and skeleton.
          */
-        public void UpdateEntityAnimations(GameTime gameTime)
+        public void UpdateEntitySkeleton(GameTime gameTime, AnimationState animState)
         {
-            // Update the animation state and apply animations to skeletons
-            skeleton.X = entity.GetPositionX();
-            skeleton.Y = entity.GetPositionY();
-
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             animState.Apply(skeleton);
 
             // Update skeletal transformations
             skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
-        }
-
-        /*
-         * Create the SkeletonRenderer.
-         */
-        public void CreateSkeletonRenderer(GraphicsDevice GraphicsDevice)
-        {
-            // Initialise skeleton renderer with premultiplied alpha
-            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
-            skeletonRenderer.PremultipliedAlpha = true;
-        }
-
-        /*
-         * Render the current skeleton to the screen.
-         */
-        public void RenderSkeleton(GraphicsDevice GraphicsDevice)
-        {
-            // Create the skeleton renderer projection matrix
-            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
-            0,
-                GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height,
-                0, 1, 0);
-
-            // Draw skeletons
-            skeletonRenderer.Begin();
-            skeletonRenderer.Draw(skeleton);
-            skeletonRenderer.End();
         }
     }
 }
