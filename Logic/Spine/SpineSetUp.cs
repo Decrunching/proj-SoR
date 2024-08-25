@@ -10,10 +10,14 @@ namespace SoR.Logic.Spine
      */
     public class SpineSetUp
     {
+        private Atlas atlas;
+        private AtlasAttachmentLoader atlasAttachmentLoader;
+        private SkeletonJson json;
         private SkeletonData skeletonData;
         private SkeletonRenderer skeletonRenderer;
         private Skeleton skeleton;
         private Skin skin;
+        private AnimationStateData animStateData;
         private AnimationState animState;
         private Entity entity;
 
@@ -26,9 +30,9 @@ namespace SoR.Logic.Spine
             entity = playerChar;
 
             // Load texture atlas and attachment loader
-            Atlas atlas = new Atlas(entity.GetAtlas(), new XnaTextureLoader(GraphicsDevice));
-            AtlasAttachmentLoader atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
-            SkeletonJson json = new SkeletonJson(atlasAttachmentLoader);
+            atlas = new Atlas(entity.GetAtlas(), new XnaTextureLoader(GraphicsDevice));
+            atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
+            json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
             skeletonData = json.ReadSkeletonData(entity.GetJson());
@@ -38,10 +42,9 @@ namespace SoR.Logic.Spine
             skin = skeletonData.FindSkin(entity.GetSkin());
             if (skin == null) throw new System.ArgumentException("Can't find skin: " + entity.GetSkin());
             skeleton.SetSkin(skin);
-            skeleton.SetSlotsToSetupPose();
 
             // Setup animation
-            AnimationStateData animStateData = new AnimationStateData(skeleton.Data);
+            animStateData = new AnimationStateData(skeleton.Data);
             animState = new AnimationState(animStateData);
             animState.Apply(skeleton);
 

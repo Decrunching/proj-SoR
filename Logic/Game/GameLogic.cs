@@ -18,7 +18,6 @@ namespace SoR.Logic.Game
         private Entity chara;
         private Entity slime;
         private Entity campfire;
-        private Entity entity;
         private SpineSetUp spineSetUp;
         private PlayerInput playerInput;
         private EntityType entityType;
@@ -42,10 +41,18 @@ namespace SoR.Logic.Game
         public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             gameStart = true;
+
+            entityType = EntityType.Player;
             CreateEntity(graphics);
-            spineSetUp = new SpineSetUp(graphics, GraphicsDevice, GetEntity()); // Instantiate Spine entities
+            spineSetUp = new SpineSetUp(graphics, GraphicsDevice, GetEntity(graphics)); // Instantiate Spine skeletons and animations
             spineSetUp.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer
             playerInput = new PlayerInput(); // Instantiate the keyboard input
+
+            /*entityType = EntityType.EnemySlime;
+            CreateEntity(graphics);
+            spineSetUp = new SpineSetUp(graphics, GraphicsDevice, GetEntity(graphics)); // Instantiate Spine skeletons and animations
+            spineSetUp.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer*/
+
         }
 
         /*
@@ -54,8 +61,6 @@ namespace SoR.Logic.Game
          */
         public void CreateEntity(GraphicsDeviceManager graphics)
         {
-            EntityType entityType = EntityType.Player;
-
             switch (entityType)
             {
                 case EntityType.Player:
@@ -77,11 +82,31 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Get the appropriate entity.
+         * Get a permanent entity.
          */
-        public Entity GetEntity()
+        public Entity GetEntity(GraphicsDeviceManager graphics)
         {
-            return playerChar;
+            if (entityType == EntityType.Player)
+            {
+                return playerChar;
+            }
+            else if (entityType == EntityType.NPCPheasant)
+            {
+                return pheasant;
+            }
+            else if (entityType == EntityType.NPCChara)
+            {
+                return chara;
+            }
+            else if (entityType == EntityType.EnemySlime)
+            {
+                return slime;
+            }
+            else if (entityType == EntityType.EnvironmentFire)
+            {
+                return campfire;
+            }
+            else throw new System.EntryPointNotFoundException("No valid entity type received");
         }
 
         /*
