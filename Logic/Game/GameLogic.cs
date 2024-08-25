@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
 using SoR.Logic.Input;
-using SoR.Logic.Spine;
 using Spine;
 
 namespace SoR.Logic.Game
@@ -18,8 +17,6 @@ namespace SoR.Logic.Game
         private Entity chara;
         private Entity slime;
         private Entity campfire;
-        private SpineSetUp spineSetUp;
-        private PlayerInput playerInput;
         private EntityType entityType;
         private bool gameStart;
 
@@ -35,6 +32,8 @@ namespace SoR.Logic.Game
             EnvironmentFire
         }
 
+        static void playerCharRef(ref Entity playerChar) { }
+
         /*
          * Constructor for initial game setup.
          */
@@ -44,12 +43,9 @@ namespace SoR.Logic.Game
 
             entityType = EntityType.Player;
             CreateEntity(graphics, GraphicsDevice);
-            playerInput = new PlayerInput(); // Instantiate the keyboard input
 
             /*entityType = EntityType.EnemySlime;
-            CreateEntity(graphics);
-            spineSetUp = new SpineSetUp(graphics, GraphicsDevice, GetEntity(graphics)); // Instantiate Spine skeletons and animations
-            spineSetUp.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer*/
+            CreateEntity(graphics);*/
 
         }
 
@@ -108,40 +104,11 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Update entity position according to player input.
+         * Render Spine skeletons.
          */
-        public void UpdateEntityPosition(
-            GameTime gameTime,
-            KeyboardState keyState,
-            GraphicsDeviceManager graphics,
-            GraphicsDevice GraphicsDevice,
-            AnimationState animState,
-            Skeleton skeleton)
+        public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
         {
-            // Pass the speed, position and animation state to PlayerInput for keyboard input processing
-            playerInput.ProcessKeyboardInputs(gameTime,
-                keyState,
-                animState,
-                playerChar.GetSpeed(),
-                playerChar.GetPositionX(),
-                playerChar.GetPositionY());
-
-            // Pass the speed to PlayerInput for joypad input processing
-            playerInput.ProcessJoypadInputs(gameTime, playerChar.GetSpeed());
-
-            // Set the new position according to player input
-            playerChar.SetPositionX(playerInput.UpdatePositionX());
-            playerChar.SetPositionY(playerInput.UpdatePositionY());
-
-            // Prevent the user from leaving the visible screen area
-            playerInput.CheckScreenEdges(graphics,
-                GraphicsDevice,
-                playerChar.GetPositionX(),
-                playerChar.GetPositionY());
-
-            // Set the new position according to player input
-            playerChar.SetPositionX(playerInput.UpdatePositionX());
-            playerChar.SetPositionY(playerInput.UpdatePositionY());
+            playerChar.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
         }
 
         /*
@@ -150,27 +117,30 @@ namespace SoR.Logic.Game
         public void UpdatePlayerInput(
             GameTime gameTime,
             KeyboardState keyState,
+            KeyboardState lastKeyState,
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice)
         {
-            // Update position according to user input
-            UpdateEntityPosition(
+            if (playerChar is PlayerChar player)
+            {
+                // Update position according to user input
+                player.UpdateEntityPosition(
                 gameTime,
-                keyState, graphics,
+                keyState,
+                lastKeyState,
+                graphics,
                 GraphicsDevice,
                 playerChar.GetAnimState(),
                 playerChar.GetSkeleton());
+            }
+            else
+            {
+                // Throw exception if playerChar is somehow not of the type PlayerChar
+                throw new System.InvalidOperationException("playerChar is not of type PlayerChar");
+            }
 
             // Update animations
             playerChar.UpdateEntityAnimations(gameTime);
-        }
-
-        /*
-         * Render Spine skeletons.
-         */
-        public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
-        {
-            playerChar.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
         }
     }
 }

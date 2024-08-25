@@ -1,5 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using SoR.Logic.Input;
 using Spine;
 
 namespace SoR.Logic.Entities
@@ -7,17 +9,19 @@ namespace SoR.Logic.Entities
     /*
      * Stores information unique to the player entity.
      */
-    internal class PlayerChar : Entity
+    public class PlayerChar : Entity
     {
+        private PlayerInput playerInput;
+
         public PlayerChar(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -34,6 +38,8 @@ namespace SoR.Logic.Entities
             // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
+
+            playerInput = new PlayerInput(); // Instantiate the keyboard input
 
             // Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
@@ -59,6 +65,45 @@ namespace SoR.Logic.Entities
         public override Skeleton GetSkeleton()
         {
             return skeleton;
+        }
+
+        /*
+         * Update entity position according to player input.
+         */
+        public void UpdateEntityPosition(
+            GameTime gameTime,
+            KeyboardState keyState,
+            KeyboardState lastKeyState,
+            GraphicsDeviceManager graphics,
+            GraphicsDevice GraphicsDevice,
+            AnimationState animState,
+            Skeleton skeleton)
+        {
+            // Pass the speed, position and animation state to PlayerInput for keyboard input processing
+            playerInput.ProcessKeyboardInputs(gameTime,
+                keyState,
+                lastKeyState,
+                animState,
+                Speed,
+                positionX,
+                positionY);
+
+            // Pass the speed to PlayerInput for joypad input processing
+            playerInput.ProcessJoypadInputs(gameTime, Speed);
+
+            // Set the new position according to player input
+            positionX = playerInput.UpdatePositionX();
+            positionY = playerInput.UpdatePositionY();
+
+            // Prevent the user from leaving the visible screen area
+            playerInput.CheckScreenEdges(graphics,
+                GraphicsDevice,
+                positionX,
+                positionY);
+
+            // Set the new position according to player input
+            positionX = playerInput.UpdatePositionX();
+            positionY = playerInput.UpdatePositionY();
         }
 
         /*

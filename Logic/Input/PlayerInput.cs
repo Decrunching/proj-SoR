@@ -11,7 +11,6 @@ namespace SoR.Logic.Input
      */
     public class PlayerInput
     {
-        private KeyboardState lastKeyState;
         private int deadZone;
         private float speed;
         private float newPositionX;
@@ -31,6 +30,7 @@ namespace SoR.Logic.Input
         public void ProcessKeyboardInputs(
             GameTime gameTime,
             KeyboardState keyState,
+            KeyboardState lastKeyState,
             AnimationState animState,
             float speed,
             float positionX,
@@ -131,7 +131,6 @@ namespace SoR.Logic.Input
                 }
             }
 
-            lastKeyState = keyState; // The previous keyboard state
             lastKeysPressed = keysPressed; // An array of keys that were previously being pressed
         }
 

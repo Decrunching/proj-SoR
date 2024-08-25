@@ -221,7 +221,8 @@ namespace SoR.Properties {
         ///bounds:2,174,323,346
         ///offsets:244,158,800,747
         ///winglower
-        ///bounds:2,46,119,126        /// [rest of string was truncated]&quot;;.
+        ///bounds:2,46,119,126
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string pheasant_atlas {
             get {

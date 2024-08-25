@@ -13,9 +13,8 @@ namespace SoR
         private GraphicsDeviceManager graphics
         { get; }
 
-        private KeyboardState keyState
-        { get; set; }
-
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
         private GameLogic gameLogic;
 
         /*
@@ -64,7 +63,9 @@ namespace SoR
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
             // Update player input and animations
-            gameLogic.UpdatePlayerInput(gameTime, keyState, graphics, GraphicsDevice);
+            gameLogic.UpdatePlayerInput(gameTime, keyState, lastKeyState, graphics, GraphicsDevice);
+
+            lastKeyState = keyState; // Get the previous keyboard state
 
             base.Update(gameTime);
         }
