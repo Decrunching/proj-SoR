@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Spine;
 
 namespace SoR.Logic.Entities
 {
@@ -7,11 +9,35 @@ namespace SoR.Logic.Entities
      */
     internal class PlayerChar : Entity
     {
-        public PlayerChar(GraphicsDeviceManager _graphics)
+        public PlayerChar(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
+            // Load texture atlas and attachment loader
+            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
+            json = new SkeletonJson(atlasAttachmentLoader);
+
+            // Initialise skeleton json
+            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeleton = new Skeleton(skeletonData);
+
+            // Set the skin
+            skeleton.SetSkin(skeletonData.FindSkin("solarknight-0"));
+
+            // Setup animation
+            animStateData = new AnimationStateData(skeleton.Data);
+            animState = new AnimationState(animStateData);
+            animState.Apply(skeleton);
+
+            // Set the "fidle" animation on track 1 and leave it looping forever
+            animState.SetAnimation(0, "idlebattle", true);
+
+            // Initialise skeleton renderer with premultiplied alpha
+            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
+            skeletonRenderer.PremultipliedAlpha = true;
+
             // Set the current position on the screen
-            position = new Vector2(_graphics.PreferredBackBufferWidth / 2,
-                _graphics.PreferredBackBufferHeight / 2);
+            position = new Vector2(graphics.PreferredBackBufferWidth / 2,
+                graphics.PreferredBackBufferHeight / 2);
 
             positionX = position.X; // Set the x-axis position
             positionY = position.Y; // Set the y-axis position
@@ -20,37 +46,54 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Get the Atlas path.
+         * Get the animation state.
          */
-        public override string GetAtlas()
+        public override AnimationState GetAnimState()
         {
-            return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas";
-            //return "D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas";
+            return animState;
         }
 
         /*
-         * Get the json path.
+         * Get the skeleton.
          */
-        public override string GetJson()
+        public override Skeleton GetSkeleton()
         {
-            return "F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json";
-            //return "D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json";
+            return skeleton;
         }
 
         /*
-         * Get the starting skin.
+         * Update the entity position, animation state and skeleton.
          */
-        public override string GetSkin()
+        public override void UpdateEntityAnimations(GameTime gameTime)
         {
-            return "solarknight-0";
+            // Update the animation state and apply animations to skeletons
+            skeleton.X = positionX;
+            skeleton.Y = positionY;
+
+            animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            animState.Apply(skeleton);
+
+            // Update skeletal transformations
+            skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
         }
 
         /*
-         * Get the starting animation.
+         * Render the current skeleton to the screen.
          */
-        public override string GetStartingAnim()
+        public override void RenderSkeleton(GraphicsDevice GraphicsDevice)
         {
-            return "idlebattle";
+            // Create the skeleton renderer projection matrix
+            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
+            0,
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height,
+                0, 1, 0);
+
+            // Draw skeletons
+            skeletonRenderer.Begin();
+            skeletonRenderer.Draw(skeleton);
+            skeletonRenderer.End();
         }
     }
 }

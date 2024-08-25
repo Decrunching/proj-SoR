@@ -43,9 +43,7 @@ namespace SoR.Logic.Game
             gameStart = true;
 
             entityType = EntityType.Player;
-            CreateEntity(graphics);
-            spineSetUp = new SpineSetUp(graphics, GraphicsDevice, GetEntity(graphics)); // Instantiate Spine skeletons and animations
-            spineSetUp.CreateSkeletonRenderer(GraphicsDevice);  // Create the skeleton renderer
+            CreateEntity(graphics, GraphicsDevice);
             playerInput = new PlayerInput(); // Instantiate the keyboard input
 
             /*entityType = EntityType.EnemySlime;
@@ -59,24 +57,24 @@ namespace SoR.Logic.Game
          * Placeholder function for choosing which entity to create. Only use for permanent
          * entities - transient entities are fine being transient.
          */
-        public void CreateEntity(GraphicsDeviceManager graphics)
+        public void CreateEntity(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             switch (entityType)
             {
                 case EntityType.Player:
-                    playerChar = new PlayerChar(graphics);
+                    playerChar = new PlayerChar(graphics, GraphicsDevice);
                     break;
                 case EntityType.NPCPheasant:
-                    pheasant = new Pheasant(graphics);
+                    pheasant = new Pheasant(graphics, GraphicsDevice);
                     break;
                 case EntityType.NPCChara:
-                    chara = new Chara(graphics);
+                    chara = new Chara(graphics, GraphicsDevice);
                     break;
                 case EntityType.EnemySlime:
-                    slime = new Slime(graphics);
+                    slime = new Slime(graphics, GraphicsDevice);
                     break;
                 case EntityType.EnvironmentFire:
-                    campfire = new Campfire(graphics);
+                    campfire = new Campfire(graphics, GraphicsDevice);
                     break;
             }
         }
@@ -160,11 +158,11 @@ namespace SoR.Logic.Game
                 gameTime,
                 keyState, graphics,
                 GraphicsDevice,
-                spineSetUp.GetAnimState(),
-                spineSetUp.GetSkeleton());
+                playerChar.GetAnimState(),
+                playerChar.GetSkeleton());
 
             // Update animations
-            spineSetUp.UpdateEntityAnimations(gameTime);
+            playerChar.UpdateEntityAnimations(gameTime);
         }
 
         /*
@@ -172,7 +170,7 @@ namespace SoR.Logic.Game
          */
         public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
         {
-            spineSetUp.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
+            playerChar.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Spine;
 
 namespace SoR.Logic.Entities
 {
@@ -7,30 +9,39 @@ namespace SoR.Logic.Entities
      */
     public abstract class Entity
     {
+        protected Atlas atlas;
+        protected AtlasAttachmentLoader atlasAttachmentLoader;
+        protected SkeletonJson json;
+        protected SkeletonData skeletonData;
+        protected SkeletonRenderer skeletonRenderer;
+        protected Skeleton skeleton;
+        protected Skin skin;
+        protected AnimationStateData animStateData;
+        protected AnimationState animState;
         protected Vector2 position;
         protected float positionX;
         protected float positionY;
         public float Speed { get; set; }
 
         /*
-         * Get the Atlas path.
+         * Get the animation state.
          */
-        public abstract string GetAtlas();
+        public abstract AnimationState GetAnimState();
 
         /*
-         * Get the json path.
+         * Get the skeleton.
          */
-        public abstract string GetJson();
+        public abstract Skeleton GetSkeleton();
 
         /*
-         * Get the starting skin.
+         * Update the entity position, animation state and skeleton.
          */
-        public abstract string GetSkin();
+        public abstract void UpdateEntityAnimations(GameTime gameTime);
 
         /*
-         * Get the starting animation.
+         * Render the current skeleton to the screen.
          */
-        public abstract string GetStartingAnim();
+        public abstract void RenderSkeleton(GraphicsDevice GraphicsDevice);
 
         /*
          * Get the current travel speed.
