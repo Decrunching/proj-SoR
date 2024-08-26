@@ -9,11 +9,11 @@ namespace SoR.Logic.Entities
     /*
      * Stores information unique to the player entity.
      */
-    public class PlayerChar : Entity
+    public class Player : Entity
     {
         private PlayerInput playerInput;
 
-        public PlayerChar(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
             atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));

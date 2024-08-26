@@ -22,6 +22,7 @@ namespace SoR.Logic.Entities
         protected float positionX;
         protected float positionY;
         public float Speed { get; set; }
+        public string Name { get; set; }
 
         /*
          * Get the animation state.
@@ -32,6 +33,18 @@ namespace SoR.Logic.Entities
          * Get the skeleton.
          */
         public abstract Skeleton GetSkeleton();
+
+        /*
+         * Update entity position according to player input.
+         
+        public abstract void UpdateEntityPosition(
+            GameTime gameTime,
+            KeyboardState keyState,
+            KeyboardState lastKeyState,
+            GraphicsDeviceManager graphics,
+            GraphicsDevice GraphicsDevice,
+            AnimationState animState,
+            Skeleton skeleton);*/
 
         /*
          * Update the entity position, animation state and skeleton.

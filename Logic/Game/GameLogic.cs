@@ -2,8 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
-using SoR.Logic.Input;
-using Spine;
+using System.Collections.Generic;
 
 namespace SoR.Logic.Game
 {
@@ -12,13 +11,8 @@ namespace SoR.Logic.Game
      */
     public class GameLogic
     {
-        private Entity playerChar;
-        private Entity pheasant;
-        private Entity chara;
-        private Entity slime;
-        private Entity campfire;
+        private Dictionary<string, Entity> entities;
         private EntityType entityType;
-        private bool gameStart;
 
         /*
          * Temporary Enums for differentiating between entities
@@ -26,10 +20,10 @@ namespace SoR.Logic.Game
         enum EntityType
         {
             Player,
-            NPCPheasant,
-            NPCChara,
-            EnemySlime,
-            EnvironmentFire
+            Pheasant,
+            Chara,
+            Slime,
+            Fire
         }
 
         static void playerCharRef(ref Entity playerChar) { }
@@ -39,14 +33,22 @@ namespace SoR.Logic.Game
          */
         public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
-            gameStart = true;
+            entities = new Dictionary<string, Entity>();
 
             entityType = EntityType.Player;
             CreateEntity(graphics, GraphicsDevice);
 
-            /*entityType = EntityType.EnemySlime;
-            CreateEntity(graphics);*/
+            entityType = EntityType.Slime;
+            CreateEntity(graphics, GraphicsDevice);
 
+            entityType = EntityType.Chara;
+            CreateEntity(graphics, GraphicsDevice);
+
+            entityType = EntityType.Pheasant;
+            CreateEntity(graphics, GraphicsDevice);
+
+            entityType = EntityType.Fire;
+            CreateEntity(graphics, GraphicsDevice);
         }
 
         /*
@@ -58,49 +60,21 @@ namespace SoR.Logic.Game
             switch (entityType)
             {
                 case EntityType.Player:
-                    playerChar = new PlayerChar(graphics, GraphicsDevice);
+                    entities.Add("player", new Player(graphics, GraphicsDevice) { Name = "player" });
                     break;
-                case EntityType.NPCPheasant:
-                    pheasant = new Pheasant(graphics, GraphicsDevice);
+                case EntityType.Pheasant:
+                    entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Name = "pheasant" });
                     break;
-                case EntityType.NPCChara:
-                    chara = new Chara(graphics, GraphicsDevice);
+                case EntityType.Chara:
+                    entities.Add("chara", new Chara(graphics, GraphicsDevice) { Name = "chara" });
                     break;
-                case EntityType.EnemySlime:
-                    slime = new Slime(graphics, GraphicsDevice);
+                case EntityType.Slime:
+                    entities.Add("slime", new Slime(graphics, GraphicsDevice) { Name = "slime" });
                     break;
-                case EntityType.EnvironmentFire:
-                    campfire = new Campfire(graphics, GraphicsDevice);
+                case EntityType.Fire:
+                    entities.Add("fire", new Campfire(graphics, GraphicsDevice) { Name = "fire" });
                     break;
             }
-        }
-
-        /*
-         * Get a permanent entity.
-         */
-        public Entity GetEntity(GraphicsDeviceManager graphics)
-        {
-            if (entityType == EntityType.Player)
-            {
-                return playerChar;
-            }
-            else if (entityType == EntityType.NPCPheasant)
-            {
-                return pheasant;
-            }
-            else if (entityType == EntityType.NPCChara)
-            {
-                return chara;
-            }
-            else if (entityType == EntityType.EnemySlime)
-            {
-                return slime;
-            }
-            else if (entityType == EntityType.EnvironmentFire)
-            {
-                return campfire;
-            }
-            else throw new System.EntryPointNotFoundException("No valid entity type received");
         }
 
         /*
@@ -108,39 +82,49 @@ namespace SoR.Logic.Game
          */
         public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
         {
-            playerChar.RenderSkeleton(GraphicsDevice); // Render the skeleton to the screen
+            foreach (var entity in entities)
+            {
+                entity.Value.RenderSkeleton(GraphicsDevice); // Render each skeleton to the screen
+            }
         }
 
         /*
          * Set up Spine animations and skeletons.
          */
-        public void UpdatePlayerInput(
+        public void UpdateEntities(
             GameTime gameTime,
             KeyboardState keyState,
             KeyboardState lastKeyState,
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice)
         {
-            if (playerChar is PlayerChar player)
+            if (entities.TryGetValue("player", out Entity playerChar))
             {
-                // Update position according to user input
-                player.UpdateEntityPosition(
-                gameTime,
-                keyState,
-                lastKeyState,
-                graphics,
-                GraphicsDevice,
-                playerChar.GetAnimState(),
-                playerChar.GetSkeleton());
-            }
-            else
-            {
-                // Throw exception if playerChar is somehow not of the type PlayerChar
-                throw new System.InvalidOperationException("playerChar is not of type PlayerChar");
-            }
+                if (playerChar is Player player)
+                {
+                    // Update position according to user input
+                    player.UpdateEntityPosition(
+                    gameTime,
+                    keyState,
+                    lastKeyState,
+                    graphics,
+                    GraphicsDevice,
+                    player.GetAnimState(),
+                    player.GetSkeleton());
+                }
+                else
+                {
+                    // Throw exception if playerChar is somehow not of the type Player
+                    throw new System.InvalidOperationException("playerChar is not of type Player");
+                }
 
-            // Update animations
-            playerChar.UpdateEntityAnimations(gameTime);
+                foreach (var entity in entities)
+                {
+                    // Update animations
+                    entity.Value.UpdateEntityAnimations(gameTime);
+                }
+
+            }
         }
     }
 }

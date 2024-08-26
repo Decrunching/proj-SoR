@@ -63,7 +63,7 @@ namespace SoR
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
             // Update player input and animations
-            gameLogic.UpdatePlayerInput(gameTime, keyState, lastKeyState, graphics, GraphicsDevice);
+            gameLogic.UpdateEntities(gameTime, keyState, lastKeyState, graphics, GraphicsDevice);
 
             lastKeyState = keyState; // Get the previous keyboard state
 
