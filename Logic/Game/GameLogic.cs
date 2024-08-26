@@ -62,7 +62,8 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Placeholder function for choosing which entity to create.
+         * Choose entity to create and place it as a value in the entities dictionary with
+         * a unique string identifier as a key.
          */
         public void CreateEntity(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
@@ -107,7 +108,7 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Render Spine skeletons and ensure entities that are further down on the screen render in front
+         * Render Spine skeletons, and ensure entities that appear further down on the screen are in front
          * of those that are higher up.
          */
         public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)

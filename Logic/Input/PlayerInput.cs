@@ -59,8 +59,7 @@ namespace SoR.Logic.Input
 
             /* Set player animation and position according to keyboard input.
              * 
-             * TO DO?:
-             * Adjust to retain current track number for incoming animations.
+             * TO DO?: Adjust to retain current track number for incoming animations.
              */
             if (keyState.IsKeyDown(Keys.Up))
             {
@@ -99,10 +98,14 @@ namespace SoR.Logic.Input
              * If a key has just been released, set the running animation back to the direction the character
              * is currently moving in. If two keys are being pressed simultaneously, set it to the direction
              * of the most recently pressed key.
+             * 
+             * TO DO: Fix this - doesn't quite work as intended and needs simplifying. Also need to switch to
+             * idle animation while two opposing direction keys are being held down with no other directional
+             * keys.
              */
-            foreach (Keys key in keyIsUp.Keys)
+            foreach (var key in keyIsUp)
             {
-                if (!keyState.IsKeyDown(key) & lastKeyState.IsKeyDown(key))
+                if (key.Value & lastKeyState.IsKeyDown(key.Key))
                 {
                     if (keyState.IsKeyDown(Keys.Right) &
                         !keyState.IsKeyDown(Keys.Left))
@@ -148,7 +151,8 @@ namespace SoR.Logic.Input
         /*
          * Prevent the player from leaving the visible screen area.
          */
-        public void CheckScreenEdges(GraphicsDeviceManager _graphics,
+        public void CheckScreenEdges(
+            GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice,
             float positionX,
             float positionY)
@@ -156,18 +160,18 @@ namespace SoR.Logic.Input
             newPositionX = positionX;
             newPositionY = positionY;
 
-            if (newPositionX > _graphics.PreferredBackBufferWidth - 5)
+            if (newPositionX > graphics.PreferredBackBufferWidth - 5)
             {
-                newPositionX = _graphics.PreferredBackBufferWidth - 5;
+                newPositionX = graphics.PreferredBackBufferWidth - 5;
             }
             else if (newPositionX < 5)
             {
                 newPositionX = 5;
             }
 
-            if (newPositionY > _graphics.PreferredBackBufferHeight - 8)
+            if (newPositionY > graphics.PreferredBackBufferHeight - 8)
             {
-                newPositionY = _graphics.PreferredBackBufferHeight - 8;
+                newPositionY = graphics.PreferredBackBufferHeight - 8;
             }
             else if (newPositionY < 8)
             {
