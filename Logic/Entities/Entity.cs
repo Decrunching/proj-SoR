@@ -55,6 +55,11 @@ namespace SoR.Logic.Entities
          */
         public abstract void RenderSkeleton(GraphicsDevice GraphicsDevice);
 
+        /* 
+         * Get the centre of the screen.
+         */
+        public abstract void GetScreenCentre(Vector2 centreScreen);
+
         /*
          * Get the current travel speed.
          */

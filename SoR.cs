@@ -10,9 +10,7 @@ namespace SoR
      */
     public class SoR : Game
     {
-        private GraphicsDeviceManager graphics
-        { get; }
-
+        private GraphicsDeviceManager graphics;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
         private GameLogic gameLogic;

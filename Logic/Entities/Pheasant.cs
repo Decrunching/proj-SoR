@@ -95,5 +95,18 @@ namespace SoR.Logic.Entities
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
         }
+
+        /* 
+         * Get the centre of the screen.
+         */
+        public override void GetScreenCentre(Vector2 centreScreen)
+        {
+            position = centreScreen;
+
+            position = new Vector2(position.X + 240, position.Y - 150);
+
+            positionX = position.X; // Set the x-axis position
+            positionY = position.Y; // Set the y-axis position
+        }
     }
 }

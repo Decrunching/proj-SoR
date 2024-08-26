@@ -35,12 +35,9 @@ namespace SoR.Logic.Entities
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
 
-            // Set the current position on the screen
+            /*// Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
-                graphics.PreferredBackBufferHeight / 2);
-
-            positionX = position.X; // Set the x-axis position
-            positionY = position.Y; // Set the y-axis position
+                graphics.PreferredBackBufferHeight / 2);*/
 
             Speed = 200f; // Set the entity's travel speed
         }
@@ -66,8 +63,6 @@ namespace SoR.Logic.Entities
          */
         public override void UpdateEntityAnimations(GameTime gameTime)
         {
-
-
             // Update the animation state and apply animations to skeletons
             skeleton.X = positionX;
             skeleton.Y = positionY;
@@ -97,5 +92,18 @@ namespace SoR.Logic.Entities
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
         }
-    }
+
+        /* 
+         * Get the centre of the screen.
+         */
+        public override void GetScreenCentre(Vector2 centreScreen)
+         {
+             position = centreScreen;
+
+            position = new Vector2(position.X + 200, position.Y + 200);
+
+        positionX = position.X; // Set the x-axis position
+            positionY = position.Y; // Set the y-axis position
+        }
+}
 }

@@ -39,9 +39,6 @@ namespace SoR.Logic.Input
         {
             //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
 
-            Keys[] keysPressed = keyState.GetPressedKeys(); // Collect a list of keys currently being pressed
-            Keys[] lastKeysPressed = new Keys[0]; // Collect a list of previously pressed keys that have just been released
-
             // Dictionary to store the input keys and whether they are currently up or pressed.
             Dictionary<Keys, bool> keyIsUp =
                 new Dictionary<Keys, bool>()
@@ -138,8 +135,6 @@ namespace SoR.Logic.Input
             {
                 switchSkin = true; // Space was pressed, so switch skins
             }
-
-            lastKeysPressed = keysPressed; // An array of keys that were previously being pressed
         }
 
         /*

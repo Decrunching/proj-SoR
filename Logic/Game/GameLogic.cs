@@ -13,9 +13,10 @@ namespace SoR.Logic.Game
     {
         private Dictionary<string, Entity> entities;
         private EntityType entityType;
+        private Vector2 centreScreen;
 
         /*
-         * Temporary Enums for differentiating between entities
+         * Enums for differentiating between entities.
          */
         enum EntityType
         {
@@ -26,29 +27,37 @@ namespace SoR.Logic.Game
             Fire
         }
 
-        static void playerCharRef(ref Entity playerChar) { }
-
         /*
          * Constructor for initial game setup.
          */
         public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
+            // Find the centre of the game window
+            centreScreen = new Vector2(graphics.PreferredBackBufferWidth / 2,
+                graphics.PreferredBackBufferHeight / 2);
+
+            // Create a new dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
 
+            // Create the Player entity
             entityType = EntityType.Player;
             CreateEntity(graphics, GraphicsDevice);
 
-            /*entityType = EntityType.Slime;
+            // Create the Slime entity
+            entityType = EntityType.Slime;
             CreateEntity(graphics, GraphicsDevice);
 
+            // Create the Chara entity
             entityType = EntityType.Chara;
             CreateEntity(graphics, GraphicsDevice);
 
+            // Create the Pheasant entity
             entityType = EntityType.Pheasant;
             CreateEntity(graphics, GraphicsDevice);
 
+            // Create the Campfire entity
             entityType = EntityType.Fire;
-            CreateEntity(graphics, GraphicsDevice);*/
+            CreateEntity(graphics, GraphicsDevice);
         }
 
         /*
@@ -61,18 +70,38 @@ namespace SoR.Logic.Game
             {
                 case EntityType.Player:
                     entities.Add("player", new Player(graphics, GraphicsDevice) { Name = "player" });
+                    if (entities.TryGetValue("player", out Entity player))
+                    {
+                        player.GetScreenCentre(centreScreen);
+                    }
                     break;
                 case EntityType.Pheasant:
                     entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Name = "pheasant" });
+                    if (entities.TryGetValue("pheasant", out Entity pheasant))
+                    {
+                        pheasant.GetScreenCentre(centreScreen);
+                    }
                     break;
                 case EntityType.Chara:
                     entities.Add("chara", new Chara(graphics, GraphicsDevice) { Name = "chara" });
+                    if (entities.TryGetValue("chara", out Entity chara))
+                    {
+                        chara.GetScreenCentre(centreScreen);
+                    }
                     break;
                 case EntityType.Slime:
                     entities.Add("slime", new Slime(graphics, GraphicsDevice) { Name = "slime" });
+                    if (entities.TryGetValue("slime", out Entity slime))
+                    {
+                        slime.GetScreenCentre(centreScreen);
+                    }
                     break;
                 case EntityType.Fire:
                     entities.Add("fire", new Campfire(graphics, GraphicsDevice) { Name = "fire" });
+                    if (entities.TryGetValue("fire", out Entity fire))
+                    {
+                        fire.GetScreenCentre(centreScreen);
+                    }
                     break;
             }
         }

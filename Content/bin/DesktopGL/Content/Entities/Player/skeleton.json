@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "wTZteSjY59o", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
+"skeleton": { "hash": "69PmXINfvCE", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
 "bones": [
 	{ "name": "root", "scaleX": 4, "scaleY": 4 },
 	{ "name": "bone", "parent": "root", "y": 9 }
@@ -270,7 +270,8 @@
 		"slots": {
 			"idle": {
 				"attachment": [
-					{ "name": "down" }
+					{ "name": "down" },
+					{ "time": 0.0333, "name": "down" }
 				]
 			},
 			"idle-battle": {
@@ -307,7 +308,8 @@
 		"slots": {
 			"idle": {
 				"attachment": [
-					{ "name": "left" }
+					{ "name": "left" },
+					{ "time": 0.0333, "name": "left" }
 				]
 			},
 			"idle-battle": {
@@ -344,7 +346,8 @@
 		"slots": {
 			"idle": {
 				"attachment": [
-					{ "name": "right" }
+					{ "name": "right" },
+					{ "time": 0.0333, "name": "right" }
 				]
 			},
 			"idle-battle": {
@@ -381,7 +384,8 @@
 		"slots": {
 			"idle": {
 				"attachment": [
-					{ "name": "up" }
+					{ "name": "up" },
+					{ "time": 0.0333, "name": "up" }
 				]
 			},
 			"idle-battle": {
