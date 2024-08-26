@@ -19,7 +19,7 @@ namespace SoR.Logic.Entities
         protected AnimationState animState;
         protected Vector2 position;
         protected float positionX;
-        protected float positionY;
+        public float PositionY {  get; set; }
         public float Speed { get; set; }
         public string Name { get; set; }
 
@@ -82,7 +82,7 @@ namespace SoR.Logic.Entities
          */
         public float GetPositionY()
         {
-            return positionY;
+            return PositionY;
         }
 
         /*
@@ -98,7 +98,7 @@ namespace SoR.Logic.Entities
          */
         public void SetPositionY(float newPositionY)
         {
-            positionY = newPositionY;
+            PositionY = newPositionY;
         }
     }
 }

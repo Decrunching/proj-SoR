@@ -42,7 +42,7 @@ namespace SoR.Logic.Entities
                 graphics.PreferredBackBufferHeight / 2);
 
             positionX = position.X; // Set the x-axis position
-            positionY = position.Y; // Set the y-axis position
+            PositionY = position.Y; // Set the y-axis position
 
             Speed = 200f; // Set the entity's travel speed
         }
@@ -70,7 +70,7 @@ namespace SoR.Logic.Entities
         {
             // Update the animation state and apply animations to skeletons
             skeleton.X = positionX;
-            skeleton.Y = positionY;
+            skeleton.Y = PositionY;
 
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -108,7 +108,7 @@ namespace SoR.Logic.Entities
             position = new Vector2(position.X - 50, position.Y - 150);
 
             positionX = position.X; // Set the x-axis position
-            positionY = position.Y; // Set the y-axis position
+            PositionY = position.Y; // Set the y-axis position
         }
     }
 }

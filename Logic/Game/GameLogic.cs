@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace SoR.Logic.Game
 {
@@ -106,15 +107,17 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Render Spine skeletons.
-         * 
-         * TO DO: Need to sort by y-axis coord.
+         * Render Spine skeletons and ensure entities that are further down on the screen render in front
+         * of those that are higher up.
          */
         public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
         {
-            foreach (var entity in entities)
+            // Sort entities by their y-axis position
+            var sortByYAxis = entities.Values.OrderBy(entity => entity.PositionY);
+
+            foreach (var entity in sortByYAxis)
             {
-                entity.Value.RenderSkeleton(GraphicsDevice); // Render each skeleton to the screen
+                entity.RenderSkeleton(GraphicsDevice); // Render each skeleton to the screen
             }
         }
 
