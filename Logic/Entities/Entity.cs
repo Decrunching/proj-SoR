@@ -15,7 +15,6 @@ namespace SoR.Logic.Entities
         protected SkeletonData skeletonData;
         protected SkeletonRenderer skeletonRenderer;
         protected Skeleton skeleton;
-        protected Skin skin;
         protected AnimationStateData animStateData;
         protected AnimationState animState;
         protected Vector2 position;

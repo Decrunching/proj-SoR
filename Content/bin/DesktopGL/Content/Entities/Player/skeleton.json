@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "bjYJnSvUdlk", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
+"skeleton": { "hash": "wTZteSjY59o", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
 "bones": [
 	{ "name": "root", "scaleX": 4, "scaleY": 4 },
 	{ "name": "bone", "parent": "root", "y": 9 }
@@ -228,7 +228,7 @@
 		"slots": {
 			"idle": {
 				"attachment": [
-					{}
+					{ "name": "down" }
 				]
 			},
 			"idle-battle": {

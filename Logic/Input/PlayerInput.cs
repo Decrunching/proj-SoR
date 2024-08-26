@@ -15,6 +15,7 @@ namespace SoR.Logic.Input
         private float speed;
         private float newPositionX;
         private float newPositionY;
+        private bool switchSkin;
 
         public PlayerInput()
         {
@@ -56,6 +57,8 @@ namespace SoR.Logic.Input
             this.speed = speed;
             newPositionX = positionX;
             newPositionY = positionY;
+
+            switchSkin = false; // Space has not been pressed yet, the skin will not be switched
 
             /* Set player animation and position according to keyboard input.
              * 
@@ -131,7 +134,20 @@ namespace SoR.Logic.Input
                 }
             }
 
+            if (keyState.IsKeyDown(Keys.Space) & !lastKeyState.IsKeyDown(Keys.Space))
+            {
+                switchSkin = true; // Space was pressed, so switch skins
+            }
+
             lastKeysPressed = keysPressed; // An array of keys that were previously being pressed
+        }
+
+        /*
+         * Check whether space was pressed and the skin should change.
+         */
+        public bool SkinHasChanged()
+        {
+            return switchSkin;
         }
 
         /*

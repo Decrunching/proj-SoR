@@ -38,7 +38,7 @@ namespace SoR.Logic.Game
             entityType = EntityType.Player;
             CreateEntity(graphics, GraphicsDevice);
 
-            entityType = EntityType.Slime;
+            /*entityType = EntityType.Slime;
             CreateEntity(graphics, GraphicsDevice);
 
             entityType = EntityType.Chara;
@@ -48,7 +48,7 @@ namespace SoR.Logic.Game
             CreateEntity(graphics, GraphicsDevice);
 
             entityType = EntityType.Fire;
-            CreateEntity(graphics, GraphicsDevice);
+            CreateEntity(graphics, GraphicsDevice);*/
         }
 
         /*

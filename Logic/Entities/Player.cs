@@ -12,6 +12,7 @@ namespace SoR.Logic.Entities
     public class Player : Entity
     {
         private PlayerInput playerInput;
+        private string skin;
 
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
@@ -26,6 +27,7 @@ namespace SoR.Logic.Entities
 
             // Set the skin
             skeleton.SetSkin(skeletonData.FindSkin("solarknight-0"));
+            skin = "solarknight-0";
 
             // Setup animation
             animStateData = new AnimationStateData(skeleton.Data);
@@ -49,6 +51,31 @@ namespace SoR.Logic.Entities
             positionY = position.Y; // Set the y-axis position
 
             Speed = 200f; // Set the entity's travel speed
+        }
+
+        /*
+         * If the player pressed space, switch to the next skin.
+         */
+        public void CheckSwitchSkin()
+        {
+            if (playerInput.SkinHasChanged())
+            {
+                switch (skin)
+                {
+                    case "solarknight-0":
+                        skeleton.SetSkin(skeletonData.FindSkin("lunarknight-0"));
+                        skin = "lunarknight-0";
+                        break;
+                    case "lunarknight-0":
+                        skeleton.SetSkin(skeletonData.FindSkin("knight-0"));
+                        skin = "knight-0";
+                        break;
+                    case "knight-0":
+                        skeleton.SetSkin(skeletonData.FindSkin("solarknight-0"));
+                        skin = "solarknight-0";
+                        break;
+                }
+            }
         }
 
         /*
@@ -107,10 +134,13 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Update the entity position, animation state and skeleton.
+         * Update the skeleton position, skin and animation state.
          */
         public override void UpdateEntityAnimations(GameTime gameTime)
         {
+            // Check whether to change the skin
+            CheckSwitchSkin();
+
             // Update the animation state and apply animations to skeletons
             skeleton.X = positionX;
             skeleton.Y = positionY;

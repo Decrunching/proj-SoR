@@ -66,6 +66,8 @@ namespace SoR.Logic.Entities
          */
         public override void UpdateEntityAnimations(GameTime gameTime)
         {
+
+
             // Update the animation state and apply animations to skeletons
             skeleton.X = positionX;
             skeleton.Y = positionY;
