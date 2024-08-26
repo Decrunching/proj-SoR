@@ -108,6 +108,8 @@ namespace SoR.Logic.Game
 
         /*
          * Render Spine skeletons.
+         * 
+         * TO DO: Need to sort by y-axis coord.
          */
         public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
         {
