@@ -1,13 +1,1 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"F:/MonoGame/SoR/SoR/Content/Entities/Campfire/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Campfire/skeleton.json","CopyItem","File",937,937,0.001249
-"F:/MonoGame/SoR/SoR/Content/Entities/Campfire/templecampfire.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Campfire/templecampfire.atlas","CopyItem","File",178,178,0.0005632
-"F:/MonoGame/SoR/SoR/Content/Entities/Campfire/templecampfire.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Campfire/templecampfire.xnb","TextureProcessor","Texture2DContent",2522,90389,0.1346284
-"F:/MonoGame/SoR/SoR/Content/Entities/Chara/savedit.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Chara/savedit.atlas","CopyItem","File",1025,1025,0.0011817
-"F:/MonoGame/SoR/SoR/Content/Entities/Chara/savedit.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Chara/savedit.xnb","TextureProcessor","Texture2DContent",26708,611157,0.1883861
-"F:/MonoGame/SoR/SoR/Content/Entities/Chara/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Chara/skeleton.json","CopyItem","File",78042,78042,0.0006359
-"F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/savedthepheasant.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Pheasant/savedthepheasant.atlas","CopyItem","File",563,563,0.0006037
-"F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/savedthepheasant.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Pheasant/savedthepheasant.xnb","TextureProcessor","Texture2DContent",18534,682861,0.0197802
-"F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Pheasant/skeleton.json","CopyItem","File",29169,29169,0.0005634
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/Char sprites.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Player/Char sprites.atlas","CopyItem","File",7035,7035,0.0011837
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/Char sprites.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Player/Char sprites.xnb","TextureProcessor","Texture2DContent",81469,2687573,0.1871131
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Player/skeleton.json","CopyItem","File",16495,16495,0.0005108
