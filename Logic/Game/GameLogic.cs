@@ -61,8 +61,7 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Placeholder function for choosing which entity to create. Only use for permanent
-         * entities - transient entities are fine being transient.
+         * Placeholder function for choosing which entity to create.
          */
         public void CreateEntity(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
