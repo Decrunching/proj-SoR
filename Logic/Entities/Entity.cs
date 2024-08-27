@@ -17,6 +17,7 @@ namespace SoR.Logic.Entities
         protected Skeleton skeleton;
         protected AnimationStateData animStateData;
         protected AnimationState animState;
+        protected SkeletonBounds hitbox;
         protected Vector2 position;
         protected float positionX;
         public float PositionY {  get; set; }

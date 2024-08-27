@@ -96,22 +96,19 @@ namespace SoR.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///&quot;skeleton&quot;: { &quot;hash&quot;: &quot;9VuZ2LnIr/A&quot;, &quot;spine&quot;: &quot;4.2.35&quot;, &quot;images&quot;: &quot;../tiles/temple/fire/&quot;, &quot;audio&quot;: &quot;&quot; },
+        ///&quot;skeleton&quot;: { &quot;hash&quot;: &quot;lCsDPQp6akI&quot;, &quot;spine&quot;: &quot;4.2.35&quot;, &quot;images&quot;: &quot;../char sprites/&quot;, &quot;audio&quot;: &quot;&quot; },
         ///&quot;bones&quot;: [
         ///	{ &quot;name&quot;: &quot;root&quot;, &quot;scaleX&quot;: 4, &quot;scaleY&quot;: 4 },
-        ///	{ &quot;name&quot;: &quot;fire&quot;, &quot;parent&quot;: &quot;root&quot; }
+        ///	{ &quot;name&quot;: &quot;bone&quot;, &quot;parent&quot;: &quot;root&quot;, &quot;y&quot;: 9 }
         ///],
         ///&quot;slots&quot;: [
-        ///	{ &quot;name&quot;: &quot;01&quot;, &quot;bone&quot;: &quot;fire&quot; }
-        ///],
-        ///&quot;skins&quot;: [
-        ///	{
-        ///		&quot;name&quot;: &quot;default&quot;,
-        ///		&quot;attachments&quot;: {
-        ///			&quot;01&quot;: {
-        ///				&quot;01&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 },
-        ///				&quot;02&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 },
-        ///				&quot;03&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 [rest of string was truncated]&quot;;.
+        ///	{ &quot;name&quot;: &quot;idle-battle&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run right&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run down&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run left&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run up&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;idle&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;hitbox&quot;, &quot;bone&quot;: &quot;bone&quot;, &quot;attachmen [rest of string was tru....
         /// </summary>
         internal static string campfire_json {
             get {
@@ -168,22 +165,19 @@ namespace SoR.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///&quot;skeleton&quot;: { &quot;hash&quot;: &quot;9VuZ2LnIr/A&quot;, &quot;spine&quot;: &quot;4.2.35&quot;, &quot;images&quot;: &quot;../tiles/temple/fire/&quot;, &quot;audio&quot;: &quot;&quot; },
+        ///&quot;skeleton&quot;: { &quot;hash&quot;: &quot;lCsDPQp6akI&quot;, &quot;spine&quot;: &quot;4.2.35&quot;, &quot;images&quot;: &quot;../char sprites/&quot;, &quot;audio&quot;: &quot;&quot; },
         ///&quot;bones&quot;: [
         ///	{ &quot;name&quot;: &quot;root&quot;, &quot;scaleX&quot;: 4, &quot;scaleY&quot;: 4 },
-        ///	{ &quot;name&quot;: &quot;fire&quot;, &quot;parent&quot;: &quot;root&quot; }
+        ///	{ &quot;name&quot;: &quot;bone&quot;, &quot;parent&quot;: &quot;root&quot;, &quot;y&quot;: 9 }
         ///],
         ///&quot;slots&quot;: [
-        ///	{ &quot;name&quot;: &quot;01&quot;, &quot;bone&quot;: &quot;fire&quot; }
-        ///],
-        ///&quot;skins&quot;: [
-        ///	{
-        ///		&quot;name&quot;: &quot;default&quot;,
-        ///		&quot;attachments&quot;: {
-        ///			&quot;01&quot;: {
-        ///				&quot;01&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 },
-        ///				&quot;02&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 },
-        ///				&quot;03&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 [rest of string was truncated]&quot;;.
+        ///	{ &quot;name&quot;: &quot;idle-battle&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run right&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run down&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run left&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run up&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;idle&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;hitbox&quot;, &quot;bone&quot;: &quot;bone&quot;, &quot;attachmen [rest of string was tru....
         /// </summary>
         internal static string chara_json {
             get {
@@ -221,8 +215,7 @@ namespace SoR.Properties {
         ///bounds:2,174,323,346
         ///offsets:244,158,800,747
         ///winglower
-        ///bounds:2,46,119,126
-        /// [rest of string was truncated]&quot;;.
+        ///bounds:2,46,119,126        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string pheasant_atlas {
             get {
@@ -242,22 +235,19 @@ namespace SoR.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///&quot;skeleton&quot;: { &quot;hash&quot;: &quot;9VuZ2LnIr/A&quot;, &quot;spine&quot;: &quot;4.2.35&quot;, &quot;images&quot;: &quot;../tiles/temple/fire/&quot;, &quot;audio&quot;: &quot;&quot; },
+        ///&quot;skeleton&quot;: { &quot;hash&quot;: &quot;lCsDPQp6akI&quot;, &quot;spine&quot;: &quot;4.2.35&quot;, &quot;images&quot;: &quot;../char sprites/&quot;, &quot;audio&quot;: &quot;&quot; },
         ///&quot;bones&quot;: [
         ///	{ &quot;name&quot;: &quot;root&quot;, &quot;scaleX&quot;: 4, &quot;scaleY&quot;: 4 },
-        ///	{ &quot;name&quot;: &quot;fire&quot;, &quot;parent&quot;: &quot;root&quot; }
+        ///	{ &quot;name&quot;: &quot;bone&quot;, &quot;parent&quot;: &quot;root&quot;, &quot;y&quot;: 9 }
         ///],
         ///&quot;slots&quot;: [
-        ///	{ &quot;name&quot;: &quot;01&quot;, &quot;bone&quot;: &quot;fire&quot; }
-        ///],
-        ///&quot;skins&quot;: [
-        ///	{
-        ///		&quot;name&quot;: &quot;default&quot;,
-        ///		&quot;attachments&quot;: {
-        ///			&quot;01&quot;: {
-        ///				&quot;01&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 },
-        ///				&quot;02&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 },
-        ///				&quot;03&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 [rest of string was truncated]&quot;;.
+        ///	{ &quot;name&quot;: &quot;idle-battle&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run right&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run down&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run left&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run up&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;idle&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;hitbox&quot;, &quot;bone&quot;: &quot;bone&quot;, &quot;attachmen [rest of string was tru....
         /// </summary>
         internal static string pheasant_json {
             get {
@@ -294,7 +284,8 @@ namespace SoR.Properties {
         ///offsets:16,20,128,128
         ///rotate:90
         ///player/boy/idle/02
-        ///bounds:167 [rest of string was truncated]&quot;;.
+        ///bounds:1670,194,80,80
+        ///offsets:16,20,12 [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string player_atlas {
             get {
@@ -314,22 +305,19 @@ namespace SoR.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///&quot;skeleton&quot;: { &quot;hash&quot;: &quot;9VuZ2LnIr/A&quot;, &quot;spine&quot;: &quot;4.2.35&quot;, &quot;images&quot;: &quot;../tiles/temple/fire/&quot;, &quot;audio&quot;: &quot;&quot; },
+        ///&quot;skeleton&quot;: { &quot;hash&quot;: &quot;lCsDPQp6akI&quot;, &quot;spine&quot;: &quot;4.2.35&quot;, &quot;images&quot;: &quot;../char sprites/&quot;, &quot;audio&quot;: &quot;&quot; },
         ///&quot;bones&quot;: [
         ///	{ &quot;name&quot;: &quot;root&quot;, &quot;scaleX&quot;: 4, &quot;scaleY&quot;: 4 },
-        ///	{ &quot;name&quot;: &quot;fire&quot;, &quot;parent&quot;: &quot;root&quot; }
+        ///	{ &quot;name&quot;: &quot;bone&quot;, &quot;parent&quot;: &quot;root&quot;, &quot;y&quot;: 9 }
         ///],
         ///&quot;slots&quot;: [
-        ///	{ &quot;name&quot;: &quot;01&quot;, &quot;bone&quot;: &quot;fire&quot; }
-        ///],
-        ///&quot;skins&quot;: [
-        ///	{
-        ///		&quot;name&quot;: &quot;default&quot;,
-        ///		&quot;attachments&quot;: {
-        ///			&quot;01&quot;: {
-        ///				&quot;01&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 },
-        ///				&quot;02&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 },
-        ///				&quot;03&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 [rest of string was truncated]&quot;;.
+        ///	{ &quot;name&quot;: &quot;idle-battle&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run right&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run down&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run left&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run up&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;idle&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;hitbox&quot;, &quot;bone&quot;: &quot;bone&quot;, &quot;attachmen [rest of string was tru....
         /// </summary>
         internal static string player_json {
             get {
@@ -380,22 +368,19 @@ namespace SoR.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///&quot;skeleton&quot;: { &quot;hash&quot;: &quot;9VuZ2LnIr/A&quot;, &quot;spine&quot;: &quot;4.2.35&quot;, &quot;images&quot;: &quot;../tiles/temple/fire/&quot;, &quot;audio&quot;: &quot;&quot; },
+        ///&quot;skeleton&quot;: { &quot;hash&quot;: &quot;lCsDPQp6akI&quot;, &quot;spine&quot;: &quot;4.2.35&quot;, &quot;images&quot;: &quot;../char sprites/&quot;, &quot;audio&quot;: &quot;&quot; },
         ///&quot;bones&quot;: [
         ///	{ &quot;name&quot;: &quot;root&quot;, &quot;scaleX&quot;: 4, &quot;scaleY&quot;: 4 },
-        ///	{ &quot;name&quot;: &quot;fire&quot;, &quot;parent&quot;: &quot;root&quot; }
+        ///	{ &quot;name&quot;: &quot;bone&quot;, &quot;parent&quot;: &quot;root&quot;, &quot;y&quot;: 9 }
         ///],
         ///&quot;slots&quot;: [
-        ///	{ &quot;name&quot;: &quot;01&quot;, &quot;bone&quot;: &quot;fire&quot; }
-        ///],
-        ///&quot;skins&quot;: [
-        ///	{
-        ///		&quot;name&quot;: &quot;default&quot;,
-        ///		&quot;attachments&quot;: {
-        ///			&quot;01&quot;: {
-        ///				&quot;01&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 },
-        ///				&quot;02&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 },
-        ///				&quot;03&quot;: { &quot;x&quot;: 16, &quot;y&quot;: -16, &quot;width&quot;: 32, &quot;height&quot;: 32 [rest of string was truncated]&quot;;.
+        ///	{ &quot;name&quot;: &quot;idle-battle&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run right&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run down&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run left&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;run up&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;idle&quot;, &quot;bone&quot;: &quot;bone&quot; },
+        ///	{ &quot;name&quot;: &quot;hitbox&quot;, &quot;bone&quot;: &quot;bone&quot;, &quot;attachmen [rest of string was tru....
         /// </summary>
         internal static string slime_json {
             get {

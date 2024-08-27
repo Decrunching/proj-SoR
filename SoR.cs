@@ -7,6 +7,9 @@ namespace SoR
 {
     /*
      * The main game class, through which all other code runs. This project utilises Spine and Monogame.
+     *
+     * @author Katherine Town
+     * @version 27/08/2024
      */
 
     /**************************************************************************************************************************

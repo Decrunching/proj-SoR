@@ -33,6 +33,9 @@ namespace SoR.Logic.Entities
             // Set the "fidle" animation on track 1 and leave it looping forever
             animState.SetAnimation(0, "idle", true);
 
+            // Create hitbox
+            hitbox = new SkeletonBounds();
+
             // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;

@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -13,6 +15,7 @@ namespace SoR.Logic.Game
     public class GameLogic
     {
         private Dictionary<string, Entity> entities;
+        private string[] presentEntities;
         private EntityType entityType;
         private Vector2 centreScreen;
 
@@ -37,28 +40,36 @@ namespace SoR.Logic.Game
             centreScreen = new Vector2(graphics.PreferredBackBufferWidth / 2,
                 graphics.PreferredBackBufferHeight / 2);
 
-            // Create a new dictionary for storing entities as values with string labels for keys
+            // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
+
+            // Create ArrayList to keep track of entities that are currently present
+            presentEntities = new string[0];
 
             // Create the Player entity
             entityType = EntityType.Player;
             CreateEntity(graphics, GraphicsDevice);
+            presentEntities.Append("player");
 
             // Create the Slime entity
             entityType = EntityType.Slime;
             CreateEntity(graphics, GraphicsDevice);
+            presentEntities.Append("slime");
 
             // Create the Chara entity
             entityType = EntityType.Chara;
             CreateEntity(graphics, GraphicsDevice);
+            presentEntities.Append("chara");
 
             // Create the Pheasant entity
             entityType = EntityType.Pheasant;
             CreateEntity(graphics, GraphicsDevice);
+            presentEntities.Append("pheasant");
 
             // Create the Campfire entity
             entityType = EntityType.Fire;
             CreateEntity(graphics, GraphicsDevice);
+            presentEntities.Append("fire");
         }
 
         /*
@@ -151,14 +162,37 @@ namespace SoR.Logic.Game
                     // Throw exception if playerChar is somehow not of the type Player
                     throw new System.InvalidOperationException("playerChar is not of type Player");
                 }
-
-                foreach (var entity in entities)
-                {
-                    // Update animations
-                    entity.Value.UpdateEntityAnimations(gameTime);
-                }
-
             }
+
+            foreach (var entity in entities)
+            {
+                // Update animations
+                entity.Value.UpdateEntityAnimations(gameTime);
+            }
+        }
+
+        /*
+         * Placeholder function for dealing/taking damage.
+         */
+        public void Damage(Entity entity)
+        {
+            /*
+            if (entities.TryGetValue("player", out Entity playerChar))
+            {
+                if (playerChar is Player player)
+                {
+                    If (entity.CollidesWith(player))
+                    {
+                        player.Battle(entity);
+                    }
+                }
+                else
+                {
+                    // Throw exception if playerChar is somehow not of the type Player
+                    throw new System.InvalidOperationException("playerChar is not of type Player");
+                }
+            }
+             */
         }
     }
 }

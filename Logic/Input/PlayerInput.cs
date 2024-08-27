@@ -63,6 +63,10 @@ namespace SoR.Logic.Input
              */
             if (keyState.IsKeyDown(Keys.Up))
             {
+                if (CollidesWith(entity))
+                {
+
+                }
                 newPositionY -= newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Up))
                 {

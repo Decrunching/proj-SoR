@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Input;
 using Spine;
+using System.Collections;
 
 namespace SoR.Logic.Entities
 {
@@ -39,6 +40,9 @@ namespace SoR.Logic.Entities
             // Set the "fidle" animation on track 1 and leave it looping forever
             animState.SetAnimation(0, "idlebattle", true);
 
+            // Create hitbox
+            hitbox = new SkeletonBounds();
+
             // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
@@ -53,6 +57,70 @@ namespace SoR.Logic.Entities
             PositionY = position.Y; // Set the y-axis position
 
             Speed = 200f; // Set the entity's travel speed
+        }
+
+        /*
+         * Placeholder function for handling battles.
+         */
+        public void Battle(Entity entity)
+        {
+            /*
+
+             */
+        }
+
+        /*
+         * Check for collision with other entities.
+         */
+        public bool CollidesWith(Skeleton entity)
+        {
+            hitbox.Update(skeleton, true);
+
+            SkeletonBounds entityHitbox = new SkeletonBounds();
+            entityHitbox.Update(entity, true);
+
+            if (hitbox.AabbIntersectsSkeleton(entityHitbox))
+            {
+                if (hitbox.ContainsPoint(positionX, PositionY) != null)
+                {
+                    return true;
+                }
+
+                foreach (Polygon polygon in entityHitbox.Polygons)
+                {
+                    ArrayList vertices = new ArrayList();
+
+                    for (int i = 0; i < polygon.Vertices.Length; i = i + 2)
+                    {
+                        // Add each vertex's x,y coordinate pair to the new vertices array
+                        Vector2 point = new Vector2(polygon.Vertices[i], polygon.Vertices[i + 1]);
+                        vertices.Add(point);
+                    }
+
+                    for (int i = 0; i < vertices.Count; i++)
+                    {
+                        // Update the hitbox with the new x,y coordinates
+                        Vector2 pointOne = (Vector2)vertices[i];
+                        Vector2 pointTwo = new Vector2();
+
+                        if (i == 0)
+                        {
+                            pointTwo = (Vector2)vertices[vertices.Count - 1];
+                        }
+                        else
+                        {
+                            pointTwo = (Vector2)vertices[i - 1];
+                        }
+
+                        if (hitbox.IntersectsSegment(pointOne.X, pointOne.Y, pointTwo.X, pointTwo.Y) != null)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+
+            return false;
         }
 
         /*
