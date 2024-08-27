@@ -193,8 +193,9 @@ namespace SoR.Logic.Input
                 is inside bounding box (not what we need)
             }
 
-            if (player.CollidesWith(entity)
-            & playerBox.MaxX > entityBox.MinX
+            // The player has collided with the entity, else this wouldn't have been called.
+            // So:
+            if (playerBox.MaxX > entityBox.MinX
             & )
             {
                 newPosition = positionX - 1;
