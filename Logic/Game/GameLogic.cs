@@ -2,8 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
-using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -156,18 +154,23 @@ namespace SoR.Logic.Game
                     GraphicsDevice,
                     player.GetAnimState(),
                     player.GetSkeleton());
+
+                    foreach (var entity in entities)
+                    {
+                        if (player.CollidesWith(entity.Value.GetSkeleton()))
+                        {
+
+                        }
+
+                        // Update animations
+                        entity.Value.UpdateEntityAnimations(gameTime);
+                    }
                 }
                 else
                 {
                     // Throw exception if playerChar is somehow not of the type Player
                     throw new System.InvalidOperationException("playerChar is not of type Player");
                 }
-            }
-
-            foreach (var entity in entities)
-            {
-                // Update animations
-                entity.Value.UpdateEntityAnimations(gameTime);
             }
         }
 

@@ -63,10 +63,6 @@ namespace SoR.Logic.Input
              */
             if (keyState.IsKeyDown(Keys.Up))
             {
-                if (CollidesWith(entity))
-                {
-
-                }
                 newPositionY -= newPlayerSpeed;
                 if (!lastKeyState.IsKeyDown(Keys.Up))
                 {
@@ -153,9 +149,9 @@ namespace SoR.Logic.Input
         }
 
         /*
-         * Prevent the player from leaving the visible screen area.
+         * Handle environmental collision. Currently just the edge of the game window.
          */
-        public void CheckScreenEdges(
+        public void EnvironCollision(
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice,
             float positionX,
@@ -181,6 +177,22 @@ namespace SoR.Logic.Input
             {
                 newPositionY = 8;
             }
+        }
+
+        /*
+         * Handle collision between entities.
+         */
+        public void EntityCollision(SkeletonBounds playerBox, SkeletonBounds entityBox)
+        {
+            /*
+            if (playerBox.maxX > entityBox.MinX
+            & playerBox.MinX < entityBox.MaxX
+            & playerBox.MaxY > entityBox.MinY
+            & playerBox.MinY < entityBox.MaxY)
+            {
+                is inside bounding box
+            }
+             */
         }
 
         /*

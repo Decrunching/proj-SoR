@@ -192,8 +192,8 @@ namespace SoR.Logic.Entities
             positionX = playerInput.UpdatePositionX();
             PositionY = playerInput.UpdatePositionY();
 
-            // Prevent the user from leaving the visible screen area
-            playerInput.CheckScreenEdges(graphics,
+            // Handle player collision
+            playerInput.EnvironCollision(graphics,
                 GraphicsDevice,
                 positionX,
                 PositionY);
