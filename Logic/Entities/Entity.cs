@@ -17,12 +17,15 @@ namespace SoR.Logic.Entities
         protected Skeleton skeleton;
         protected AnimationStateData animStateData;
         protected AnimationState animState;
+        protected Attachment hitboxAttachment;
         protected SkeletonBounds hitbox;
+        protected Slot slot;
         protected Vector2 position;
         protected float positionX;
-        public float PositionY {  get; set; }
+        protected float positionY;
         public float Speed { get; set; }
         public string Name { get; set; }
+        public bool Render { get; set; }
 
         /*
          * Get the animation state.
@@ -33,6 +36,11 @@ namespace SoR.Logic.Entities
          * Get the skeleton.
          */
         public abstract Skeleton GetSkeleton();
+
+        /*
+         * Get the hitbox.
+         */
+        public abstract SkeletonBounds GetHitbox();
 
         /*
          * Update entity position according to player input.
@@ -62,44 +70,13 @@ namespace SoR.Logic.Entities
         public abstract void GetScreenCentre(Vector2 centreScreen);
 
         /*
-         * Get the current travel speed.
-         */
-        public float GetSpeed()
-        {
-            return Speed;
-        }
-
-        /*
          * Get the current x-axis position.
          */
-        public float GetPositionX()
-        {
-
-            return positionX;
-        }
+        public abstract float GetPositionX();
 
         /*
          * Get the current y-axis position.
          */
-        public float GetPositionY()
-        {
-            return PositionY;
-        }
-
-        /*
-         * Set the current x-axis position.
-         */
-        public void SetPositionX(float newPositionX)
-        {
-            positionX = newPositionX;
-        }
-
-        /*
-         * Set the current y-axis position.
-         */
-        public void SetPositionY(float newPositionY)
-        {
-            PositionY = newPositionY;
-        }
+        public abstract float GetPositionY();
     }
 }

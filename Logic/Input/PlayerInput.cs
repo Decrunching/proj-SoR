@@ -141,14 +141,6 @@ namespace SoR.Logic.Input
         }
 
         /*
-         * Check whether space was pressed and the skin should change.
-         */
-        public bool SkinHasChanged()
-        {
-            return switchSkin;
-        }
-
-        /*
          * Handle environmental collision. Currently just the edge of the game window.
          */
         public void EnvironCollision(
@@ -177,34 +169,6 @@ namespace SoR.Logic.Input
             {
                 newPositionY = 8;
             }
-        }
-
-        /*
-         * Handle collision between entities.
-         */
-        public void EntityCollision(SkeletonBounds playerBox, SkeletonBounds entityBox)
-        {
-            /*
-            if (playerBox.maxX > entityBox.MinX
-            & playerBox.MinX < entityBox.MaxX
-            & playerBox.MaxY > entityBox.MinY
-            & playerBox.MinY < entityBox.MaxY)
-            {
-                is inside bounding box (not what we need)
-            }
-
-            // The player has collided with the entity, else this wouldn't have been called.
-            // So:
-            if (playerBox.MaxX > entityBox.MinX
-            & )
-            {
-                newPosition = positionX - 1;
-            }
-            else if (playerBox.MinX < entityBox.MaxX)
-            {
-                
-            }
-             */
         }
 
         /*
@@ -254,6 +218,14 @@ namespace SoR.Logic.Input
         public float UpdatePositionY()
         {
             return newPositionY;
+        }
+
+        /*
+         * Check whether space was pressed and the skin should change.
+         */
+        public bool SkinHasChanged()
+        {
+            return switchSkin;
         }
     }
 }

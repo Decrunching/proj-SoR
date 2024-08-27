@@ -13,7 +13,6 @@ namespace SoR.Logic.Game
     public class GameLogic
     {
         private Dictionary<string, Entity> entities;
-        private string[] presentEntities;
         private EntityType entityType;
         private Vector2 centreScreen;
 
@@ -41,33 +40,28 @@ namespace SoR.Logic.Game
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
 
-            // Create ArrayList to keep track of entities that are currently present
-            presentEntities = new string[0];
+            // Create dictionary to keep track of entities that are currently being rendered
+            entities = new Dictionary<string, Entity>();
 
             // Create the Player entity
             entityType = EntityType.Player;
             CreateEntity(graphics, GraphicsDevice);
-            presentEntities.Append("player");
 
             // Create the Slime entity
             entityType = EntityType.Slime;
             CreateEntity(graphics, GraphicsDevice);
-            presentEntities.Append("slime");
 
             // Create the Chara entity
             entityType = EntityType.Chara;
             CreateEntity(graphics, GraphicsDevice);
-            presentEntities.Append("chara");
 
             // Create the Pheasant entity
             entityType = EntityType.Pheasant;
             CreateEntity(graphics, GraphicsDevice);
-            presentEntities.Append("pheasant");
 
             // Create the Campfire entity
             entityType = EntityType.Fire;
             CreateEntity(graphics, GraphicsDevice);
-            presentEntities.Append("fire");
         }
 
         /*
@@ -79,35 +73,35 @@ namespace SoR.Logic.Game
             switch (entityType)
             {
                 case EntityType.Player:
-                    entities.Add("player", new Player(graphics, GraphicsDevice) { Name = "player" });
+                    entities.Add("player", new Player(graphics, GraphicsDevice) { Name = "player", Render = true });
                     if (entities.TryGetValue("player", out Entity player))
                     {
                         player.GetScreenCentre(centreScreen);
                     }
                     break;
                 case EntityType.Pheasant:
-                    entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Name = "pheasant" });
+                    entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Name = "pheasant", Render = true });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
                         pheasant.GetScreenCentre(centreScreen);
                     }
                     break;
                 case EntityType.Chara:
-                    entities.Add("chara", new Chara(graphics, GraphicsDevice) { Name = "chara" });
+                    entities.Add("chara", new Chara(graphics, GraphicsDevice) { Name = "chara", Render = true });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
                         chara.GetScreenCentre(centreScreen);
                     }
                     break;
                 case EntityType.Slime:
-                    entities.Add("slime", new Slime(graphics, GraphicsDevice) { Name = "slime" });
+                    entities.Add("slime", new Slime(graphics, GraphicsDevice) { Name = "slime", Render = true });
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
                         slime.GetScreenCentre(centreScreen);
                     }
                     break;
                 case EntityType.Fire:
-                    entities.Add("fire", new Campfire(graphics, GraphicsDevice) { Name = "fire" });
+                    entities.Add("fire", new Campfire(graphics, GraphicsDevice) { Name = "fire", Render = true });
                     if (entities.TryGetValue("fire", out Entity fire))
                     {
                         fire.GetScreenCentre(centreScreen);
@@ -123,7 +117,7 @@ namespace SoR.Logic.Game
         public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
         {
             // Sort entities by their y-axis position
-            var sortByYAxis = entities.Values.OrderBy(entity => entity.PositionY);
+            var sortByYAxis = entities.Values.OrderBy(entity => entity.GetPositionY());
 
             foreach (var entity in sortByYAxis)
             {
@@ -157,13 +151,20 @@ namespace SoR.Logic.Game
 
                     foreach (var entity in entities)
                     {
-                        if (player.CollidesWith(entity.Value.GetSkeleton()))
+                        if (entity.Value.Render)
                         {
+                            if (player.CollidesWith(entity.Value.GetSkeleton(), entity.Value.GetHitbox()))
+                            {
+                                player.EntityCollision(
+                                    player.GetHitbox(),
+                                    entity.Value.GetHitbox(),
+                                    player.GetPositionX(),
+                                    player.GetPositionY());
+                            }
 
+                            // Update animations
+                            entity.Value.UpdateEntityAnimations(gameTime);
                         }
-
-                        // Update animations
-                        entity.Value.UpdateEntityAnimations(gameTime);
                     }
                 }
                 else

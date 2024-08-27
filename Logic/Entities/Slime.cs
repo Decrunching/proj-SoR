@@ -12,14 +12,14 @@ namespace SoR.Logic.Entities
         public Slime(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -64,13 +64,21 @@ namespace SoR.Logic.Entities
         }
 
         /*
+         * Get the hitbox.
+         */
+        public override SkeletonBounds GetHitbox()
+        {
+            return hitbox;
+        }
+
+        /*
          * Update the entity position, animation state and skeleton.
          */
         public override void UpdateEntityAnimations(GameTime gameTime)
         {
             // Update the animation state and apply animations to skeletons
             skeleton.X = positionX;
-            skeleton.Y = PositionY;
+            skeleton.Y = positionY;
 
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -102,13 +110,30 @@ namespace SoR.Logic.Entities
          * Get the centre of the screen.
          */
         public override void GetScreenCentre(Vector2 centreScreen)
-         {
-             position = centreScreen;
+        {
+            position = centreScreen;
 
             position = new Vector2(position.X + 200, position.Y + 200);
 
-        positionX = position.X; // Set the x-axis position
-            PositionY = position.Y; // Set the y-axis position
+            positionX = position.X; // Set the x-axis position
+            positionY = position.Y; // Set the y-axis position
         }
-}
+
+        /*
+         * Get the current x-axis position.
+         */
+        public override float GetPositionX()
+        {
+
+            return positionX;
+        }
+
+        /*
+         * Get the current y-axis position.
+         */
+        public override float GetPositionY()
+        {
+            return positionY;
+        }
+    }
 }
