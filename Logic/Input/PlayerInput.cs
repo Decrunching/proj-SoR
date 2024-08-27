@@ -190,7 +190,18 @@ namespace SoR.Logic.Input
             & playerBox.MaxY > entityBox.MinY
             & playerBox.MinY < entityBox.MaxY)
             {
-                is inside bounding box
+                is inside bounding box (not what we need)
+            }
+
+            if (player.CollidesWith(entity)
+            & playerBox.MaxX > entityBox.MinX
+            & )
+            {
+                newPosition = positionX - 1;
+            }
+            else if (playerBox.MinX < entityBox.MaxX)
+            {
+                
             }
              */
         }
