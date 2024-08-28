@@ -8,3 +8,4 @@ Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Siz
 "F:/MonoGame/SoR/SoR/Content/Entities/Slime/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Slime/skeleton.json","CopyItem","File",3979,3979,0.0006773
 "F:/MonoGame/SoR/SoR/Content/Entities/Slime/Slime.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Slime/Slime.atlas","CopyItem","File",427,427,0.0006032
 "F:/MonoGame/SoR/SoR/Content/Entities/Slime/Slime.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Slime/Slime.xnb","TextureProcessor","Texture2DContent",8551,299461,0.0107566
+"F:/MonoGame/SoR/SoR/Content/Fonts/File.spritefont","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Fonts/File.xnb","FontDescriptionProcessor","SpriteFontContent",2078,37919,0.2194922

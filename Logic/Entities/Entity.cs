@@ -26,8 +26,12 @@ namespace SoR.Logic.Entities
         protected float prevPositionX;
         protected float prevPositionY;
         protected int hitpoints;
-        protected string MaxX;
-        protected string MaxY;
+        protected string showMaxX;
+        protected string showMaxY;
+        protected string showMinX;
+        protected string showMinY;
+        protected string showPositionX;
+        protected string showPositionY;
         public float Speed { get; set; }
         public string Name { get; set; }
         public bool Render { get; set; }
@@ -78,6 +82,11 @@ namespace SoR.Logic.Entities
          * Render the current skeleton to the screen.
          */
         public abstract void RenderSkeleton(GraphicsDevice GraphicsDevice);
+
+        /*
+         * Draw text to the screen.
+         */
+        public abstract void DrawText(SpriteBatch spriteBatch, SpriteFont font);
 
         /* 
          * Get the centre of the screen.

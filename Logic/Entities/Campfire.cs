@@ -142,6 +142,16 @@ namespace SoR.Logic.Entities
             skeletonRenderer.End();
         }
 
+        /*
+         * Draw text to the screen.
+         */
+        public override void DrawText(SpriteBatch spriteBatch, SpriteFont font)
+        {
+            /*spriteBatch.Begin();
+            spriteBatch.DrawString(font, "File", new Vector2(100, 100), Color.BlueViolet);
+            spriteBatch.End();*/
+        }
+
         /* 
          * Get the centre of the screen.
          */

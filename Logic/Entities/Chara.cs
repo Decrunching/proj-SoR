@@ -9,9 +9,6 @@ namespace SoR.Logic.Entities
      */
     internal class Chara : Entity
     {
-        private string MaxX;
-        private string MaxY;
-
         public Chara(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
@@ -143,6 +140,16 @@ namespace SoR.Logic.Entities
             skeletonRenderer.Begin();
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
+        }
+
+        /*
+         * Draw text to the screen.
+         */
+        public override void DrawText(SpriteBatch spriteBatch, SpriteFont font)
+        {
+            /*spriteBatch.Begin();
+            spriteBatch.DrawString(font, "File", new Vector2(100, 100), Color.BlueViolet);
+            spriteBatch.End();*/
         }
 
         /* 

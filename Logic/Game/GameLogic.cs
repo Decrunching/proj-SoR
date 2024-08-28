@@ -15,6 +15,7 @@ namespace SoR.Logic.Game
         private Dictionary<string, Entity> entities;
         private EntityType entityType;
         private Vector2 centreScreen;
+        private SpriteBatch spriteBatch;
         private SpriteFont font;
 
         /*
@@ -32,8 +33,14 @@ namespace SoR.Logic.Game
         /*
          * Constructor for initial game setup.
          */
-        public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, SoR game)
         {
+            // Initialise SpriteBatch
+            spriteBatch = new SpriteBatch(GraphicsDevice);
+
+            // Font used for drawing text
+            font = game.Content.Load<SpriteFont>("Fonts/File");
+
             // Find the centre of the game window
             centreScreen = new Vector2(graphics.PreferredBackBufferWidth / 2,
                 graphics.PreferredBackBufferHeight / 2);
@@ -119,7 +126,11 @@ namespace SoR.Logic.Game
 
             foreach (var entity in sortByYAxis)
             {
-                entity.RenderSkeleton(GraphicsDevice); // Render each skeleton to the screen
+                if (entity.Render)
+                {
+                    entity.RenderSkeleton(GraphicsDevice); // Render each skeleton to the screen
+                    entity.DrawText(spriteBatch, font); // Draw any text associated with entity
+                }
             }
         }
 

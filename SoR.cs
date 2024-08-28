@@ -77,7 +77,6 @@ namespace SoR
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 800;
             graphics.PreferredBackBufferHeight = 600;
-            this = game;
         }
 
         /*
@@ -96,8 +95,8 @@ namespace SoR
         protected override void LoadContent()
         {
             // TODO: use this.Content to load your game content here
-
-            gameLogic = new GameLogic(graphics, GraphicsDevice);
+            game = this;
+            gameLogic = new GameLogic(graphics, GraphicsDevice, game);
         }
 
         /*

@@ -61,8 +61,6 @@ namespace SoR.Logic.Entities
             Speed = 200f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
-
-            font = Content.Load<SpriteFont>("File");
         }
 
         /*
@@ -258,6 +256,14 @@ namespace SoR.Logic.Entities
                 positionX = prevPositionX;
                 positionY = prevPositionY;
             }
+
+            // Set the text above the character to show the MaxX, MaxY, MinX, MinY, positionX and positionY
+            showMaxX = hitbox.MaxX.ToString();
+            showMaxY = hitbox.MaxY.ToString();
+            showMinX = hitbox.MinX.ToString();
+            showMinY = hitbox.MinY.ToString();
+            showPositionX = positionX.ToString();
+            showPositionY = positionY.ToString();
         }
 
         /*
@@ -297,6 +303,22 @@ namespace SoR.Logic.Entities
             skeletonRenderer.Begin();
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
+        }
+
+        /*
+         * Draw text to the screen.
+         */
+        public override void DrawText(SpriteBatch spriteBatch, SpriteFont font)
+        {
+            spriteBatch.Begin();
+            spriteBatch.DrawString(
+                font,
+                "MaxX: " + showMaxX + ", MaxY: " + showMaxY +
+                "\n MinX: " + showMinX + ", MinY: " + showMinY +
+                "\n positionX: " + showPositionX + ", positionY: " + showPositionY,
+                new Vector2(positionX - 70, positionY - hitbox.Height * 2.5F),
+                Color.BlueViolet);
+            spriteBatch.End();
         }
 
         /* 
