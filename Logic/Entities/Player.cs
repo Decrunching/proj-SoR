@@ -17,14 +17,14 @@ namespace SoR.Logic.Entities
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -203,8 +203,6 @@ namespace SoR.Logic.Entities
          */
         public void UpdateEntityPosition(
             GameTime gameTime,
-            KeyboardState keyState,
-            KeyboardState lastKeyState,
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice,
             AnimationState animState,
@@ -215,8 +213,6 @@ namespace SoR.Logic.Entities
 
             // Pass the speed, position and animation state to PlayerInput for keyboard input processing
             playerInput.ProcessKeyboardInputs(gameTime,
-                keyState,
-                lastKeyState,
                 animState,
                 Speed,
                 positionX,
@@ -241,17 +237,20 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Handle collision between entities.
+         * Handle entity collision.
+         * 
+         * TO DO:
+         * Player should still be able to move perpendicular to hitbox edge when in collision.
          */
         public void EntityCollision(
             GameTime gameTime,
             SkeletonBounds playerBox,
             SkeletonBounds entityBox)
         {
-            if (playerBox.MaxX < entityBox.Width * 0.8
-            | playerBox.MinX > entityBox.Width * 0.8
-            | playerBox.MinY > entityBox.Height * 0.5
-            | playerBox.MaxY < entityBox.Height * 0.5)
+            if (playerBox.MaxX > entityBox.MinX
+            | playerBox.MinX < entityBox.MaxX
+            | playerBox.MinY > entityBox.Height
+            | playerBox.MaxY < entityBox.Height)
             {
                 positionX = prevPositionX;
                 positionY = prevPositionY;
@@ -313,10 +312,8 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "MaxX: " + showMaxX + ", MaxY: " + showMaxY +
-                "\nMinX: " + showMinX + ", MinY: " + showMinY +
                 "\npositionX: " + showPositionX + ", positionY: " + showPositionY,
-                new Vector2(positionX - 70, positionY - hitbox.Height * 2F),
+                new Vector2(positionX - 150, positionY - hitbox.Height * 7F),
                 Color.BlueViolet);
             spriteBatch.End();
         }

@@ -1,11 +1,20 @@
 {
-"skeleton": { "hash": "sYAbAYEBoYY", "spine": "4.2.35", "images": "../working/char animation/", "audio": "" },
+"skeleton": {
+	"hash": "gJ5DRS5EClM",
+	"spine": "4.2.35",
+	"x": -54.09,
+	"y": -35.97,
+	"width": 108.27,
+	"height": 104.28,
+	"images": "../working/char animation/",
+	"audio": ""
+},
 "bones": [
 	{ "name": "root", "rotation": -0.15, "scaleX": 2, "scaleY": 2 },
 	{ "name": "jelly", "parent": "root" }
 ],
 "slots": [
-	{ "name": "jellyanim-atkd and idle-01", "bone": "jelly" },
+	{ "name": "jellyanim-atkd and idle-01", "bone": "jelly", "attachment": "jellyanim/atkd and idle/01" },
 	{ "name": "hitbox", "bone": "root", "attachment": "hitbox" }
 ],
 "skins": [
@@ -15,8 +24,8 @@
 			"hitbox": {
 				"hitbox": {
 					"type": "boundingbox",
-					"vertexCount": 8,
-					"vertices": [ 0.09, -3.5, -8.65, -1.78, -12.74, 3.26, -8.88, 13.36, 0.22, 17.84, 9.16, 12.63, 12.1, 2.93, 7.26, -2.12 ]
+					"vertexCount": 4,
+					"vertices": [ -14.99, -6.93, -15.1, 9.65, 14.94, 9.51, 14.9, -7.05 ]
 				}
 			},
 			"jellyanim-atkd and idle-01": {
@@ -50,18 +59,7 @@
 				"hitbox": {
 					"hitbox": {
 						"deform": [
-							{ "curve": "stepped" },
-							{
-								"time": 0.5,
-								"offset": 7,
-								"vertices": [ -5.03938, 0, -7.17286, 0, -5.03938 ],
-								"curve": "stepped"
-							},
-							{
-								"time": 0.9667,
-								"offset": 7,
-								"vertices": [ -5.03938, 0, -5.03938, 0, -5.03938 ]
-							}
+							{}
 						]
 					}
 				}
@@ -90,34 +88,7 @@
 				"hitbox": {
 					"hitbox": {
 						"deform": [
-							{
-								"offset": 7,
-								"vertices": [ -2.90386, 0, -4.64884, 0, -2.90386 ],
-								"curve": "stepped"
-							},
-							{
-								"time": 0.1667,
-								"offset": 2,
-								"vertices": [ -2.04317, 0.50057, -3.04759, -0.02175, -2.10062, -5.75859, 0, -10.85426, 2.33362, -5.50957, 3.05502, 0.01174, 1.86641, 0.53649 ],
-								"curve": "stepped"
-							},
-							{
-								"time": 0.3333,
-								"offset": 2,
-								"vertices": [ -4.35005, 0.39175, -6.48809, -0.01702, -4.47234, -5.138, 0, -16.87569, 4.96648, -4.94311, 6.50206, 0.00919, 3.97196, 0.41986 ],
-								"curve": "stepped"
-							},
-							{
-								"time": 0.6667,
-								"offset": 7,
-								"vertices": [ -2.90386, 0, -4.64884, 0, -2.90386 ],
-								"curve": "stepped"
-							},
-							{
-								"time": 0.9333,
-								"offset": 7,
-								"vertices": [ -2.90386, 0, -4.64884, 0, -2.90386 ]
-							}
+							{}
 						]
 					}
 				}
@@ -144,14 +115,7 @@
 				"hitbox": {
 					"hitbox": {
 						"deform": [
-							{ "curve": "stepped" },
-							{
-								"time": 0.5,
-								"offset": 7,
-								"vertices": [ -3.48944, 0, -4.84641, 0, -3.48944 ],
-								"curve": "stepped"
-							},
-							{ "time": 0.9667 }
+							{}
 						]
 					}
 				}

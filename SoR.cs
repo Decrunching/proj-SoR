@@ -61,8 +61,6 @@ namespace SoR
     public class SoR : Game
     {
         private GraphicsDeviceManager graphics;
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
         private GameLogic gameLogic;
         private SoR game;
 
@@ -75,8 +73,8 @@ namespace SoR
             Content.RootDirectory = "Content";
             IsMouseVisible = true;
             graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = 1000;
+            graphics.PreferredBackBufferHeight = 800;
         }
 
         /*
@@ -109,12 +107,9 @@ namespace SoR
                 Exit();
 
             // TODO: Add your update logic here
-            keyState = Keyboard.GetState(); // Get the current keyboard state
 
             // Update player input and animations
-            gameLogic.UpdateEntities(gameTime, keyState, lastKeyState, graphics, GraphicsDevice);
-
-            lastKeyState = keyState; // Get the previous keyboard state
+            gameLogic.UpdateEntities(gameTime, graphics, GraphicsDevice);
 
             base.Update(gameTime);
         }

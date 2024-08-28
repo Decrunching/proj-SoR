@@ -12,14 +12,14 @@ namespace SoR.Logic.Entities
         public Slime(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -168,10 +168,8 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "MaxX: " + showMaxX + ", MaxY: " + showMaxY +
-                "\nMinX: " + showMinX + ", MinY: " + showMinY +
                 "\npositionX: " + showPositionX + ", positionY: " + showPositionY,
-                new Vector2(positionX - 70, positionY - hitbox.Height * 2F),
+                new Vector2(positionX - 150, positionY - hitbox.Height * 3F),
                 Color.BlueViolet);
             spriteBatch.End();
         }

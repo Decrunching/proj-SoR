@@ -11,6 +11,8 @@ namespace SoR.Logic.Input
      */
     public class PlayerInput
     {
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
         private int deadZone;
         private float speed;
         private float newPositionX;
@@ -30,14 +32,14 @@ namespace SoR.Logic.Input
          */
         public void ProcessKeyboardInputs(
             GameTime gameTime,
-            KeyboardState keyState,
-            KeyboardState lastKeyState,
             AnimationState animState,
             float speed,
             float positionX,
             float positionY)
         {
             //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
+
+            keyState = Keyboard.GetState(); // Get the current keyboard state
 
             // Dictionary to store the input keys and whether they are currently up or pressed.
             Dictionary<Keys, bool> keyIsUp =
@@ -138,6 +140,8 @@ namespace SoR.Logic.Input
             {
                 switchSkin = true; // Space was pressed, so switch skins
             }
+
+            lastKeyState = keyState; // Get the previous keyboard state
         }
 
         /*

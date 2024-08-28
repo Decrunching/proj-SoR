@@ -122,7 +122,7 @@ namespace SoR.Logic.Game
         public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
         {
             // Sort entities by their y-axis position
-            var sortByYAxis = entities.Values.OrderBy(entity => entity.GetPositionY());
+            var sortByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
 
             foreach (var entity in sortByYAxis)
             {
@@ -139,8 +139,6 @@ namespace SoR.Logic.Game
          */
         public void UpdateEntities(
             GameTime gameTime,
-            KeyboardState keyState,
-            KeyboardState lastKeyState,
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice)
         {
@@ -151,8 +149,6 @@ namespace SoR.Logic.Game
                     // Update position according to user input
                     player.UpdateEntityPosition(
                     gameTime,
-                    keyState,
-                    lastKeyState,
                     graphics,
                     GraphicsDevice,
                     player.GetAnimState(),
