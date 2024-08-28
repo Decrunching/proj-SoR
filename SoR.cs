@@ -64,11 +64,12 @@ namespace SoR
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
         private GameLogic gameLogic;
+        private SoR game;
 
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
          */
-    public SoR()
+        public SoR()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -76,6 +77,7 @@ namespace SoR
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 800;
             graphics.PreferredBackBufferHeight = 600;
+            this = game;
         }
 
         /*

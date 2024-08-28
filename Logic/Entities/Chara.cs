@@ -9,6 +9,9 @@ namespace SoR.Logic.Entities
      */
     internal class Chara : Entity
     {
+        private string MaxX;
+        private string MaxY;
+
         public Chara(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader

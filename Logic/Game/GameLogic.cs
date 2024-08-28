@@ -15,6 +15,7 @@ namespace SoR.Logic.Game
         private Dictionary<string, Entity> entities;
         private EntityType entityType;
         private Vector2 centreScreen;
+        private SpriteFont font;
 
         /*
          * Enums for differentiating between entities.

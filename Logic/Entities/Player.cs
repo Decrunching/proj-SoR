@@ -61,6 +61,8 @@ namespace SoR.Logic.Entities
             Speed = 200f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
+
+            font = Content.Load<SpriteFont>("File");
         }
 
         /*
@@ -210,6 +212,9 @@ namespace SoR.Logic.Entities
             AnimationState animState,
             Skeleton skeleton)
         {
+            prevPositionX = positionX;
+            prevPositionY = positionY;
+
             // Pass the speed, position and animation state to PlayerInput for keyboard input processing
             playerInput.ProcessKeyboardInputs(gameTime,
                 keyState,
@@ -245,31 +250,13 @@ namespace SoR.Logic.Entities
             SkeletonBounds playerBox,
             SkeletonBounds entityBox)
         {
-            float newPlayerSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (playerBox.MaxX < entityBox.MaxX / 2
-            & playerBox.MaxY < entityBox.MaxY - (entityBox.MaxY * 0.2))
+            if (playerBox.MaxX < entityBox.MinX + (entityBox.Width * 0.8)
+            | playerBox.MinX > entityBox.MaxX - (entityBox.Width * 0.8)
+            | playerBox.MinY > entityBox.MaxY - (playerBox.Height * 0.8)
+            | playerBox.MaxY < entityBox.MinY + (entityBox.Height * 0.8))
             {
-                position.X -= newPlayerSpeed;
-                position.Y -= newPlayerSpeed;
-            }
-            if (playerBox.MaxX > entityBox.MaxX / 2
-            & playerBox.MaxY > entityBox.MaxY - (entityBox.MaxY * 0.2))
-            {
-                position.X += newPlayerSpeed;
-                position.Y += newPlayerSpeed;
-            }
-            if (playerBox.MaxX > entityBox.MaxX / 2
-            & playerBox.MaxY < entityBox.MaxY - (entityBox.MaxY * 0.2))
-            {
-                position.X += newPlayerSpeed;
-                position.Y -= newPlayerSpeed;
-            }
-            if (playerBox.MaxX < entityBox.MaxX / 2
-            & playerBox.MaxY > entityBox.MaxY - (entityBox.MaxY * 0.2))
-            {
-                position.X -= newPlayerSpeed;
-                position.Y += newPlayerSpeed;
+                positionX = prevPositionX;
+                positionY = prevPositionY;
             }
         }
 

@@ -103,3 +103,10 @@
 /processorParam:TextureFormat=Color
 /build:Entities/Slime/Slime.png
 
+#begin Fonts/File.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/File.spritefont
+

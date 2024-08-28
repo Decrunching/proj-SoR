@@ -23,7 +23,11 @@ namespace SoR.Logic.Entities
         protected Vector2 position;
         protected float positionX;
         protected float positionY;
+        protected float prevPositionX;
+        protected float prevPositionY;
         protected int hitpoints;
+        protected string MaxX;
+        protected string MaxY;
         public float Speed { get; set; }
         public string Name { get; set; }
         public bool Render { get; set; }

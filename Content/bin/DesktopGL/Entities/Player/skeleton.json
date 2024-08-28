@@ -1,5 +1,5 @@
 {
-"skeleton": { "hash": "bjYJnSvUdlk", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
+"skeleton": { "hash": "YHO2C4Z3e2M", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
 "bones": [
 	{ "name": "root", "scaleX": 4, "scaleY": 4 },
 	{ "name": "bone", "parent": "root", "y": 9 }
@@ -10,9 +10,22 @@
 	{ "name": "run down", "bone": "bone" },
 	{ "name": "run left", "bone": "bone" },
 	{ "name": "run up", "bone": "bone" },
-	{ "name": "idle", "bone": "bone" }
+	{ "name": "idle", "bone": "bone" },
+	{ "name": "hitbox", "bone": "root", "attachment": "hitbox" }
 ],
 "skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"hitbox": {
+				"hitbox": {
+					"type": "boundingbox",
+					"vertexCount": 7,
+					"vertices": [ 1.95, 0.01, 2.41, 6.08, 3.18, 16.2, -0.01, 17.91, -3.12, 16.3, -2.4, 6.04, -1.98, 0.01 ]
+				}
+			}
+		}
+	},
 	{
 		"name": "0-4",
 		"attachments": {
@@ -226,9 +239,14 @@
 "animations": {
 	"idlebattle": {
 		"slots": {
+			"hitbox": {
+				"attachment": [
+					{ "name": "hitbox" }
+				]
+			},
 			"idle": {
 				"attachment": [
-					{}
+					{ "name": "down" }
 				]
 			},
 			"idle-battle": {
@@ -262,15 +280,59 @@
 				]
 			}
 		},
+		"attachments": {
+			"default": {
+				"hitbox": {
+					"hitbox": {
+						"deform": [
+							{
+								"vertices": [ 3.6121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -3.99387 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.1667,
+								"vertices": [ 3.6121, 0, 0, 0, 0, -1.1453, 0, -1.1453, 0, -1.1453, 0, 0, -3.99387 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.3333,
+								"vertices": [ 3.6121, 0, 0, -0.6167, 0, -2.12174, 0, -2.12174, 0, -2.12174, 0, -0.6167, -3.99387 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.5,
+								"vertices": [ 3.6121, 0, 0, -0.6167, 0, -2.12174, 0, -2.12174, 0, -2.12174, 0, -0.6167, -3.99387 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.6667,
+								"vertices": [ 3.6121, 0, 0, 0, 0, -1.12083, 0, -1.12083, 0, -1.12083, 0, 0, -3.99387 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.8333,
+								"vertices": [ 3.6121, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -3.99387 ]
+							}
+						]
+					}
+				}
+			}
+		},
 		"drawOrder": [
 			{}
 		]
 	},
 	"idledown": {
 		"slots": {
+			"hitbox": {
+				"attachment": [
+					{ "name": "hitbox" }
+				]
+			},
 			"idle": {
 				"attachment": [
-					{ "name": "down" }
+					{ "name": "down" },
+					{ "time": 0.0333, "name": "down" }
 				]
 			},
 			"idle-battle": {
@@ -305,9 +367,15 @@
 	},
 	"idleleft": {
 		"slots": {
+			"hitbox": {
+				"attachment": [
+					{ "name": "hitbox" }
+				]
+			},
 			"idle": {
 				"attachment": [
-					{ "name": "left" }
+					{ "name": "left" },
+					{ "time": 0.0333, "name": "left" }
 				]
 			},
 			"idle-battle": {
@@ -342,9 +410,15 @@
 	},
 	"idleright": {
 		"slots": {
+			"hitbox": {
+				"attachment": [
+					{ "name": "hitbox" }
+				]
+			},
 			"idle": {
 				"attachment": [
-					{ "name": "right" }
+					{ "name": "right" },
+					{ "time": 0.0333, "name": "right" }
 				]
 			},
 			"idle-battle": {
@@ -379,9 +453,15 @@
 	},
 	"idleup": {
 		"slots": {
+			"hitbox": {
+				"attachment": [
+					{ "name": "hitbox" }
+				]
+			},
 			"idle": {
 				"attachment": [
-					{ "name": "up" }
+					{ "name": "up" },
+					{ "time": 0.0333, "name": "up" }
 				]
 			},
 			"idle-battle": {
@@ -416,6 +496,11 @@
 	},
 	"rundown": {
 		"slots": {
+			"hitbox": {
+				"attachment": [
+					{ "name": "hitbox" }
+				]
+			},
 			"idle": {
 				"attachment": [
 					{}
@@ -453,6 +538,59 @@
 				"attachment": [
 					{}
 				]
+			}
+		},
+		"attachments": {
+			"default": {
+				"hitbox": {
+					"hitbox": {
+						"deform": [
+							{ "curve": "stepped" },
+							{
+								"time": 0.1,
+								"offset": 1,
+								"vertices": [ 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.2,
+								"offset": 1,
+								"vertices": [ 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.3,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ],
+								"curve": "stepped"
+							},
+							{ "time": 0.4, "curve": "stepped" },
+							{
+								"time": 0.5,
+								"offset": 1,
+								"vertices": [ 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.6,
+								"offset": 1,
+								"vertices": [ 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.7,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.7667,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ]
+							}
+						]
+					}
+				}
 			}
 		},
 		"drawOrder": [
@@ -461,6 +599,11 @@
 	},
 	"runleft": {
 		"slots": {
+			"hitbox": {
+				"attachment": [
+					{ "name": "hitbox" }
+				]
+			},
 			"idle": {
 				"attachment": [
 					{}
@@ -498,6 +641,59 @@
 				"attachment": [
 					{}
 				]
+			}
+		},
+		"attachments": {
+			"default": {
+				"hitbox": {
+					"hitbox": {
+						"deform": [
+							{ "curve": "stepped" },
+							{
+								"time": 0.1,
+								"offset": 1,
+								"vertices": [ 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.2,
+								"offset": 1,
+								"vertices": [ 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.3,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ],
+								"curve": "stepped"
+							},
+							{ "time": 0.4, "curve": "stepped" },
+							{
+								"time": 0.5,
+								"offset": 1,
+								"vertices": [ 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.6,
+								"offset": 1,
+								"vertices": [ 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.7,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.7667,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ]
+							}
+						]
+					}
+				}
 			}
 		},
 		"drawOrder": [
@@ -506,6 +702,11 @@
 	},
 	"runright": {
 		"slots": {
+			"hitbox": {
+				"attachment": [
+					{ "name": "hitbox" }
+				]
+			},
 			"idle": {
 				"attachment": [
 					{}
@@ -545,12 +746,70 @@
 				]
 			}
 		},
+		"attachments": {
+			"default": {
+				"hitbox": {
+					"hitbox": {
+						"deform": [
+							{ "curve": "stepped" },
+							{
+								"time": 0.1,
+								"offset": 1,
+								"vertices": [ 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.2,
+								"offset": 1,
+								"vertices": [ 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.3,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ],
+								"curve": "stepped"
+							},
+							{ "time": 0.4, "curve": "stepped" },
+							{
+								"time": 0.5,
+								"offset": 1,
+								"vertices": [ 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.6,
+								"offset": 1,
+								"vertices": [ 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.7,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.7667,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ]
+							}
+						]
+					}
+				}
+			}
+		},
 		"drawOrder": [
 			{}
 		]
 	},
 	"runup": {
 		"slots": {
+			"hitbox": {
+				"attachment": [
+					{ "name": "hitbox" }
+				]
+			},
 			"idle": {
 				"attachment": [
 					{}
@@ -588,6 +847,59 @@
 					{ "time": 0.7, "name": "7" },
 					{ "time": 0.7667, "name": "7" }
 				]
+			}
+		},
+		"attachments": {
+			"default": {
+				"hitbox": {
+					"hitbox": {
+						"deform": [
+							{ "curve": "stepped" },
+							{
+								"time": 0.1,
+								"offset": 1,
+								"vertices": [ 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.2,
+								"offset": 1,
+								"vertices": [ 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.3,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ],
+								"curve": "stepped"
+							},
+							{ "time": 0.4, "curve": "stepped" },
+							{
+								"time": 0.5,
+								"offset": 1,
+								"vertices": [ 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037, 0, 0.91037 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.6,
+								"offset": 1,
+								"vertices": [ 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997, 0, 2.31997 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.7,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ],
+								"curve": "stepped"
+							},
+							{
+								"time": 0.7667,
+								"offset": 1,
+								"vertices": [ 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417, 0, 0.73417 ]
+							}
+						]
+					}
+				}
 			}
 		},
 		"drawOrder": [
