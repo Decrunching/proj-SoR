@@ -41,7 +41,6 @@ namespace SoR.Logic.Entities
 
             // Create hitbox
             slot = skeleton.FindSlot("hitbox");
-            hitbox = new SkeletonBounds();
             hitboxAttachment = skeleton.GetAttachment("hitbox", "hitbox");
             slot.Attachment = hitboxAttachment;
             skeleton.SetAttachment("hitbox", "hitbox");
@@ -60,6 +59,8 @@ namespace SoR.Logic.Entities
             positionY = position.Y; // Set the y-axis position
 
             Speed = 200f; // Set the entity's travel speed
+
+            hitpoints = 100; // Set the starting number of hitpoints
         }
 
         /*
@@ -68,95 +69,84 @@ namespace SoR.Logic.Entities
         public void Battle(Entity entity)
         {
             /*
-
+            if (entities.TryGetValue("player", out Entity playerChar))
+            {
+                if (playerChar is Player player)
+                {
+                    If (entity.CollidesWith(player))
+                    {
+                        player.Battle(entity);
+                    }
+                }
+                else
+                {
+                    // Throw exception if playerChar is somehow not of the type Player
+                    throw new System.InvalidOperationException("playerChar is not of type Player");
+                }
+            }
              */
         }
 
         /*
          * Check for collision with other entities.
          */
-        public bool CollidesWith(Skeleton entity, SkeletonBounds entityHitbox)
+        public override bool CollidesWith(Entity entity)
         {
-            if (hitbox.AabbIntersectsSkeleton(entityHitbox))
+            entity.UpdateHitbox(new SkeletonBounds());
+            entity.GetHitbox().Update(entity.GetSkeleton(), true);
+
+            hitbox = new SkeletonBounds();
+            hitbox.Update(skeleton, true);
+
+            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
             {
                 return true;
-
-                /*foreach (Polygon polygon in entityHitbox.Polygons)
-                {
-                    ArrayList vertices = new ArrayList();
-
-                    for (int i = 0; i < polygon.Vertices.Length; i = i + 2)
-                    {
-                        // Add each vertex's x,y coordinate pair to the new vertices array
-                        Vector2 point = new Vector2(polygon.Vertices[i], polygon.Vertices[i + 1]);
-                        vertices.Add(point);
-                    }
-
-                    for (int i = 0; i < vertices.Count; i++)
-                    {
-                        // Update the hitbox with the new x,y coordinates
-                        Vector2 pointOne = (Vector2)vertices[i];
-                        Vector2 pointTwo = new Vector2();
-
-                        if (i == 0)
-                        {
-                            pointTwo = (Vector2)vertices[vertices.Count - 1];
-                        }
-                        else
-                        {
-                            pointTwo = (Vector2)vertices[i - 1];
-                        }
-
-                        if (hitbox.IntersectsSegment(pointOne.X, pointOne.Y, pointTwo.X, pointTwo.Y) != null)
-                        {
-                            return true;
-                        }
-                    }
-                }*/
             }
-            else
+
+            /*// Pull hitbox apart and put it back together again
+            // Can't remember right now why this was necessary, think it was to do with the shield
+            foreach (Polygon polygon in entityHitbox.Polygons)
             {
-                return false;
-            }
+                ArrayList vertices = new ArrayList();
 
+                for (int i = 0; i < polygon.Vertices.Length; i = i + 2)
+                {
+                    // Add each vertex's x,y coordinate pair to the new vertices array
+                    Vector2 point = new Vector2(polygon.Vertices[i], polygon.Vertices[i + 1]);
+                    vertices.Add(point);
+                }
+
+                for (int i = 0; i < vertices.Count; i++)
+                {
+                    // Update the hitbox with the new x,y coordinates
+                    Vector2 pointOne = (Vector2)vertices[i];
+                    Vector2 pointTwo = new Vector2();
+
+                    if (i == 0)
+                    {
+                        pointTwo = (Vector2)vertices[vertices.Count - 1];
+                    }
+                    else
+                    {
+                        pointTwo = (Vector2)vertices[i - 1];
+                    }
+
+                    if (hitbox.IntersectsSegment(pointOne.X, pointOne.Y, pointTwo.X, pointTwo.Y) != null)
+                    {
+                        return true;
+                    }
+                }
+            }*/
+
+            return false;
         }
 
         /*
-         * Handle collision between entities.
+         * Update the hitbox after a collision.
          */
-        public void EntityCollision(
-            SkeletonBounds playerBox,
-            SkeletonBounds entityBox,
-            float positionX,
-            float positionY)
+        public override void UpdateHitbox(SkeletonBounds updatedHitbox)
         {
-            float newPositionX = positionX;
-            float newPositionY = positionY;
-
-            if (playerBox.MaxX < entityBox.MaxX / 2
-            & playerBox.MaxY < entityBox.MaxY - (entityBox.MaxY * 0.2))
-            {
-                newPositionX = positionX - 1;
-                newPositionY = positionY - 1;
-            }
-            else if (playerBox.MinX > entityBox.MaxX / 2
-            & playerBox.MaxY < entityBox.MaxY - (entityBox.MaxY * 0.2))
-            {
-                newPositionX = positionX + 1;
-                newPositionY = positionY - 1;
-            }
-            else if (playerBox.MinX > entityBox.MaxX / 2
-            & playerBox.MaxY > entityBox.MaxY - (entityBox.MaxY * 0.2))
-            {
-                newPositionX = positionX + 1;
-                newPositionY = positionY + 1;
-            }
-            else if (playerBox.MaxX < entityBox.MaxX / 2
-            & playerBox.MaxY > entityBox.MaxY - (entityBox.MaxY * 0.2))
-            {
-                newPositionX = positionX - 1;
-                newPositionY = positionY + 1;
-            }
+            hitbox = updatedHitbox;
         }
 
         /*
@@ -248,6 +238,42 @@ namespace SoR.Logic.Entities
         }
 
         /*
+         * Handle collision between entities.
+         */
+        public void EntityCollision(
+            GameTime gameTime,
+            SkeletonBounds playerBox,
+            SkeletonBounds entityBox)
+        {
+            float newPlayerSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (playerBox.MaxX < entityBox.MaxX / 2
+            & playerBox.MaxY < entityBox.MaxY - (entityBox.MaxY * 0.2))
+            {
+                position.X -= newPlayerSpeed;
+                position.Y -= newPlayerSpeed;
+            }
+            if (playerBox.MaxX > entityBox.MaxX / 2
+            & playerBox.MaxY > entityBox.MaxY - (entityBox.MaxY * 0.2))
+            {
+                position.X += newPlayerSpeed;
+                position.Y += newPlayerSpeed;
+            }
+            if (playerBox.MaxX > entityBox.MaxX / 2
+            & playerBox.MaxY < entityBox.MaxY - (entityBox.MaxY * 0.2))
+            {
+                position.X += newPlayerSpeed;
+                position.Y -= newPlayerSpeed;
+            }
+            if (playerBox.MaxX < entityBox.MaxX / 2
+            & playerBox.MaxY > entityBox.MaxY - (entityBox.MaxY * 0.2))
+            {
+                position.X -= newPlayerSpeed;
+                position.Y += newPlayerSpeed;
+            }
+        }
+
+        /*
          * Update the skeleton position, skin and animation state.
          */
         public override void UpdateEntityAnimations(GameTime gameTime)
@@ -266,7 +292,6 @@ namespace SoR.Logic.Entities
 
             // Update skeletal transformations
             skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
-            //hitboxAttachment.ComputeWorldVertices(, hitboxAttachment.Vertices);
         }
 
         /*
@@ -315,6 +340,23 @@ namespace SoR.Logic.Entities
         public override float GetPositionY()
         {
             return positionY;
+        }
+
+        /*
+         * Set the new x-axis position.
+         */
+        public void SetPositionX(float newPositionX)
+        {
+
+            positionX = newPositionX;
+        }
+
+        /*
+         * Set the new y-axis position.
+         */
+        public void SetPositionY(float newPositionY)
+        {
+            positionY = newPositionY;
         }
     }
 }

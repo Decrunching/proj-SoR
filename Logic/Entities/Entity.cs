@@ -23,9 +23,20 @@ namespace SoR.Logic.Entities
         protected Vector2 position;
         protected float positionX;
         protected float positionY;
+        protected int hitpoints;
         public float Speed { get; set; }
         public string Name { get; set; }
         public bool Render { get; set; }
+
+        /*
+         * Check for collision with other entities.
+         */
+        public abstract bool CollidesWith(Entity entity);
+
+        /*
+         * Update the hitbox after a collision.
+         */
+        public abstract void UpdateHitbox(SkeletonBounds updatedHitbox);
 
         /*
          * Get the animation state.

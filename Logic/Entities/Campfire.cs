@@ -34,7 +34,10 @@ namespace SoR.Logic.Entities
             animState.SetAnimation(0, "idle", true);
 
             // Create hitbox
-            hitbox = new SkeletonBounds();
+            slot = skeleton.FindSlot("hitbox");
+            hitboxAttachment = skeleton.GetAttachment("hitbox", "hitbox");
+            slot.Attachment = hitboxAttachment;
+            skeleton.SetAttachment("hitbox", "hitbox");
 
             // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
@@ -48,6 +51,35 @@ namespace SoR.Logic.Entities
             positionY = position.Y; // Set the y-axis position
 
             Speed = 200f; // Set the entity's travel speed
+
+            hitpoints = 100; // Set the starting number of hitpoints
+        }
+
+        /*
+         * Check for collision with other entities.
+         */
+        public override bool CollidesWith(Entity entity)
+        {
+            entity.UpdateHitbox(new SkeletonBounds());
+            entity.GetHitbox().Update(entity.GetSkeleton(), true);
+
+            hitbox = new SkeletonBounds();
+            hitbox.Update(skeleton, true);
+
+            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /*
+         * Update the hitbox after a collision.
+         */
+        public override void UpdateHitbox(SkeletonBounds updatedHitbox)
+        {
+            hitbox = updatedHitbox;
         }
 
         /*
@@ -83,6 +115,7 @@ namespace SoR.Logic.Entities
             skeleton.X = positionX;
             skeleton.Y = positionY;
 
+            hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             animState.Apply(skeleton);

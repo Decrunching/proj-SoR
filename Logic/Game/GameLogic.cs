@@ -40,9 +40,6 @@ namespace SoR.Logic.Game
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
 
-            // Create dictionary to keep track of entities that are currently being rendered
-            entities = new Dictionary<string, Entity>();
-
             // Create the Player entity
             entityType = EntityType.Player;
             CreateEntity(graphics, GraphicsDevice);
@@ -153,13 +150,12 @@ namespace SoR.Logic.Game
                     {
                         if (entity.Value.Render)
                         {
-                            if (player.CollidesWith(entity.Value.GetSkeleton(), entity.Value.GetHitbox()))
+                            if (entity.Value != player & player.CollidesWith(entity.Value))
                             {
                                 player.EntityCollision(
+                                    gameTime,
                                     player.GetHitbox(),
-                                    entity.Value.GetHitbox(),
-                                    player.GetPositionX(),
-                                    player.GetPositionY());
+                                    entity.Value.GetHitbox());
                             }
 
                             // Update animations
@@ -173,30 +169,6 @@ namespace SoR.Logic.Game
                     throw new System.InvalidOperationException("playerChar is not of type Player");
                 }
             }
-        }
-
-        /*
-         * Placeholder function for dealing/taking damage.
-         */
-        public void Damage(Entity entity)
-        {
-            /*
-            if (entities.TryGetValue("player", out Entity playerChar))
-            {
-                if (playerChar is Player player)
-                {
-                    If (entity.CollidesWith(player))
-                    {
-                        player.Battle(entity);
-                    }
-                }
-                else
-                {
-                    // Throw exception if playerChar is somehow not of the type Player
-                    throw new System.InvalidOperationException("playerChar is not of type Player");
-                }
-            }
-             */
         }
     }
 }
