@@ -12,14 +12,14 @@ namespace SoR.Logic.Entities
         public Slime(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -150,16 +150,30 @@ namespace SoR.Logic.Entities
             skeletonRenderer.Begin();
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
+
+            // Set the text above the character to show the MaxX, MaxY, MinX, MinY, positionX and positionY
+            showMaxX = hitbox.MaxX.ToString();
+            showMaxY = hitbox.MaxY.ToString();
+            showMinX = hitbox.MinX.ToString();
+            showMinY = hitbox.MinY.ToString();
+            showPositionX = positionX.ToString();
+            showPositionY = positionY.ToString();
         }
 
         /*
-         * Draw text to the screen.
+         * Draw text to the screen (debugging).
          */
         public override void DrawText(SpriteBatch spriteBatch, SpriteFont font)
         {
-            /*spriteBatch.Begin();
-            spriteBatch.DrawString(font, "File", new Vector2(100, 100), Color.BlueViolet);
-            spriteBatch.End();*/
+            spriteBatch.Begin();
+            spriteBatch.DrawString(
+                font,
+                "MaxX: " + showMaxX + ", MaxY: " + showMaxY +
+                "\nMinX: " + showMinX + ", MinY: " + showMinY +
+                "\npositionX: " + showPositionX + ", positionY: " + showPositionY,
+                new Vector2(positionX - 70, positionY - hitbox.Height * 2F),
+                Color.BlueViolet);
+            spriteBatch.End();
         }
 
         /* 

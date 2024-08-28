@@ -17,14 +17,14 @@ namespace SoR.Logic.Entities
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -248,22 +248,14 @@ namespace SoR.Logic.Entities
             SkeletonBounds playerBox,
             SkeletonBounds entityBox)
         {
-            if (playerBox.MaxX < entityBox.MinX + (entityBox.Width * 0.8)
-            | playerBox.MinX > entityBox.MaxX - (entityBox.Width * 0.8)
-            | playerBox.MinY > entityBox.MaxY - (playerBox.Height * 0.8)
-            | playerBox.MaxY < entityBox.MinY + (entityBox.Height * 0.8))
+            if (playerBox.MaxX < entityBox.Width * 0.8
+            | playerBox.MinX > entityBox.Width * 0.8
+            | playerBox.MinY > entityBox.Height * 0.5
+            | playerBox.MaxY < entityBox.Height * 0.5)
             {
                 positionX = prevPositionX;
                 positionY = prevPositionY;
             }
-
-            // Set the text above the character to show the MaxX, MaxY, MinX, MinY, positionX and positionY
-            showMaxX = hitbox.MaxX.ToString();
-            showMaxY = hitbox.MaxY.ToString();
-            showMinX = hitbox.MinX.ToString();
-            showMinY = hitbox.MinY.ToString();
-            showPositionX = positionX.ToString();
-            showPositionY = positionY.ToString();
         }
 
         /*
@@ -303,10 +295,18 @@ namespace SoR.Logic.Entities
             skeletonRenderer.Begin();
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
+
+            // Set the text above the character to show the MaxX, MaxY, MinX, MinY, positionX and positionY
+            showMaxX = hitbox.MaxX.ToString();
+            showMaxY = hitbox.MaxY.ToString();
+            showMinX = hitbox.MinX.ToString();
+            showMinY = hitbox.MinY.ToString();
+            showPositionX = positionX.ToString();
+            showPositionY = positionY.ToString();
         }
 
         /*
-         * Draw text to the screen.
+         * Draw text to the screen (debugging).
          */
         public override void DrawText(SpriteBatch spriteBatch, SpriteFont font)
         {
@@ -314,9 +314,9 @@ namespace SoR.Logic.Entities
             spriteBatch.DrawString(
                 font,
                 "MaxX: " + showMaxX + ", MaxY: " + showMaxY +
-                "\n MinX: " + showMinX + ", MinY: " + showMinY +
-                "\n positionX: " + showPositionX + ", positionY: " + showPositionY,
-                new Vector2(positionX - 70, positionY - hitbox.Height * 2.5F),
+                "\nMinX: " + showMinX + ", MinY: " + showMinY +
+                "\npositionX: " + showPositionX + ", positionY: " + showPositionY,
+                new Vector2(positionX - 70, positionY - hitbox.Height * 2F),
                 Color.BlueViolet);
             spriteBatch.End();
         }

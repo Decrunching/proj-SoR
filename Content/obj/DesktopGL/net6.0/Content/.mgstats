@@ -1,11 +1,2 @@
 Source File,Dest File,Processor Type,Content Type,Source File Size,Dest File Size,Build Seconds
-"F:/MonoGame/SoR/SoR/Content/Entities/Campfire/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Campfire/skeleton.json","CopyItem","File",1199,1199,0.0013131
-"F:/MonoGame/SoR/SoR/Content/Entities/Campfire/templecampfire.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Campfire/templecampfire.atlas","CopyItem","File",178,178,0.0006414
-"F:/MonoGame/SoR/SoR/Content/Entities/Campfire/templecampfire.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Campfire/templecampfire.xnb","TextureProcessor","Texture2DContent",2522,90389,0.1742051
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/Char sprites.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Player/Char sprites.atlas","CopyItem","File",7035,7035,0.0013099
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/Char sprites.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Player/Char sprites.xnb","TextureProcessor","Texture2DContent",81469,2687573,0.1837093
-"F:/MonoGame/SoR/SoR/Content/Entities/Player/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Player/skeleton.json","CopyItem","File",24571,24571,0.0005766
-"F:/MonoGame/SoR/SoR/Content/Entities/Slime/skeleton.json","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Slime/skeleton.json","CopyItem","File",3979,3979,0.0006773
-"F:/MonoGame/SoR/SoR/Content/Entities/Slime/Slime.atlas","F:\MonoGame\SoR\SoR\Content\bin\DesktopGL\Content\Entities/Slime/Slime.atlas","CopyItem","File",427,427,0.0006032
-"F:/MonoGame/SoR/SoR/Content/Entities/Slime/Slime.png","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Entities/Slime/Slime.xnb","TextureProcessor","Texture2DContent",8551,299461,0.0107566
-"F:/MonoGame/SoR/SoR/Content/Fonts/File.spritefont","F:/MonoGame/SoR/SoR/Content/bin/DesktopGL/Content/Fonts/File.xnb","FontDescriptionProcessor","SpriteFontContent",2078,37919,0.2194922
+"D:/GitHub projects/Proj-SoR/Content/Fonts/File.spritefont","D:/GitHub projects/Proj-SoR/Content/bin/DesktopGL/Content/Fonts/File.xnb","FontDescriptionProcessor","SpriteFontContent",2078,21535,0.2330037
