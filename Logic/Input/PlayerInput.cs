@@ -52,6 +52,10 @@ namespace SoR.Logic.Input
                 };
 
             float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            bool travelUp = false;
+            bool travelDown = false;
+            bool travelLeft = false;
+            bool travelRight = false;
 
             this.speed = speed;
             newPositionX = positionX;
@@ -61,7 +65,10 @@ namespace SoR.Logic.Input
 
             /* Set player animation and position according to keyboard input.
              * 
-             * TO DO?: Adjust to retain current track number for incoming animations.
+             * TO DO?:
+             * Adjust to retain current track number for incoming animations.
+             * JSON files have exact times for frame starts if hardcoding.
+             * AnimationState does return frame start times too, if puzzling out the API.
              */
             if (keyState.IsKeyDown(Keys.Up))
             {
@@ -69,6 +76,7 @@ namespace SoR.Logic.Input
                 if (!lastKeyState.IsKeyDown(Keys.Up))
                 {
                     animState.SetAnimation(0, "runup", true);
+                    travelUp = true;
                 }
             }
             if (keyState.IsKeyDown(Keys.Down))
@@ -77,6 +85,7 @@ namespace SoR.Logic.Input
                 if (!lastKeyState.IsKeyDown(Keys.Down))
                 {
                     animState.SetAnimation(0, "rundown", true);
+                    travelDown = true;
                 }
             }
             if (keyState.IsKeyDown(Keys.Left))
@@ -85,6 +94,7 @@ namespace SoR.Logic.Input
                 if (!lastKeyState.IsKeyDown(Keys.Left))
                 {
                     animState.SetAnimation(0, "runleft", true);
+                    travelLeft = true;
                 }
             }
             if (keyState.IsKeyDown(Keys.Right))
@@ -93,6 +103,7 @@ namespace SoR.Logic.Input
                 if (!lastKeyState.IsKeyDown(Keys.Right))
                 {
                     animState.SetAnimation(0, "runright", true);
+                    travelRight = true;
                 }
             }
 

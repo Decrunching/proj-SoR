@@ -1,8 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Input;
 using Spine;
+using System;
 
 namespace SoR.Logic.Entities
 {
@@ -103,41 +103,6 @@ namespace SoR.Logic.Entities
                 return true;
             }
 
-            /*// Pull hitbox apart and put it back together again
-            // Can't remember right now why this was necessary, think it was to do with the shield
-            foreach (Polygon polygon in entityHitbox.Polygons)
-            {
-                ArrayList vertices = new ArrayList();
-
-                for (int i = 0; i < polygon.Vertices.Length; i = i + 2)
-                {
-                    // Add each vertex's x,y coordinate pair to the new vertices array
-                    Vector2 point = new Vector2(polygon.Vertices[i], polygon.Vertices[i + 1]);
-                    vertices.Add(point);
-                }
-
-                for (int i = 0; i < vertices.Count; i++)
-                {
-                    // Update the hitbox with the new x,y coordinates
-                    Vector2 pointOne = (Vector2)vertices[i];
-                    Vector2 pointTwo = new Vector2();
-
-                    if (i == 0)
-                    {
-                        pointTwo = (Vector2)vertices[vertices.Count - 1];
-                    }
-                    else
-                    {
-                        pointTwo = (Vector2)vertices[i - 1];
-                    }
-
-                    if (hitbox.IntersectsSegment(pointOne.X, pointOne.Y, pointTwo.X, pointTwo.Y) != null)
-                    {
-                        return true;
-                    }
-                }
-            }*/
-
             return false;
         }
 
@@ -212,7 +177,8 @@ namespace SoR.Logic.Entities
             prevPositionY = positionY;
 
             // Pass the speed, position and animation state to PlayerInput for keyboard input processing
-            playerInput.ProcessKeyboardInputs(gameTime,
+            playerInput.ProcessKeyboardInputs(
+                gameTime,
                 animState,
                 Speed,
                 positionX,
@@ -247,14 +213,8 @@ namespace SoR.Logic.Entities
             SkeletonBounds playerBox,
             SkeletonBounds entityBox)
         {
-            if (playerBox.MaxX > entityBox.MinX
-            | playerBox.MinX < entityBox.MaxX
-            | playerBox.MinY > entityBox.Height
-            | playerBox.MaxY < entityBox.Height)
-            {
-                positionX = prevPositionX;
-                positionY = prevPositionY;
-            }
+            positionX = prevPositionX;
+            positionY = prevPositionY;
         }
 
         /*
@@ -302,6 +262,8 @@ namespace SoR.Logic.Entities
             showMinY = hitbox.MinY.ToString();
             showPositionX = positionX.ToString();
             showPositionY = positionY.ToString();
+            showHitboxWidth = hitbox.Width.ToString();
+            showHitboxHeight = hitbox.Height.ToString();
         }
 
         /*
@@ -312,7 +274,8 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "\npositionX: " + showPositionX + ", positionY: " + showPositionY,
+                "\nMaxX: " + showMaxX + ", MaxY: " + showMaxY +
+                "\nHBWidth: " + showHitboxWidth + ", HBHeight: " + showHitboxHeight,
                 new Vector2(positionX - 150, positionY - hitbox.Height * 7F),
                 Color.BlueViolet);
             spriteBatch.End();
@@ -329,23 +292,6 @@ namespace SoR.Logic.Entities
 
             positionX = position.X; // Set the x-axis position
             positionY = position.Y; // Set the y-axis position
-        }
-
-        /*
-         * Get the current x-axis position.
-         */
-        public override float GetPositionX()
-        {
-
-            return positionX;
-        }
-
-        /*
-         * Get the current y-axis position.
-         */
-        public override float GetPositionY()
-        {
-            return positionY;
         }
 
         /*

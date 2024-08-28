@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
 using System.Collections.Generic;
 using System.Linq;
@@ -105,6 +104,7 @@ namespace SoR.Logic.Game
                         slime.GetScreenCentre(centreScreen);
                     }
                     break;
+                // TO DO: Fire to move into separate environmental entity dictionary
                 case EntityType.Fire:
                     entities.Add("fire", new Campfire(graphics, GraphicsDevice) { Name = "fire", Render = true });
                     if (entities.TryGetValue("fire", out Entity fire))

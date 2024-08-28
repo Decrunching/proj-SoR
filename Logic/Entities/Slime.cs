@@ -186,22 +186,5 @@ namespace SoR.Logic.Entities
             positionX = position.X; // Set the x-axis position
             positionY = position.Y; // Set the y-axis position
         }
-
-        /*
-         * Get the current x-axis position.
-         */
-        public override float GetPositionX()
-        {
-
-            return positionX;
-        }
-
-        /*
-         * Get the current y-axis position.
-         */
-        public override float GetPositionY()
-        {
-            return positionY;
-        }
     }
 }

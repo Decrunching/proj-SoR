@@ -102,25 +102,25 @@ bounds:1094,2,64,88
 offsets:32,20,128,128
 player/boy/run up/01
 bounds:1394,276,72,84
-offsets:24,20,128,128
+offsets:32,20,128,128
 player/boy/run up/02
 bounds:554,182,72,88
-offsets:24,20,128,128
+offsets:32,20,128,128
 player/boy/run up/03
 bounds:2,174,76,92
-offsets:20,20,128,128
+offsets:32,20,128,128
 player/boy/run up/04
 bounds:566,272,72,88
-offsets:24,20,128,128
+offsets:32,20,128,128
 player/boy/run up/05
 bounds:788,272,68,88
-offsets:28,20,128,128
+offsets:32,20,128,128
 player/boy/run up/06
 bounds:286,80,64,92
 offsets:32,20,128,128
 player/boy/run up/07
 bounds:818,2,68,88
-offsets:28,20,128,128
+offsets:32,20,128,128
 player/girl/idle/01
 bounds:1378,96,80,84
 offsets:16,20,128,128
@@ -201,26 +201,26 @@ bounds:1226,2,64,88
 offsets:32,20,128,128
 player/girl/run up/01
 bounds:1468,276,72,84
-offsets:24,20,128,128
+offsets:32,20,128,128
 player/girl/run up/02
 bounds:640,272,72,88
-offsets:24,20,128,128
+offsets:32,20,128,128
 player/girl/run up/03
 bounds:2,2,76,92
-offsets:20,20,128,128
+offsets:32,20,128,128
 rotate:90
 player/girl/run up/04
 bounds:670,2,72,88
-offsets:24,20,128,128
+offsets:32,20,128,128
 player/girl/run up/05
 bounds:858,272,68,88
-offsets:28,20,128,128
+offsets:32,20,128,128
 player/girl/run up/06
 bounds:418,80,64,92
 offsets:32,20,128,128
 player/girl/run up/07
 bounds:888,2,68,88
-offsets:28,20,128,128
+offsets:32,20,128,128
 player/hooded char/idle/down
 bounds:1424,10,72,84
 offsets:24,20,128,128

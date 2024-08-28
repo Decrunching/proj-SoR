@@ -63,6 +63,8 @@ namespace SoR
         private GraphicsDeviceManager graphics;
         private GameLogic gameLogic;
         private SoR game;
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
 
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
@@ -107,9 +109,12 @@ namespace SoR
                 Exit();
 
             // TODO: Add your update logic here
+            keyState = Keyboard.GetState(); // Get the current keyboard state
 
             // Update player input and animations
             gameLogic.UpdateEntities(gameTime, graphics, GraphicsDevice);
+
+            lastKeyState = keyState; // Get the previous keyboard state
 
             base.Update(gameTime);
         }

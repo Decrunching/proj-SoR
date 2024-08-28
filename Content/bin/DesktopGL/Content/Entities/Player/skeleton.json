@@ -1,14 +1,5 @@
 {
-"skeleton": {
-	"hash": "hYeypMliqtI",
-	"spine": "4.2.35",
-	"x": -64,
-	"y": -28,
-	"width": 128,
-	"height": 128,
-	"images": "../char sprites/",
-	"audio": ""
-},
+"skeleton": { "hash": "CM2M1OJTbO4", "spine": "4.2.35", "images": "../char sprites/", "audio": "" },
 "bones": [
 	{ "name": "root", "scaleX": 4, "scaleY": 4 },
 	{ "name": "bone", "parent": "root", "y": 9 }
@@ -19,7 +10,7 @@
 	{ "name": "run down", "bone": "bone" },
 	{ "name": "run left", "bone": "bone" },
 	{ "name": "run up", "bone": "bone" },
-	{ "name": "idle", "bone": "bone", "attachment": "down" },
+	{ "name": "idle", "bone": "bone" },
 	{ "name": "hitbox", "bone": "root", "attachment": "hitbox" }
 ],
 "skins": [

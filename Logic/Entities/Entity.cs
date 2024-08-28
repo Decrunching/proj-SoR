@@ -30,6 +30,8 @@ namespace SoR.Logic.Entities
         protected string showMaxY;
         protected string showMinX;
         protected string showMinY;
+        protected string showHitboxWidth;
+        protected string showHitboxHeight;
         protected string showPositionX;
         protected string showPositionY;
         public float Speed { get; set; }
@@ -96,11 +98,17 @@ namespace SoR.Logic.Entities
         /*
          * Get the current x-axis position.
          */
-        public abstract float GetPositionX();
+        public float GetPositionX()
+        {
+            return positionX;
+        }
 
         /*
          * Get the current y-axis position.
          */
-        public abstract float GetPositionY();
+        public float GetPositionY()
+        {
+            return positionY;
+        }
     }
 }
