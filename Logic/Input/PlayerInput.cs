@@ -10,7 +10,7 @@ namespace SoR.Logic.Input
     /*
      * This class handles player input and animation application.
      */
-    public class PlayerInput
+    public class PlayerInput : Direction
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
@@ -18,6 +18,8 @@ namespace SoR.Logic.Input
         private int deadZone;
         private float newPositionX;
         private float newPositionY;
+        private float prevPosX;
+        private float prevPosY;
         private bool switchSkin;
         private bool idle;
 
@@ -31,6 +33,7 @@ namespace SoR.Logic.Input
             idle = true; // Player is currently idle
 
             // Dictionary to store the input keys, whether they are currently up or pressed, and which animation to apply
+            // TO DO: Simplify to remove duplicated code
             inputKeys = new Dictionary<Keys, InputKeys>()
             {
             { Keys.Up, new InputKeys(keyState.IsKeyDown(Keys.Up), "runup") },
@@ -66,6 +69,8 @@ namespace SoR.Logic.Input
 
             newPositionX = positionX;
             newPositionY = positionY;
+            prevPosX = newPositionX;
+            prevPosY = newPositionY;
 
             switchSkin = false; // Space has not been pressed yet, the skin will not be switched
 
@@ -85,7 +90,7 @@ namespace SoR.Logic.Input
              * AnimationState does return frame start times too, if puzzling out the API.
              * Fix this - possibly switch to idle animation while two opposing direction keys are
              * being held down with no other directional keys, and make player face the direction
-             * of travelif 3 buttons held down simultaneously.
+             * of travel if 3 buttons held down simultaneously.
              */
             // Set player animation and position according to keyboard input
             foreach (var key in inputKeys.Keys)
@@ -113,6 +118,7 @@ namespace SoR.Logic.Input
                     {
                         newPositionX += newPlayerSpeed;
                     }
+
                     if (!previouslyPressed)
                     {
                         animState.SetAnimation(0, inputKeys[key].NextAnimation, true); // Set new animation
@@ -127,16 +133,16 @@ namespace SoR.Logic.Input
                     //DEBUGGING
                     stringLastKeyState = stringKeyState = inputKeys[key].NextAnimation;
                 }
-                if ()
-                {
-
-                }
             }
 
             if (keyState.IsKeyDown(Keys.Space) & !lastKeyState.IsKeyDown(Keys.Space))
             {
                 switchSkin = true; // Space was pressed, so switch skins
             }
+
+            // Get the previous x,y co-ordinates
+            prevPosX = newPositionX;
+            prevPosY = newPositionY;
 
             lastKeyState = keyState; // Get the previous keyboard state
         }

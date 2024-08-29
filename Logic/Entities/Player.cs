@@ -15,14 +15,14 @@ namespace SoR.Logic.Entities
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -193,7 +193,7 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "keyState: " + playerInput.GetStringKeyState() + ", lastKeyState: " + playerInput.GetPrevStringKeyState(),
+                "X: " + (positionX - prevPositionX) + " Y: " + (positionY - prevPositionY),
                 new Vector2(positionX - 150, positionY + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
