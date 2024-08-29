@@ -78,13 +78,16 @@ namespace SoR.Logic.Input
                 }
             }
 
-            /* Set player animation and position according to keyboard input.
-             * 
+            /* 
              * TO DO?:
              * Adjust to retain current track number for incoming animations.
              * JSON files have exact times for frame starts if hardcoding.
              * AnimationState does return frame start times too, if puzzling out the API.
+             * Fix this - possibly switch to idle animation while two opposing direction keys are
+             * being held down with no other directional keys, and make player face the direction
+             * of travelif 3 buttons held down simultaneously.
              */
+            // Set player animation and position according to keyboard input
             foreach (var key in inputKeys.Keys)
             {
                 bool pressed = keyState.IsKeyDown(key);
@@ -116,34 +119,17 @@ namespace SoR.Logic.Input
                     }
                     stringKeyState = inputKeys[key].NextAnimation;
                 }
-                /*
-                 * If a key has just been released, set the running animation back to the direction the character
-                 * is currently moving in. If two keys are being pressed simultaneously, set it to the direction
-                 * of the most recently pressed key.
-                 * 
-                 * TO DO: Fix this - doesn't quite work as intended and needs simplifying. Also need to switch to
-                 * idle animation while two opposing direction keys are being held down with no other directional
-                 * keys.
-                 */
+                // If a key has just been released, set the running animation to the direction of movement
                 else if (!pressed & previouslyPressed)
                 {
-                    if (stringKeyState == "runright")
-                    {
-                        animState.SetAnimation(0, "runright", true);
-                    }
-                    if (stringKeyState == "runleft")
-                    {
-                        animState.SetAnimation(0, "runleft", true);
-                    }
-                    if (stringKeyState == "rundown")
-                    {
-                        animState.SetAnimation(0, "rundown", true);
-                    }
-                    if (stringKeyState == "runup")
-                    {
-                        animState.SetAnimation(0, "runup", true);
-                    }
+                    animState.SetAnimation(0, stringKeyState, true);
+
+                    //DEBUGGING
                     stringLastKeyState = stringKeyState = inputKeys[key].NextAnimation;
+                }
+                if ()
+                {
+
                 }
             }
 
