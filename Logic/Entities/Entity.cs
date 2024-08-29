@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SoR.Logic.Input;
 using Spine;
 
 namespace SoR.Logic.Entities
@@ -20,12 +21,15 @@ namespace SoR.Logic.Entities
         protected Attachment hitboxAttachment;
         protected SkeletonBounds hitbox;
         protected Slot slot;
+        protected PlayerInput playerInput;
         protected Vector2 position;
         protected float positionX;
         protected float positionY;
         protected float prevPositionX;
         protected float prevPositionY;
         protected int hitpoints;
+
+        // DEBUGGING
         protected string showMaxX;
         protected string showMaxY;
         protected string showMinX;
@@ -34,6 +38,7 @@ namespace SoR.Logic.Entities
         protected string showHitboxHeight;
         protected string showPositionX;
         protected string showPositionY;
+
         public float Speed { get; set; }
         public string Name { get; set; }
         public bool Render { get; set; }
@@ -41,39 +46,53 @@ namespace SoR.Logic.Entities
         /*
          * Check for collision with other entities.
          */
-        public abstract bool CollidesWith(Entity entity);
+        public bool CollidesWith(Entity entity)
+        {
+            entity.UpdateHitbox(new SkeletonBounds());
+            entity.GetHitbox().Update(entity.GetSkeleton(), true);
+
+            hitbox = new SkeletonBounds();
+            hitbox.Update(skeleton, true);
+
+            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
+            {
+                return true;
+            }
+
+            return false;
+        }
 
         /*
          * Update the hitbox after a collision.
          */
-        public abstract void UpdateHitbox(SkeletonBounds updatedHitbox);
+        public void UpdateHitbox(SkeletonBounds updatedHitbox)
+        {
+            hitbox = updatedHitbox;
+        }
 
         /*
          * Get the animation state.
          */
-        public abstract AnimationState GetAnimState();
+        public AnimationState GetAnimState()
+        {
+            return animState;
+        }
 
         /*
          * Get the skeleton.
          */
-        public abstract Skeleton GetSkeleton();
+        public Skeleton GetSkeleton()
+        {
+            return skeleton;
+        }
 
         /*
          * Get the hitbox.
          */
-        public abstract SkeletonBounds GetHitbox();
-
-        /*
-         * Update entity position according to player input.
-         
-        public abstract void UpdateEntityPosition(
-            GameTime gameTime,
-            KeyboardState keyState,
-            KeyboardState lastKeyState,
-            GraphicsDeviceManager graphics,
-            GraphicsDevice GraphicsDevice,
-            AnimationState animState,
-            Skeleton skeleton);*/
+        public SkeletonBounds GetHitbox()
+        {
+            return hitbox;
+        }
 
         /*
          * Update the entity position, animation state and skeleton.
@@ -83,7 +102,31 @@ namespace SoR.Logic.Entities
         /*
          * Render the current skeleton to the screen.
          */
-        public abstract void RenderSkeleton(GraphicsDevice GraphicsDevice);
+        public void RenderSkeleton(GraphicsDevice GraphicsDevice)
+        {
+            // Create the skeleton renderer projection matrix
+            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
+            0,
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height,
+                0, 1, 0);
+
+            // Draw skeletons
+            skeletonRenderer.Begin();
+            skeletonRenderer.Draw(skeleton);
+            skeletonRenderer.End();
+
+            // Set the text above the character to show
+            // MaxX, MaxY, MinX, MinY, positionX, positionY, hitbox width, and/or hitbox height
+            showMaxX = hitbox.MaxX.ToString();
+            showMaxY = hitbox.MaxY.ToString();
+            showMinX = hitbox.MinX.ToString();
+            showMinY = hitbox.MinY.ToString();
+            showPositionX = positionX.ToString();
+            showPositionY = positionY.ToString();
+            showHitboxWidth = hitbox.Width.ToString();
+            showHitboxHeight = hitbox.Height.ToString();
+        }
 
         /*
          * Draw text to the screen.
@@ -93,7 +136,7 @@ namespace SoR.Logic.Entities
         /* 
          * Get the centre of the screen.
          */
-        public abstract void GetScreenCentre(Vector2 centreScreen);
+        public abstract void SetStartPosition(Vector2 centreScreen);
 
         /*
          * Get the current x-axis position.

@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Input;
 using Spine;
-using System;
 
 namespace SoR.Logic.Entities
 {
@@ -11,7 +10,6 @@ namespace SoR.Logic.Entities
      */
     public class Player : Entity
     {
-        private PlayerInput playerInput;
         private string skin;
 
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
@@ -88,33 +86,6 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Check for collision with other entities.
-         */
-        public override bool CollidesWith(Entity entity)
-        {
-            entity.UpdateHitbox(new SkeletonBounds());
-            entity.GetHitbox().Update(entity.GetSkeleton(), true);
-
-            hitbox = new SkeletonBounds();
-            hitbox.Update(skeleton, true);
-
-            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /*
-         * Update the hitbox after a collision.
-         */
-        public override void UpdateHitbox(SkeletonBounds updatedHitbox)
-        {
-            hitbox = updatedHitbox;
-        }
-
-        /*
          * If the player pressed space, switch to the next skin.
          */
         public void CheckSwitchSkin()
@@ -137,30 +108,6 @@ namespace SoR.Logic.Entities
                         break;
                 }
             }
-        }
-
-        /*
-         * Get the animation state.
-         */
-        public override AnimationState GetAnimState()
-        {
-            return animState;
-        }
-
-        /*
-         * Get the skeleton.
-         */
-        public override Skeleton GetSkeleton()
-        {
-            return skeleton;
-        }
-
-        /*
-         * Get the hitbox.
-         */
-        public override SkeletonBounds GetHitbox()
-        {
-            return hitbox;
         }
 
         /*
@@ -239,44 +186,15 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Render the current skeleton to the screen.
-         */
-        public override void RenderSkeleton(GraphicsDevice GraphicsDevice)
-        {
-            // Create the skeleton renderer projection matrix
-            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
-            0,
-                GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height,
-                0, 1, 0);
-
-            // Draw skeletons
-            skeletonRenderer.Begin();
-            skeletonRenderer.Draw(skeleton);
-            skeletonRenderer.End();
-
-            // Set the text above the character to show the MaxX, MaxY, MinX, MinY, positionX and positionY
-            showMaxX = hitbox.MaxX.ToString();
-            showMaxY = hitbox.MaxY.ToString();
-            showMinX = hitbox.MinX.ToString();
-            showMinY = hitbox.MinY.ToString();
-            showPositionX = positionX.ToString();
-            showPositionY = positionY.ToString();
-            showHitboxWidth = hitbox.Width.ToString();
-            showHitboxHeight = hitbox.Height.ToString();
-        }
-
-        /*
-         * Draw text to the screen (debugging).
+         * Draw text to the screen.
          */
         public override void DrawText(SpriteBatch spriteBatch, SpriteFont font)
         {
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "\nMaxX: " + showMaxX + ", MaxY: " + showMaxY +
-                "\nHBWidth: " + showHitboxWidth + ", HBHeight: " + showHitboxHeight,
-                new Vector2(positionX - 150, positionY - hitbox.Height * 7F),
+                "keyState: " + playerInput.GetStringKeyState() + ", lastKeyState: " + playerInput.GetPrevStringKeyState(),
+                new Vector2(positionX - 150, positionY + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
         }
@@ -284,31 +202,14 @@ namespace SoR.Logic.Entities
         /* 
          * Get the centre of the screen.
          */
-        public override void GetScreenCentre(Vector2 centreScreen)
+        public override void SetStartPosition(Vector2 centreScreen)
         {
             position = centreScreen;
 
-            position = new Vector2(position.X - 270, position.Y - 150);
+            position = new Vector2(position.X - 270, position.Y - 200);
 
             positionX = position.X; // Set the x-axis position
             positionY = position.Y; // Set the y-axis position
-        }
-
-        /*
-         * Set the new x-axis position.
-         */
-        public void SetPositionX(float newPositionX)
-        {
-
-            positionX = newPositionX;
-        }
-
-        /*
-         * Set the new y-axis position.
-         */
-        public void SetPositionY(float newPositionY)
-        {
-            positionY = newPositionY;
         }
     }
 }

@@ -80,28 +80,28 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(graphics, GraphicsDevice) { Name = "player", Render = true });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.GetScreenCentre(centreScreen);
+                        player.SetStartPosition(centreScreen);
                     }
                     break;
                 case EntityType.Pheasant:
                     entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Name = "pheasant", Render = true });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
-                        pheasant.GetScreenCentre(centreScreen);
+                        pheasant.SetStartPosition(centreScreen);
                     }
                     break;
                 case EntityType.Chara:
                     entities.Add("chara", new Chara(graphics, GraphicsDevice) { Name = "chara", Render = true });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
-                        chara.GetScreenCentre(centreScreen);
+                        chara.SetStartPosition(centreScreen);
                     }
                     break;
                 case EntityType.Slime:
                     entities.Add("slime", new Slime(graphics, GraphicsDevice) { Name = "slime", Render = true });
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
-                        slime.GetScreenCentre(centreScreen);
+                        slime.SetStartPosition(centreScreen);
                     }
                     break;
                 // TO DO: Fire to move into separate environmental entity dictionary
@@ -109,7 +109,7 @@ namespace SoR.Logic.Game
                     entities.Add("fire", new Campfire(graphics, GraphicsDevice) { Name = "fire", Render = true });
                     if (entities.TryGetValue("fire", out Entity fire))
                     {
-                        fire.GetScreenCentre(centreScreen);
+                        fire.SetStartPosition(centreScreen);
                     }
                     break;
             }
@@ -135,7 +135,7 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Set up Spine animations and skeletons.
+         * Update Spine animations and skeletons.
          */
         public void UpdateEntities(
             GameTime gameTime,

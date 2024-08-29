@@ -56,57 +56,6 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Check for collision with other entities.
-         */
-        public override bool CollidesWith(Entity entity)
-        {
-            entity.UpdateHitbox(new SkeletonBounds());
-            entity.GetHitbox().Update(entity.GetSkeleton(), true);
-
-            hitbox = new SkeletonBounds();
-            hitbox.Update(skeleton, true);
-
-            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
-        /*
-         * Update the hitbox after a collision.
-         */
-        public override void UpdateHitbox(SkeletonBounds updatedHitbox)
-        {
-            hitbox = updatedHitbox;
-        }
-
-        /*
-         * Get the animation state.
-         */
-        public override AnimationState GetAnimState()
-        {
-            return animState;
-        }
-
-        /*
-         * Get the skeleton.
-         */
-        public override Skeleton GetSkeleton()
-        {
-            return skeleton;
-        }
-
-        /*
-         * Get the hitbox.
-         */
-        public override SkeletonBounds GetHitbox()
-        {
-            return hitbox;
-        }
-
-        /*
          * Update the entity position, animation state and skeleton.
          */
         public override void UpdateEntityAnimations(GameTime gameTime)
@@ -125,41 +74,15 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Render the current skeleton to the screen.
-         */
-        public override void RenderSkeleton(GraphicsDevice GraphicsDevice)
-        {
-            // Create the skeleton renderer projection matrix
-            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
-            0,
-                GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height,
-                0, 1, 0);
-
-            // Draw skeletons
-            skeletonRenderer.Begin();
-            skeletonRenderer.Draw(skeleton);
-            skeletonRenderer.End();
-
-            // Set the text above the character to show the MaxX, MaxY, MinX, MinY, positionX and positionY
-            showMaxX = hitbox.MaxX.ToString();
-            showMaxY = hitbox.MaxY.ToString();
-            showMinX = hitbox.MinX.ToString();
-            showMinY = hitbox.MinY.ToString();
-            showPositionX = positionX.ToString();
-            showPositionY = positionY.ToString();
-        }
-
-        /*
-         * Draw text to the screen (debugging).
+         * Draw text to the screen.
          */
         public override void DrawText(SpriteBatch spriteBatch, SpriteFont font)
         {
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "\npositionX: " + showPositionX + ", positionY: " + showPositionY,
-                new Vector2(positionX - 150, positionY - hitbox.Height * 6F),
+                "",
+                new Vector2(positionX - 150, positionY + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
         }
@@ -167,7 +90,7 @@ namespace SoR.Logic.Entities
         /* 
          * Get the centre of the screen.
          */
-        public override void GetScreenCentre(Vector2 centreScreen)
+        public override void SetStartPosition(Vector2 centreScreen)
         {
             position = centreScreen;
 

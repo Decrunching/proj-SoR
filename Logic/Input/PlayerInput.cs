@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
+using System.Linq;
 
 namespace SoR.Logic.Input
 {
@@ -13,16 +14,38 @@ namespace SoR.Logic.Input
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
+        private Dictionary<Keys, InputKeys> inputKeys;
         private int deadZone;
-        private float speed;
         private float newPositionX;
         private float newPositionY;
         private bool switchSkin;
+        private bool idle;
+
+        // DEBUGGING
+        private string stringKeyState;
+        private string stringLastKeyState;
 
         public PlayerInput()
         {
-            // Set the joystick deadzone
-            deadZone = 4096;
+            deadZone = 4096; // Set the joystick deadzone
+            idle = true; // Player is currently idle
+
+            // Dictionary to store the input keys, whether they are currently up or pressed, and which animation to apply
+            inputKeys = new Dictionary<Keys, InputKeys>()
+            {
+            { Keys.Up, new InputKeys(keyState.IsKeyDown(Keys.Up), "runup") },
+            { Keys.W, new InputKeys(keyState.IsKeyDown(Keys.W), "runup") },
+            { Keys.Down, new InputKeys(keyState.IsKeyDown(Keys.Down), "rundown") },
+            { Keys.S, new InputKeys(keyState.IsKeyDown(Keys.S), "rundown") },
+            { Keys.Left, new InputKeys(keyState.IsKeyDown(Keys.Left), "runleft") },
+            { Keys.A, new InputKeys(keyState.IsKeyDown(Keys.A), "runleft") },
+            { Keys.Right, new InputKeys(keyState.IsKeyDown(Keys.Right), "runright") },
+            { Keys.D, new InputKeys(keyState.IsKeyDown(Keys.D), "runright") }
+            };
+
+            //DEBUGGING
+            stringKeyState = "";
+            stringLastKeyState = "";
         }
 
         /*
@@ -37,31 +60,23 @@ namespace SoR.Logic.Input
             float positionX,
             float positionY)
         {
-            //Anims: fdown, fdownidle, fside, fsideidle, fup, fupidle, mdown, mdownidle, mside, msideidle, mup, mupidle
-
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            // Dictionary to store the input keys and whether they are currently up or pressed.
-            Dictionary<Keys, bool> keyIsUp =
-                new Dictionary<Keys, bool>()
-                {
-                    { Keys.Up, keyState.IsKeyUp(Keys.Up) },
-                    { Keys.Down, keyState.IsKeyUp(Keys.Down) },
-                    { Keys.Left, keyState.IsKeyUp(Keys.Left) },
-                    { Keys.Right, keyState.IsKeyUp(Keys.Right) }
-                };
-
             float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            bool travelUp = false;
-            bool travelDown = false;
-            bool travelLeft = false;
-            bool travelRight = false;
 
-            this.speed = speed;
             newPositionX = positionX;
             newPositionY = positionY;
 
             switchSkin = false; // Space has not been pressed yet, the skin will not be switched
+
+            if (inputKeys.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
+            {
+                if (!idle) // If idle animation is not currently playing
+                {
+                    animState.SetAnimation(0, "idlebattle", true); // Set idle animation
+                    idle = true; // Idle is now playing
+                }
+            }
 
             /* Set player animation and position according to keyboard input.
              * 
@@ -70,80 +85,65 @@ namespace SoR.Logic.Input
              * JSON files have exact times for frame starts if hardcoding.
              * AnimationState does return frame start times too, if puzzling out the API.
              */
-            if (keyState.IsKeyDown(Keys.Up))
+            foreach (var key in inputKeys.Keys)
             {
-                newPositionY -= newPlayerSpeed;
-                if (!lastKeyState.IsKeyDown(Keys.Up))
-                {
-                    animState.SetAnimation(0, "runup", true);
-                    travelUp = true;
-                }
-            }
-            if (keyState.IsKeyDown(Keys.Down))
-            {
-                newPositionY += newPlayerSpeed;
-                if (!lastKeyState.IsKeyDown(Keys.Down))
-                {
-                    animState.SetAnimation(0, "rundown", true);
-                    travelDown = true;
-                }
-            }
-            if (keyState.IsKeyDown(Keys.Left))
-            {
-                newPositionX -= newPlayerSpeed;
-                if (!lastKeyState.IsKeyDown(Keys.Left))
-                {
-                    animState.SetAnimation(0, "runleft", true);
-                    travelLeft = true;
-                }
-            }
-            if (keyState.IsKeyDown(Keys.Right))
-            {
-                newPositionX += newPlayerSpeed;
-                if (!lastKeyState.IsKeyDown(Keys.Right))
-                {
-                    animState.SetAnimation(0, "runright", true);
-                    travelRight = true;
-                }
-            }
+                bool pressed = keyState.IsKeyDown(key);
+                bool previouslyPressed = lastKeyState.IsKeyDown(key);
+                inputKeys[key].Pressed = pressed;
 
-            /*
-             * If a key has just been released, set the running animation back to the direction the character
-             * is currently moving in. If two keys are being pressed simultaneously, set it to the direction
-             * of the most recently pressed key.
-             * 
-             * TO DO: Fix this - doesn't quite work as intended and needs simplifying. Also need to switch to
-             * idle animation while two opposing direction keys are being held down with no other directional
-             * keys.
-             */
-            foreach (var key in keyIsUp)
-            {
-                if (key.Value & lastKeyState.IsKeyDown(key.Key))
+                if (pressed)
                 {
-                    if (keyState.IsKeyDown(Keys.Right) &
-                        !keyState.IsKeyDown(Keys.Left))
+                    idle = false; // Idle will no longer be playing
+                    if (inputKeys[key].NextAnimation == "runup")
+                    {
+                        newPositionY -= newPlayerSpeed;
+                    }
+                    if (inputKeys[key].NextAnimation == "rundown")
+                    {
+                        newPositionY += newPlayerSpeed;
+                    }
+                    if (inputKeys[key].NextAnimation == "runleft")
+                    {
+                        newPositionX -= newPlayerSpeed;
+                    }
+                    if (inputKeys[key].NextAnimation == "runright")
+                    {
+                        newPositionX += newPlayerSpeed;
+                    }
+                    if (!previouslyPressed)
+                    {
+                        animState.SetAnimation(0, inputKeys[key].NextAnimation, true); // Set new animation
+                    }
+                    stringKeyState = inputKeys[key].NextAnimation;
+                }
+                /*
+                 * If a key has just been released, set the running animation back to the direction the character
+                 * is currently moving in. If two keys are being pressed simultaneously, set it to the direction
+                 * of the most recently pressed key.
+                 * 
+                 * TO DO: Fix this - doesn't quite work as intended and needs simplifying. Also need to switch to
+                 * idle animation while two opposing direction keys are being held down with no other directional
+                 * keys.
+                 */
+                else if (!pressed & previouslyPressed)
+                {
+                    if (stringKeyState == "runright")
                     {
                         animState.SetAnimation(0, "runright", true);
                     }
-                    if (keyState.IsKeyDown(Keys.Left) &
-                        !keyState.IsKeyDown(Keys.Right))
+                    if (stringKeyState == "runleft")
                     {
                         animState.SetAnimation(0, "runleft", true);
                     }
-                    if (keyState.IsKeyDown(Keys.Down) &
-                        !keyState.IsKeyDown(Keys.Up))
+                    if (stringKeyState == "rundown")
                     {
                         animState.SetAnimation(0, "rundown", true);
                     }
-                    if (keyState.IsKeyDown(Keys.Up) &
-                        !keyState.IsKeyDown(Keys.Down))
+                    if (stringKeyState == "runup")
                     {
                         animState.SetAnimation(0, "runup", true);
                     }
-                    else if (!keyIsUp.ContainsValue(false))
-                    {
-                        animState.SetAnimation(0, "idlebattle", true);
-                    }
+                    stringLastKeyState = stringKeyState = inputKeys[key].NextAnimation;
                 }
             }
 
@@ -153,6 +153,16 @@ namespace SoR.Logic.Input
             }
 
             lastKeyState = keyState; // Get the previous keyboard state
+        }
+
+        public string GetStringKeyState()
+        {
+            return stringKeyState.ToString();
+        }
+
+        public string GetPrevStringKeyState()
+        {
+            return stringLastKeyState.ToString();
         }
 
         /*
@@ -191,8 +201,6 @@ namespace SoR.Logic.Input
          */
         public void ProcessJoypadInputs(GameTime gameTime, float speed)
         {
-            this.speed = speed;
-
             if (Joystick.LastConnectedIndex == 0)
             {
                 JoystickState jstate = Joystick.GetState(0);
