@@ -28,6 +28,8 @@ namespace SoR.Logic.Entities
         protected float prevPositionX;
         protected float prevPositionY;
         protected int hitpoints;
+        protected bool inContact;
+        protected bool wasContact;
 
         // DEBUGGING
         protected string showMaxX;
@@ -44,12 +46,33 @@ namespace SoR.Logic.Entities
         public bool Render { get; set; }
 
         /*
+         * Placeholder function for dealing damage.
+         */
+        public abstract int Damage(Entity player);
+
+        /*
+         * On first collision, play collision animation.
+         */
+        public abstract void React();
+
+        public void Colliding()
+        {
+            inContact = true;
+        }
+
+        public void NotColliding()
+        {
+            inContact = false;
+        }
+
+        /*
          * Check for collision with other entities.
          */
         public bool CollidesWith(Entity entity)
         {
             entity.UpdateHitbox(new SkeletonBounds());
             entity.GetHitbox().Update(entity.GetSkeleton(), true);
+            entity.Colliding();
 
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);

@@ -15,14 +15,14 @@ namespace SoR.Logic.Entities
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -59,6 +59,28 @@ namespace SoR.Logic.Entities
             Speed = 200f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
+        }
+
+        /*
+         * Placeholder function for dealing damage.
+         */
+        public override int Damage(Entity entity)
+        {
+            if (CollidesWith(entity))
+            {
+                animState.SetAnimation(0, "attack", false);
+                int damage = 5;
+                return damage;
+            }
+            return 0;
+        }
+
+        /*
+         * On first collision, play collision animation.
+         */
+        public override void React()
+        {
+            inContact = true;
         }
 
         /*
@@ -158,10 +180,14 @@ namespace SoR.Logic.Entities
         public void EntityCollision(
             GameTime gameTime,
             SkeletonBounds playerBox,
-            SkeletonBounds entityBox)
+            SkeletonBounds entityBox,
+            Entity entity)
         {
             positionX = prevPositionX;
             positionY = prevPositionY;
+
+            entity.Colliding();
+            entity.React();
         }
 
         /*
@@ -193,7 +219,7 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "X: " + (positionX - prevPositionX) + " Y: " + (positionY - prevPositionY),
+                "",
                 new Vector2(positionX - 150, positionY + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();

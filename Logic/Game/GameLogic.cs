@@ -163,8 +163,10 @@ namespace SoR.Logic.Game
                                 player.EntityCollision(
                                     gameTime,
                                     player.GetHitbox(),
-                                    entity.Value.GetHitbox());
+                                    entity.Value.GetHitbox(),
+                                    entity.Value);
                             }
+                            entity.Value.NotColliding();
 
                             // Update animations
                             entity.Value.UpdateEntityAnimations(gameTime);

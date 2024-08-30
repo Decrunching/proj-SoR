@@ -12,14 +12,14 @@ namespace SoR.Logic.Entities
         public Slime(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -49,20 +49,31 @@ namespace SoR.Logic.Entities
 
             Speed = 200f; // Set the entity's travel speed
 
+            inContact = false; // Is not touching another entity
+
             hitpoints = 100; // Set the starting number of hitpoints
         }
 
         /*
          * Placeholder function for dealing damage.
-         */
-        public int Damage(Entity player)
+*/
+        public override int Damage(Entity entity)
         {
-            /*if (player.CollidesWith(skeleton, hitbox))
+            int damage = 5;
+            return damage;
+        }
+
+        /*
+         * On first collision, play collision animation.
+         */
+        public override void React()
+        {
+            if (!wasContact)
             {
-                int damage = 5;
-                return damage;
-            }*/
-            return 0;
+                animState.SetAnimation(0, "attack", false);
+                animState.AddAnimation(0, "idle", true, 0);
+            }
+            wasContact = inContact;
         }
 
         /*
