@@ -10,7 +10,7 @@ namespace SoR.Logic.Input
     /*
      * This class handles player input and animation application.
      */
-    public class PlayerInput : Direction
+    public class PlayerInput
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
@@ -18,8 +18,8 @@ namespace SoR.Logic.Input
         private int deadZone;
         private float newPositionX;
         private float newPositionY;
-        private float prevPosX;
-        private float prevPosY;
+        private float prevPositionX;
+        private float prevPositionY;
         private bool switchSkin;
         private bool idle;
 
@@ -69,8 +69,8 @@ namespace SoR.Logic.Input
 
             newPositionX = positionX;
             newPositionY = positionY;
-            prevPosX = newPositionX;
-            prevPosY = newPositionY;
+            prevPositionX = newPositionX;
+            prevPositionY = newPositionY;
 
             switchSkin = false; // Space has not been pressed yet, the skin will not be switched
 
@@ -101,7 +101,6 @@ namespace SoR.Logic.Input
 
                 if (pressed)
                 {
-                    idle = false; // Idle will no longer be playing
                     if (inputKeys[key].NextAnimation == "runup")
                     {
                         newPositionY -= newPlayerSpeed;
@@ -119,10 +118,13 @@ namespace SoR.Logic.Input
                         newPositionX += newPlayerSpeed;
                     }
 
+                    idle = false; // Idle will no longer be playing
+
                     if (!previouslyPressed)
                     {
                         animState.SetAnimation(0, inputKeys[key].NextAnimation, true); // Set new animation
                     }
+
                     stringKeyState = inputKeys[key].NextAnimation;
                 }
                 // If a key has just been released, set the running animation to the direction of movement
@@ -131,7 +133,7 @@ namespace SoR.Logic.Input
                     animState.SetAnimation(0, stringKeyState, true);
 
                     //DEBUGGING
-                    stringLastKeyState = stringKeyState = inputKeys[key].NextAnimation;
+                    stringLastKeyState = inputKeys[key].NextAnimation;
                 }
             }
 
@@ -141,8 +143,8 @@ namespace SoR.Logic.Input
             }
 
             // Get the previous x,y co-ordinates
-            prevPosX = newPositionX;
-            prevPosY = newPositionY;
+            prevPositionX = newPositionX;
+            prevPositionY = newPositionY;
 
             lastKeyState = keyState; // Get the previous keyboard state
         }
@@ -197,24 +199,24 @@ namespace SoR.Logic.Input
             {
                 JoystickState jstate = Joystick.GetState(0);
 
-                float updatedcharSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
                 if (jstate.Axes[1] < -deadZone)
                 {
-                    newPositionY -= updatedcharSpeed;
+                    newPositionY -= newPlayerSpeed;
                 }
                 else if (jstate.Axes[1] > deadZone)
                 {
-                    newPositionY += updatedcharSpeed;
+                    newPositionY += newPlayerSpeed;
                 }
 
                 if (jstate.Axes[0] < -deadZone)
                 {
-                    newPositionX -= updatedcharSpeed;
+                    newPositionX -= newPlayerSpeed;
                 }
                 else if (jstate.Axes[0] > deadZone)
                 {
-                    newPositionX += updatedcharSpeed;
+                    newPositionX += newPlayerSpeed;
                 }
             }
         }
