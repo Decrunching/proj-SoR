@@ -15,14 +15,14 @@ namespace SoR.Logic.Entities
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -53,9 +53,6 @@ namespace SoR.Logic.Entities
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
                 graphics.PreferredBackBufferHeight / 2);
 
-            positionX = position.X; // Set the x-axis position
-            positionY = position.Y; // Set the y-axis position
-
             Speed = 200f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
@@ -68,7 +65,6 @@ namespace SoR.Logic.Entities
         {
             if (CollidesWith(entity))
             {
-                animState.SetAnimation(0, "attack", false);
                 int damage = 5;
                 return damage;
             }
@@ -78,9 +74,18 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public override void React()
+        public override void React(string animation)
         {
-            inContact = true;
+        }
+
+        /*
+         * If something changes to trigger a new animation, apply the animation.
+         * If the animation is already applied, do nothing.
+         */
+        public override string ChangeAnimation(string trigger)
+        {
+            nextAnimation = trigger;
+            return trigger;
         }
 
         /*
@@ -135,40 +140,38 @@ namespace SoR.Logic.Entities
         /*
          * Update entity position according to player input.
          */
-        public void UpdateEntityPosition(
+        public void UpdatePlayerPosition(
             GameTime gameTime,
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice,
             AnimationState animState,
             Skeleton skeleton)
         {
-            prevPositionX = positionX;
-            prevPositionY = positionY;
+            prevPositionX = position.X;
+            prevPositionY = position.Y;
 
             // Pass the speed, position and animation state to PlayerInput for keyboard input processing
             playerInput.ProcessKeyboardInputs(
                 gameTime,
                 animState,
                 Speed,
-                positionX,
-                positionY);
+                position.X,
+                position.Y);
 
             // Pass the speed to PlayerInput for joypad input processing
             playerInput.ProcessJoypadInputs(gameTime, Speed);
 
             // Set the new position according to player input
-            positionX = playerInput.UpdatePositionX();
-            positionY = playerInput.UpdatePositionY();
+            position = new Vector2(playerInput.UpdatePositionX(), playerInput.UpdatePositionY());
 
             // Handle player collision
             playerInput.EnvironCollision(graphics,
                 GraphicsDevice,
-                positionX,
-                positionY);
+                position.X,
+                position.Y);
 
             // Set the new position according to player input
-            positionX = playerInput.UpdatePositionX();
-            positionY = playerInput.UpdatePositionY();
+            position = new Vector2(playerInput.UpdatePositionX(), playerInput.UpdatePositionY());
         }
 
         /*
@@ -177,17 +180,16 @@ namespace SoR.Logic.Entities
          * TO DO:
          * Player should still be able to move perpendicular to hitbox edge when in collision.
          */
-        public void EntityCollision(
+        public void PlayerCollision(
             GameTime gameTime,
             SkeletonBounds playerBox,
             SkeletonBounds entityBox,
             Entity entity)
         {
-            positionX = prevPositionX;
-            positionY = prevPositionY;
+            position.X = prevPositionX;
+            position.Y = prevPositionY;
 
-            entity.Colliding();
-            entity.React();
+            entity.React(entity.ChangeAnimation("attack"));
         }
 
         /*
@@ -199,8 +201,8 @@ namespace SoR.Logic.Entities
             CheckSwitchSkin();
 
             // Update the animation state and apply animations to skeletons
-            skeleton.X = positionX;
-            skeleton.Y = positionY;
+            skeleton.X = position.X;
+            skeleton.Y = position.Y;
 
             hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -220,7 +222,7 @@ namespace SoR.Logic.Entities
             spriteBatch.DrawString(
                 font,
                 "",
-                new Vector2(positionX - 150, positionY + hitbox.Height / 2),
+                new Vector2(position.X - 150, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
         }
@@ -233,9 +235,6 @@ namespace SoR.Logic.Entities
             position = centreScreen;
 
             position = new Vector2(position.X - 270, position.Y - 200);
-
-            positionX = position.X; // Set the x-axis position
-            positionY = position.Y; // Set the y-axis position
         }
     }
 }

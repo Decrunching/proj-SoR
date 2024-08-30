@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Entities;
+using Spine;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -147,7 +148,7 @@ namespace SoR.Logic.Game
                 if (playerChar is Player player)
                 {
                     // Update position according to user input
-                    player.UpdateEntityPosition(
+                    player.UpdatePlayerPosition(
                     gameTime,
                     graphics,
                     GraphicsDevice,
@@ -160,13 +161,13 @@ namespace SoR.Logic.Game
                         {
                             if (entity.Value != player & player.CollidesWith(entity.Value))
                             {
-                                player.EntityCollision(
+                                player.PlayerCollision(
                                     gameTime,
                                     player.GetHitbox(),
                                     entity.Value.GetHitbox(),
                                     entity.Value);
+
                             }
-                            entity.Value.NotColliding();
 
                             // Update animations
                             entity.Value.UpdateEntityAnimations(gameTime);

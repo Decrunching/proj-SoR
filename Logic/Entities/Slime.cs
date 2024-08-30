@@ -12,14 +12,14 @@ namespace SoR.Logic.Entities
         public Slime(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -30,8 +30,10 @@ namespace SoR.Logic.Entities
             animState = new AnimationState(animStateData);
             animState.Apply(skeleton);
 
+            nextAnimation = "idle";
+
             // Set the "fidle" animation on track 1 and leave it looping forever
-            animState.SetAnimation(0, "idle", true);
+            animState.SetAnimation(0, nextAnimation, true);
 
             // Create hitbox
             slot = skeleton.FindSlot("hitbox");
@@ -49,14 +51,12 @@ namespace SoR.Logic.Entities
 
             Speed = 200f; // Set the entity's travel speed
 
-            inContact = false; // Is not touching another entity
-
             hitpoints = 100; // Set the starting number of hitpoints
         }
 
         /*
          * Placeholder function for dealing damage.
-*/
+         */
         public override int Damage(Entity entity)
         {
             int damage = 5;
@@ -66,14 +66,32 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public override void React()
+        public override void React(string animation)
         {
-            if (!wasContact)
+            if (animation != "no change")
             {
-                animState.SetAnimation(0, "attack", false);
+                animState.SetAnimation(0, animation, false);
                 animState.AddAnimation(0, "idle", true, 0);
             }
-            wasContact = inContact;
+        }
+
+        /*
+         * If something changes to trigger a new animation, apply the animation.
+         * If the animation is already applied, do nothing.
+         * 
+         * TO DO: Fix this.
+         */
+        public override string ChangeAnimation(string trigger)
+        {
+            if (nextAnimation != trigger)
+            {
+                if (trigger == "attack")
+                {
+                    nextAnimation = trigger;
+                    return "attack";
+                }
+            }
+            return "no change";
         }
 
         /*
@@ -82,8 +100,8 @@ namespace SoR.Logic.Entities
         public override void UpdateEntityAnimations(GameTime gameTime)
         {
             // Update the animation state and apply animations to skeletons
-            skeleton.X = positionX;
-            skeleton.Y = positionY;
+            skeleton.X = position.X;
+            skeleton.Y = position.Y;
 
             hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -103,7 +121,7 @@ namespace SoR.Logic.Entities
             spriteBatch.DrawString(
                 font,
                 "",
-                new Vector2(positionX - 150, positionY + hitbox.Height / 2),
+                new Vector2(position.X - 150, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
         }
@@ -116,9 +134,6 @@ namespace SoR.Logic.Entities
             position = centreScreen;
 
             position = new Vector2(position.X + 200, position.Y + 200);
-
-            positionX = position.X; // Set the x-axis position
-            positionY = position.Y; // Set the y-axis position
         }
     }
 }

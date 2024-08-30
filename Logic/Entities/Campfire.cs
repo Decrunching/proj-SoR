@@ -12,14 +12,14 @@ namespace SoR.Logic.Entities
         public Campfire(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Campfire\\templecampfire.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Campfire\\templecampfire.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Campfire\\templecampfire.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Campfire\\templecampfire.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Campfire\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Campfire\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Campfire\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Campfire\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -47,9 +47,6 @@ namespace SoR.Logic.Entities
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
                 graphics.PreferredBackBufferHeight / 2);
 
-            positionX = position.X; // Set the x-axis position
-            positionY = position.Y; // Set the y-axis position
-
             Speed = 200f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
@@ -62,7 +59,6 @@ namespace SoR.Logic.Entities
         {
             if (CollidesWith(entity))
             {
-                animState.SetAnimation(0, "attack", false);
                 int damage = 5;
                 return damage;
             }
@@ -72,9 +68,18 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public override void React()
+        public override void React(string animation)
         {
-            inContact = true;
+        }
+
+        /*
+         * If something changes to trigger a new animation, apply the animation.
+         * If the animation is already applied, do nothing.
+         */
+        public override string ChangeAnimation(string trigger)
+        {
+            nextAnimation = trigger;
+            return trigger;
         }
 
         /*
@@ -83,8 +88,8 @@ namespace SoR.Logic.Entities
         public override void UpdateEntityAnimations(GameTime gameTime)
         {
             // Update the animation state and apply animations to skeletons
-            skeleton.X = positionX;
-            skeleton.Y = positionY;
+            skeleton.X = position.X;
+            skeleton.Y = position.Y;
 
             hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -104,7 +109,7 @@ namespace SoR.Logic.Entities
             spriteBatch.DrawString(
                 font,
                 "",
-                new Vector2(positionX - 150, positionY + hitbox.Height / 2),
+                new Vector2(position.X - 150, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
         }
@@ -117,9 +122,6 @@ namespace SoR.Logic.Entities
             position = centreScreen;
 
             position = new Vector2(position.X - 50, position.Y - 150);
-
-            positionX = position.X; // Set the x-axis position
-            positionY = position.Y; // Set the y-axis position
         }
     }
 }

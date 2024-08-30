@@ -23,23 +23,10 @@ namespace SoR.Logic.Entities
         protected Slot slot;
         protected PlayerInput playerInput;
         protected Vector2 position;
-        protected float positionX;
-        protected float positionY;
         protected float prevPositionX;
         protected float prevPositionY;
         protected int hitpoints;
-        protected bool inContact;
-        protected bool wasContact;
-
-        // DEBUGGING
-        protected string showMaxX;
-        protected string showMaxY;
-        protected string showMinX;
-        protected string showMinY;
-        protected string showHitboxWidth;
-        protected string showHitboxHeight;
-        protected string showPositionX;
-        protected string showPositionY;
+        protected string nextAnimation;
 
         public float Speed { get; set; }
         public string Name { get; set; }
@@ -53,17 +40,13 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public abstract void React();
+        public abstract void React(string animation);
 
-        public void Colliding()
-        {
-            inContact = true;
-        }
-
-        public void NotColliding()
-        {
-            inContact = false;
-        }
+        /*
+         * If something changes to trigger a new animation, apply the animation.
+         * If the animation is already applied, do nothing.
+         */
+        public abstract string ChangeAnimation(string trigger);
 
         /*
          * Check for collision with other entities.
@@ -72,7 +55,6 @@ namespace SoR.Logic.Entities
         {
             entity.UpdateHitbox(new SkeletonBounds());
             entity.GetHitbox().Update(entity.GetSkeleton(), true);
-            entity.Colliding();
 
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
@@ -138,17 +120,6 @@ namespace SoR.Logic.Entities
             skeletonRenderer.Begin();
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
-
-            // Set the text above the character to show
-            // MaxX, MaxY, MinX, MinY, positionX, positionY, hitbox width, and/or hitbox height
-            showMaxX = hitbox.MaxX.ToString();
-            showMaxY = hitbox.MaxY.ToString();
-            showMinX = hitbox.MinX.ToString();
-            showMinY = hitbox.MinY.ToString();
-            showPositionX = positionX.ToString();
-            showPositionY = positionY.ToString();
-            showHitboxWidth = hitbox.Width.ToString();
-            showHitboxHeight = hitbox.Height.ToString();
         }
 
         /*
@@ -166,7 +137,7 @@ namespace SoR.Logic.Entities
          */
         public float GetPositionX()
         {
-            return positionX;
+            return position.X;
         }
 
         /*
@@ -174,7 +145,7 @@ namespace SoR.Logic.Entities
          */
         public float GetPositionY()
         {
-            return positionY;
+            return position.Y;
         }
     }
 }

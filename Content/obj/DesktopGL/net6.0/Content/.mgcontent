@@ -4,12 +4,12 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/GitHub projects/Proj-SoR/Content/Entities/Campfire/templecampfire.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/Entities/Chara/savedit.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/Entities/Pheasant/savedthepheasant.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/Entities/Player/Char sprites.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/Entities/Slime/Slime.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/Fonts/File.spritefont</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Entities/Campfire/templecampfire.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Entities/Chara/savedit.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Entities/Pheasant/savedthepheasant.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Entities/Player/Char sprites.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Entities/Slime/Slime.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Fonts/File.spritefont</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />
