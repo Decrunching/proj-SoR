@@ -8,12 +8,12 @@ namespace SoR.Logic.Input
     internal class InputKeys
     {
         public bool Pressed { get; set; }
-        public string NextAnimation { get; set; }
+        public string Direction { get; set; }
 
-        public InputKeys(bool pressed, string nextAnimation)
+        public InputKeys(bool pressed, string direction)
         {
             Pressed = pressed;
-            NextAnimation = nextAnimation;
+            Direction = direction;
         }
     }
 }
