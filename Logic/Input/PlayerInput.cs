@@ -4,14 +4,13 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
-using System;
 
 namespace SoR.Logic.Input
 {
     /*
      * This class handles player input and animation application.
      */
-    public class PlayerInput
+    public class PlayerInput : Direction
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
@@ -19,19 +18,14 @@ namespace SoR.Logic.Input
         private int deadZone;
         private float newPositionX;
         private float newPositionY;
-        public float prevPositionX;
-        public float prevPositionY;
+        private float prevPosX;
+        private float prevPosY;
         private bool switchSkin;
         private bool idle;
-        private string direction;
 
         // DEBUGGING
-        public string stringKeyState;
-        public string stringLastKeyState;
-        public float directionX;
-        public float directionY;
-        public float compareX;
-        public float compareY;
+        private string stringKeyState;
+        private string stringLastKeyState;
 
         public PlayerInput()
         {
@@ -73,8 +67,10 @@ namespace SoR.Logic.Input
 
             float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            newPositionX = prevPositionX = positionX;
-            newPositionY = prevPositionY = positionY;
+            newPositionX = positionX;
+            newPositionY = positionY;
+            prevPosX = newPositionX;
+            prevPosY = newPositionY;
 
             switchSkin = false; // Space has not been pressed yet, the skin will not be switched
 
@@ -106,35 +102,36 @@ namespace SoR.Logic.Input
                 if (pressed)
                 {
                     idle = false; // Idle will no longer be playing
-                    if (inputKeys[key].Direction == "runup")
+                    if (inputKeys[key].NextAnimation == "runup")
                     {
                         newPositionY -= newPlayerSpeed;
                     }
-                    if (inputKeys[key].Direction == "rundown")
+                    if (inputKeys[key].NextAnimation == "rundown")
                     {
                         newPositionY += newPlayerSpeed;
                     }
-                    if (inputKeys[key].Direction == "runleft")
+                    if (inputKeys[key].NextAnimation == "runleft")
                     {
                         newPositionX -= newPlayerSpeed;
                     }
-                    if (inputKeys[key].Direction == "runright")
+                    if (inputKeys[key].NextAnimation == "runright")
                     {
                         newPositionX += newPlayerSpeed;
                     }
 
-                    direction = FaceDirection();
-
                     if (!previouslyPressed)
                     {
-                        animState.SetAnimation(0, direction, true); // Set new animation
+                        animState.SetAnimation(0, inputKeys[key].NextAnimation, true); // Set new animation
                     }
-                    stringKeyState = inputKeys[key].Direction;
+                    stringKeyState = inputKeys[key].NextAnimation;
                 }
                 // If a key has just been released, set the running animation to the direction of movement
                 else if (!pressed & previouslyPressed)
                 {
                     animState.SetAnimation(0, stringKeyState, true);
+
+                    //DEBUGGING
+                    stringLastKeyState = stringKeyState = inputKeys[key].NextAnimation;
                 }
             }
 
@@ -144,50 +141,20 @@ namespace SoR.Logic.Input
             }
 
             // Get the previous x,y co-ordinates
-            prevPositionX = newPositionX;
-            prevPositionY = newPositionY;
+            prevPosX = newPositionX;
+            prevPosY = newPositionY;
 
             lastKeyState = keyState; // Get the previous keyboard state
         }
 
-        /*
-         * Determine which direction the player character is facing.
-         */
-        public string FaceDirection()
+        public string GetStringKeyState()
         {
-            directionX = newPositionX - prevPositionX;
-            directionY = newPositionY - prevPositionY;
+            return stringKeyState.ToString();
+        }
 
-            if (directionX != 0 | directionY != 0)
-            {
-                compareX = Math.Abs(directionX);
-                compareY = Math.Abs(directionY);
-
-                if (compareX >= compareY)
-                {
-                    if (directionX > 0)
-                    {
-                        direction = "runright";
-                    }
-                    if (directionX < 0)
-                    {
-                        direction = "runleft";
-                    }
-                }
-                else
-                {
-                    if (directionY > 0)
-                    {
-                        direction = "rundown";
-                    }
-                    if (directionY < 0)
-                    {
-                        direction = "runup";
-                    }
-                }
-            }
-
-            return direction;
+        public string GetPrevStringKeyState()
+        {
+            return stringLastKeyState.ToString();
         }
 
         /*

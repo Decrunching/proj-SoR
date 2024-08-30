@@ -193,11 +193,7 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "dirX: " + playerInput.directionX + " dirY: " + playerInput.directionY +
-                "\ndirection: " + playerInput.FaceDirection() +
-                "\nposX: " + playerInput.UpdatePositionX() + "\nposY: " + playerInput.UpdatePositionY() +
-                "\nprevPosX: " + playerInput.prevPositionX + "\nprevPosY: " + playerInput.prevPositionY +
-                "\ncompareX: " + playerInput.compareX + " compareY: " + playerInput.compareY,
+                "X: " + (positionX - prevPositionX) + " Y: " + (positionY - prevPositionY),
                 new Vector2(positionX - 150, positionY + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
