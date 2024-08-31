@@ -47,7 +47,7 @@ namespace SoR.Logic.Entities
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
 
-            movement = new Movement();
+            movement = new InputMovement();
 
             // Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
@@ -95,14 +95,6 @@ namespace SoR.Logic.Entities
                     nextAnim = "idlebattle";
                 }
             }
-        }
-
-        /*
-         * No longer in collision.
-         */
-        public override void ResetCollision()
-        {
-            prevTrigger = "none";
         }
 
         /*
@@ -187,50 +179,14 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Handle entity collision.
-         * 
-         * TO DO:
-         * Player should still be able to move perpendicular to hitbox edge when in collision.
-         */
-        public override void Collision()
-        {
-            position.X = prevPositionX;
-            position.Y = prevPositionY;
-        }
-
-        /*
          * Update the skeleton position, skin and animation state.
          */
         public override void UpdateEntityAnimations(GameTime gameTime)
         {
+            base.UpdateEntityAnimations(gameTime);
+
             // Check whether to change the skin
             CheckSwitchSkin();
-
-            // Update the animation state and apply animations to skeletons
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
-
-            hitbox.Update(skeleton, true);
-            animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            animState.Apply(skeleton);
-
-            // Update skeletal transformations
-            skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
-        }
-
-        /*
-         * Draw text to the screen.
-         */
-        public override void DrawText(SpriteBatch spriteBatch, SpriteFont font)
-        {
-            spriteBatch.Begin();
-            spriteBatch.DrawString(
-                font,
-                "",
-                new Vector2(position.X - 150, position.Y + hitbox.Height / 2),
-                Color.BlueViolet);
-            spriteBatch.End();
         }
 
         /* 

@@ -161,14 +161,15 @@ namespace SoR.Logic.Game
                             if (entity.Value != player & player.CollidesWith(entity.Value))
                             {
                                 player.Collision();
+                                entity.Value.Collision();
 
                                 entity.Value.ChangeAnimation("collision");
                                 player.ChangeAnimation("collision");
                             }
                             else
                             {
-                                entity.Value.ResetCollision();
-                                player.ResetCollision();
+                                entity.Value.ResetTrigger();
+                                player.ResetTrigger();
                             }
                         }
                         else
@@ -177,10 +178,10 @@ namespace SoR.Logic.Game
                             throw new System.InvalidOperationException("playerChar is not of type Player");
                         }
                     }
-                }
 
-                // Update animations
-                entity.Value.UpdateEntityAnimations(gameTime);
+                    // Update animations
+                    entity.Value.UpdateEntityAnimations(gameTime);
+                }
             }
         }
     }

@@ -10,7 +10,7 @@ namespace SoR.Logic.Input
     /*
      * This class handles player input and animation application.
      */
-    public class Movement
+    public class InputMovement
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
@@ -23,8 +23,9 @@ namespace SoR.Logic.Input
         private bool switchSkin;
         private bool idle;
         private string lastPressedKey;
+        private int turnAround;
 
-        public Movement()
+        public InputMovement()
         {
             deadZone = 4096; // Set the joystick deadzone
             idle = true; // Player is currently idle
@@ -87,15 +88,16 @@ namespace SoR.Logic.Input
                     {
                         newPositionX -= newPlayerSpeed;
                     }
-                    if (inputKeys[key].NextAnimation == "runright")
+                    else if (inputKeys[key].NextAnimation == "runright")
                     {
                         newPositionX += newPlayerSpeed;
                     }
+                    
                     if (inputKeys[key].NextAnimation == "runup")
                     {
                         newPositionY -= newPlayerSpeed;
                     }
-                    if (inputKeys[key].NextAnimation == "rundown")
+                    else if (inputKeys[key].NextAnimation == "rundown")
                     {
                         newPositionY += newPlayerSpeed;
                     }
@@ -164,7 +166,7 @@ namespace SoR.Logic.Input
         /*
          * Handle environmental collision. Currently just the edge of the game window.
          */
-        public void EnvironCollision(
+        public bool EnvironCollision(
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice,
             float positionX,
@@ -176,20 +178,37 @@ namespace SoR.Logic.Input
             if (newPositionX > graphics.PreferredBackBufferWidth - 5)
             {
                 newPositionX = graphics.PreferredBackBufferWidth - 5;
+                turnAround = 1; // Left
+                return true;
             }
             else if (newPositionX < 5)
             {
                 newPositionX = 5;
+                turnAround = 2; // Right
+                return true;
             }
 
             if (newPositionY > graphics.PreferredBackBufferHeight - 8)
             {
                 newPositionY = graphics.PreferredBackBufferHeight - 8;
+                turnAround = 3; // Up
+                return true;
             }
             else if (newPositionY < 8)
             {
                 newPositionY = 8;
+                turnAround = 4; // Down
+                return true;
             }
+            return false;
+        }
+
+        /*
+         * Return the current direction to face. 1 = left, 2 = right, 3 = up, 4 = down.
+         */
+        public int TurnAround()
+        {
+            return turnAround;
         }
 
         /*

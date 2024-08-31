@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Input;
 using Spine;
 using System;
+using System.Windows;
 
 namespace SoR.Logic.Entities
 {
@@ -22,10 +23,10 @@ namespace SoR.Logic.Entities
         protected Attachment hitboxAttachment;
         protected SkeletonBounds hitbox;
         protected Slot slot;
-        protected Movement movement;
+        protected InputMovement movement;
         protected Random random;
         protected Vector2 position;
-        protected Vector2 moving;
+        protected Vector2 movementDirection;
         protected float prevPositionX;
         protected float prevPositionY;
         protected int hitpoints;
@@ -33,6 +34,7 @@ namespace SoR.Logic.Entities
         protected string nextAnim;
         protected float newDirectionTime;
         protected float sinceLastChange;
+        protected bool inMotion;
 
         public float Speed { get; set; }
         public string Name { get; set; }
@@ -54,20 +56,102 @@ namespace SoR.Logic.Entities
          */
         public abstract void ChangeAnimation(string trigger);
 
-        /*
-         * No longer in collision.
+        /* 
+         * Get the centre of the screen.
          */
-        public abstract void ResetCollision();
+        public abstract void SetStartPosition(Vector2 centreScreen);
 
         /*
          * Update entity position.
          */
-        public abstract void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice);
+        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        {
+            // Handle environmental collision
+            if (movement.EnvironCollision(graphics, GraphicsDevice, position.X, position.Y))
+            {
+                NewDirection(movement.TurnAround());
+            }
+
+            // Set the new position
+            position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
+        }
+
+        /*
+         * Choose a new direction to face.
+         */
+        public void NewDirection(int direction)
+        {
+            switch (direction)
+            {
+                case 1:
+                    movementDirection = new Vector2(-1, 0); // Left
+                    ChangeAnimation("turnleft");
+                    ResetTrigger();
+                    break;
+                case 2:
+                    movementDirection = new Vector2(1, 0); // Right
+                    ChangeAnimation("turnright");
+                    ResetTrigger();
+                    break;
+                case 3:
+                    movementDirection = new Vector2(0, -1); // Up
+                    break;
+                case 4:
+                    movementDirection = new Vector2(0, 1); // Down
+                    break;
+            }
+        }
 
         /*
          * Move to new position.
          */
-        public abstract void Movement(GameTime gameTime);
+        public virtual void Movement(GameTime gameTime)
+        {
+            prevPositionX = position.X;
+            prevPositionY = position.Y;
+
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            float newSpeed = Speed * deltaTime;
+
+            sinceLastChange += deltaTime;
+
+            if (sinceLastChange >= newDirectionTime)
+            {
+                int direction = random.Next(4);
+                NewDirection(direction);
+                newDirectionTime = (float)random.NextDouble() * 3f + 0.33f;
+                sinceLastChange = 0;
+            }
+
+            position += movementDirection * newSpeed;
+        }
+
+        /*
+         * Update the entity position, animation state and skeleton.
+         */
+        public virtual void UpdateEntityAnimations(GameTime gameTime)
+        {
+            // Update the animation state and apply animations to skeletons
+            skeleton.X = position.X;
+            skeleton.Y = position.Y;
+
+            hitbox.Update(skeleton, true);
+            animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            animState.Apply(skeleton);
+
+            // Update skeletal transformations
+            skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+        }
+
+        /*
+         * No longer in collision.
+         */
+        public void ResetTrigger()
+        {
+            prevTrigger = "none";
+        }
 
         /*
          * Handle entity collision.
@@ -75,22 +159,11 @@ namespace SoR.Logic.Entities
          * TO DO:
          * Player should still be able to move perpendicular to hitbox edge when in collision.
          */
-        public abstract void Collision();
-
-        /*
-         * Update the entity position, animation state and skeleton.
-         */
-        public abstract void UpdateEntityAnimations(GameTime gameTime);
-
-        /*
-         * Draw text to the screen.
-         */
-        public abstract void DrawText(SpriteBatch spriteBatch, SpriteFont font);
-
-        /* 
-         * Get the centre of the screen.
-         */
-        public abstract void SetStartPosition(Vector2 centreScreen);
+        public void Collision()
+        {
+            position.X = prevPositionX;
+            position.Y = prevPositionY;
+        }
 
         /*
          * Check for collision with other entities.
@@ -135,6 +208,20 @@ namespace SoR.Logic.Entities
         public void UpdateHitbox(SkeletonBounds updatedHitbox)
         {
             hitbox = updatedHitbox;
+        }
+
+        /*
+         * Draw text to the screen.
+         */
+        public void DrawText(SpriteBatch spriteBatch, SpriteFont font)
+        {
+            spriteBatch.Begin();
+            spriteBatch.DrawString(
+                font,
+                "",
+                new Vector2(position.X - 150, position.Y + hitbox.Height / 2),
+                Color.BlueViolet);
+            spriteBatch.End();
         }
 
         /*

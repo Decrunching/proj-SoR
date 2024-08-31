@@ -70,9 +70,7 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public override void React(string animation)
-        {
-        }
+        public override void React(string animation) { }
 
         /*
          * If something changes to trigger a new animation, apply the animation.
@@ -81,85 +79,6 @@ namespace SoR.Logic.Entities
         public override void ChangeAnimation(string trigger)
         {
             prevTrigger = trigger;
-        }
-
-        /*
-         * No longer in collision.
-         */
-        public override void ResetCollision()
-        {
-            prevTrigger = "none";
-        }
-
-        /*
-         * Update entity position.
-         */
-        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
-        {
-            // Pass the speed to PlayerInput for joypad input processing
-            movement.ProcessJoypadInputs(gameTime, Speed);
-
-            // Handle player collision
-            movement.EnvironCollision(graphics,
-                GraphicsDevice,
-                position.X,
-                position.Y);
-
-            // Set the new position according to player input
-            position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
-        }
-
-        /*
-         * Move to new position.
-         */
-        public override void Movement(GameTime gameTime)
-        {
-            prevPositionX = position.X;
-            prevPositionY = position.Y;
-        }
-
-        /*
-         * Handle entity collision.
-         * 
-         * TO DO:
-         * Player should still be able to move perpendicular to hitbox edge when in collision.
-         */
-        public override void Collision()
-        {
-            position.X = prevPositionX;
-            position.Y = prevPositionY;
-        }
-
-        /*
-         * Update the entity position, animation state and skeleton.
-         */
-        public override void UpdateEntityAnimations(GameTime gameTime)
-        {
-            // Update the animation state and apply animations to skeletons
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
-
-            hitbox.Update(skeleton, true);
-            animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            animState.Apply(skeleton);
-
-            // Update skeletal transformations
-            skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
-        }
-
-        /*
-         * Draw text to the screen.
-         */
-        public override void DrawText(SpriteBatch spriteBatch, SpriteFont font)
-        {
-            spriteBatch.Begin();
-            spriteBatch.DrawString(
-                font,
-                "",
-                new Vector2(position.X - 150, position.Y + hitbox.Height / 2),
-                Color.BlueViolet);
-            spriteBatch.End();
         }
 
         /* 
