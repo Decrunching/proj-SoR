@@ -192,7 +192,7 @@ namespace SoR.Logic.Entities
          * TO DO:
          * Player should still be able to move perpendicular to hitbox edge when in collision.
          */
-        public void Collision()
+        public override void Collision()
         {
             position.X = prevPositionX;
             position.Y = prevPositionY;

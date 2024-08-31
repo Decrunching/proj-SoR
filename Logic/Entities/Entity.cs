@@ -60,6 +60,39 @@ namespace SoR.Logic.Entities
         public abstract void ResetCollision();
 
         /*
+         * Update entity position.
+         */
+        public abstract void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice);
+
+        /*
+         * Move to new position.
+         */
+        public abstract void Movement(GameTime gameTime);
+
+        /*
+         * Handle entity collision.
+         * 
+         * TO DO:
+         * Player should still be able to move perpendicular to hitbox edge when in collision.
+         */
+        public abstract void Collision();
+
+        /*
+         * Update the entity position, animation state and skeleton.
+         */
+        public abstract void UpdateEntityAnimations(GameTime gameTime);
+
+        /*
+         * Draw text to the screen.
+         */
+        public abstract void DrawText(SpriteBatch spriteBatch, SpriteFont font);
+
+        /* 
+         * Get the centre of the screen.
+         */
+        public abstract void SetStartPosition(Vector2 centreScreen);
+
+        /*
          * Check for collision with other entities.
          */
         public bool CollidesWith(Entity entity)
@@ -77,53 +110,6 @@ namespace SoR.Logic.Entities
 
             return false;
         }
-
-        /*
-         * Update the hitbox after a collision.
-         */
-        public void UpdateHitbox(SkeletonBounds updatedHitbox)
-        {
-            hitbox = updatedHitbox;
-        }
-
-        /*
-         * Get the animation state.
-         */
-        public AnimationState GetAnimState()
-        {
-            return animState;
-        }
-
-        /*
-         * Get the skeleton.
-         */
-        public Skeleton GetSkeleton()
-        {
-            return skeleton;
-        }
-
-        /*
-         * Get the hitbox.
-         */
-        public SkeletonBounds GetHitbox()
-        {
-            return hitbox;
-        }
-
-        /*
-         * Update entity position.
-         */
-        public abstract void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice);
-
-        /*
-         * Move to new position.
-         */
-        public abstract void Movement(GameTime gameTime);
-
-        /*
-         * Update the entity position, animation state and skeleton.
-         */
-        public abstract void UpdateEntityAnimations(GameTime gameTime);
 
         /*
          * Render the current skeleton to the screen.
@@ -144,29 +130,27 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Draw text to the screen.
+         * Update the hitbox after a collision.
          */
-        public abstract void DrawText(SpriteBatch spriteBatch, SpriteFont font);
-
-        /* 
-         * Get the centre of the screen.
-         */
-        public abstract void SetStartPosition(Vector2 centreScreen);
-
-        /*
-         * Get the current x-axis position.
-         */
-        public float GetPositionX()
+        public void UpdateHitbox(SkeletonBounds updatedHitbox)
         {
-            return position.X;
+            hitbox = updatedHitbox;
         }
 
         /*
-         * Get the current y-axis position.
+         * Get the skeleton.
          */
-        public float GetPositionY()
+        public Skeleton GetSkeleton()
         {
-            return position.Y;
+            return skeleton;
+        }
+
+        /*
+         * Get the hitbox.
+         */
+        public SkeletonBounds GetHitbox()
+        {
+            return hitbox;
         }
     }
 }

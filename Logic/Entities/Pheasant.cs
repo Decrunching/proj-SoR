@@ -45,13 +45,19 @@ namespace SoR.Logic.Entities
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
 
+            random = new Random();
+            moving = new Vector2(0, 0);
+            newDirectionTime = (float)random.NextDouble() * 5f + 2f;
+            sinceLastChange = 0;
+            NewDirection();
+
             movement = new Movement();
 
             // Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
                 graphics.PreferredBackBufferHeight / 2);
 
-            Speed = 200f; // Set the entity's travel speed
+            Speed = 80f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
         }
@@ -119,39 +125,56 @@ namespace SoR.Logic.Entities
             prevPositionX = position.X;
             prevPositionY = position.Y;
 
-            Random random = new Random();
-            Vector2 moving = new Vector2(0, 0);
-            float newDirection = (float)random.NextDouble() * 5f + 2f;
-            float sinceLastChange = 0;
-            int direction;
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float newSpeed = Speed * deltaTime;
 
-            sinceLastChange += newSpeed;
+            sinceLastChange += deltaTime;
 
-            if (sinceLastChange >= newDirection)
+            if (sinceLastChange >= newDirectionTime)
             {
-                direction = random.Next(4);
-                switch (direction)
-                {
-                    case 0:
-                        moving = new Vector2(0, -1); // Up
-                        break;
-                    case 1:
-                        moving = new Vector2(0, 1); // Down
-                        break;
-                    case 2:
-                        moving = new Vector2(-1, 0); // Left
-                        break;
-                    case 3:
-                        moving = new Vector2(1, 0); // Right
-                        break;
-                }
-                newDirection = (float)random.NextDouble() * 5f + 2f;
+                NewDirection();
+                newDirectionTime = (float)random.NextDouble() * 1f + 0.25f;
                 sinceLastChange = 0;
             }
 
             position += moving * newSpeed;
+        }
+
+        /*
+         * Choose a new direction to face.
+         */
+        public void NewDirection()
+        {
+            int direction = random.Next(4);
+
+            switch (direction)
+            {
+                case 0:
+                    moving = new Vector2(0, -1); // Up
+                    break;
+                case 1:
+                    moving = new Vector2(0, 1); // Down
+                    break;
+                case 2:
+                    moving = new Vector2(-1, 0); // Left
+                    break;
+                case 3:
+                    moving = new Vector2(1, 0); // Right
+                    break;
+            }
+        }
+
+        /*
+         * Handle entity collision.
+         * 
+         * TO DO:
+         * Player should still be able to move perpendicular to hitbox edge when in collision.
+         */
+        public override void Collision()
+        {
+            position.X = prevPositionX;
+            position.Y = prevPositionY;
         }
 
         /*

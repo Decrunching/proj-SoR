@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Input;
 using Spine;
+using System;
 
 namespace SoR.Logic.Entities
 {
@@ -44,13 +45,11 @@ namespace SoR.Logic.Entities
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
 
-            movement = new Movement();
-
             // Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
                 graphics.PreferredBackBufferHeight / 2);
 
-            Speed = 200f; // Set the entity's travel speed
+            Speed = 80f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
         }
@@ -117,6 +116,18 @@ namespace SoR.Logic.Entities
         {
             prevPositionX = position.X;
             prevPositionY = position.Y;
+        }
+
+        /*
+         * Handle entity collision.
+         * 
+         * TO DO:
+         * Player should still be able to move perpendicular to hitbox edge when in collision.
+         */
+        public override void Collision()
+        {
+            position.X = prevPositionX;
+            position.Y = prevPositionY;
         }
 
         /*

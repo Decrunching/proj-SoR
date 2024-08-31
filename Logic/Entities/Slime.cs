@@ -60,7 +60,7 @@ namespace SoR.Logic.Entities
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
                 graphics.PreferredBackBufferHeight / 2);
 
-            Speed = 200f; // Set the entity's travel speed
+            Speed = 80f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
         }
@@ -145,16 +145,18 @@ namespace SoR.Logic.Entities
             if (sinceLastChange >= newDirectionTime)
             {
                 NewDirection();
-                newDirectionTime = (float)random.NextDouble() * 5f + 2f;
+                newDirectionTime = (float)random.NextDouble() * 1f + 0.25f;
                 sinceLastChange = 0;
             }
 
                 position += moving * newSpeed;
         }
 
+        /*
+         * Choose a new direction to face.
+         */
         public void NewDirection()
         {
-            Random random = new Random();
             int direction = random.Next(4);
 
             switch (direction)
@@ -172,6 +174,18 @@ namespace SoR.Logic.Entities
                     moving = new Vector2(1, 0); // Right
                     break;
             }
+        }
+
+        /*
+         * Handle entity collision.
+         * 
+         * TO DO:
+         * Player should still be able to move perpendicular to hitbox edge when in collision.
+         */
+        public override void Collision()
+        {
+            position.X = prevPositionX;
+            position.Y = prevPositionY;
         }
 
         /*
