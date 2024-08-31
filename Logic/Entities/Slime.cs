@@ -9,6 +9,8 @@ namespace SoR.Logic.Entities
      */
     internal class Slime : Entity
     {
+        public string isTrigger = " not triggered";
+
         public Slime(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
@@ -30,10 +32,11 @@ namespace SoR.Logic.Entities
             animState = new AnimationState(animStateData);
             animState.Apply(skeleton);
 
-            nextAnimation = "idle";
+            prevTrigger = "none";
+            nextAnim = null;
 
             // Set the "fidle" animation on track 1 and leave it looping forever
-            animState.SetAnimation(0, nextAnimation, true);
+            animState.SetAnimation(0, "idle", true);
 
             // Create hitbox
             slot = skeleton.FindSlot("hitbox");
@@ -66,11 +69,11 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public override void React(string animation)
+        public override void React(string eventTrigger)
         {
-            if (animation != "no change")
+            if (eventTrigger != "none")
             {
-                animState.SetAnimation(0, animation, false);
+                animState.SetAnimation(0, nextAnim, false);
                 animState.AddAnimation(0, "idle", true, 0);
             }
         }
@@ -81,17 +84,25 @@ namespace SoR.Logic.Entities
          * 
          * TO DO: Fix this.
          */
-        public override string ChangeAnimation(string trigger)
+        public override void ChangeAnimation(string eventTrigger)
         {
-            if (nextAnimation != trigger)
+            if (prevTrigger != eventTrigger)
             {
-                if (trigger == "attack")
+                if (eventTrigger == "collision")
                 {
-                    nextAnimation = trigger;
-                    return "attack";
+                    prevTrigger = "collision";
+                    nextAnim = "attack";
                 }
+                React(eventTrigger);
             }
-            return "no change";
+        }
+
+        /*
+         * No longer in collision.
+         */
+        public override void ResetCollision()
+        {
+            prevTrigger = "none";
         }
 
         /*
@@ -120,7 +131,7 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "",
+                "nextAnimation: " + prevTrigger + "\nTrigger: " + isTrigger,
                 new Vector2(position.X - 150, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();

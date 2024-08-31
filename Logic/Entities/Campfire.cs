@@ -76,10 +76,17 @@ namespace SoR.Logic.Entities
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          */
-        public override string ChangeAnimation(string trigger)
+        public override void ChangeAnimation(string trigger)
         {
-            nextAnimation = trigger;
-            return trigger;
+            prevTrigger = trigger;
+        }
+
+        /*
+         * No longer in collision.
+         */
+        public override void ResetCollision()
+        {
+            prevTrigger = "none";
         }
 
         /*

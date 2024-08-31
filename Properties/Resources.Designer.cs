@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace SoR.Properties {
+namespace Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace SoR.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("SoR.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -215,7 +215,8 @@ namespace SoR.Properties {
         ///bounds:2,174,323,346
         ///offsets:244,158,800,747
         ///winglower
-        ///bounds:2,46,119,126        /// [rest of string was truncated]&quot;;.
+        ///bounds:2,46,119,126
+        /// [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string pheasant_atlas {
             get {

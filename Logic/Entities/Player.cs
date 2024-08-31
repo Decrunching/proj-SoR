@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Input;
 using Spine;
+using System;
 
 namespace SoR.Logic.Entities
 {
@@ -82,10 +83,17 @@ namespace SoR.Logic.Entities
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          */
-        public override string ChangeAnimation(string trigger)
+        public override void ChangeAnimation(string trigger)
         {
-            nextAnimation = trigger;
-            return trigger;
+            prevTrigger = trigger;
+        }
+
+        /*
+         * No longer in collision.
+         */
+        public override void ResetCollision()
+        {
+            prevTrigger = "none";
         }
 
         /*
@@ -140,29 +148,16 @@ namespace SoR.Logic.Entities
         /*
          * Update entity position according to player input.
          */
-        public void UpdatePlayerPosition(
+        public void UpdatePosition(
             GameTime gameTime,
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice,
-            AnimationState animState,
-            Skeleton skeleton)
+            AnimationState animState)
         {
-            prevPositionX = position.X;
-            prevPositionY = position.Y;
-
-            // Pass the speed, position and animation state to PlayerInput for keyboard input processing
-            playerInput.ProcessKeyboardInputs(
-                gameTime,
-                animState,
-                Speed,
-                position.X,
-                position.Y);
+            playerInput.CheckSkin(); // Set the next skin if Space is pressed
 
             // Pass the speed to PlayerInput for joypad input processing
             playerInput.ProcessJoypadInputs(gameTime, Speed);
-
-            // Set the new position according to player input
-            position = new Vector2(playerInput.UpdatePositionX(), playerInput.UpdatePositionY());
 
             // Handle player collision
             playerInput.EnvironCollision(graphics,
@@ -175,21 +170,29 @@ namespace SoR.Logic.Entities
         }
 
         /*
+         * 
+         */
+        public void Movement(GameTime gameTime)
+        {
+            prevPositionX = position.X;
+            prevPositionY = position.Y;
+
+            playerInput.CheckMovement(gameTime, animState, Speed, position.X, position.Y);
+
+            // Set the new position according to player input
+            position = new Vector2(playerInput.UpdatePositionX(), playerInput.UpdatePositionY());
+        }
+
+        /*
          * Handle entity collision.
          * 
          * TO DO:
          * Player should still be able to move perpendicular to hitbox edge when in collision.
          */
-        public void PlayerCollision(
-            GameTime gameTime,
-            SkeletonBounds playerBox,
-            SkeletonBounds entityBox,
-            Entity entity)
+        public void Collision()
         {
             position.X = prevPositionX;
             position.Y = prevPositionY;
-
-            entity.React(entity.ChangeAnimation("attack"));
         }
 
         /*

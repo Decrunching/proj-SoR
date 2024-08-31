@@ -147,13 +147,14 @@ namespace SoR.Logic.Game
             {
                 if (playerChar is Player player)
                 {
+                    player.Movement(gameTime);
+
                     // Update position according to user input
-                    player.UpdatePlayerPosition(
+                    player.UpdatePosition(
                     gameTime,
                     graphics,
                     GraphicsDevice,
-                    player.GetAnimState(),
-                    player.GetSkeleton());
+                    player.GetAnimState());
 
                     foreach (var entity in entities)
                     {
@@ -161,17 +162,18 @@ namespace SoR.Logic.Game
                         {
                             if (entity.Value != player & player.CollidesWith(entity.Value))
                             {
-                                player.PlayerCollision(
-                                    gameTime,
-                                    player.GetHitbox(),
-                                    entity.Value.GetHitbox(),
-                                    entity.Value);
+                                player.Collision();
 
+                                entity.Value.ChangeAnimation("collision");
                             }
-
-                            // Update animations
-                            entity.Value.UpdateEntityAnimations(gameTime);
+                            else
+                            {
+                                entity.Value.ResetCollision();
+                            }
                         }
+
+                        // Update animations
+                        entity.Value.UpdateEntityAnimations(gameTime);
                     }
                 }
                 else

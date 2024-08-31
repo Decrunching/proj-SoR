@@ -26,7 +26,8 @@ namespace SoR.Logic.Entities
         protected float prevPositionX;
         protected float prevPositionY;
         protected int hitpoints;
-        protected string nextAnimation;
+        protected string prevTrigger;
+        protected string nextAnim;
 
         public float Speed { get; set; }
         public string Name { get; set; }
@@ -46,7 +47,12 @@ namespace SoR.Logic.Entities
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          */
-        public abstract string ChangeAnimation(string trigger);
+        public abstract void ChangeAnimation(string trigger);
+
+        /*
+         * No longer in collision.
+         */
+        public abstract void ResetCollision();
 
         /*
          * Check for collision with other entities.
