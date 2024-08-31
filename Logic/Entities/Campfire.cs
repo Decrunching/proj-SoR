@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SoR.Logic.Input;
 using Spine;
 
 namespace SoR.Logic.Entities
@@ -42,6 +43,8 @@ namespace SoR.Logic.Entities
             // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
+
+            movement = new Movement();
 
             // Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
@@ -87,6 +90,33 @@ namespace SoR.Logic.Entities
         public override void ResetCollision()
         {
             prevTrigger = "none";
+        }
+
+        /*
+         * Update entity position.
+         */
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        {
+            // Pass the speed to PlayerInput for joypad input processing
+            movement.ProcessJoypadInputs(gameTime, Speed);
+
+            // Handle player collision
+            movement.EnvironCollision(graphics,
+                GraphicsDevice,
+                position.X,
+                position.Y);
+
+            // Set the new position according to player input
+            position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
+        }
+
+        /*
+         * Move to new position.
+         */
+        public override void Movement(GameTime gameTime)
+        {
+            prevPositionX = position.X;
+            prevPositionY = position.Y;
         }
 
         /*

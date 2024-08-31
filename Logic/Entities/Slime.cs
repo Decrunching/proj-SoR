@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SoR.Logic.Input;
 using Spine;
+using System;
 
 namespace SoR.Logic.Entities
 {
@@ -9,8 +11,6 @@ namespace SoR.Logic.Entities
      */
     internal class Slime : Entity
     {
-        public string isTrigger = " not triggered";
-
         public Slime(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
@@ -47,6 +47,14 @@ namespace SoR.Logic.Entities
             // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
+
+            random = new Random();
+            moving = new Vector2(0, 0);
+            newDirectionTime = (float)random.NextDouble() * 5f + 2f;
+            sinceLastChange = 0;
+            NewDirection();
+
+            movement = new Movement();
 
             // Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
@@ -106,6 +114,67 @@ namespace SoR.Logic.Entities
         }
 
         /*
+         * Update entity position.
+         */
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        {
+            // Handle environmental collision
+            movement.EnvironCollision(graphics,
+                GraphicsDevice,
+                position.X,
+                position.Y);
+
+            // Set the new position
+            position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
+        }
+
+        /*
+         * Move to new position.
+         */
+        public override void Movement(GameTime gameTime)
+        {
+            prevPositionX = position.X;
+            prevPositionY = position.Y;
+
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            float newSpeed = Speed * deltaTime;
+
+            sinceLastChange += deltaTime;
+
+            if (sinceLastChange >= newDirectionTime)
+            {
+                NewDirection();
+                newDirectionTime = (float)random.NextDouble() * 5f + 2f;
+                sinceLastChange = 0;
+            }
+
+                position += moving * newSpeed;
+        }
+
+        public void NewDirection()
+        {
+            Random random = new Random();
+            int direction = random.Next(4);
+
+            switch (direction)
+            {
+                case 0:
+                    moving = new Vector2(0, -1); // Up
+                    break;
+                case 1:
+                    moving = new Vector2(0, 1); // Down
+                    break;
+                case 2:
+                    moving = new Vector2(-1, 0); // Left
+                    break;
+                case 3:
+                    moving = new Vector2(1, 0); // Right
+                    break;
+            }
+        }
+
+        /*
          * Update the entity position, animation state and skeleton.
          */
         public override void UpdateEntityAnimations(GameTime gameTime)
@@ -131,7 +200,7 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "nextAnimation: " + prevTrigger + "\nTrigger: " + isTrigger,
+                "",
                 new Vector2(position.X - 150, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();

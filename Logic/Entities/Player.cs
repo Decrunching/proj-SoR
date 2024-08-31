@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Input;
 using Spine;
-using System;
 
 namespace SoR.Logic.Entities
 {
@@ -48,7 +47,7 @@ namespace SoR.Logic.Entities
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
 
-            playerInput = new PlayerInput(); // Instantiate the keyboard input
+            movement = new Movement();
 
             // Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
@@ -75,17 +74,27 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public override void React(string animation)
+        public override void React(string eventTrigger)
         {
+            nextAnim = "idlebattle";
         }
 
         /*
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
+         * 
+         * TO DO: Fix this.
          */
-        public override void ChangeAnimation(string trigger)
+        public override void ChangeAnimation(string eventTrigger)
         {
-            prevTrigger = trigger;
+            if (prevTrigger != eventTrigger)
+            {
+                if (eventTrigger == "collision")
+                {
+                    prevTrigger = "collision";
+                    nextAnim = "idlebattle";
+                }
+            }
         }
 
         /*
@@ -125,7 +134,7 @@ namespace SoR.Logic.Entities
          */
         public void CheckSwitchSkin()
         {
-            if (playerInput.SkinHasChanged())
+            if (movement.SkinHasChanged())
             {
                 switch (skin)
                 {
@@ -146,41 +155,35 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Update entity position according to player input.
+         * Update entity position.
          */
-        public void UpdatePosition(
-            GameTime gameTime,
-            GraphicsDeviceManager graphics,
-            GraphicsDevice GraphicsDevice,
-            AnimationState animState)
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
-            playerInput.CheckSkin(); // Set the next skin if Space is pressed
+            // Process joypad inputs
+            movement.ProcessJoypadInputs(gameTime, Speed);
 
-            // Pass the speed to PlayerInput for joypad input processing
-            playerInput.ProcessJoypadInputs(gameTime, Speed);
-
-            // Handle player collision
-            playerInput.EnvironCollision(graphics,
+            // Handle environmental collision
+            movement.EnvironCollision(graphics,
                 GraphicsDevice,
                 position.X,
                 position.Y);
 
-            // Set the new position according to player input
-            position = new Vector2(playerInput.UpdatePositionX(), playerInput.UpdatePositionY());
+            // Set the new position
+            position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
         }
 
         /*
-         * 
+         * Move to new position.
          */
-        public void Movement(GameTime gameTime)
+        public override void Movement(GameTime gameTime)
         {
             prevPositionX = position.X;
             prevPositionY = position.Y;
 
-            playerInput.CheckMovement(gameTime, animState, Speed, position.X, position.Y);
+            movement.CheckMovement(gameTime, animState, Speed, position.X, position.Y);
 
             // Set the new position according to player input
-            position = new Vector2(playerInput.UpdatePositionX(), playerInput.UpdatePositionY());
+            position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
         }
 
         /*

@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Entities;
-using Spine;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -65,8 +64,8 @@ namespace SoR.Logic.Game
             CreateEntity(graphics, GraphicsDevice);
 
             // Create the Campfire entity
-            entityType = EntityType.Fire;
-            CreateEntity(graphics, GraphicsDevice);
+            //entityType = EntityType.Fire;
+            //CreateEntity(graphics, GraphicsDevice);
         }
 
         /*
@@ -143,44 +142,45 @@ namespace SoR.Logic.Game
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice)
         {
-            if (entities.TryGetValue("player", out Entity playerChar))
+            foreach (var entity in entities)
             {
-                if (playerChar is Player player)
+                if (entity.Value.Render)
                 {
-                    player.Movement(gameTime);
+                    entity.Value.Movement(gameTime);
 
                     // Update position according to user input
-                    player.UpdatePosition(
+                    entity.Value.UpdatePosition(
                     gameTime,
                     graphics,
-                    GraphicsDevice,
-                    player.GetAnimState());
+                    GraphicsDevice);
 
-                    foreach (var entity in entities)
+                    if (entities.TryGetValue("player", out Entity playerChar))
                     {
-                        if (entity.Value.Render)
+                        if (playerChar is Player player)
                         {
                             if (entity.Value != player & player.CollidesWith(entity.Value))
                             {
                                 player.Collision();
 
                                 entity.Value.ChangeAnimation("collision");
+                                player.ChangeAnimation("collision");
                             }
                             else
                             {
                                 entity.Value.ResetCollision();
+                                player.ResetCollision();
                             }
                         }
-
-                        // Update animations
-                        entity.Value.UpdateEntityAnimations(gameTime);
+                        else
+                        {
+                            // Throw exception if playerChar is somehow not of the type Player
+                            throw new System.InvalidOperationException("playerChar is not of type Player");
+                        }
                     }
                 }
-                else
-                {
-                    // Throw exception if playerChar is somehow not of the type Player
-                    throw new System.InvalidOperationException("playerChar is not of type Player");
-                }
+
+                // Update animations
+                entity.Value.UpdateEntityAnimations(gameTime);
             }
         }
     }

@@ -10,7 +10,7 @@ namespace SoR.Logic.Input
     /*
      * This class handles player input and animation application.
      */
-    public class PlayerInput
+    public class Movement
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
@@ -24,7 +24,7 @@ namespace SoR.Logic.Input
         private bool idle;
         private string lastPressedKey;
 
-        public PlayerInput()
+        public Movement()
         {
             deadZone = 4096; // Set the joystick deadzone
             idle = true; // Player is currently idle
@@ -107,6 +107,8 @@ namespace SoR.Logic.Input
 
                 SetNextAnimation(animState, key, pressed, previouslyPressed);
             }
+
+            CheckSkin();
 
             lastKeyState = keyState; // Get the previous keyboard state
 

@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Input;
 using Spine;
+using System;
 
 namespace SoR.Logic.Entities
 {
@@ -21,13 +22,17 @@ namespace SoR.Logic.Entities
         protected Attachment hitboxAttachment;
         protected SkeletonBounds hitbox;
         protected Slot slot;
-        protected PlayerInput playerInput;
+        protected Movement movement;
+        protected Random random;
         protected Vector2 position;
+        protected Vector2 moving;
         protected float prevPositionX;
         protected float prevPositionY;
         protected int hitpoints;
         protected string prevTrigger;
         protected string nextAnim;
+        protected float newDirectionTime;
+        protected float sinceLastChange;
 
         public float Speed { get; set; }
         public string Name { get; set; }
@@ -104,6 +109,16 @@ namespace SoR.Logic.Entities
         {
             return hitbox;
         }
+
+        /*
+         * Update entity position.
+         */
+        public abstract void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice);
+
+        /*
+         * Move to new position.
+         */
+        public abstract void Movement(GameTime gameTime);
 
         /*
          * Update the entity position, animation state and skeleton.

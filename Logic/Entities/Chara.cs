@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SoR.Logic.Input;
 using Spine;
+using System;
 
 namespace SoR.Logic.Entities
 {
@@ -42,6 +44,8 @@ namespace SoR.Logic.Entities
             // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
+
+            movement = new Movement();
 
             // Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
@@ -87,6 +91,67 @@ namespace SoR.Logic.Entities
         public override void ResetCollision()
         {
             prevTrigger = "none";
+        }
+
+        /*
+         * Update entity position.
+         */
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        {
+            // Pass the speed to PlayerInput for joypad input processing
+            movement.ProcessJoypadInputs(gameTime, Speed);
+
+            // Handle player collision
+            movement.EnvironCollision(graphics,
+                GraphicsDevice,
+                position.X,
+                position.Y);
+
+            // Set the new position according to player input
+            position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
+        }
+
+        /*
+         * Move to new position.
+         */
+        public override void Movement(GameTime gameTime)
+        {
+            prevPositionX = position.X;
+            prevPositionY = position.Y;
+
+            Random random = new Random();
+            Vector2 moving = new Vector2(0, 0);
+            float newDirection = (float)random.NextDouble() * 5f + 2f;
+            float sinceLastChange = 0;
+            int direction;
+
+            float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            sinceLastChange += newSpeed;
+
+            if (sinceLastChange >= newDirection)
+            {
+                direction = random.Next(4);
+                switch (direction)
+                {
+                    case 0:
+                        moving = new Vector2(0, -1); // Up
+                        break;
+                    case 1:
+                        moving = new Vector2(0, 1); // Down
+                        break;
+                    case 2:
+                        moving = new Vector2(-1, 0); // Left
+                        break;
+                    case 3:
+                        moving = new Vector2(1, 0); // Right
+                        break;
+                }
+                newDirection = (float)random.NextDouble() * 5f + 2f;
+                sinceLastChange = 0;
+            }
+
+            position += moving * newSpeed;
         }
 
         /*
