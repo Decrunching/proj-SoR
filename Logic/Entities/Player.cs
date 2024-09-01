@@ -47,6 +47,8 @@ namespace SoR.Logic.Entities
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
 
+            hitbox = new SkeletonBounds();
+
             movement = new InputMovement();
 
             // Set the current position on the screen
@@ -76,7 +78,7 @@ namespace SoR.Logic.Entities
          */
         public override void React(string eventTrigger)
         {
-            nextAnim = "idlebattle";
+            playAnim = "idlebattle";
         }
 
         /*
@@ -92,7 +94,7 @@ namespace SoR.Logic.Entities
                 if (eventTrigger == "collision")
                 {
                     prevTrigger = "collision";
-                    nextAnim = "idlebattle";
+                    playAnim = "idlebattle";
                 }
             }
         }
@@ -155,8 +157,10 @@ namespace SoR.Logic.Entities
             movement.ProcessJoypadInputs(gameTime, Speed);
 
             // Handle environmental collision
-            movement.EnvironCollision(graphics,
+            movement.EnvironCollision(
+                graphics,
                 GraphicsDevice,
+                GetHitbox(),
                 position.X,
                 position.Y);
 

@@ -160,16 +160,14 @@ namespace SoR.Logic.Game
                         {
                             if (entity.Value != player & player.CollidesWith(entity.Value))
                             {
-                                player.Collision();
-                                entity.Value.Collision();
+                                entity.Value.StopMoving();
 
                                 entity.Value.ChangeAnimation("collision");
                                 player.ChangeAnimation("collision");
                             }
-                            else
+                            else if (!entity.Value.IsMoving())
                             {
-                                entity.Value.ResetTrigger();
-                                player.ResetTrigger();
+                                entity.Value.StartMoving();
                             }
                         }
                         else

@@ -45,12 +45,15 @@ namespace SoR.Logic.Entities
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
 
+            hitbox = new SkeletonBounds();
+
             random = new Random();
             movementDirection = new Vector2(0, 0); // The direction of movement
             newDirectionTime = (float)random.NextDouble() * 1f + 0.25f; // After 0.25-1 seconds, choose a new movement direction
             sinceLastChange = 0; // Time elapsed since last direction change
             NewDirection(random.Next(4)); // Choose a random new direction to move in
-            inMotion = true; // Is currently moving freely
+
+            inMotion = true; // Move freely
 
             movement = new InputMovement(); // Environmental collision handling
 
@@ -79,13 +82,12 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public override void React(string eventTrigger)
+        public override void React(string reaction)
         {
-            if (eventTrigger != "none")
+            if (reaction != "none")
             {
-                animState.SetAnimation(0, nextAnim, false);
-                animState.AddAnimation(0, "run", true, 0);
-                inMotion = false;
+                animState.SetAnimation(0, playAnim, false);
+                animState.AddAnimation(0, nextAnim, true, 0);
             }
         }
 
@@ -101,13 +103,7 @@ namespace SoR.Logic.Entities
 
             if (prevTrigger != eventTrigger)
             {
-                if (eventTrigger == "collision")
-                {
-                    prevTrigger = "collision";
-                    nextAnim = "attack";
-                    reaction = eventTrigger;
-                }
-                if(eventTrigger == "turnleft")
+                if (eventTrigger == "turnleft")
                 {
                     skeleton.ScaleX = 1;
                 }
@@ -115,7 +111,22 @@ namespace SoR.Logic.Entities
                 {
                     skeleton.ScaleX = -1;
                 }
-                React(reaction);
+                if (eventTrigger == "collision")
+                {
+                    prevTrigger = "collision";
+                    playAnim = "attack";
+                    nextAnim = "idle";
+                    reaction = eventTrigger;
+                    React(reaction);
+                }
+                if (eventTrigger == "move")
+                {
+                    prevTrigger = "move";
+                    playAnim = "run";
+                    nextAnim = "run";
+                    reaction = eventTrigger;
+                    React(reaction);
+                }
             }
         }
 

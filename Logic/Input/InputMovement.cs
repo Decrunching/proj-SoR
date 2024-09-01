@@ -169,34 +169,35 @@ namespace SoR.Logic.Input
         public bool EnvironCollision(
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice,
+            SkeletonBounds hitbox,
             float positionX,
             float positionY)
         {
             newPositionX = positionX;
             newPositionY = positionY;
 
-            if (newPositionX > graphics.PreferredBackBufferWidth - 5)
+            if (newPositionX > graphics.PreferredBackBufferWidth - hitbox.Width)
             {
-                newPositionX = graphics.PreferredBackBufferWidth - 5;
+                newPositionX = graphics.PreferredBackBufferWidth - hitbox.Width;
                 turnAround = 1; // Left
                 return true;
             }
-            else if (newPositionX < 5)
+            else if (newPositionX < hitbox.Width)
             {
-                newPositionX = 5;
+                newPositionX = hitbox.Width;
                 turnAround = 2; // Right
                 return true;
             }
 
-            if (newPositionY > graphics.PreferredBackBufferHeight - 8)
+            if (newPositionY > graphics.PreferredBackBufferHeight - hitbox.Height)
             {
-                newPositionY = graphics.PreferredBackBufferHeight - 8;
+                newPositionY = graphics.PreferredBackBufferHeight - hitbox.Height;
                 turnAround = 3; // Up
                 return true;
             }
-            else if (newPositionY < 8)
+            else if (newPositionY < hitbox.Height * 4)
             {
-                newPositionY = 8;
+                newPositionY = hitbox.Height * 4;
                 turnAround = 4; // Down
                 return true;
             }
