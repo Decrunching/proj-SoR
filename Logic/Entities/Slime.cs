@@ -14,14 +14,14 @@ namespace SoR.Logic.Entities
         public Slime(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Slime\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -31,9 +31,6 @@ namespace SoR.Logic.Entities
             animStateData = new AnimationStateData(skeleton.Data);
             animState = new AnimationState(animStateData);
             animState.Apply(skeleton);
-
-            prevTrigger = "none";
-            playAnim = null;
 
             // Set the "fidle" animation on track 1 and leave it looping forever
             animState.SetAnimation(0, "idle", true);
@@ -81,12 +78,18 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public override void React(string reaction)
+        public override void React(string reaction, string setOrAdd)
         {
             if (reaction != "none")
             {
-                animState.SetAnimation(0, playAnim, false);
-                animState.AddAnimation(0, nextAnim, true, 0);
+                if (setOrAdd == "set")
+                {
+                    animState.SetAnimation(0, playAnim, false);
+                }
+                if (setOrAdd == "add")
+                {
+                    animState.AddAnimation(0, playAnim, true, 0);
+                }
             }
         }
 
@@ -98,7 +101,9 @@ namespace SoR.Logic.Entities
          */
         public override void ChangeAnimation(string eventTrigger)
         {
-            string reaction = "none";
+            string reaction = "none"; // Default to "none" if there will be no animation change
+            string setAnim = "set"; // Interrupt the last animation
+            string addAnim = "add"; // Wait for the previous animation to finish looping
 
             if (prevTrigger != eventTrigger)
             {
@@ -114,13 +119,15 @@ namespace SoR.Logic.Entities
                 {
                     prevTrigger = "collision";
                     playAnim = "attack";
-                    nextAnim = "idle";
                     reaction = eventTrigger;
-                    React(reaction);
+                    React(reaction, setAnim);
                 }
                 if (eventTrigger == "move")
                 {
-                    prevTrigger = "move";
+                    prevTrigger = eventTrigger;
+                    playAnim = "idle";
+                    reaction = eventTrigger;
+                    React(reaction, addAnim);
                 }
             }
         }

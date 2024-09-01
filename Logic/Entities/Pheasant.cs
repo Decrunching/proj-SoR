@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Input;
 using Spine;
 using System;
+using System.Windows;
 
 namespace SoR.Logic.Entities
 {
@@ -14,14 +15,14 @@ namespace SoR.Logic.Entities
         public Pheasant(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Pheasant\\savedthepheasant.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Pheasant\\savedthepheasant.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Pheasant\\savedthepheasant.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Pheasant\\savedthepheasant.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Pheasant\\skeleton.json");
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Pheasant\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Pheasant\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Pheasant\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -34,6 +35,7 @@ namespace SoR.Logic.Entities
 
             // Set the "fidle" animation on track 1 and leave it looping forever
             animState.SetAnimation(0, "run", true);
+            trackEntry = new TrackEntry();
 
             // Create hitbox
             slot = skeleton.FindSlot("hitbox");
@@ -82,12 +84,18 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public override void React(string reaction)
+        public override void React(string reaction, string setOrAdd)
         {
             if (reaction != "none")
             {
-                animState.SetAnimation(0, playAnim, false);
-                animState.AddAnimation(0, nextAnim, true, 0);
+                if (setOrAdd == "set")
+                {
+                    animState.SetAnimation(0, playAnim, false);
+                }
+                if (setOrAdd == "add")
+                {
+                    animState.AddAnimation(0, playAnim, true, 0);
+                }
             }
         }
 
@@ -99,7 +107,9 @@ namespace SoR.Logic.Entities
          */
         public override void ChangeAnimation(string eventTrigger)
         {
-            string reaction = "none";
+            string reaction = "none"; // Default to "none" if there will be no animation change
+            string setAnim = "set"; // Interrupt the last animation
+            string addAnim = "add"; // Wait for the previous animation to finish looping
 
             if (prevTrigger != eventTrigger)
             {
@@ -113,19 +123,27 @@ namespace SoR.Logic.Entities
                 }
                 if (eventTrigger == "collision")
                 {
-                    prevTrigger = "collision";
+                    prevTrigger = eventTrigger;
                     playAnim = "attack";
-                    nextAnim = "idle";
                     reaction = eventTrigger;
-                    React(reaction);
+                    React(reaction, setAnim);
                 }
                 if (eventTrigger == "move")
                 {
-                    prevTrigger = "move";
+                    prevTrigger = eventTrigger;
                     playAnim = "run";
-                    nextAnim = "run";
                     reaction = eventTrigger;
-                    React(reaction);
+                    React(reaction, addAnim);
+                }
+                if (eventTrigger == "idle")
+                {
+                    prevTrigger = eventTrigger;
+                    playAnim = "idle";
+                    reaction = eventTrigger;
+                    if (trackEntry != null & trackEntry.IsComplete)
+                    {
+                        React(reaction, setAnim);
+                    }
                 }
             }
         }

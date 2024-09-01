@@ -22,6 +22,7 @@ namespace SoR.Logic.Entities
         protected Attachment hitboxAttachment;
         protected SkeletonBounds hitbox;
         protected Slot slot;
+        protected TrackEntry trackEntry;
         protected InputMovement movement;
         protected Random random;
         protected Vector2 position;
@@ -31,12 +32,9 @@ namespace SoR.Logic.Entities
         protected int hitpoints;
         protected string prevTrigger;
         protected string playAnim;
-        protected string nextAnim;
         protected float newDirectionTime;
         protected float sinceLastChange;
         protected bool inMotion;
-        protected bool addAnimDone;
-        protected bool setAnimDone;
 
         public float Speed { get; set; }
         public string Name { get; set; }
@@ -50,7 +48,7 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public abstract void React(string animation);
+        public abstract void React(string reaction, string setOrAdd);
 
         /*
          * If something changes to trigger a new animation, apply the animation.
@@ -169,6 +167,7 @@ namespace SoR.Logic.Entities
          */
         public void StopMoving()
         {
+            ChangeAnimation("idle"); // TO DO: Fix pheasant being stuck in idle/collision loop
             inMotion = false;
         }
 
@@ -243,8 +242,8 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "",
-                new Vector2(position.X - 150, position.Y + hitbox.Height / 2),
+                "Anim: " + playAnim,
+                new Vector2(position.X - 50, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
         }

@@ -70,7 +70,7 @@ namespace SoR.Logic.Entities
         /*
          * On first collision, play collision animation.
          */
-        public override void React(string animation) { }
+        public override void React(string animation, string setOrAdd) { }
 
         /*
          * If something changes to trigger a new animation, apply the animation.
