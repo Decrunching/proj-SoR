@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "10qje3TnFOE",
+	"hash": "6awK6h93lz0",
 	"spine": "4.2.35",
 	"x": -87.55,
 	"y": -34.67,
@@ -11,11 +11,11 @@
 },
 "bones": [
 	{ "name": "root", "scaleX": 0.25, "scaleY": 0.25 },
-	{ "name": "hip", "parent": "root", "x": 0.76, "y": 122.74, "icon": "ik" },
+	{ "name": "hip", "parent": "root", "x": 0.76, "y": 122.74 },
 	{ "name": "torso", "parent": "hip", "length": 72.06, "rotation": 92.39, "x": -2.52, "y": -15.91 },
 	{ "name": "head", "parent": "torso", "length": 54.36, "rotation": -7, "x": 151.35, "y": -3.81 },
 	{ "name": "earfront", "parent": "head", "length": 85.48, "rotation": -146.33, "x": 63.33, "y": -71.42 },
-	{ "name": "earback", "parent": "head", "length": 65.93, "rotation": 148.24, "x": 77.62, "y": 45.89 },
+	{ "name": "earback", "parent": "head", "length": 65.93, "rotation": 160.76, "x": 77.62, "y": 45.89 },
 	{ "name": "armbackupper", "parent": "torso", "length": 51.44, "rotation": 151.36, "x": 124.22, "y": 23.01 },
 	{
 		"name": "armbacklower",
@@ -28,7 +28,7 @@
 		"scaleY": 0.25,
 		"inherit": "noScale"
 	},
-	{ "name": "tail", "parent": "hip", "length": 29.82, "x": 10.79, "y": -11.27 },
+	{ "name": "tail", "parent": "torso", "length": 29.82, "rotation": -92.39, "x": 4.08, "y": -13.49 },
 	{
 		"name": "handback",
 		"parent": "armbacklower",
@@ -63,7 +63,7 @@
 		"scaleY": 0.25,
 		"inherit": "noScale"
 	},
-	{ "name": "legbackupper", "parent": "hip", "length": 50.01, "rotation": -114.97, "x": -27.92, "y": -17.81 },
+	{ "name": "legbackupper", "parent": "torso", "length": 50.01, "rotation": 152.64, "x": -0.84, "y": 25.46 },
 	{ "name": "legbacklower", "parent": "legbackupper", "length": 36.68, "rotation": 53.27, "x": 44.76, "y": 0.98 },
 	{
 		"name": "footback",
@@ -74,7 +74,7 @@
 		"y": -1.47,
 		"inherit": "noRotationOrReflection"
 	},
-	{ "name": "legfrontupper", "parent": "hip", "length": 76.15, "rotation": -80.01, "x": 14.73, "y": -23.62 },
+	{ "name": "legfrontupper", "parent": "torso", "length": 76.15, "rotation": -172.4, "x": -8.42, "y": -16.91 },
 	{ "name": "legfrontlower", "parent": "legfrontupper", "length": 36, "rotation": 56.44, "x": 77.61, "y": -2.08 },
 	{
 		"name": "footfront",
@@ -869,12 +869,12 @@
 			"earfront": {
 				"rotate": [
 					{
-						"curve": [ 0.308, 0.56, 0.335, 9.02 ]
+						"curve": [ 0.308, 0.56, 0.335, 2 ]
 					},
 					{
 						"time": 0.6667,
-						"value": 9.35,
-						"curve": [ 0.975, 8.79, 1.002, 0.33 ]
+						"value": 2.33,
+						"curve": [ 0.975, 1.77, 1.002, 0.33 ]
 					},
 					{ "time": 1.3333 }
 				]
@@ -882,12 +882,12 @@
 			"earback": {
 				"rotate": [
 					{
-						"curve": [ 0.308, 0.4, 0.335, -4.63 ]
+						"curve": [ 0.308, 0.4, 0.335, 1.42 ]
 					},
 					{
 						"time": 0.6667,
-						"value": -4.4,
-						"curve": [ 0.975, -4.8, 1.002, 0.23 ]
+						"value": 1.65,
+						"curve": [ 0.975, 1.25, 1.002, 0.23 ]
 					},
 					{ "time": 1.3333 }
 				]
