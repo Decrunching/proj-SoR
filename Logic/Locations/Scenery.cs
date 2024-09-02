@@ -114,8 +114,7 @@ namespace Logic.Locations
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "animOne: " + animOne + " animTwo: " + animTwo +
-                "\n prevTrigger: " + prevTrigger,
+                "",
                 new Vector2(position.X - 50, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();

@@ -45,7 +45,7 @@ namespace SoR.Logic.Game
         /*
          * Constructor for initial game setup.
          */
-        public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, SoR game)
+        public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, MainGame game)
         {
             // Initialise SpriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -205,7 +205,7 @@ namespace SoR.Logic.Game
             {
                 if (entity.Render)
                 {
-                    entity.Movement(gameTime);
+                    entity.Movement(gameTime, graphics);
 
                     // Update position according to user input
                     entity.UpdatePosition(

@@ -1,3 +1,3 @@
 ﻿
-using var game = new SoR.SoR();
+using var game = new SoR.MainGame();
 game.Run();

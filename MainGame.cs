@@ -2,6 +2,15 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Game;
+using System;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization.Metadata;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
+using Apos.Input;
+using FontStashSharp;
 
 namespace SoR
 {
@@ -58,22 +67,24 @@ namespace SoR
      * (The 3-Clause BSD License: https://opensource.org/license/BSD-3-Clause)
      **************************************************************************************************************************/
 
-    public class SoR : Game
+    public class MainGame : Game
     {
-        private GraphicsDeviceManager graphics;
+        protected GraphicsDeviceManager graphics;
+        protected GameWindow window;
         private GameLogic gameLogic;
-        private SoR game;
+        private MainGame game;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
 
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
          */
-        public SoR()
+        public MainGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
-            IsMouseVisible = true;
+            IsMouseVisible = false;
+            Window.AllowUserResizing = true;
             graphics.IsFullScreen = false;
             graphics.PreferredBackBufferWidth = 1000;
             graphics.PreferredBackBufferHeight = 800;

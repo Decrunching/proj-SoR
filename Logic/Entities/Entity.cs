@@ -23,8 +23,9 @@ namespace SoR.Logic.Entities
         protected SkeletonBounds hitbox;
         protected Slot slot;
         protected TrackEntry trackEntry;
-        protected InputMovement movement;
         protected Random random;
+        protected UserInput movement;
+        protected Settings settings;
         protected Vector2 position;
         protected Vector2 movementDirection;
         protected float prevPositionX;
@@ -155,7 +156,7 @@ namespace SoR.Logic.Entities
         /*
          * Move to new position.
          */
-        public virtual void Movement(GameTime gameTime)
+        public virtual void Movement(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             prevPositionX = position.X;
             prevPositionY = position.Y;
@@ -251,8 +252,7 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "animOne: " + animOne + " animTwo: " + animTwo +
-                "\n prevTrigger: " + prevTrigger,
+                "",
                 new Vector2(position.X - 50, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();

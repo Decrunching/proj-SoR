@@ -4,14 +4,13 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
-using System.Security.Policy;
 
 namespace SoR.Logic.Input
 {
     /*
      * This class handles player input and animation application.
      */
-    public class InputMovement
+    public class UserInput
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
@@ -27,7 +26,7 @@ namespace SoR.Logic.Input
         private int turnAround;
         private string animation;
 
-        public InputMovement()
+        public UserInput()
         {
             deadZone = 4096; // Set the joystick deadzone
             idle = true; // Player is currently idle
@@ -61,6 +60,7 @@ namespace SoR.Logic.Input
          */
         public void CheckMovement(
             GameTime gameTime,
+            GraphicsDeviceManager graphics,
             AnimationState animState,
             float speed,
             float positionX,
@@ -127,7 +127,7 @@ namespace SoR.Logic.Input
                 }
             }
 
-            CheckSkin();
+            CheckUserInput(graphics); // Check all non-directional user input
 
             lastKeyState = keyState; // Get the previous keyboard state
 
@@ -144,7 +144,10 @@ namespace SoR.Logic.Input
             return animation;
         }
 
-        public void CheckSkin()
+        /*
+         * All non-directional user input.
+         */
+        public void CheckUserInput(GraphicsDeviceManager graphics)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
@@ -153,6 +156,18 @@ namespace SoR.Logic.Input
             if (keyState.IsKeyDown(Keys.Space) & !lastKeyState.IsKeyDown(Keys.Space))
             {
                 switchSkin = true; // Space was pressed, so switch skins
+            }
+
+            if (keyState.IsKeyDown(Keys.F4))
+            {
+                if (!graphics.IsFullScreen)
+                {
+                    graphics.IsFullScreen = true;
+                }
+                if (graphics.IsFullScreen)
+                {
+                    graphics.IsFullScreen = false;
+                }
             }
         }
 

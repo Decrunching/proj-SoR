@@ -13,18 +13,22 @@ namespace Logic.Entities.Character
     public class Player : Entity
     {
         private string skin;
+        private bool fullscreen;
+        private bool borderless;
+        private int screenWidth;
+        private int screenHeight;
 
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -60,7 +64,7 @@ namespace Logic.Entities.Character
 
             inMotion = true; // Move freely
 
-            movement = new InputMovement(); // Environmental collision handling
+            movement = new UserInput(); // Environmental collision handling
 
             // Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
@@ -217,12 +221,12 @@ namespace Logic.Entities.Character
         /*
          * Move to new position.
          */
-        public override void Movement(GameTime gameTime)
+        public override void Movement(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             prevPositionX = position.X;
             prevPositionY = position.Y;
 
-            movement.CheckMovement(gameTime, animState, Speed, position.X, position.Y);
+            movement.CheckMovement(gameTime, graphics, animState, Speed, position.X, position.Y);
             ChangeAnimation(movement.AnimateMovement());
 
 
