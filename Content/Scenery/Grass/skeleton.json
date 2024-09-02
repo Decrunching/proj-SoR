@@ -1,86 +1,25 @@
 {
 "skeleton": {
-	"hash": "RYoir+9S2sM",
-	"spine": "4.2.35",
-	"x": -0.2,
-	"y": -127.74,
-	"width": 128.52,
-	"height": 128.13,
-	"images": "../tiles/grass/",
+	"hash": "MO1+pO6LrIg",
+	"spine": "4.2.36",
+	"y": -256,
+	"width": 256,
+	"height": 256,
+	"images": "",
 	"audio": "./audio"
 },
 "bones": [
-	{ "name": "root" }
+	{ "name": "root", "scaleX": 2, "scaleY": 2 }
 ],
 "slots": [
-	{ "name": "00", "bone": "root", "attachment": "00" },
-	{ "name": "01", "bone": "root", "attachment": "01" },
-	{ "name": "02", "bone": "root", "attachment": "02" },
-	{ "name": "03", "bone": "root", "attachment": "03" },
-	{ "name": "04", "bone": "root", "attachment": "04" },
-	{ "name": "05", "bone": "root", "attachment": "05" },
-	{ "name": "06", "bone": "root", "attachment": "06" },
-	{ "name": "07", "bone": "root", "attachment": "07" },
-	{ "name": "08", "bone": "root", "attachment": "08" },
-	{ "name": "09", "bone": "root", "attachment": "09" },
-	{ "name": "10", "bone": "root", "attachment": "10" },
-	{ "name": "11", "bone": "root", "attachment": "11" },
-	{ "name": "12", "bone": "root", "attachment": "12" },
-	{ "name": "13", "bone": "root", "attachment": "13" },
-	{ "name": "14", "bone": "root", "attachment": "14" },
-	{ "name": "15", "bone": "root", "attachment": "15" }
+	{ "name": "grasstiles", "bone": "root", "attachment": "grasstiles" }
 ],
 "skins": [
 	{
 		"name": "default",
 		"attachments": {
-			"00": {
-				"00": { "x": 80.33, "y": -15.6, "width": 32, "height": 32 }
-			},
-			"01": {
-				"01": { "x": 112.31, "y": -15.6, "width": 32, "height": 32 }
-			},
-			"02": {
-				"02": { "x": 16.38, "y": -15.6, "width": 32, "height": 32 }
-			},
-			"03": {
-				"03": { "x": 47.97, "y": -15.6, "width": 32, "height": 32 }
-			},
-			"04": {
-				"04": { "x": 15.8, "y": -47.58, "width": 32, "height": 32 }
-			},
-			"05": {
-				"05": { "x": 47.97, "y": -47.58, "width": 32, "height": 32 }
-			},
-			"06": {
-				"06": { "x": 80.14, "y": -48.35, "width": 32, "height": 32 }
-			},
-			"07": {
-				"07": { "x": 111.74, "y": -48.35, "width": 32, "height": 32 }
-			},
-			"08": {
-				"08": { "x": 15.8, "y": -80.33, "width": 32, "height": 32 }
-			},
-			"09": {
-				"09": { "x": 48.35, "y": -79.56, "width": 32, "height": 32 }
-			},
-			"10": {
-				"10": { "x": 80.14, "y": -79.95, "width": 32, "height": 32 }
-			},
-			"11": {
-				"11": { "x": 112.31, "y": -79.76, "width": 32, "height": 32 }
-			},
-			"12": {
-				"12": { "x": 15.99, "y": -111.74, "width": 32, "height": 32 }
-			},
-			"13": {
-				"13": { "x": 47.97, "y": -111.54, "width": 32, "height": 32 }
-			},
-			"14": {
-				"14": { "x": 80.33, "y": -111.54, "width": 32, "height": 32 }
-			},
-			"15": {
-				"15": { "x": 111.54, "y": -111.74, "width": 32, "height": 32 }
+			"grasstiles": {
+				"grasstiles": { "x": 64, "y": -64, "width": 128, "height": 128 }
 			}
 		}
 	}

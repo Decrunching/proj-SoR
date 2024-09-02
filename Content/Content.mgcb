@@ -110,10 +110,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/File.spritefont
 
-#begin Scenery/Grass/grasstiles.atlas
-/copy:Scenery/Grass/grasstiles.atlas
+#begin Scenery/Grass/skeleton.atlas
+/copy:Scenery/Grass/skeleton.atlas
 
-#begin Scenery/Grass/grasstiles.png
+#begin Scenery/Grass/skeleton.json
+/copy:Scenery/Grass/skeleton.json
+
+#begin Scenery/Grass/skeleton.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -123,8 +126,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Scenery/Grass/grasstiles.png
-
-#begin Scenery/Grass/skeleton.json
-/copy:Scenery/Grass/skeleton.json
+/build:Scenery/Grass/skeleton.png
 
