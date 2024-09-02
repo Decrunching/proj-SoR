@@ -89,7 +89,12 @@ namespace SoR.Logic.Entities
         public override void ChangeAnimation(string eventTrigger)
         {
             string reaction = "none"; // Default to "none" if there will be no animation change
-            int animCount = 0; // How many animations to play
+
+            /*
+             * 0 = no animation, 1 = rapidly transition to next, 2 = set new animation then queue
+             * the next, 3 = start animation on the same frame the previous animation was at.
+             */
+            int animType = 0;
 
             if (prevTrigger != eventTrigger)
             {
@@ -104,19 +109,19 @@ namespace SoR.Logic.Entities
                 if (eventTrigger == "collision")
                 {
                     prevTrigger = eventTrigger;
-                    animCount = 2;
+                    animType = 2;
                     animOne = "attack";
                     animTwo = "idle";
                     reaction = eventTrigger;
-                    React(reaction, animCount);
+                    React(reaction, animType);
                 }
                 if (eventTrigger == "move")
                 {
                     prevTrigger = eventTrigger;
-                    animCount = 1;
+                    animType = 1;
                     animOne = "run";
                     reaction = eventTrigger;
-                    React(reaction, animCount);
+                    React(reaction, animType);
                 }
             }
         }

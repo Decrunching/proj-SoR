@@ -86,23 +86,25 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * On first collision, play collision animation.
+         * Choose a method for playing the animation according to Player.ChangeAnimation(eventTrigger)
+         * animType.
          */
-        public void React(string reaction, int animCount)
+        public void React(string reaction, int animType)
         {
             if (reaction != "none")
             {
-                if (animCount == 1)
+                if (animType == 1)
                 {
                     animState.AddAnimation(0, animOne, true, -trackEntry.TrackComplete);
                 }
-                if (animCount == 2)
+                if (animType == 2)
                 {
                     animState.SetAnimation(0, animOne, false);
                     trackEntry = animState.AddAnimation(0, animTwo, true, 0);
-
-                    //animState.SetAnimation(0, animOne, false);
-                    //animState.AddAnimation(0, animTwo, true, 0);
+                }
+                if (animType == 3)
+                {
+                    animState.AddAnimation(0, animOne, true, -trackEntry.TrackTime);
                 }
             }
         }

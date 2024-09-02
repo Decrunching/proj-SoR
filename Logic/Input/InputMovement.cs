@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
+using System.Security.Policy;
 
 namespace SoR.Logic.Input
 {
@@ -24,6 +25,9 @@ namespace SoR.Logic.Input
         private bool idle;
         private string lastPressedKey;
         private int turnAround;
+        private string animation;
+        private string keyRelease;
+        private string idleAnim;
 
         public InputMovement()
         {
@@ -73,7 +77,14 @@ namespace SoR.Logic.Input
             prevPositionX = newPositionX;
             prevPositionY = newPositionY;
 
-            CheckIdle(animState); // Set idle if the player is not moving
+            if (inputKeys.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
+            {
+                if (!idle) // If idle animation is not currently playing
+                {
+                    idle = true; // Idle is now playing
+                    animation = "idlebattle"; // Set idle animation
+                }
+            }
 
             // Set player animation and position according to keyboard input
             foreach (var key in inputKeys.Keys)
@@ -107,7 +118,15 @@ namespace SoR.Logic.Input
                     lastPressedKey = inputKeys[key].NextAnimation;
                 }
 
-                SetNextAnimation(animState, key, pressed, previouslyPressed);
+                if (pressed & !previouslyPressed)
+                {
+                    animation = inputKeys[key].NextAnimation;
+                }
+
+                if (!pressed & previouslyPressed)
+                {
+                    animation = lastPressedKey;
+                }
             }
 
             CheckSkin();
@@ -120,35 +139,11 @@ namespace SoR.Logic.Input
         }
 
         /*
-         * If a key was just pressed, set the new animation to play. If a key has just been released, set
-         * the animation to the new direction of movement.
+         * Return the animation to play according to user input.
          */
-        public void SetNextAnimation(AnimationState animState, Keys key, bool pressed, bool previouslyPressed)
+        public string AnimateMovement()
         {
-            if (pressed & !previouslyPressed)
-            {
-                animState.SetAnimation(0, inputKeys[key].NextAnimation, true);
-            }
-
-            if (!pressed & previouslyPressed)
-            {
-                animState.SetAnimation(0, lastPressedKey, true);
-            }
-        }
-
-        /*
-         * Set idle if the player is not moving.
-         */
-        public void CheckIdle(AnimationState animState)
-        {
-            if (inputKeys.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
-            {
-                if (!idle) // If idle animation is not currently playing
-                {
-                    animState.SetAnimation(0, "idlebattle", true); // Set idle animation
-                    idle = true; // Idle is now playing
-                }
-            }
+            return animation;
         }
 
         public void CheckSkin()

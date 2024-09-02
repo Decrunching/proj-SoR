@@ -91,12 +91,55 @@ namespace SoR.Logic.Entities
          */
         public override void ChangeAnimation(string eventTrigger)
         {
+            string reaction = "none"; // Default to "none" if there will be no animation change
+
+            /*
+             * 0 = no animation, 1 = rapidly transition to next, 2 = set new animation then queue
+             * the next, 3 = start animation on the same frame the previous animation was at.
+             */
+            int animType = 0;
+
             if (prevTrigger != eventTrigger)
             {
-                if (eventTrigger == "collision")
+                if (eventTrigger == "idlebattle")
                 {
-                    prevTrigger = "collision";
+                    prevTrigger = eventTrigger;
+                    animType = 1;
                     animOne = "idlebattle";
+                    reaction = eventTrigger;
+                    React(reaction, animType);
+                }
+                if (eventTrigger == "runup")
+                {
+                    prevTrigger = eventTrigger;
+                    animType = 3;
+                    animOne = "runup";
+                    reaction = eventTrigger;
+                    React(reaction, animType);
+                }
+                if (eventTrigger == "rundown")
+                {
+                    prevTrigger = eventTrigger;
+                    animType = 3;
+                    animOne = "rundown";
+                    reaction = eventTrigger;
+                    React(reaction, animType);
+                }
+                if (eventTrigger == "runleft")
+                {
+                    prevTrigger = eventTrigger;
+                    animType = 3;
+                    animOne = "runleft";
+                    reaction = eventTrigger;
+                    React(reaction, animType);
+                }
+                if (eventTrigger == "runright")
+                {
+                    prevTrigger = eventTrigger;
+                    animType = 3;
+                    animOne = "runright";
+                    reaction = eventTrigger;
+                    React(reaction, animType);
                 }
             }
         }
@@ -179,6 +222,8 @@ namespace SoR.Logic.Entities
             prevPositionY = position.Y;
 
             movement.CheckMovement(gameTime, animState, Speed, position.X, position.Y);
+            ChangeAnimation(movement.AnimateMovement());
+
 
             // Set the new position according to player input
             position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
