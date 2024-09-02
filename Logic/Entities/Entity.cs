@@ -31,7 +31,8 @@ namespace SoR.Logic.Entities
         protected float prevPositionY;
         protected int hitpoints;
         protected string prevTrigger;
-        protected string playAnim;
+        protected string animOne;
+        protected string animTwo;
         protected float newDirectionTime;
         protected float sinceLastChange;
         protected bool inMotion;
@@ -43,12 +44,7 @@ namespace SoR.Logic.Entities
         /*
          * Placeholder function for dealing damage.
          */
-        public abstract int Damage(Entity player);
-
-        /*
-         * On first collision, play collision animation.
-         */
-        public abstract void React(string reaction, string setOrAdd);
+        public abstract int Damage(Entity entity);
 
         /*
          * If something changes to trigger a new animation, apply the animation.
@@ -60,6 +56,56 @@ namespace SoR.Logic.Entities
          * Get the centre of the screen.
          */
         public abstract void SetStartPosition(Vector2 centreScreen);
+
+        /*
+         * Check if moving.
+         */
+        public bool IsMoving()
+        {
+            return inMotion;
+        }
+
+        /*
+         * Start moving and switch to running animation.
+         */
+        public void StartMoving()
+        {
+            inMotion = true;
+            ChangeAnimation("move");
+        }
+
+        /*
+         * Stop moving.
+         */
+        public void StopMoving()
+        {
+            inMotion = false;
+            ChangeAnimation("collision"); // TO DO: Fix - see collision
+            position.X = prevPositionX;
+            position.Y = prevPositionY;
+        }
+
+        /*
+         * On first collision, play collision animation.
+         */
+        public void React(string reaction, int animCount)
+        {
+            if (reaction != "none")
+            {
+                if (animCount == 1)
+                {
+                    animState.AddAnimation(0, animOne, true, -trackEntry.TrackComplete);
+                }
+                if (animCount == 2)
+                {
+                    animState.SetAnimation(0, animOne, false);
+                    trackEntry = animState.AddAnimation(0, animTwo, true, 0);
+
+                    //animState.SetAnimation(0, animOne, false);
+                    //animState.AddAnimation(0, animTwo, true, 0);
+                }
+            }
+        }
 
         /*
          * Update entity position.
@@ -134,44 +180,6 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Stop moving if colliding.
-         * 
-         * TO DO:
-         * Player should still be able to move perpendicular to hitbox edge when in collision.
-         */
-        public void Collision()
-        {
-            position.X = prevPositionX;
-            position.Y = prevPositionY;
-        }
-
-        /*
-         * Check if moving.
-         */
-        public bool IsMoving()
-        {
-            return inMotion;
-        }
-
-        /*
-         * Start moving and switch to running animation.
-         */
-        public void StartMoving()
-        {
-            ChangeAnimation("move");
-            inMotion = true;
-        }
-
-        /*
-         * Stop moving.
-         */
-        public void StopMoving()
-        {
-            ChangeAnimation("idle"); // TO DO: Fix pheasant being stuck in idle/collision loop
-            inMotion = false;
-        }
-
-        /*
          * Check for collision with other entities.
          */
         public bool CollidesWith(Entity entity)
@@ -242,7 +250,8 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "Anim: " + playAnim,
+                "animOne: " + animOne + " animTwo: " + animTwo +
+                "\n prevTrigger: " + prevTrigger,
                 new Vector2(position.X - 50, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();

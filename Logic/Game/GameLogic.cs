@@ -62,10 +62,6 @@ namespace SoR.Logic.Game
             // Create the Pheasant entity
             entityType = EntityType.Pheasant;
             CreateEntity(graphics, GraphicsDevice);
-
-            // Create the Campfire entity
-            //entityType = EntityType.Fire;
-            //CreateEntity(graphics, GraphicsDevice);
         }
 
         /*
@@ -102,14 +98,6 @@ namespace SoR.Logic.Game
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
                         slime.SetStartPosition(centreScreen);
-                    }
-                    break;
-                // TO DO: Fire to move into separate environmental entity dictionary
-                case EntityType.Fire:
-                    entities.Add("fire", new Campfire(graphics, GraphicsDevice) { Name = "fire", Render = true });
-                    if (entities.TryGetValue("fire", out Entity fire))
-                    {
-                        fire.SetStartPosition(centreScreen);
                     }
                     break;
             }
@@ -161,7 +149,6 @@ namespace SoR.Logic.Game
                             if (entity.Value != player & player.CollidesWith(entity.Value))
                             {
                                 player.ChangeAnimation("collision");
-                                entity.Value.ChangeAnimation("collision"); // TO DO: Fix - see collision
 
                                 entity.Value.StopMoving();
                             }

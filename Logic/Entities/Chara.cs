@@ -14,14 +14,14 @@ namespace SoR.Logic.Entities
         public Chara(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Chara\\savedit.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Chara\\savedit.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Chara\\savedit.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Chara\\savedit.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Chara\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Chara\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Chara\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Chara\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -31,9 +31,10 @@ namespace SoR.Logic.Entities
             animStateData = new AnimationStateData(skeleton.Data);
             animState = new AnimationState(animStateData);
             animState.Apply(skeleton);
+            animStateData.DefaultMix = 0.1f;
 
             // Set the "fidle" animation on track 1 and leave it looping forever
-            animState.SetAnimation(0, "run", true);
+            trackEntry = animState.SetAnimation(0, "run", true);
 
             // Create hitbox
             slot = skeleton.FindSlot("hitbox");
@@ -80,24 +81,6 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * On first collision, play collision animation.
-         */
-        public override void React(string reaction, string setOrAdd)
-        {
-            if (reaction != "none")
-            {
-                if (setOrAdd == "set")
-                {
-                    animState.SetAnimation(0, playAnim, false);
-                }
-                if (setOrAdd == "add")
-                {
-                    animState.AddAnimation(0, playAnim, true, 0);
-                }
-            }
-        }
-
-        /*
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          * 
@@ -106,8 +89,7 @@ namespace SoR.Logic.Entities
         public override void ChangeAnimation(string eventTrigger)
         {
             string reaction = "none"; // Default to "none" if there will be no animation change
-            string setAnim = "set"; // Interrupt the last animation
-            string addAnim = "add"; // Wait for the previous animation to finish looping
+            int animCount = 0; // How many animations to play
 
             if (prevTrigger != eventTrigger)
             {
@@ -121,18 +103,22 @@ namespace SoR.Logic.Entities
                 }
                 if (eventTrigger == "collision")
                 {
-                    trackEntry = new TrackEntry();
                     prevTrigger = eventTrigger;
-                    playAnim = "jump";
+                    animOne = "jump";
+                    animTwo = "idle";
                     reaction = eventTrigger;
-                    React(reaction, setAnim);
+                    animCount = 1;
+                    React(reaction, animCount);
+                    animCount = 2;
+                    React(reaction, animCount);
                 }
                 if (eventTrigger == "move")
                 {
                     prevTrigger = eventTrigger;
-                    playAnim = "run";
+                    animCount = 1;
+                    animOne = "run";
                     reaction = eventTrigger;
-                    React(reaction, addAnim);
+                    React(reaction, animCount);
                 }
             }
         }

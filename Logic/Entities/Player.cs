@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Input;
 using Spine;
+using System;
 
 namespace SoR.Logic.Entities
 {
@@ -15,14 +16,14 @@ namespace SoR.Logic.Entities
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
-            atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            //skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
-            skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\Entities\\Player\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -33,9 +34,10 @@ namespace SoR.Logic.Entities
             animStateData = new AnimationStateData(skeleton.Data);
             animState = new AnimationState(animStateData);
             animState.Apply(skeleton);
+            animStateData.DefaultMix = 0.1f;
 
             // Set the "fidle" animation on track 1 and leave it looping forever
-            animState.SetAnimation(0, "idlebattle", true);
+            trackEntry = animState.SetAnimation(0, "idlebattle", true);
 
             // Create hitbox
             slot = skeleton.FindSlot("hitbox");
@@ -49,7 +51,15 @@ namespace SoR.Logic.Entities
 
             hitbox = new SkeletonBounds();
 
-            movement = new InputMovement();
+            random = new Random();
+            movementDirection = new Vector2(0, 0); // The direction of movement
+            newDirectionTime = (float)random.NextDouble() * 1f + 0.25f; // After 0.25-1 seconds, choose a new movement direction
+            sinceLastChange = 0; // Time elapsed since last direction change
+            NewDirection(random.Next(4)); // Choose a random new direction to move in
+
+            inMotion = true; // Move freely
+
+            movement = new InputMovement(); // Environmental collision handling
 
             // Set the current position on the screen
             position = new Vector2(graphics.PreferredBackBufferWidth / 2,
@@ -74,24 +84,6 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * On first collision, play collision animation.
-         */
-        public override void React(string reaction, string setOrAdd)
-        {
-            if (reaction != "none")
-            {
-                if (setOrAdd == "set")
-                {
-                    animState.SetAnimation(0, playAnim, false);
-                }
-                if (setOrAdd == "add")
-                {
-                    animState.AddAnimation(0, playAnim, true, 0);
-                }
-            }
-        }
-
-        /*
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          * 
@@ -104,7 +96,7 @@ namespace SoR.Logic.Entities
                 if (eventTrigger == "collision")
                 {
                     prevTrigger = "collision";
-                    playAnim = "idlebattle";
+                    animOne = "idlebattle";
                 }
             }
         }
