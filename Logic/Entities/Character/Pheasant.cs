@@ -1,13 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
 using System;
 
-namespace SoR.Logic.Entities
+namespace Logic.Entities.Character
 {
     /*
-     * Stores information unique to the pheasant entity.
+     * Stores information unique to Pheasant.
      */
     internal class Pheasant : Entity
     {

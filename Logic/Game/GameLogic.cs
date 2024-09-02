@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Entities.Character;
+using Logic.Locations;
+using Logic.Locations.Interactables;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Entities;
 using System.Collections.Generic;
@@ -12,7 +15,9 @@ namespace SoR.Logic.Game
     public class GameLogic
     {
         private Dictionary<string, Entity> entities;
+        private Dictionary<string, Scenery> scenery;
         private EntityType entityType;
+        private SceneryType sceneryType;
         private Vector2 centreScreen;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
@@ -25,8 +30,16 @@ namespace SoR.Logic.Game
             Player,
             Pheasant,
             Chara,
-            Slime,
-            Fire
+            Slime
+        }
+
+        /*
+         * Enums for differentiating between environmental ojects.
+         */
+        enum SceneryType
+        {
+            Campfire,
+            Grass
         }
 
         /*
@@ -47,6 +60,9 @@ namespace SoR.Logic.Game
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
 
+            // Create dictionary for storing entities as values with string labels for keys
+            scenery = new Dictionary<string, Scenery>();
+
             // Create the Player entity
             entityType = EntityType.Player;
             CreateEntity(graphics, GraphicsDevice);
@@ -62,6 +78,14 @@ namespace SoR.Logic.Game
             // Create the Pheasant entity
             entityType = EntityType.Pheasant;
             CreateEntity(graphics, GraphicsDevice);
+
+            // Create the Campfire object
+            sceneryType = SceneryType.Campfire;
+            CreateObject(graphics, GraphicsDevice);
+
+            // Create the Campfire object
+            sceneryType = SceneryType.Grass;
+            CreateObject(graphics, GraphicsDevice);
         }
 
         /*
@@ -73,28 +97,28 @@ namespace SoR.Logic.Game
             switch (entityType)
             {
                 case EntityType.Player:
-                    entities.Add("player", new Player(graphics, GraphicsDevice) { Name = "player", Render = true });
+                    entities.Add("player", new Player(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("player", out Entity player))
                     {
                         player.SetStartPosition(centreScreen);
                     }
                     break;
                 case EntityType.Pheasant:
-                    entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Name = "pheasant", Render = true });
+                    entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
                         pheasant.SetStartPosition(centreScreen);
                     }
                     break;
                 case EntityType.Chara:
-                    entities.Add("chara", new Chara(graphics, GraphicsDevice) { Name = "chara", Render = true });
+                    entities.Add("chara", new Chara(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
                         chara.SetStartPosition(centreScreen);
                     }
                     break;
                 case EntityType.Slime:
-                    entities.Add("slime", new Slime(graphics, GraphicsDevice) { Name = "slime", Render = true });
+                    entities.Add("slime", new Slime(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
                         slime.SetStartPosition(centreScreen);
@@ -104,20 +128,56 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Render Spine skeletons, and ensure entities that appear further down on the screen are in front
-         * of those that are higher up.
+         * Choose environmental object to create and place it as a value in the objects dictionary with
+         * a unique string identifier as a key.
          */
-        public void SpineRenderSkeleton(GraphicsDevice GraphicsDevice)
+        public void CreateObject(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
-            // Sort entities by their y-axis position
-            var sortByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
+            switch (sceneryType)
+            {
+                case SceneryType.Campfire:
+                    scenery.Add("campfire", new Campfire(graphics, GraphicsDevice) { Render = true });
+                    if (scenery.TryGetValue("campfire", out Scenery campfire))
+                    {
+                        campfire.SetStartPosition();
+                    }
+                    break;
+            }
+            switch (sceneryType)
+            {
+                case SceneryType.Grass:
+                    scenery.Add("grass", new Grass(graphics, GraphicsDevice) { Render = true });
+                    if (scenery.TryGetValue("grass", out Scenery grass))
+                    {
+                        grass.SetStartPosition();
+                    }
+                    break;
+            }
+        }
 
-            foreach (var entity in sortByYAxis)
+        /*
+         * Render Spine objects in order of y-axis position.
+         */
+        public void Render(GraphicsDevice GraphicsDevice)
+        {
+            var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetSceneryHitbox().MaxY);
+            var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetEntityHitbox().MaxY);
+
+            foreach (var scenery in sortSceneryByYAxis)
+            {
+                if (scenery.Render)
+                {
+                    scenery.RenderScenery(GraphicsDevice);
+                    scenery.DrawSceneryText(spriteBatch, font);
+                }
+            }
+
+            foreach (var entity in sortEntitiesByYAxis)
             {
                 if (entity.Render)
                 {
-                    entity.RenderSkeleton(GraphicsDevice); // Render each skeleton to the screen
-                    entity.DrawText(spriteBatch, font); // Draw any text associated with entity
+                    entity.RenderEntity(GraphicsDevice);
+                    entity.DrawEntityText(spriteBatch, font);
                 }
             }
         }
@@ -130,14 +190,25 @@ namespace SoR.Logic.Game
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice)
         {
-            foreach (var entity in entities)
+            foreach (var scenery in scenery.Values)
             {
-                if (entity.Value.Render)
+                if (scenery.Render)
                 {
-                    entity.Value.Movement(gameTime);
+
+
+                    // Update animations
+                    scenery.UpdateSceneryAnimations(gameTime);
+                }
+            }
+
+            foreach (var entity in entities.Values)
+            {
+                if (entity.Render)
+                {
+                    entity.Movement(gameTime);
 
                     // Update position according to user input
-                    entity.Value.UpdatePosition(
+                    entity.UpdatePosition(
                     gameTime,
                     graphics,
                     GraphicsDevice);
@@ -146,15 +217,15 @@ namespace SoR.Logic.Game
                     {
                         if (playerChar is Player player)
                         {
-                            if (entity.Value != player & player.CollidesWith(entity.Value))
+                            if (entity != player & player.CollidesWith(entity))
                             {
                                 player.ChangeAnimation("collision");
 
-                                entity.Value.StopMoving();
+                                entity.StopMoving();
                             }
-                            else if (!entity.Value.IsMoving())
+                            else if (!entity.IsMoving())
                             {
-                                entity.Value.StartMoving();
+                                entity.StartMoving();
                             }
                         }
                         else
@@ -165,7 +236,7 @@ namespace SoR.Logic.Game
                     }
 
                     // Update animations
-                    entity.Value.UpdateEntityAnimations(gameTime);
+                    entity.UpdateEntityAnimations(gameTime);
                 }
             }
         }

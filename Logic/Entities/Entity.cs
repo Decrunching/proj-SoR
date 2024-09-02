@@ -7,7 +7,7 @@ using System;
 namespace SoR.Logic.Entities
 {
     /*
-     * All other entities are currently based on this class to reduce code repetition.
+     * Common functions and fields for player and non-player characters.
      */
     public abstract class Entity
     {
@@ -38,7 +38,6 @@ namespace SoR.Logic.Entities
         protected bool inMotion;
 
         public float Speed { get; set; }
-        public string Name { get; set; }
         public bool Render { get; set; }
 
         /*
@@ -118,7 +117,7 @@ namespace SoR.Logic.Entities
             if (movement.EnvironCollision(
                 graphics,
                 GraphicsDevice,
-                GetHitbox(),
+                GetEntityHitbox(),
                 position.X,
                 position.Y))
             {
@@ -186,13 +185,13 @@ namespace SoR.Logic.Entities
          */
         public bool CollidesWith(Entity entity)
         {
-            entity.UpdateHitbox(new SkeletonBounds());
-            entity.GetHitbox().Update(entity.GetSkeleton(), true);
+            entity.UpdateEntityHitbox(new SkeletonBounds());
+            entity.GetEntityHitbox().Update(entity.GetEntitySkeleton(), true);
 
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
-            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
+            if (hitbox.AabbIntersectsSkeleton(entity.GetEntityHitbox()))
             {
                 return true;
             }
@@ -201,9 +200,17 @@ namespace SoR.Logic.Entities
         }
 
         /*
+         * Update the hitbox after a collision.
+         */
+        public void UpdateEntityHitbox(SkeletonBounds updatedHitbox)
+        {
+            hitbox = updatedHitbox;
+        }
+
+        /*
          * Render the current skeleton to the screen.
          */
-        public void RenderSkeleton(GraphicsDevice GraphicsDevice)
+        public void RenderEntity(GraphicsDevice GraphicsDevice)
         {
             // Create the skeleton renderer projection matrix
             ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
@@ -237,17 +244,9 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Update the hitbox after a collision.
-         */
-        public void UpdateHitbox(SkeletonBounds updatedHitbox)
-        {
-            hitbox = updatedHitbox;
-        }
-
-        /*
          * Draw text to the screen.
          */
-        public void DrawText(SpriteBatch spriteBatch, SpriteFont font)
+        public void DrawEntityText(SpriteBatch spriteBatch, SpriteFont font)
         {
             spriteBatch.Begin();
             spriteBatch.DrawString(
@@ -262,7 +261,7 @@ namespace SoR.Logic.Entities
         /*
          * Get the skeleton.
          */
-        public Skeleton GetSkeleton()
+        public Skeleton GetEntitySkeleton()
         {
             return skeleton;
         }
@@ -270,7 +269,7 @@ namespace SoR.Logic.Entities
         /*
          * Get the hitbox.
          */
-        public SkeletonBounds GetHitbox()
+        public SkeletonBounds GetEntityHitbox()
         {
             return hitbox;
         }

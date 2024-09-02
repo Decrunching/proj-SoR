@@ -1,13 +1,14 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
 using System;
 
-namespace SoR.Logic.Entities
+namespace Logic.Entities.Character
 {
     /*
-     * Stores information unique to the player entity.
+     * Stores information unique to Player.
      */
     public class Player : Entity
     {
@@ -205,7 +206,7 @@ namespace SoR.Logic.Entities
             movement.EnvironCollision(
                 graphics,
                 GraphicsDevice,
-                GetHitbox(),
+                GetEntityHitbox(),
                 position.X,
                 position.Y);
 

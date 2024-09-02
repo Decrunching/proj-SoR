@@ -26,8 +26,6 @@ namespace SoR.Logic.Input
         private string lastPressedKey;
         private int turnAround;
         private string animation;
-        private string keyRelease;
-        private string idleAnim;
 
         public InputMovement()
         {
