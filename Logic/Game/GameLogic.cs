@@ -2,6 +2,7 @@
 using Logic.Locations;
 using Logic.Locations.Interactables;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Entities;
 using System.Collections.Generic;

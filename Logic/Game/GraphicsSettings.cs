@@ -3,15 +3,12 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Content;
 using System;
-using System.Net.Quic;
 using System.Text.Json.Serialization.Metadata;
 using System.Text.Json;
 using System.IO;
 using Apos.Input;
-using System.Drawing;
 using SoR;
 using FontStashSharp;
-using System.Reflection.Metadata;
 
 namespace Logic.Game
 {
@@ -75,14 +72,26 @@ namespace Logic.Game
         }
 
         /*
-         * 
+         * Setup InputHelper for Apos library and FontSystem.
          */
-        public void LoadSettings(MainGame game, IServiceProvider serviceProvider, string rootDirectory)
+        public void LoadSettings(MainGame game, ContentManager Content)
         {
             InputHelper.Setup(game); // For Apos library
-
             fontSystem = new FontSystem();
-            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/source-code-pro-mediu,.ttf"));
+            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/source-code-pro-medium.ttf"));
+        }
+
+        /*
+         * Unload settings content.
+         */
+        public void UnloadSettings(GameWindow Window, Settings settings)
+        {
+            if (!settings.IsFullscreen)
+            {
+                SaveWindow(Window, settings);
+            }
+
+            SaveJson("Settings.json", settings, SettingsContext.Default.Settings);
         }
 
         /*
@@ -90,10 +99,9 @@ namespace Logic.Game
          */
         public void UpdateSettings(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
         {
-            if (QuicStreamType.Pressed())
-                Exit();
+            InputHelper.UpdateSetup();
 
-            if (ToggleBorderlessMode(graphics, Window, settings).Pressed())
+            if (toggleBorderless.Pressed())
             {
                 ToggleBorderlessMode(graphics, Window, settings);
             }
@@ -105,6 +113,8 @@ namespace Logic.Game
                 SaveJson("Settings.json", settings, SettingsContext.Default.Settings);
 
                 ChangeFullscreen(graphics, Window, fullscreenLast, settings);
+
+                InputHelper.UpdateCleanup();
             }
         }
 
@@ -136,6 +146,17 @@ namespace Logic.Game
         }*/
 
         /*
+         * Render settings choices.
+         */
+        public void DrawSettings(GraphicsDevice GraphicsDevice, Settings settings)
+        {
+            var font = fontSystem.GetFont(24);
+            string mode = settings.IsBorderless ? "Borderless" : settings.IsFullscreen ? "Fullscreen" : "Window";
+            Vector2 modeCenter = font.MeasureString(mode) / 2f;
+            Vector2 windowCenter = new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height) / 2f;
+        }
+
+        /*
          * Turn off borderless mode or toggle fullscreen state.
          */
         public void ToggleFullscreenMode(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
@@ -165,28 +186,6 @@ namespace Logic.Game
             settings.IsFullscreen = settings.IsBorderless;
 
             ChangeFullscreen(graphics, Window, fullscreenLast, settings);
-        }
-
-        /*
-         * Set or remove fullscreen mode.
-         */
-        public void ChangeFullscreen(GraphicsDeviceManager graphics, GameWindow Window, bool fullscreenLast, Settings settings)
-        {
-            if (settings.IsFullscreen)
-            {
-                if (fullscreenLast)
-                {
-                    ApplyHardwareMode(graphics, settings);
-                }
-                else
-                {
-                    SetFullscreen(graphics, Window, settings);
-                }
-            }
-            else
-            {
-                RemoveFullscreen(graphics, Window, settings);
-            }
         }
 
         public static string GetPath(string name) => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, name);
@@ -237,6 +236,28 @@ namespace Logic.Game
         }
 
         /*
+         * Set or remove fullscreen mode.
+         */
+        public void ChangeFullscreen(GraphicsDeviceManager graphics, GameWindow Window, bool fullscreenLast, Settings settings)
+        {
+            if (settings.IsFullscreen)
+            {
+                if (fullscreenLast)
+                {
+                    ApplyHardwareMode(graphics, settings);
+                }
+                else
+                {
+                    SetFullscreen(graphics, Window, settings);
+                }
+            }
+            else
+            {
+                RemoveFullscreen(graphics, Window, settings);
+            }
+        }
+
+        /*
          * Called when already in fullscreen. When hardware mode switch set to false, will be borderless.
          */
         public void ApplyHardwareMode(GraphicsDeviceManager graphics, Settings settings)
@@ -270,7 +291,7 @@ namespace Logic.Game
         }
 
         /*
-         * 
+         * Save window settings.
          */
         public void SaveWindow(GameWindow Window, Settings settings)
         {

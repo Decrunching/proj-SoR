@@ -14,96 +14,6 @@
 
 #---------------------------------- Content ---------------------------------#
 
-#begin Entities/Campfire/skeleton.json
-/copy:Entities/Campfire/skeleton.json
-
-#begin Entities/Campfire/templecampfire.atlas
-/copy:Entities/Campfire/templecampfire.atlas
-
-#begin Entities/Campfire/templecampfire.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Entities/Campfire/templecampfire.png
-
-#begin Entities/Chara/savedit.atlas
-/copy:Entities/Chara/savedit.atlas
-
-#begin Entities/Chara/savedit.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Entities/Chara/savedit.png
-
-#begin Entities/Chara/skeleton.json
-/copy:Entities/Chara/skeleton.json
-
-#begin Entities/Pheasant/savedthepheasant.atlas
-/copy:Entities/Pheasant/savedthepheasant.atlas
-
-#begin Entities/Pheasant/savedthepheasant.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Entities/Pheasant/savedthepheasant.png
-
-#begin Entities/Pheasant/skeleton.json
-/copy:Entities/Pheasant/skeleton.json
-
-#begin Entities/Player/Char sprites.atlas
-/copy:Entities/Player/Char sprites.atlas
-
-#begin Entities/Player/Char sprites.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Entities/Player/Char sprites.png
-
-#begin Entities/Player/skeleton.json
-/copy:Entities/Player/skeleton.json
-
-#begin Entities/Slime/skeleton.json
-/copy:Entities/Slime/skeleton.json
-
-#begin Entities/Slime/Slime.atlas
-/copy:Entities/Slime/Slime.atlas
-
-#begin Entities/Slime/Slime.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:Entities/Slime/Slime.png
-
 #begin Fonts/File.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -111,13 +21,13 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/File.spritefont
 
-#begin Scenery/Grass/skeleton.atlas
-/copy:Scenery/Grass/skeleton.atlas
+#begin Fonts/source-code-pro-medium.ttf
+/copy:Fonts/source-code-pro-medium.ttf
 
-#begin Scenery/Grass/skeleton.json
-/copy:Scenery/Grass/skeleton.json
+#begin SoR Resources/Entities/Chara/savedit.atlas
+/copy:SoR Resources/Entities/Chara/savedit.atlas
 
-#begin Scenery/Grass/skeleton.png
+#begin SoR Resources/Entities/Chara/savedit.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -127,5 +37,98 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:Scenery/Grass/skeleton.png
+/build:SoR Resources/Entities/Chara/savedit.png
+
+#begin SoR Resources/Entities/Chara/skeleton.json
+/copy:SoR Resources/Entities/Chara/skeleton.json
+
+#begin SoR Resources/Entities/Pheasant/savedthepheasant.atlas
+/copy:SoR Resources/Entities/Pheasant/savedthepheasant.atlas
+
+#begin SoR Resources/Entities/Pheasant/savedthepheasant.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SoR Resources/Entities/Pheasant/savedthepheasant.png
+
+#begin SoR Resources/Entities/Pheasant/skeleton.json
+/copy:SoR Resources/Entities/Pheasant/skeleton.json
+
+#begin SoR Resources/Entities/Player/Char sprites.atlas
+/copy:SoR Resources/Entities/Player/Char sprites.atlas
+
+#begin SoR Resources/Entities/Player/Char sprites.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SoR Resources/Entities/Player/Char sprites.png
+
+#begin SoR Resources/Entities/Player/skeleton.json
+/copy:SoR Resources/Entities/Player/skeleton.json
+
+#begin SoR Resources/Entities/Slime/skeleton.json
+/copy:SoR Resources/Entities/Slime/skeleton.json
+
+#begin SoR Resources/Entities/Slime/Slime.atlas
+/copy:SoR Resources/Entities/Slime/Slime.atlas
+
+#begin SoR Resources/Entities/Slime/Slime.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SoR Resources/Entities/Slime/Slime.png
+
+#begin SoR Resources/Locations/Interactables/Campfire/skeleton.json
+/copy:SoR Resources/Locations/Interactables/Campfire/skeleton.json
+
+#begin SoR Resources/Locations/Interactables/Campfire/templecampfire.atlas
+/copy:SoR Resources/Locations/Interactables/Campfire/templecampfire.atlas
+
+#begin SoR Resources/Locations/Interactables/Campfire/templecampfire.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SoR Resources/Locations/Interactables/Campfire/templecampfire.png
+
+#begin SoR Resources/Locations/Scenery/Grass/grasstiles.atlas
+/copy:SoR Resources/Locations/Scenery/Grass/grasstiles.atlas
+
+#begin SoR Resources/Locations/Scenery/Grass/grasstiles.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:SoR Resources/Locations/Scenery/Grass/grasstiles.png
+
+#begin SoR Resources/Locations/Scenery/Grass/skeleton.json
+/copy:SoR Resources/Locations/Scenery/Grass/skeleton.json
 

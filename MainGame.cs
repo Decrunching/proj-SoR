@@ -1,5 +1,4 @@
-﻿using Apos.Input;
-using Logic.Game;
+﻿using Logic.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
@@ -83,6 +82,8 @@ namespace SoR
          */
         protected override void Initialize()
         {
+            game = this;
+            settings = new Settings();
             graphicsSettings = new GraphicsSettings(game, graphics, Window, settings);
             graphicsSettings.InitialiseSettings(graphics, settings, Window);
 
@@ -94,19 +95,13 @@ namespace SoR
          */
         protected override void LoadContent()
         {
-            game = this;
             gameLogic = new GameLogic(graphics, GraphicsDevice, game);
-            graphicsSettings.LoadSettings(game, Content.ServiceProvider, Content.RootDirectory);
+            graphicsSettings.LoadSettings(game, Content);
         }
 
         protected override void UnloadContent()
         {
-            if (!settings.IsBorderless)
-            {
-                graphicsSettings.SaveWindow();
-            }
-
-            graphicsSettings.SaveJson("Settings.json", settings, SettingsContext.Default.Settings);
+            graphicsSettings.UnloadSettings(Window, settings);
 
             base.UnloadContent();
         }
@@ -120,13 +115,10 @@ namespace SoR
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            InputHelper.UpdateSetup();
             graphicsSettings.UpdateSettings(graphics, Window, settings);
-            InputHelper.UpdateCleanup();
 
             // Update player input and animations
             gameLogic.UpdateEntities(gameTime, graphics, GraphicsDevice);
-            graphicsSettings.ChooseScreenMode(gameTime, graphics, Window, settings);
 
             base.Update(gameTime);
         }
@@ -137,12 +129,8 @@ namespace SoR
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
+            graphicsSettings.DrawSettings(GraphicsDevice, settings);
             gameLogic.Render(GraphicsDevice);
-
-            var font = fontSystem.GetFont(24);
-            string mode = settings.IsBorderless ? "Borderless" : settings.IsFullscreen ? "Fullscreen" : "Window";
-            Vector2 modeCenter = font.MeasureString(mode) / 2f;
-            Vector2 windowCenter = new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height) / 2f;
 
             base.Draw(gameTime);
         }
