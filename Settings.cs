@@ -1,57 +1,99 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 
 namespace SoR
 {
+    /*
+     * Manage graphics settings.
+     */
     public class Settings
     {
         private bool fullscreen;
         private bool borderless;
         private int screenWidth;
         private int screenHeight;
-        private MainGame game;
+        private KeyboardState keyState;
 
-        public Settings(MainGame game, GameWindow window)
+        public Settings(GraphicsDeviceManager graphics, GameWindow Window)
         {
-            this.game = game;
+            fullscreen = false;
+            borderless = false;
+            screenWidth = 0;
+            screenHeight = 0;
         }
 
         /*
          * 
          */
-        public void ToggleBorderless(GraphicsDeviceManager graphics, GameWindow window)
+        public void ChooseScreenMode(GraphicsDeviceManager graphics, GameWindow Window)
         {
+            keyState = Keyboard.GetState(); // Get the current keyboard state
+
+            if (keyState.IsKeyDown(Keys.F4))
+            {
+                if (!graphics.IsFullScreen)
+                {
+                    ToggleFullscreen(graphics, Window);
+                }
+                if (graphics.IsFullScreen)
+                {
+                    ToggleBorderless(graphics, Window);
+                }
+            }
+        }
+
+        /*
+         * 
+         */
+        public void ToggleFullscreen(GraphicsDeviceManager graphics, GameWindow Window)
+        {
+            bool fullscreenLast = fullscreen;
+
             if (borderless)
             {
                 borderless = false;
             }
             else
             {
-                borderless = true;
+                fullscreen = !fullscreen;
             }
 
-            ApplyBorderlessChange(game, graphics, window, borderless);
+            ChangeFullscreen(graphics, Window, fullscreenLast);
         }
 
         /*
          * 
          */
-        public void ApplyBorderlessChange(MainGame game, GraphicsDeviceManager graphics, GameWindow window, bool borderlessLast)
+        public void ToggleBorderless(GraphicsDeviceManager graphics, GameWindow Window)
         {
-            if (borderless)
+            bool fullscreenLast = fullscreen;
+
+            borderless = !borderless;
+            fullscreen = borderless;
+
+            ChangeFullscreen(graphics, Window, fullscreenLast);
+        }
+
+        /*
+         * 
+         */
+        public void ChangeFullscreen(GraphicsDeviceManager graphics, GameWindow Window, bool fullscreenLast)
+        {
+            if (fullscreen)
             {
-                if (borderlessLast)
+                if (fullscreenLast)
                 {
                     ApplyHardwareMode(graphics);
                 }
                 else
                 {
-                    SetBorderless(graphics, window);
+                    SetFullscreen(graphics, Window);
                 }
             }
             else
             {
-                SetWindowed(graphics);
+                RemoveFullscreen(graphics);
             }
         }
 
@@ -67,10 +109,10 @@ namespace SoR
         /*
          * 
          */
-        public void SetBorderless(GraphicsDeviceManager graphics, GameWindow window)
+        public void SetFullscreen(GraphicsDeviceManager graphics, GameWindow Window)
         {
-            screenWidth = window.ClientBounds.Width;
-            screenHeight = window.ClientBounds.Height;
+            screenWidth = Window.ClientBounds.Width;
+            screenHeight = Window.ClientBounds.Height;
 
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
@@ -83,7 +125,7 @@ namespace SoR
         /*
          * 
          */
-        public void SetWindowed(GraphicsDeviceManager graphics)
+        public void RemoveFullscreen(GraphicsDeviceManager graphics)
         {
             graphics.PreferredBackBufferWidth = screenWidth;
             graphics.PreferredBackBufferHeight = screenHeight;

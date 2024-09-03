@@ -127,7 +127,7 @@ namespace SoR.Logic.Input
                 }
             }
 
-            CheckUserInput(graphics); // Check all non-directional user input
+            ChangeSkin(graphics); // Check all non-directional user input
 
             lastKeyState = keyState; // Get the previous keyboard state
 
@@ -147,7 +147,7 @@ namespace SoR.Logic.Input
         /*
          * All non-directional user input.
          */
-        public void CheckUserInput(GraphicsDeviceManager graphics)
+        public void ChangeSkin(GraphicsDeviceManager graphics)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
@@ -156,18 +156,6 @@ namespace SoR.Logic.Input
             if (keyState.IsKeyDown(Keys.Space) & !lastKeyState.IsKeyDown(Keys.Space))
             {
                 switchSkin = true; // Space was pressed, so switch skins
-            }
-
-            if (keyState.IsKeyDown(Keys.F4))
-            {
-                if (!graphics.IsFullScreen)
-                {
-                    graphics.IsFullScreen = true;
-                }
-                if (graphics.IsFullScreen)
-                {
-                    graphics.IsFullScreen = false;
-                }
             }
         }
 

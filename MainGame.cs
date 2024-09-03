@@ -2,15 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Game;
-using System;
-using System.IO;
-using System.Text.Json;
-using System.Text.Json.Serialization.Metadata;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Apos.Input;
-using FontStashSharp;
 
 namespace SoR
 {
@@ -70,11 +61,9 @@ namespace SoR
     public class MainGame : Game
     {
         protected GraphicsDeviceManager graphics;
-        protected GameWindow window;
         private GameLogic gameLogic;
         private MainGame game;
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
+        private Settings settings;
 
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
@@ -82,6 +71,7 @@ namespace SoR
         public MainGame()
         {
             graphics = new GraphicsDeviceManager(this);
+            Window.AllowAltF4 = true;
             Content.RootDirectory = "Content";
             IsMouseVisible = false;
             Window.AllowUserResizing = true;
@@ -108,6 +98,7 @@ namespace SoR
             // TODO: use this.Content to load your game content here
             game = this;
             gameLogic = new GameLogic(graphics, GraphicsDevice, game);
+            settings = new Settings(graphics, Window);
         }
 
         /*
@@ -120,12 +111,10 @@ namespace SoR
                 Exit();
 
             // TODO: Add your update logic here
-            keyState = Keyboard.GetState(); // Get the current keyboard state
 
             // Update player input and animations
             gameLogic.UpdateEntities(gameTime, graphics, GraphicsDevice);
-
-            lastKeyState = keyState; // Get the previous keyboard state
+            settings.ChooseScreenMode(graphics, Window);
 
             base.Update(gameTime);
         }
