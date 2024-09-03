@@ -60,22 +60,8 @@ namespace Logic.Locations.Interactables
         }
 
         /*
-         * If something changes to trigger a new animation, apply the animation.
-         * If the animation is already applied, do nothing.
-         * 
-         * TO DO: Fix this.
+         * Placeholder for Campfire animation changes.
          */
-        public override void ChangeAnimation(string eventTrigger)
-        {
-            string reaction = "none"; // Default to "none" if there will be no animation change
-
-            /*
-             * 0 = no animation, 1 = rapidly transition to next, 2 = set new animation then queue
-             * the next, 3 = start animation on the same frame the previous animation was at.
-             */
-            int animType = 0;
-
-            if (prevTrigger != eventTrigger) { }
-        }
+        public override void ChangeAnimation(string eventTrigger) { }
     }
 }

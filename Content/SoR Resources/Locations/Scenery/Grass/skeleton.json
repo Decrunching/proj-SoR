@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "hQDB1qv6PfE",
+	"hash": "hTWo8IMcxwQ",
 	"spine": "4.2.35",
 	"y": -128,
 	"width": 128,
@@ -9,7 +9,7 @@
 	"audio": "./audio"
 },
 "bones": [
-	{ "name": "root" }
+	{ "name": "root", "scaleX": 2, "scaleY": 2 }
 ],
 "slots": [
 	{ "name": "00", "bone": "root", "attachment": "00" },

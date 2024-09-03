@@ -13,9 +13,8 @@ using FontStashSharp;
 namespace Logic.Game
 {
     /*
-     * Manage graphics settings.
-     * 
-     * https://learn-monogame.github.io/tutorial/game-settings/ <- using tutorial from Learn Monogame
+     * INCOMPLETE: Manage graphics settings. Currently switches between borderless and windowed mode with F4, and
+     * resets to windowed (default) with F1.
      */
     public class GraphicsSettings : Settings
     {
@@ -26,9 +25,6 @@ namespace Logic.Game
         public int screenWidth { get; set; }
         public int screenHeight { get; set; }
         private bool fixedTimeStep;
-        private float sinceLastChange;
-        private float screenChangeTime;
-        private KeyboardState keyState;
         private FontSystem fontSystem;
 
         public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
@@ -42,14 +38,55 @@ namespace Logic.Game
 
             RestoreWindow(graphics, Window, settings);
         }
-        ICondition quit =
-        new AnyCondition(
-        new KeyboardCondition(Keys.Escape),
-                new GamePadCondition(GamePadButton.Back, 0)
-            );
-        ICondition toggleFullscreen = new AllCondition(new KeyboardCondition(Keys.F5));
         ICondition toggleBorderless = new KeyboardCondition(Keys.F4);
         ICondition resetSettings = new KeyboardCondition(Keys.F1);
+
+        public static string GetPath(string name) => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, name);
+
+        public static T LoadJson<T>(string name, JsonTypeInfo<T> typeInfo) where T : new()
+        {
+            T json;
+            string jsonPath = GetPath(name);
+
+            if (File.Exists(jsonPath))
+            {
+                json = JsonSerializer.Deserialize(File.ReadAllText(jsonPath), typeInfo)!;
+            }
+            else
+            {
+                json = new T();
+            }
+
+            return json;
+        }
+
+        public static void SaveJson<T>(string name, T json, JsonTypeInfo<T> typeInfo)
+        {
+            string jsonPath = GetPath(name);
+            Directory.CreateDirectory(Path.GetDirectoryName(jsonPath)!);
+            string jsonString = JsonSerializer.Serialize(json, typeInfo);
+            File.WriteAllText(jsonPath, jsonString);
+        }
+
+        public static T EnsureJson<T>(string name, JsonTypeInfo<T> typeInfo) where T : new()
+        {
+            T json;
+            string jsonPath = GetPath(name);
+
+            if (File.Exists(jsonPath))
+            {
+                json = JsonSerializer.Deserialize(File.ReadAllText(jsonPath), typeInfo)!;
+            }
+            else
+            {
+                json = new T();
+                string jsonString = JsonSerializer.Serialize(json, typeInfo);
+                Directory.CreateDirectory(Path.GetDirectoryName(jsonPath)!);
+                File.WriteAllText(jsonPath, jsonString);
+            }
+
+            return json;
+        }
 
         /*
          * Initialise the game settings.
@@ -119,33 +156,6 @@ namespace Logic.Game
         }
 
         /*
-         * Toggle between borderless / windowed when F4 is pressed.
-         * 
-         * Has fullscreen option set up too, but I think fullscreen mode is annoying and pointless. If I 
-         * ever release this as a full, playable game and people start asking for it, adding it back in
-         * is as easy as calling ToggleFullscreen(graphics, Window).
-         */
-        /*public void ChooseScreenMode(GameTime gameTime, GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
-        {
-            keyState = Keyboard.GetState(); // Get the current keyboard state
-
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            sinceLastChange += deltaTime;
-            screenChangeTime = 0.3f;
-
-            if (sinceLastChange >= screenChangeTime)
-            {
-                sinceLastChange = 0;
-
-                if (keyState.IsKeyDown(Keys.F4))
-                {
-                    ToggleBorderlessMode(graphics, Window, settings);
-                }
-            }
-        }*/
-
-        /*
          * Render settings choices.
          */
         public void DrawSettings(GraphicsDevice GraphicsDevice, Settings settings)
@@ -186,53 +196,6 @@ namespace Logic.Game
             settings.IsFullscreen = settings.IsBorderless;
 
             ChangeFullscreen(graphics, Window, fullscreenLast, settings);
-        }
-
-        public static string GetPath(string name) => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, name);
-
-        public static T LoadJson<T>(string name, JsonTypeInfo<T> typeInfo) where T : new()
-        {
-            T json;
-            string jsonPath = GetPath(name);
-
-            if (File.Exists(jsonPath))
-            {
-                json = JsonSerializer.Deserialize(File.ReadAllText(jsonPath), typeInfo)!;
-            }
-            else
-            {
-                json = new T();
-            }
-
-            return json;
-        }
-
-        public static void SaveJson<T>(string name, T json, JsonTypeInfo<T> typeInfo)
-        {
-            string jsonPath = GetPath(name);
-            Directory.CreateDirectory(Path.GetDirectoryName(jsonPath)!);
-            string jsonString = JsonSerializer.Serialize(json, typeInfo);
-            File.WriteAllText(jsonPath, jsonString);
-        }
-
-        public static T EnsureJson<T>(string name, JsonTypeInfo<T> typeInfo) where T : new()
-        {
-            T json;
-            string jsonPath = GetPath(name);
-
-            if (File.Exists(jsonPath))
-            {
-                json = JsonSerializer.Deserialize(File.ReadAllText(jsonPath), typeInfo)!;
-            }
-            else
-            {
-                json = new T();
-                string jsonString = JsonSerializer.Serialize(json, typeInfo);
-                Directory.CreateDirectory(Path.GetDirectoryName(jsonPath)!);
-                File.WriteAllText(jsonPath, jsonString);
-            }
-
-            return json;
         }
 
         /*
