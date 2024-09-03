@@ -1,11 +1,17 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Content;
 using System;
 using System.Net.Quic;
 using System.Text.Json.Serialization.Metadata;
 using System.Text.Json;
 using System.IO;
+using Apos.Input;
+using System.Drawing;
+using SoR;
+using FontStashSharp;
+using System.Reflection.Metadata;
 
 namespace Logic.Game
 {
@@ -22,25 +28,65 @@ namespace Logic.Game
         public bool ToggleBorderless { get; set; }
         public int screenWidth { get; set; }
         public int screenHeight { get; set; }
+        private bool fixedTimeStep;
         private float sinceLastChange;
         private float screenChangeTime;
         private KeyboardState keyState;
+        private FontSystem fontSystem;
 
-        public GraphicsSettings(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
+        public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
+        {
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
+
+            game.IsMouseVisible = false;
+
+            settings = EnsureJson("Settings.json", SettingsContext.Default.Settings);
+
+            RestoreWindow(graphics, Window, settings);
+        }
+        ICondition quit =
+        new AnyCondition(
+        new KeyboardCondition(Keys.Escape),
+                new GamePadCondition(GamePadButton.Back, 0)
+            );
+        ICondition toggleFullscreen = new AllCondition(new KeyboardCondition(Keys.F5));
+        ICondition toggleBorderless = new KeyboardCondition(Keys.F4);
+        ICondition resetSettings = new KeyboardCondition(Keys.F1);
+
+        /*
+         * Initialise the game settings.
+         */
+        public void InitialiseSettings(GraphicsDeviceManager graphics, Settings settings, GameWindow Window)
         {
             Window.AllowUserResizing = true;
             Window.AllowAltF4 = true;
 
-            IsFixedTimeStep = settings.IsFixedTimeStep;
+            fixedTimeStep = settings.IsFixedTimeStep;
             graphics.SynchronizeWithVerticalRetrace = settings.IsVSync;
 
             settings.IsFullscreen = settings.IsFullscreen || settings.IsBorderless;
 
             RestoreWindow(graphics, Window, settings);
+            if (settings.IsFullscreen)
+            {
+                ChangeFullscreen(graphics, Window, false, settings);
+            }
         }
 
         /*
          * 
+         */
+        public void LoadSettings(MainGame game, IServiceProvider serviceProvider, string rootDirectory)
+        {
+            InputHelper.Setup(game); // For Apos library
+
+            fontSystem = new FontSystem();
+            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/source-code-pro-mediu,.ttf"));
+        }
+
+        /*
+         * Update the game settings.
          */
         public void UpdateSettings(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
         {
@@ -69,7 +115,7 @@ namespace Logic.Game
          * ever release this as a full, playable game and people start asking for it, adding it back in
          * is as easy as calling ToggleFullscreen(graphics, Window).
          */
-        public void ChooseScreenMode(GameTime gameTime, GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
+        /*public void ChooseScreenMode(GameTime gameTime, GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
@@ -87,7 +133,7 @@ namespace Logic.Game
                     ToggleBorderlessMode(graphics, Window, settings);
                 }
             }
-        }
+        }*/
 
         /*
          * Turn off borderless mode or toggle fullscreen state.

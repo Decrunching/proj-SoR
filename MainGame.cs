@@ -1,5 +1,4 @@
 ﻿using Apos.Input;
-using FontStashSharp;
 using Logic.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -68,7 +67,6 @@ namespace SoR
         private MainGame game;
         private GraphicsSettings graphicsSettings;
         private Settings settings;
-        private FontSystem fontSystem;
 
 
         /*
@@ -78,10 +76,6 @@ namespace SoR
         {
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
-            IsMouseVisible = false;
-            settings = EnsureJson("Settings.json", SettingsContext.Default.Settings);
         }
 
         /*
@@ -89,7 +83,8 @@ namespace SoR
          */
         protected override void Initialize()
         {
-            graphicsSettings = new GraphicsSettings(graphics, Window, settings);
+            graphicsSettings = new GraphicsSettings(game, graphics, Window, settings);
+            graphicsSettings.InitialiseSettings(graphics, settings, Window);
 
             base.Initialize();
         }
@@ -101,11 +96,7 @@ namespace SoR
         {
             game = this;
             gameLogic = new GameLogic(graphics, GraphicsDevice, game);
-
-            InputHelper.Setup(game); // For Apos library
-
-            fontSystem = new FontSystem();
-            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/source-code-pro-mediu,.ttf"));
+            graphicsSettings.LoadSettings(game, Content.ServiceProvider, Content.RootDirectory);
         }
 
         protected override void UnloadContent()
