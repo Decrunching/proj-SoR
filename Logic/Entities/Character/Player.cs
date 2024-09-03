@@ -13,10 +13,6 @@ namespace Logic.Entities.Character
     public class Player : Entity
     {
         private string skin;
-        private bool fullscreen;
-        private bool borderless;
-        private int screenWidth;
-        private int screenHeight;
 
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {

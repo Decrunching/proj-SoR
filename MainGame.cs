@@ -1,4 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Apos.Input;
+using FontStashSharp;
+using Logic.Game;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Game;
@@ -63,21 +66,22 @@ namespace SoR
         protected GraphicsDeviceManager graphics;
         private GameLogic gameLogic;
         private MainGame game;
+        private GraphicsSettings graphicsSettings;
         private Settings settings;
+        private FontSystem fontSystem;
+
 
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
          */
         public MainGame()
         {
-            graphics = new GraphicsDeviceManager(this);
-            Window.AllowAltF4 = true;
             Content.RootDirectory = "Content";
+            graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferWidth = 1280;
+            graphics.PreferredBackBufferHeight = 720;
             IsMouseVisible = false;
-            Window.AllowUserResizing = true;
-            graphics.IsFullScreen = false;
-            graphics.PreferredBackBufferWidth = 1000;
-            graphics.PreferredBackBufferHeight = 800;
+            settings = EnsureJson("Settings.json", SettingsContext.Default.Settings);
         }
 
         /*
@@ -85,7 +89,7 @@ namespace SoR
          */
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            graphicsSettings = new GraphicsSettings(graphics, Window, settings);
 
             base.Initialize();
         }
@@ -95,10 +99,25 @@ namespace SoR
          */
         protected override void LoadContent()
         {
-            // TODO: use this.Content to load your game content here
             game = this;
             gameLogic = new GameLogic(graphics, GraphicsDevice, game);
-            settings = new Settings(graphics, Window);
+
+            InputHelper.Setup(game); // For Apos library
+
+            fontSystem = new FontSystem();
+            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/source-code-pro-mediu,.ttf"));
+        }
+
+        protected override void UnloadContent()
+        {
+            if (!settings.IsBorderless)
+            {
+                graphicsSettings.SaveWindow();
+            }
+
+            graphicsSettings.SaveJson("Settings.json", settings, SettingsContext.Default.Settings);
+
+            base.UnloadContent();
         }
 
         /*
@@ -110,11 +129,13 @@ namespace SoR
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            // TODO: Add your update logic here
+            InputHelper.UpdateSetup();
+            graphicsSettings.UpdateSettings(graphics, Window, settings);
+            InputHelper.UpdateCleanup();
 
             // Update player input and animations
             gameLogic.UpdateEntities(gameTime, graphics, GraphicsDevice);
-            settings.ChooseScreenMode(graphics, Window);
+            graphicsSettings.ChooseScreenMode(gameTime, graphics, Window, settings);
 
             base.Update(gameTime);
         }
@@ -126,6 +147,11 @@ namespace SoR
         {
             GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
             gameLogic.Render(GraphicsDevice);
+
+            var font = fontSystem.GetFont(24);
+            string mode = settings.IsBorderless ? "Borderless" : settings.IsFullscreen ? "Fullscreen" : "Window";
+            Vector2 modeCenter = font.MeasureString(mode) / 2f;
+            Vector2 windowCenter = new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height) / 2f;
 
             base.Draw(gameTime);
         }

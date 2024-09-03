@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Game;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Input;
 using Spine;
@@ -25,7 +26,7 @@ namespace SoR.Logic.Entities
         protected TrackEntry trackEntry;
         protected Random random;
         protected UserInput movement;
-        protected Settings settings;
+        protected GraphicsSettings settings;
         protected Vector2 position;
         protected Vector2 movementDirection;
         protected float prevPositionX;
@@ -252,7 +253,7 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "",
+                "newDirection: " + newDirectionTime,
                 new Vector2(position.X - 50, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
