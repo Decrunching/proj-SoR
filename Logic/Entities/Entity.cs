@@ -59,7 +59,7 @@ namespace SoR.Logic.Entities
         /* 
          * Get the centre of the screen.
          */
-        public abstract void SetStartPosition(GraphicsDeviceManager graphics);
+        public abstract void SetStartPosition(GraphicsDeviceManager graphics, Vector2 centreScreen);
 
         /*
          * Check if moving.
@@ -239,7 +239,7 @@ namespace SoR.Logic.Entities
         /*
          * Update the entity position, animation state and skeleton.
          */
-        public virtual void UpdateEntityAnimations(GameTime gameTime)
+        public virtual void UpdateEntityAnimations(GameTime gameTime, float cameraX, float cameraY)
         {
             // Update the animation state and apply animations to skeletons
             skeleton.X = position.X;
@@ -262,7 +262,7 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "newDirection: " + newDirectionTime,
+                "",
                 new Vector2(position.X - 50, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
@@ -306,6 +306,15 @@ namespace SoR.Logic.Entities
         public Vector2 GetPosition()
         {
             return position;
+        }
+
+        /*
+         * Set the player position.
+         */
+        public void SetPosition(float cameraX, float cameraY)
+        {
+            skeleton.X = position.X - cameraX;
+            skeleton.Y = position.Y - cameraY;
         }
     }
 }

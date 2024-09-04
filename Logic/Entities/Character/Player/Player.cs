@@ -194,11 +194,11 @@ namespace Logic.Entities.Character.Player
         /*
          * Update the skeleton position, skin and animation state.
          */
-        public override void UpdateEntityAnimations(GameTime gameTime, Camera camera)
+        public override void UpdateEntityAnimations(GameTime gameTime, float cameraX, float cameraY)
         {
             // Update the animation state and apply animations to skeletons
-            skeleton.X = position.X - camera.GetCameraPositionX();
-            skeleton.Y = position.Y - camera.GetCameraPositionY();
+            skeleton.X = position.X - cameraX;
+            skeleton.Y = position.Y - cameraY;
 
             hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -215,31 +215,15 @@ namespace Logic.Entities.Character.Player
         /* 
          * Get the centre of the screen.
          */
-        public override void SetStartPosition(GraphicsDeviceManager graphics)
+        public override void SetStartPosition(GraphicsDeviceManager graphics, Vector2 centreScreen)
         {
+            position = centreScreen;
+
             // Set the default starting position on the screen
-            position = new Vector2(position.X - 270, position.Y - 200);
+            position = new Vector2(position.X - 270, position.Y - 100);
 
             maxPosition = new Vector2(graphics.PreferredBackBufferWidth * 2,
                 graphics.PreferredBackBufferHeight * 2); // Set the maximum range of movement
-        }
-
-        /*
-         * Render the current skeleton to the screen.
-         */
-        public override void RenderEntity(GraphicsDevice GraphicsDevice)
-        {
-            // Create the skeleton renderer projection matrix
-            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
-            0,
-                GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height,
-                0, 1, 0);
-
-            // Draw skeletons
-            skeletonRenderer.Begin();
-            skeletonRenderer.Draw(skeleton);
-            skeletonRenderer.End();
         }
     }
 }

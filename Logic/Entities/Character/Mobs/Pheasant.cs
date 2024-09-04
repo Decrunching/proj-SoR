@@ -130,7 +130,7 @@ namespace Logic.Entities.Character.Mobs
         /* 
          * Get the centre of the screen.
          */
-        public override void SetStartPosition(Vector2 centreScreen)
+        public override void SetStartPosition(GraphicsDeviceManager graphics, Vector2 centreScreen)
         {
             position = centreScreen;
 

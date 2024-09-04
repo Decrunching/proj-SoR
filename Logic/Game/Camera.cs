@@ -14,7 +14,7 @@ namespace Logic.Game
         public Camera(Viewport viewport)
         {
             this.viewport = viewport;
-            Vector2 = Vector2.Zero;
+            Position = Vector2.Zero;
         }
 
         /*

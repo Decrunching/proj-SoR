@@ -178,7 +178,7 @@ namespace SoR.Logic.Input
             this.maxPositionX = maxPositionX;
             this.maxPositionY = maxPositionY;
 
-            if (newPositionX > maxPositionX - hitbox.Width)
+            if (newPositionX > graphics.PreferredBackBufferWidth - hitbox.Width)
             {
                 newPositionX = graphics.PreferredBackBufferWidth - hitbox.Width;
                 turnAround = 1; // Left
@@ -191,7 +191,7 @@ namespace SoR.Logic.Input
                 return true;
             }
 
-            if (newPositionY > maxPositionY - hitbox.Height)
+            if (newPositionY > graphics.PreferredBackBufferHeight - hitbox.Height)
             {
                 newPositionY = graphics.PreferredBackBufferHeight - hitbox.Height;
                 turnAround = 3; // Up

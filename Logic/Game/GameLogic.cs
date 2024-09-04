@@ -69,6 +69,8 @@ namespace SoR.Logic.Game
           */
         public void LoadGameContent(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, MainGame game)
         {
+            Vector2 centreScreen = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+
             // Initialise SpriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -77,19 +79,19 @@ namespace SoR.Logic.Game
 
             // Create the Player entity
             entityType = EntityType.Player;
-            CreateEntity(graphics, GraphicsDevice);
+            CreateEntity(graphics, GraphicsDevice, centreScreen);
 
             // Create the Slime entity
             entityType = EntityType.Slime;
-            CreateEntity(graphics, GraphicsDevice);
+            CreateEntity(graphics, GraphicsDevice, centreScreen);
 
             // Create the Chara entity
             entityType = EntityType.Chara;
-            CreateEntity(graphics, GraphicsDevice);
+            CreateEntity(graphics, GraphicsDevice, centreScreen);
 
             // Create the Pheasant entity
             entityType = EntityType.Pheasant;
-            CreateEntity(graphics, GraphicsDevice);
+            CreateEntity(graphics, GraphicsDevice, centreScreen);
 
             // Create the Campfire object
             sceneryType = SceneryType.Campfire;
@@ -104,7 +106,7 @@ namespace SoR.Logic.Game
          * Choose entity to create and place it as a value in the entities dictionary with
          * a unique string identifier as a key.
          */
-        public void CreateEntity(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public void CreateEntity(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, Vector2 centreScreen)
         {
             switch (entityType)
             {
@@ -112,28 +114,28 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.SetStartPosition(graphics);
+                        player.SetStartPosition(graphics, centreScreen);
                     }
                     break;
                 case EntityType.Pheasant:
                     entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
-                        pheasant.SetStartPosition(graphics);
+                        pheasant.SetStartPosition(graphics, centreScreen);
                     }
                     break;
                 case EntityType.Chara:
                     entities.Add("chara", new Chara(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
-                        chara.SetStartPosition(graphics);
+                        chara.SetStartPosition(graphics, centreScreen);
                     }
                     break;
                 case EntityType.Slime:
                     entities.Add("slime", new Slime(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
-                        slime.SetStartPosition(graphics);
+                        slime.SetStartPosition(graphics, centreScreen);
                     }
                     break;
             }
@@ -165,6 +167,14 @@ namespace SoR.Logic.Game
                     }
                     break;
             }
+        }
+
+        /*
+         * Updates the player according to camera position.
+         */
+        public void UpdatePlayerPosition(Entity player)
+        {
+            player.SetPosition(camera.GetCameraPositionX(), camera.GetCameraPositionY());
         }
 
         /*
@@ -213,10 +223,6 @@ namespace SoR.Logic.Game
                             {
                                 entity.StartMoving();
                             }
-
-                            // Update animations
-                            entity.UpdateEntityAnimations(gameTime);
-                            player.UpdateEntityAnimations(gameTime, camera);
                         }
                         else
                         {
@@ -224,6 +230,9 @@ namespace SoR.Logic.Game
                             throw new System.InvalidOperationException("playerChar is not of type Player");
                         }
                     }
+
+                    // Update animations
+                    entity.UpdateEntityAnimations(gameTime, camera.GetCameraPositionX(), camera.GetCameraPositionY());
                 }
             }
         }
