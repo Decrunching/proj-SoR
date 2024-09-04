@@ -5,7 +5,7 @@ using SoR.Logic.Input;
 using Spine;
 using System;
 
-namespace Logic.Entities.Character
+namespace Logic.Entities.Character.Mobs
 {
     /*
      * Stores information unique to Pheasant.

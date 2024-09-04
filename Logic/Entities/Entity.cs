@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Input;
 using Spine;
 using System;
+using System.Collections.Generic;
 
 namespace SoR.Logic.Entities
 {
@@ -12,6 +13,7 @@ namespace SoR.Logic.Entities
      */
     public abstract class Entity
     {
+        protected Dictionary<string, int> animations;
         protected Atlas atlas;
         protected AtlasAttachmentLoader atlasAttachmentLoader;
         protected SkeletonJson json;
@@ -28,6 +30,7 @@ namespace SoR.Logic.Entities
         protected UserInput movement;
         protected GraphicsSettings settings;
         protected Vector2 position;
+        protected Vector2 maxPosition;  
         protected Vector2 movementDirection;
         protected float prevPositionX;
         protected float prevPositionY;
@@ -56,7 +59,7 @@ namespace SoR.Logic.Entities
         /* 
          * Get the centre of the screen.
          */
-        public abstract void SetStartPosition(Vector2 centreScreen);
+        public abstract void SetStartPosition(GraphicsDeviceManager graphics);
 
         /*
          * Check if moving.
@@ -89,6 +92,10 @@ namespace SoR.Logic.Entities
         /*
          * Choose a method for playing the animation according to Player.ChangeAnimation(eventTrigger)
          * animType.
+         * 
+         * 1 = rapidly transition to next animation
+         * 2 = set new animation then queue the next
+         * 3 = start next animation on the same frame the previous animation finished on
          */
         public void React(string reaction, int animType)
         {
@@ -121,7 +128,9 @@ namespace SoR.Logic.Entities
                 GraphicsDevice,
                 GetEntityHitbox(),
                 position.X,
-                position.Y))
+                position.Y,
+                maxPosition.X,
+                maxPosition.Y))
             {
                 NewDirection(movement.TurnAround());
             }
@@ -212,7 +221,7 @@ namespace SoR.Logic.Entities
         /*
          * Render the current skeleton to the screen.
          */
-        public void RenderEntity(GraphicsDevice GraphicsDevice)
+        public virtual void RenderEntity(GraphicsDevice GraphicsDevice)
         {
             // Create the skeleton renderer projection matrix
             ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
@@ -273,6 +282,30 @@ namespace SoR.Logic.Entities
         public SkeletonBounds GetEntityHitbox()
         {
             return hitbox;
+        }
+
+        /*
+         * Get the X-axis position.
+         */
+        public float GetPositionX()
+        {
+            return position.X;
+        }
+
+        /*
+         * Get the Y-axis position.
+         */
+        public float GetPositionY()
+        {
+            return position.Y;
+        }
+
+        /*
+         * 
+         */
+        public Vector2 GetPosition()
+        {
+            return position;
         }
     }
 }

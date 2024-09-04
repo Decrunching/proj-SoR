@@ -18,12 +18,6 @@ namespace Logic.Game
      */
     public class GraphicsSettings : Settings
     {
-        public bool Fullscreen { get; set; }
-        public bool Borderless { get; set; }
-        public bool ToggleFullscreen { get; set; }
-        public bool ToggleBorderless { get; set; }
-        public int screenWidth { get; set; }
-        public int screenHeight { get; set; }
         private bool fixedTimeStep;
         private FontSystem fontSystem;
 
@@ -265,7 +259,7 @@ namespace Logic.Game
         }
 
         /*
-         * 
+         * Restore the window to defaults.
          */
         public void RestoreWindow(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
         {

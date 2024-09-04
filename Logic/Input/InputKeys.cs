@@ -1,6 +1,4 @@
-﻿using System.Numerics;
-
-namespace SoR.Logic.Input
+﻿namespace SoR.Logic.Input
 {
     /*
      * Manage key functions.

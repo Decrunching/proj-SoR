@@ -18,6 +18,8 @@ namespace SoR.Logic.Input
         private int deadZone;
         private float newPositionX;
         private float newPositionY;
+        private float maxPositionX;
+        private float maxPositionY;
         private float prevPositionX;
         private float prevPositionY;
         private bool switchSkin;
@@ -167,12 +169,16 @@ namespace SoR.Logic.Input
             GraphicsDevice GraphicsDevice,
             SkeletonBounds hitbox,
             float positionX,
-            float positionY)
+            float positionY,
+            float maxPositionX,
+            float maxPositionY)
         {
             newPositionX = positionX;
             newPositionY = positionY;
+            this.maxPositionX = maxPositionX;
+            this.maxPositionY = maxPositionY;
 
-            if (newPositionX > graphics.PreferredBackBufferWidth - hitbox.Width)
+            if (newPositionX > maxPositionX - hitbox.Width)
             {
                 newPositionX = graphics.PreferredBackBufferWidth - hitbox.Width;
                 turnAround = 1; // Left
@@ -185,7 +191,7 @@ namespace SoR.Logic.Input
                 return true;
             }
 
-            if (newPositionY > graphics.PreferredBackBufferHeight - hitbox.Height)
+            if (newPositionY > maxPositionY - hitbox.Height)
             {
                 newPositionY = graphics.PreferredBackBufferHeight - hitbox.Height;
                 turnAround = 3; // Up

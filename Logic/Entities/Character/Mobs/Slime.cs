@@ -5,24 +5,24 @@ using SoR.Logic.Input;
 using Spine;
 using System;
 
-namespace Logic.Entities.Character
+namespace Logic.Entities.Character.Mobs
 {
     /*
-     * Stores information unique to Chara.
+     * Stores information unique to Slime.
      */
-    internal class Chara : Entity
+    internal class Slime : Entity
     {
-        public Chara(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public Slime(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\SoR Resources\\Entities\\Chara\\savedit.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Chara\\savedit.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\SoR Resources\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\SoR Resources\\Entities\\Chara\\skeleton.json");
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Chara\\skeleton.json");
+            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\SoR Resources\\Entities\\Slime\\skeleton.json");
+            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -35,7 +35,7 @@ namespace Logic.Entities.Character
             animStateData.DefaultMix = 0.1f;
 
             // Set the "fidle" animation on track 1 and leave it looping forever
-            trackEntry = animState.SetAnimation(0, "run", true);
+            trackEntry = animState.SetAnimation(0, "idle", true);
 
             // Create hitbox
             slot = skeleton.FindSlot("hitbox");
@@ -73,12 +73,8 @@ namespace Logic.Entities.Character
          */
         public override int Damage(Entity entity)
         {
-            if (CollidesWith(entity))
-            {
-                int damage = 5;
-                return damage;
-            }
-            return 0;
+            int damage = 5;
+            return damage;
         }
 
         /*
@@ -97,6 +93,9 @@ namespace Logic.Entities.Character
              */
             int animType = 0;
 
+            //string setAnim = "set"; // Interrupt the last animation
+            //string addAnim = "add"; // Wait for the previous animation to finish looping
+
             if (prevTrigger != eventTrigger)
             {
                 if (eventTrigger == "turnleft")
@@ -105,24 +104,22 @@ namespace Logic.Entities.Character
                 }
                 if (eventTrigger == "turnright")
                 {
-                    skeleton.ScaleX = -1;
+                    skeleton.ScaleX = 1;
                 }
                 if (eventTrigger == "collision")
                 {
                     prevTrigger = eventTrigger;
-                    animOne = "jump";
+                    animType = 2;
+                    animOne = "attack";
                     animTwo = "idle";
                     reaction = eventTrigger;
-                    animType = 1;
-                    React(reaction, animType);
-                    animType = 2;
                     React(reaction, animType);
                 }
                 if (eventTrigger == "move")
                 {
                     prevTrigger = eventTrigger;
                     animType = 1;
-                    animOne = "run";
+                    animOne = "idle";
                     reaction = eventTrigger;
                     React(reaction, animType);
                 }
@@ -136,7 +133,7 @@ namespace Logic.Entities.Character
         {
             position = centreScreen;
 
-            position = new Vector2(position.X - 280, position.Y + 210);
+            position = new Vector2(position.X + 200, position.Y + 200);
         }
     }
 }

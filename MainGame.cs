@@ -67,7 +67,6 @@ namespace SoR
         private GraphicsSettings graphicsSettings;
         private Settings settings;
 
-
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
          */
@@ -86,6 +85,8 @@ namespace SoR
             settings = new Settings();
             graphicsSettings = new GraphicsSettings(game, graphics, Window, settings);
             graphicsSettings.InitialiseSettings(graphics, settings, Window);
+            gameLogic = new GameLogic();
+            gameLogic.InitialiseCamera(GraphicsDevice.Viewport);
 
             base.Initialize();
         }
@@ -95,10 +96,13 @@ namespace SoR
          */
         protected override void LoadContent()
         {
-            gameLogic = new GameLogic(graphics, GraphicsDevice, game);
+            gameLogic.LoadGameContent(graphics, GraphicsDevice, game);
             graphicsSettings.LoadSettings(game, Content);
         }
 
+        /*
+         * Unload graphics content.
+         */
         protected override void UnloadContent()
         {
             graphicsSettings.UnloadSettings(Window, settings);
@@ -118,7 +122,7 @@ namespace SoR
             graphicsSettings.UpdateSettings(graphics, Window, settings);
 
             // Update player input and animations
-            gameLogic.UpdateEntities(gameTime, graphics, GraphicsDevice);
+            gameLogic.UpdateEntities(gameTime, graphics, GraphicsDevice, graphicsSettings);
 
             base.Update(gameTime);
         }
@@ -129,7 +133,9 @@ namespace SoR
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
+
             graphicsSettings.DrawSettings(GraphicsDevice, settings);
+            
             gameLogic.Render(GraphicsDevice);
 
             base.Draw(gameTime);

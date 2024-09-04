@@ -3,9 +3,10 @@ using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
-using System;
+using System.Collections.Generic;
+using Logic.Game;
 
-namespace Logic.Entities.Character
+namespace Logic.Entities.Character.Player
 {
     /*
      * Stores information unique to Player.
@@ -16,6 +17,16 @@ namespace Logic.Entities.Character
 
         public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
+            // The possible animations to play as a string and the method to use for playing them as an int
+            animations = new Dictionary<string, int>()
+            {
+                { "idlebattle", 1 },
+                { "runup", 3 },
+                { "rundown", 3 },
+                { "runleft", 3 },
+                { "runright", 3 }
+            };
+
             // Load texture atlas and attachment loader
             atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\SoR Resources\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
@@ -52,19 +63,7 @@ namespace Logic.Entities.Character
 
             hitbox = new SkeletonBounds();
 
-            random = new Random();
-            movementDirection = new Vector2(0, 0); // The direction of movement
-            newDirectionTime = (float)random.NextDouble() * 1f + 0.25f; // After 0.25-1 seconds, choose a new movement direction
-            sinceLastChange = 0; // Time elapsed since last direction change
-            NewDirection(random.Next(4)); // Choose a random new direction to move in
-
-            inMotion = true; // Move freely
-
             movement = new UserInput(); // Environmental collision handling
-
-            // Set the current position on the screen
-            position = new Vector2(graphics.PreferredBackBufferWidth / 2,
-                graphics.PreferredBackBufferHeight / 2);
 
             Speed = 200f; // Set the entity's travel speed
 
@@ -87,60 +86,21 @@ namespace Logic.Entities.Character
         /*
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
-         * 
-         * TO DO: Fix this.
          */
         public override void ChangeAnimation(string eventTrigger)
         {
             string reaction = "none"; // Default to "none" if there will be no animation change
 
-            /*
-             * 0 = no animation, 1 = rapidly transition to next, 2 = set new animation then queue
-             * the next, 3 = start animation on the same frame the previous animation was at.
-             */
-            int animType = 0;
-
             if (prevTrigger != eventTrigger)
             {
-                if (eventTrigger == "idlebattle")
+                foreach (string animation in animations.Keys)
                 {
-                    prevTrigger = eventTrigger;
-                    animType = 1;
-                    animOne = "idlebattle";
-                    reaction = eventTrigger;
-                    React(reaction, animType);
-                }
-                if (eventTrigger == "runup")
-                {
-                    prevTrigger = eventTrigger;
-                    animType = 3;
-                    animOne = "runup";
-                    reaction = eventTrigger;
-                    React(reaction, animType);
-                }
-                if (eventTrigger == "rundown")
-                {
-                    prevTrigger = eventTrigger;
-                    animType = 3;
-                    animOne = "rundown";
-                    reaction = eventTrigger;
-                    React(reaction, animType);
-                }
-                if (eventTrigger == "runleft")
-                {
-                    prevTrigger = eventTrigger;
-                    animType = 3;
-                    animOne = "runleft";
-                    reaction = eventTrigger;
-                    React(reaction, animType);
-                }
-                if (eventTrigger == "runright")
-                {
-                    prevTrigger = eventTrigger;
-                    animType = 3;
-                    animOne = "runright";
-                    reaction = eventTrigger;
-                    React(reaction, animType);
+                    if (eventTrigger == animation)
+                    {
+                        prevTrigger = animOne = reaction = animation;
+
+                        React(reaction, animations[animation]);
+                    }
                 }
             }
         }
@@ -208,7 +168,9 @@ namespace Logic.Entities.Character
                 GraphicsDevice,
                 GetEntityHitbox(),
                 position.X,
-                position.Y);
+                position.Y,
+                maxPosition.X,
+                maxPosition.Y);
 
             // Set the new position
             position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
@@ -225,7 +187,6 @@ namespace Logic.Entities.Character
             movement.CheckMovement(gameTime, graphics, animState, Speed, position.X, position.Y);
             ChangeAnimation(movement.AnimateMovement());
 
-
             // Set the new position according to player input
             position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
         }
@@ -233,9 +194,19 @@ namespace Logic.Entities.Character
         /*
          * Update the skeleton position, skin and animation state.
          */
-        public override void UpdateEntityAnimations(GameTime gameTime)
+        public override void UpdateEntityAnimations(GameTime gameTime, Camera camera)
         {
-            base.UpdateEntityAnimations(gameTime);
+            // Update the animation state and apply animations to skeletons
+            skeleton.X = position.X - camera.GetCameraPositionX();
+            skeleton.Y = position.Y - camera.GetCameraPositionY();
+
+            hitbox.Update(skeleton, true);
+            animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            animState.Apply(skeleton);
+
+            // Update skeletal transformations
+            skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
 
             // Check whether to change the skin
             CheckSwitchSkin();
@@ -244,11 +215,31 @@ namespace Logic.Entities.Character
         /* 
          * Get the centre of the screen.
          */
-        public override void SetStartPosition(Vector2 centreScreen)
+        public override void SetStartPosition(GraphicsDeviceManager graphics)
         {
-            position = centreScreen;
-
+            // Set the default starting position on the screen
             position = new Vector2(position.X - 270, position.Y - 200);
+
+            maxPosition = new Vector2(graphics.PreferredBackBufferWidth * 2,
+                graphics.PreferredBackBufferHeight * 2); // Set the maximum range of movement
+        }
+
+        /*
+         * Render the current skeleton to the screen.
+         */
+        public override void RenderEntity(GraphicsDevice GraphicsDevice)
+        {
+            // Create the skeleton renderer projection matrix
+            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
+            0,
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height,
+                0, 1, 0);
+
+            // Draw skeletons
+            skeletonRenderer.Begin();
+            skeletonRenderer.Draw(skeleton);
+            skeletonRenderer.End();
         }
     }
 }
