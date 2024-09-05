@@ -9,14 +9,17 @@ namespace Logic.Locations
 {
     internal class Map
     {
-        /*protected Point TileSize {  get; private set; }
+        protected Point TileSize {  get; private set; }
         protected Point MapSize { get; private set; }
         private readonly Point mapTileSize = new(4, 3);
         private readonly Sprite[, ] tiles;
 
         public Map()
         {
-            tiles = new Sprite[mapTileSize.X, mapTileSize.Y];
+
+
+
+            /*tiles = new Sprite[mapTileSize.X, mapTileSize.Y];
 
             List<Texture2D> textures = new(5);
             for (int i = 1; i < 6; i++) textures.Add(Globals.Content.Load<Texture2D>($"tile{i}"));
@@ -31,17 +34,17 @@ namespace Logic.Locations
                 for (int x = 0; x < mapTileSize.X; x++)
                 {
                     int r = random.Next(0, textures.Count);
-                    tiles[x, y] = new(textures[r], new(x * TileSize.X, y * TileSize.Y));
+                    //tiles[x, y] = new(textures[r], new(x * TileSize.X, y * TileSize.Y));
                 }
-            }
+            }*/
         }
 
         public void DrawMap()
         {
             for (int y = 0; y < mapTileSize.Y; y++)
             {
-                for (int x = 0; x < mapTileSize.X; x++) tiles[x, y].Draw();
+                //for (int x = 0; x < mapTileSize.X; x++) tiles[x, y].Draw();
             }
-        }*/
+        }
     }
 }

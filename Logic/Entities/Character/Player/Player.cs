@@ -62,6 +62,8 @@ namespace Logic.Entities.Character.Player
 
             hitbox = new SkeletonBounds();
 
+            movement = new UserInput(); // Environmental collision handling
+
             Speed = 200f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
@@ -163,14 +165,12 @@ namespace Logic.Entities.Character.Player
             movement.EnvironCollision(
                 graphics,
                 GraphicsDevice,
-                GetEntityHitbox(),
-                position.X,
-                position.Y,
-                maxPosition.X,
-                maxPosition.Y);
+                GetHitbox(),
+                position,
+                maxPosition);
 
             // Set the new position
-            position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
+            position = movement.UpdatePosition();
         }
 
         /*
@@ -178,24 +178,25 @@ namespace Logic.Entities.Character.Player
          */
         public override void Movement(GameTime gameTime, GraphicsDeviceManager graphics)
         {
-            prevPositionX = position.X;
-            prevPositionY = position.Y;
+            prevPosition = position;
 
-            movement.CheckMovement(gameTime, graphics, animState, Speed, position.X, position.Y);
+            movement.CheckMovement(gameTime, graphics, animState, Speed, position);
             ChangeAnimation(movement.AnimateMovement());
 
             // Set the new position according to player input
-            position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
+            position = movement.UpdatePosition();
         }
 
         /*
          * Update the skeleton position, skin and animation state.
          */
-        public override void UpdateEntityAnimations(GameTime gameTime, float cameraX, float cameraY)
+        public override void UpdateAnimations(GameTime gameTime)
         {
             // Update the animation state and apply animations to skeletons
-            skeleton.X = position.X - cameraX;
-            skeleton.Y = position.Y - cameraY;
+            //skeleton.X = position.X - cameraPosition.X;
+            //skeleton.Y = position.Y - cameraPosition.Y;
+            skeleton.X = position.X;
+            skeleton.Y = position.Y;
 
             hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);

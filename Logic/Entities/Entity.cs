@@ -33,8 +33,7 @@ namespace SoR.Logic.Entities
         protected Vector2 position;
         protected Vector2 maxPosition;  
         protected Vector2 movementDirection;
-        protected float prevPositionX;
-        protected float prevPositionY;
+        protected Vector2 prevPosition;
         protected int hitpoints;
         protected string prevTrigger;
         protected string animOne;
@@ -81,8 +80,7 @@ namespace SoR.Logic.Entities
         {
             inMotion = false;
             ChangeAnimation("collision"); // TO DO: Fix - see collision
-            position.X = prevPositionX;
-            position.Y = prevPositionY;
+            position = prevPosition;
         }
 
         /*
@@ -122,17 +120,15 @@ namespace SoR.Logic.Entities
             if (movement.EnvironCollision(
                 graphics,
                 GraphicsDevice,
-                GetEntityHitbox(),
-                position.X,
-                position.Y,
-                maxPosition.X,
-                maxPosition.Y))
+                GetHitbox(),
+                position,
+                maxPosition))
             {
                 NewDirection(movement.TurnAround());
             }
 
             // Set the new position
-            position = new Vector2(movement.UpdatePositionX(), movement.UpdatePositionY());
+            position = movement.UpdatePosition();
         }
 
         /*
@@ -164,8 +160,7 @@ namespace SoR.Logic.Entities
          */
         public virtual void Movement(GameTime gameTime, GraphicsDeviceManager graphics)
         {
-            prevPositionX = position.X;
-            prevPositionY = position.Y;
+            prevPosition = position;
 
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -193,12 +188,12 @@ namespace SoR.Logic.Entities
         public bool CollidesWith(Entity entity)
         {
             entity.UpdateEntityHitbox(new SkeletonBounds());
-            entity.GetEntityHitbox().Update(entity.GetEntitySkeleton(), true);
+            entity.GetHitbox().Update(entity.GetSkeleton(), true);
 
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
-            if (hitbox.AabbIntersectsSkeleton(entity.GetEntityHitbox()))
+            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
             {
                 return true;
             }
@@ -228,6 +223,11 @@ namespace SoR.Logic.Entities
 
             // Draw skeletons
             skeletonRenderer.Begin();
+
+            // Update the animation state and apply animations to skeletons
+            skeleton.X = position.X;
+            skeleton.Y = position.Y;
+
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
         }
@@ -235,12 +235,8 @@ namespace SoR.Logic.Entities
         /*
          * Update the entity position, animation state and skeleton.
          */
-        public virtual void UpdateEntityAnimations(GameTime gameTime, float cameraX, float cameraY)
+        public virtual void UpdateAnimations(GameTime gameTime)
         {
-            // Update the animation state and apply animations to skeletons
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
-
             hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -253,13 +249,13 @@ namespace SoR.Logic.Entities
         /*
          * Draw text to the screen.
          */
-        public void DrawEntityText(SpriteBatch spriteBatch, SpriteFont font)
+        public void DrawText(SpriteBatch spriteBatch, SpriteFont font)
         {
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "",
-                new Vector2(position.X - 50, position.Y + hitbox.Height / 2),
+                "position: " + position.X + ", " + position.Y,
+                new Vector2(skeleton.X - 50, skeleton.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
         }
@@ -275,7 +271,7 @@ namespace SoR.Logic.Entities
         /*
          * Get the skeleton.
          */
-        public Skeleton GetEntitySkeleton()
+        public Skeleton GetSkeleton()
         {
             return skeleton;
         }
@@ -283,42 +279,17 @@ namespace SoR.Logic.Entities
         /*
          * Get the hitbox.
          */
-        public SkeletonBounds GetEntityHitbox()
+        public SkeletonBounds GetHitbox()
         {
             return hitbox;
         }
 
         /*
-         * Get the X-axis position.
-         */
-        public float GetPositionX()
-        {
-            return position.X;
-        }
-
-        /*
-         * Get the Y-axis position.
-         */
-        public float GetPositionY()
-        {
-            return position.Y;
-        }
-
-        /*
-         * 
+         * Get the entity position.
          */
         public Vector2 GetPosition()
         {
             return position;
         }
-
-        /*
-         * Set the player position.
-         *//*
-        public void SetPosition(float cameraX, float cameraY)
-        {
-            skeleton.X = position.X - cameraX;
-            skeleton.Y = position.Y - cameraY;
-        }*/
     }
 }

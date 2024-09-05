@@ -1,6 +1,7 @@
-﻿using Logic.Entities.Character.Player;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
+using MonoGame.Extended.ViewportAdapters;
 
 namespace Logic.Game
 {/*
@@ -8,36 +9,46 @@ namespace Logic.Game
   */
     public class Camera
     {
-        public Matrix Transform { get; set; }
-        public Vector2 Position { get; set; }
-        public Vector2 Vector2 { get; set; }
+        private OrthographicCamera camera;
+
+        public Camera(GraphicsDevice GraphicsDevice, GameWindow Window)
+        {
+            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
+            camera = new OrthographicCamera(viewportAdapter);
+        }
+
+        public Matrix RenderCamera()
+        {
+            Matrix transformMatrix = camera.GetViewMatrix();
+            return transformMatrix;
+        }
+
+
+
+        /*public Matrix Transform { get; private set; }
         private Viewport viewport;
 
-        public Camera(Viewport viewport)
-        {
-            this.viewport = viewport;
-            Position = Vector2.Zero;
-        }
-
         /*
-         * Centre the camera over the player and create the transformation matrix for moving the
-         * camera as the player moves.
+         * Centre the camera over the player, clamp it to the stage bounds, and create the transformation
+         * matrix for moving it as the player moves.
          */
-        public void UpdateCamera(Player player)
+        /*public void Follow(Player player, int screenWidth, int screenHeight)
         {
-            Position = player.GetPosition() - new Vector2(viewport.Width / 2, viewport.Height / 2);
+            var position = Matrix.CreateTranslation(
+                -player.GetPosition().X - (player.GetHitbox().Width / 2),
+                -player.GetPosition().Y - (player.GetHitbox().Height / 2),
+                0);
 
-            Transform = Matrix.CreateTranslation(new Vector3(-Position, 0));
-        }
+            var offset = Matrix.CreateTranslation(
+                    screenWidth / 2,
+                    screenHeight / 2,
+                    0);
 
-        public float GetCameraPositionX()
-        {
-            return Position.X;
-        }
+            Transform = position * offset;
 
-        public float GetCameraPositionY()
-        {
-            return Position.Y;
-        }
+            /*Position = Vector2.Clamp(
+                Position, Vector2.Zero, new Vector2(
+                    stageWidth - viewport.Width, stageHeight - viewport.Height));
+        }*/
     }
 }

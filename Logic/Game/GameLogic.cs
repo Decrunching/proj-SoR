@@ -18,11 +18,13 @@ namespace SoR.Logic.Game
     {
         private EntityType entityType;
         private SceneryType sceneryType;
+        private Camera camera;
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
-        private Camera camera;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
+        private int screenHeight;
+        private int screenWidth;
         private float relativePositionX;
         private float relativePositionY;
 
@@ -49,21 +51,20 @@ namespace SoR.Logic.Game
         /*
          * Constructor for initial game setup.
          */
-        public GameLogic(GraphicsDeviceManager graphics)
+        public GameLogic(GraphicsDeviceManager graphics,
+            GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
         {
+            // Get the screen width and height from GraphicsSettings
+            screenWidth = graphicsSettings.Width;
+            screenHeight = graphicsSettings.Height;
+
+            camera = new Camera(GraphicsDevice, Window);
+
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
 
             // Create dictionary for storing entities as values with string labels for keys
             scenery = new Dictionary<string, Scenery>();
-        }
-
-        /*
-         * Initialise the game camera.
-         */
-        public void InitialiseCamera(Viewport viewport)
-        {
-            camera = new Camera(viewport);
         }
 
          /*
@@ -206,7 +207,7 @@ namespace SoR.Logic.Game
                 if (scenery.Render)
                 {
                     // Update animations
-                    scenery.UpdateSceneryAnimations(gameTime);
+                    scenery.UpdateAnimations(gameTime);
                 }
             }
 
@@ -222,12 +223,20 @@ namespace SoR.Logic.Game
                     graphics,
                     GraphicsDevice);
 
+                    /*
+                     * https://www.monogameextended.net/docs/features/camera/orthographic-camera/
+                     * "SkeletonMeshRenderer and SkeletonRegionRenderer both expose the Effect instance
+                     * used to render the skeleton as a property. You can set the transformation matrix
+                     * on that effect."
+                     */
+
+                    // Update animations
+                    entity.UpdateAnimations(gameTime);
+
                     if (entities.TryGetValue("player", out Entity playerChar))
                     {
                         if (playerChar is Player player)
                         {
-                            camera.UpdateCamera(player);
-
                             if (entity != player & player.CollidesWith(entity))
                             {
                                 player.ChangeAnimation("collision");
@@ -245,9 +254,6 @@ namespace SoR.Logic.Game
                             throw new System.InvalidOperationException("playerChar is not of type Player");
                         }
                     }
-
-                    // Update animations
-                    entity.UpdateEntityAnimations(gameTime, camera.GetCameraPositionX(), camera.GetCameraPositionY());
                 }
             }
         }
@@ -257,15 +263,15 @@ namespace SoR.Logic.Game
          */
         public void Render(GraphicsDevice GraphicsDevice)
         {
-            var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetSceneryHitbox().MaxY);
-            var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetEntityHitbox().MaxY);
+            var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetHitbox().MaxY);
+            var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
 
             foreach (var scenery in sortSceneryByYAxis)
             {
                 if (scenery.Render)
                 {
                     scenery.RenderScenery(GraphicsDevice);
-                    scenery.DrawSceneryText(spriteBatch, font);
+                    scenery.DrawText(spriteBatch, font);
                 }
             }
 
@@ -274,7 +280,7 @@ namespace SoR.Logic.Game
                 if (entity.Render)
                 {
                     entity.RenderEntity(GraphicsDevice);
-                    entity.DrawEntityText(spriteBatch, font);
+                    entity.DrawText(spriteBatch, font);
                 }
             }
         }

@@ -60,7 +60,7 @@ namespace Logic.Locations
         /*
          * Update the hitbox after a collision.
          */
-        public void UpdateSceneryHitbox(SkeletonBounds updatedHitbox)
+        public void UpdateHitbox(SkeletonBounds updatedHitbox)
         {
             hitbox = updatedHitbox;
         }
@@ -77,6 +77,10 @@ namespace Logic.Locations
                 GraphicsDevice.Viewport.Height,
                 0, 1, 0);
 
+            // Update the animation state and apply animations to skeletons
+            skeleton.X = position.X;
+            skeleton.Y = position.Y;
+
             // Draw skeletons
             skeletonRenderer.Begin();
             skeletonRenderer.Draw(skeleton);
@@ -86,12 +90,8 @@ namespace Logic.Locations
         /*
          * Update the entity position, animation state and skeleton.
          */
-        public virtual void UpdateSceneryAnimations(GameTime gameTime)
+        public virtual void UpdateAnimations(GameTime gameTime)
         {
-            // Update the animation state and apply animations to skeletons
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
-
             hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -104,13 +104,13 @@ namespace Logic.Locations
         /*
          * Draw text to the screen.
          */
-        public void DrawSceneryText(SpriteBatch spriteBatch, SpriteFont font)
+        public void DrawText(SpriteBatch spriteBatch, SpriteFont font)
         {
             spriteBatch.Begin();
             spriteBatch.DrawString(
                 font,
-                "",
-                new Vector2(position.X - 50, position.Y + hitbox.Height / 2),
+                "Position: " + skeleton.X + ", " + skeleton.Y,
+                new Vector2(position.X, position.Y + 200),
                 Color.BlueViolet);
             spriteBatch.End();
         }
@@ -126,7 +126,7 @@ namespace Logic.Locations
         /*
          * Get the hitbox.
          */
-        public SkeletonBounds GetSceneryHitbox()
+        public SkeletonBounds GetHitbox()
         {
             return hitbox;
         }

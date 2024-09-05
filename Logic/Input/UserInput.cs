@@ -14,14 +14,11 @@ namespace SoR.Logic.Input
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
+        private Vector2 newPosition;
+        private Vector2 prevPosition;
+        private Vector2 maxPosition;
         private Dictionary<Keys, InputKeys> inputKeys;
         private int deadZone;
-        private float newPositionX;
-        private float newPositionY;
-        private float maxPositionX;
-        private float maxPositionY;
-        private float prevPositionX;
-        private float prevPositionY;
         private bool switchSkin;
         private bool idle;
         private string lastPressedKey;
@@ -65,17 +62,13 @@ namespace SoR.Logic.Input
             GraphicsDeviceManager graphics,
             AnimationState animState,
             float speed,
-            float positionX,
-            float positionY)
+            Vector2 position)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
             float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            newPositionX = positionX;
-            newPositionY = positionY;
-            prevPositionX = newPositionX;
-            prevPositionY = newPositionY;
+            prevPosition = newPosition = position;
 
             if (inputKeys.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
             {
@@ -97,20 +90,20 @@ namespace SoR.Logic.Input
                 {
                     if (inputKeys[key].NextAnimation == "runleft")
                     {
-                        newPositionX -= newPlayerSpeed;
+                        newPosition.X -= newPlayerSpeed;
                     }
                     else if (inputKeys[key].NextAnimation == "runright")
                     {
-                        newPositionX += newPlayerSpeed;
+                        newPosition.X += newPlayerSpeed;
                     }
                     
                     if (inputKeys[key].NextAnimation == "runup")
                     {
-                        newPositionY -= newPlayerSpeed;
+                        newPosition.Y -= newPlayerSpeed;
                     }
                     else if (inputKeys[key].NextAnimation == "rundown")
                     {
-                        newPositionY += newPlayerSpeed;
+                        newPosition.Y += newPlayerSpeed;
                     }
 
                     idle = false; // Idle will no longer be playing
@@ -134,8 +127,7 @@ namespace SoR.Logic.Input
             lastKeyState = keyState; // Get the previous keyboard state
 
             // Get the previous x,y co-ordinates
-            prevPositionX = newPositionX;
-            prevPositionY = newPositionY;
+            prevPosition = newPosition;
         }
 
         /*
@@ -168,38 +160,34 @@ namespace SoR.Logic.Input
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice,
             SkeletonBounds hitbox,
-            float positionX,
-            float positionY,
-            float maxPositionX,
-            float maxPositionY)
+            Vector2 position,
+            Vector2 maxPosition)
         {
-            newPositionX = positionX;
-            newPositionY = positionY;
-            this.maxPositionX = maxPositionX;
-            this.maxPositionY = maxPositionY;
+            newPosition = position;
+            this.maxPosition = maxPosition;
 
-            if (newPositionX > graphics.PreferredBackBufferWidth - hitbox.Width)
+            if (newPosition.X > graphics.PreferredBackBufferWidth - hitbox.Width)
             {
-                newPositionX = graphics.PreferredBackBufferWidth - hitbox.Width;
+                newPosition.X = graphics.PreferredBackBufferWidth - hitbox.Width;
                 turnAround = 1; // Left
                 return true;
             }
-            else if (newPositionX < hitbox.Width)
+            else if (newPosition.X < hitbox.Width)
             {
-                newPositionX = hitbox.Width;
+                newPosition.X = hitbox.Width;
                 turnAround = 2; // Right
                 return true;
             }
 
-            if (newPositionY > graphics.PreferredBackBufferHeight - hitbox.Height)
+            if (newPosition.Y > graphics.PreferredBackBufferHeight - hitbox.Height)
             {
-                newPositionY = graphics.PreferredBackBufferHeight - hitbox.Height;
+                newPosition.Y = graphics.PreferredBackBufferHeight - hitbox.Height;
                 turnAround = 3; // Up
                 return true;
             }
-            else if (newPositionY < hitbox.Height * 4)
+            else if (newPosition.Y < hitbox.Height * 4)
             {
-                newPositionY = hitbox.Height * 4;
+                newPosition.Y = hitbox.Height * 4;
                 turnAround = 4; // Down
                 return true;
             }
@@ -227,20 +215,20 @@ namespace SoR.Logic.Input
 
                 if (jstate.Axes[1] < -deadZone)
                 {
-                    newPositionY -= newPlayerSpeed;
+                    newPosition.Y -= newPlayerSpeed;
                 }
                 else if (jstate.Axes[1] > deadZone)
                 {
-                    newPositionY += newPlayerSpeed;
+                    newPosition.Y += newPlayerSpeed;
                 }
 
                 if (jstate.Axes[0] < -deadZone)
                 {
-                    newPositionX -= newPlayerSpeed;
+                    newPosition.X -= newPlayerSpeed;
                 }
                 else if (jstate.Axes[0] > deadZone)
                 {
-                    newPositionX += newPlayerSpeed;
+                    newPosition.X += newPlayerSpeed;
                 }
             }
         }
@@ -248,17 +236,9 @@ namespace SoR.Logic.Input
         /*
          * Get the new x-axis position.
          */
-        public float UpdatePositionX()
+        public Vector2 UpdatePosition()
         {
-            return newPositionX;
-        }
-
-        /*
-         * Get the new y-axis position.
-         */
-        public float UpdatePositionY()
-        {
-            return newPositionY;
+            return newPosition;
         }
 
         /*
