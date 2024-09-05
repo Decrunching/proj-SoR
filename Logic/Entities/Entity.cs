@@ -1,6 +1,7 @@
 ﻿using Logic.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.ECS;
 using SoR.Logic.Input;
 using Spine;
 using System;
@@ -55,11 +56,6 @@ namespace SoR.Logic.Entities
          * If the animation is already applied, do nothing.
          */
         public abstract void ChangeAnimation(string trigger);
-
-        /* 
-         * Get the centre of the screen.
-         */
-        public abstract void SetStartPosition(GraphicsDeviceManager graphics, Vector2 centreScreen);
 
         /*
          * Check if moving.
@@ -269,6 +265,14 @@ namespace SoR.Logic.Entities
         }
 
         /*
+         * Set entity position to the centre of the screen +/- any x,y axis adjustment.
+         */
+        public void SetPosition(GraphicsDeviceManager graphics, float xAdjustment, float yAdjustment)
+        {
+            position = new Vector2(xAdjustment, yAdjustment);
+        }
+
+        /*
          * Get the skeleton.
          */
         public Skeleton GetEntitySkeleton()
@@ -310,11 +314,11 @@ namespace SoR.Logic.Entities
 
         /*
          * Set the player position.
-         */
+         *//*
         public void SetPosition(float cameraX, float cameraY)
         {
             skeleton.X = position.X - cameraX;
             skeleton.Y = position.Y - cameraY;
-        }
+        }*/
     }
 }

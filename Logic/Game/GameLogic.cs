@@ -23,6 +23,8 @@ namespace SoR.Logic.Game
         private Camera camera;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
+        private float relativePositionX;
+        private float relativePositionY;
 
         /*
          * Enums for differentiating between entities.
@@ -47,7 +49,7 @@ namespace SoR.Logic.Game
         /*
          * Constructor for initial game setup.
          */
-        public GameLogic()
+        public GameLogic(GraphicsDeviceManager graphics)
         {
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
@@ -57,7 +59,7 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * 
+         * Initialise the game camera.
          */
         public void InitialiseCamera(Viewport viewport)
         {
@@ -65,33 +67,35 @@ namespace SoR.Logic.Game
         }
 
          /*
-          * 
+          * Load content into the game.
           */
         public void LoadGameContent(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, MainGame game)
         {
-            Vector2 centreScreen = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
-
             // Initialise SpriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
 
+            // The centre of the screen
+            relativePositionX = graphics.PreferredBackBufferWidth / 2;
+            relativePositionY = graphics.PreferredBackBufferHeight / 2;
+
             // Create the Player entity
             entityType = EntityType.Player;
-            CreateEntity(graphics, GraphicsDevice, centreScreen);
+            CreateEntity(graphics, GraphicsDevice);
 
             // Create the Slime entity
             entityType = EntityType.Slime;
-            CreateEntity(graphics, GraphicsDevice, centreScreen);
+            CreateEntity(graphics, GraphicsDevice);
 
             // Create the Chara entity
             entityType = EntityType.Chara;
-            CreateEntity(graphics, GraphicsDevice, centreScreen);
+            CreateEntity(graphics, GraphicsDevice);
 
             // Create the Pheasant entity
             entityType = EntityType.Pheasant;
-            CreateEntity(graphics, GraphicsDevice, centreScreen);
+            CreateEntity(graphics, GraphicsDevice);
 
             // Create the Campfire object
             sceneryType = SceneryType.Campfire;
@@ -106,7 +110,7 @@ namespace SoR.Logic.Game
          * Choose entity to create and place it as a value in the entities dictionary with
          * a unique string identifier as a key.
          */
-        public void CreateEntity(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, Vector2 centreScreen)
+        public void CreateEntity(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             switch (entityType)
             {
@@ -114,28 +118,28 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.SetStartPosition(graphics, centreScreen);
+                        player.SetPosition(graphics, relativePositionX + 50, relativePositionY + 50);
                     }
                     break;
                 case EntityType.Pheasant:
                     entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
-                        pheasant.SetStartPosition(graphics, centreScreen);
+                        pheasant.SetPosition(graphics, relativePositionX + 40, relativePositionY - 200);
                     }
                     break;
                 case EntityType.Chara:
                     entities.Add("chara", new Chara(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
-                        chara.SetStartPosition(graphics, centreScreen);
+                        chara.SetPosition(graphics, relativePositionX + 420, relativePositionY + 350);
                     }
                     break;
                 case EntityType.Slime:
                     entities.Add("slime", new Slime(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
-                        slime.SetStartPosition(graphics, centreScreen);
+                        slime.SetPosition(graphics, relativePositionX - 300, relativePositionY + 250);
                     }
                     break;
             }
@@ -149,21 +153,21 @@ namespace SoR.Logic.Game
         {
             switch (sceneryType)
             {
-                case SceneryType.Campfire:
-                    scenery.Add("campfire", new Campfire(graphics, GraphicsDevice) { Render = true });
-                    if (scenery.TryGetValue("campfire", out Scenery campfire))
+                case SceneryType.Grass:
+                    scenery.Add("grass", new Grass(graphics, GraphicsDevice) { Render = true });
+                    if (scenery.TryGetValue("grass", out Scenery grass))
                     {
-                        campfire.SetStartPosition();
+                        grass.SetPosition(graphics, relativePositionX - 96, relativePositionY - 96);
                     }
                     break;
             }
             switch (sceneryType)
             {
-                case SceneryType.Grass:
-                    scenery.Add("grass", new Grass(graphics, GraphicsDevice) { Render = true });
-                    if (scenery.TryGetValue("grass", out Scenery grass))
+                case SceneryType.Campfire:
+                    scenery.Add("campfire", new Campfire(graphics, GraphicsDevice) { Render = true });
+                    if (scenery.TryGetValue("campfire", out Scenery campfire))
                     {
-                        grass.SetStartPosition();
+                        campfire.SetPosition(graphics, relativePositionX, relativePositionY);
                     }
                     break;
             }
@@ -172,10 +176,21 @@ namespace SoR.Logic.Game
         /*
          * Updates the player according to camera position.
          */
-        public void UpdatePlayerPosition(Entity player)
+        /*public void UpdatePlayerPosition(Entity player)
         {
-            player.SetPosition(camera.GetCameraPositionX(), camera.GetCameraPositionY());
-        }
+            if (entities.TryGetValue("player", out Entity playerChar))
+            {
+                if (playerChar is Player thePlayer)
+                {
+                    player.SetPosition(camera.GetCameraPositionX(), camera.GetCameraPositionY());
+                }
+                else
+                {
+                    // Throw exception if playerChar is somehow not of the type Player
+                    throw new System.InvalidOperationException("playerChar is not of type Player");
+                }
+            }
+        }*/
 
         /*
          * Update Spine animations and skeletons.

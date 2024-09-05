@@ -59,10 +59,6 @@ namespace Logic.Entities.Character.Mobs
 
             movement = new UserInput(); // Environmental collision handling
 
-            // Set the current position on the screen
-            position = new Vector2(graphics.PreferredBackBufferWidth / 2,
-                graphics.PreferredBackBufferHeight / 2);
-
             Speed = 80f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
@@ -127,16 +123,6 @@ namespace Logic.Entities.Character.Mobs
                     React(reaction, animType);
                 }
             }
-        }
-
-        /* 
-         * Get the centre of the screen.
-         */
-        public override void SetStartPosition(GraphicsDeviceManager graphics, Vector2 centreScreen)
-        {
-            position = centreScreen;
-
-            position = new Vector2(position.X - 280, position.Y + 210);
         }
     }
 }

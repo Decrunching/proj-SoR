@@ -45,18 +45,6 @@ namespace Logic.Locations.Interactables
             skeletonRenderer.PremultipliedAlpha = true;
 
             hitbox = new SkeletonBounds();
-
-            // Set the current position on the screen
-            position = new Vector2(graphics.PreferredBackBufferWidth / 2,
-                graphics.PreferredBackBufferHeight / 2);
-        }
-
-        /* 
-         * Get the centre of the screen.
-         */
-        public override void SetStartPosition()
-        {
-            position = new Vector2(position.X, position.Y);
         }
 
         /*

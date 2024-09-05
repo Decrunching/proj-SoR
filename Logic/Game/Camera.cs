@@ -3,7 +3,9 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace Logic.Game
-{
+{/*
+  * Positions the camera to follow the player.
+  */
     public class Camera
     {
         public Matrix Transform { get; set; }

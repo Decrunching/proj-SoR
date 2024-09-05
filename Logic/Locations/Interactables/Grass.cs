@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Spine;
+using System.Drawing;
 
 namespace Logic.Locations.Interactables
 {
@@ -47,18 +48,14 @@ namespace Logic.Locations.Interactables
             skeletonRenderer.PremultipliedAlpha = true;
 
             hitbox = new SkeletonBounds();
-
-            // Set the current position on the screen
-            position = new Vector2(graphics.PreferredBackBufferWidth / 2,
-                graphics.PreferredBackBufferHeight / 2);
         }
 
-        /* 
-         * Get the centre of the screen.
+        /*
+         * For setting the player position relative to the map.
          */
-        public override void SetStartPosition()
+        public Vector2 RelativePosition()
         {
-            position = new Vector2(0, 0);
+            return position;
         }
 
         /*

@@ -27,11 +27,6 @@ namespace Logic.Locations
         protected string animTwo;
         public bool Render { get; set; }
 
-        /* 
-         * Get the centre of the screen.
-         */
-        public abstract void SetStartPosition();
-
         /*
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
@@ -118,6 +113,14 @@ namespace Logic.Locations
                 new Vector2(position.X - 50, position.Y + hitbox.Height / 2),
                 Color.BlueViolet);
             spriteBatch.End();
+        }
+
+        /*
+         * Set entity position to the centre of the screen +/- any x,y axis adjustment.
+         */
+        public void SetPosition(GraphicsDeviceManager graphics, float xAdjustment, float yAdjustment)
+        {
+            position = new Vector2(xAdjustment, yAdjustment);
         }
 
         /*

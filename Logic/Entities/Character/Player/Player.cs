@@ -4,7 +4,6 @@ using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
 using System.Collections.Generic;
-using Logic.Game;
 
 namespace Logic.Entities.Character.Player
 {
@@ -62,8 +61,6 @@ namespace Logic.Entities.Character.Player
             skeletonRenderer.PremultipliedAlpha = true;
 
             hitbox = new SkeletonBounds();
-
-            movement = new UserInput(); // Environmental collision handling
 
             Speed = 200f; // Set the entity's travel speed
 
@@ -210,20 +207,6 @@ namespace Logic.Entities.Character.Player
 
             // Check whether to change the skin
             CheckSwitchSkin();
-        }
-
-        /* 
-         * Get the centre of the screen.
-         */
-        public override void SetStartPosition(GraphicsDeviceManager graphics, Vector2 centreScreen)
-        {
-            position = centreScreen;
-
-            // Set the default starting position on the screen
-            position = new Vector2(position.X - 270, position.Y - 100);
-
-            maxPosition = new Vector2(graphics.PreferredBackBufferWidth * 2,
-                graphics.PreferredBackBufferHeight * 2); // Set the maximum range of movement
         }
     }
 }
