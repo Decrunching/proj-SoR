@@ -157,7 +157,6 @@ namespace Logic.Game
             var font = fontSystem.GetFont(24);
             string mode = settings.IsBorderless ? "Borderless" : settings.IsFullscreen ? "Fullscreen" : "Window";
             Vector2 modeCenter = font.MeasureString(mode) / 2f;
-            Vector2 windowCenter = new Vector2(GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height) / 2f;
         }
 
         /*

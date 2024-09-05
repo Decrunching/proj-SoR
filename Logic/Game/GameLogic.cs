@@ -23,8 +23,8 @@ namespace SoR.Logic.Game
         private Dictionary<string, Scenery> scenery;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
-        private int screenHeight;
         private int screenWidth;
+        private int screenHeight;
         private float relativePositionX;
         private float relativePositionY;
 
@@ -51,14 +51,14 @@ namespace SoR.Logic.Game
         /*
          * Constructor for initial game setup.
          */
-        public GameLogic(GraphicsDeviceManager graphics,
-            GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
+        public GameLogic(GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
         {
             // Get the screen width and height from GraphicsSettings
             screenWidth = graphicsSettings.Width;
             screenHeight = graphicsSettings.Height;
 
-            camera = new Camera(GraphicsDevice, Window);
+            // Instantiate the game camera
+            camera = new Camera (GraphicsDevice, Window, screenWidth, screenHeight);
 
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
@@ -67,9 +67,9 @@ namespace SoR.Logic.Game
             scenery = new Dictionary<string, Scenery>();
         }
 
-         /*
-          * Load content into the game.
-          */
+        /*
+         * Load content into the game.
+         */
         public void LoadGameContent(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, MainGame game)
         {
             // Initialise SpriteBatch
@@ -223,13 +223,6 @@ namespace SoR.Logic.Game
                     graphics,
                     GraphicsDevice);
 
-                    /*
-                     * https://www.monogameextended.net/docs/features/camera/orthographic-camera/
-                     * "SkeletonMeshRenderer and SkeletonRegionRenderer both expose the Effect instance
-                     * used to render the skeleton as a property. You can set the transformation matrix
-                     * on that effect."
-                     */
-
                     // Update animations
                     entity.UpdateAnimations(gameTime);
 
@@ -237,6 +230,8 @@ namespace SoR.Logic.Game
                     {
                         if (playerChar is Player player)
                         {
+                            camera.FollowPlayer(player.GetPosition(), screenWidth, screenHeight);
+
                             if (entity != player & player.CollidesWith(entity))
                             {
                                 player.ChangeAnimation("collision");
@@ -270,8 +265,8 @@ namespace SoR.Logic.Game
             {
                 if (scenery.Render)
                 {
-                    scenery.RenderScenery(GraphicsDevice);
-                    scenery.DrawText(spriteBatch, font);
+                    scenery.RenderScenery(GraphicsDevice, camera.GetCamera());
+                    scenery.DrawText(spriteBatch, font, camera.GetCamera());
                 }
             }
 
@@ -279,8 +274,8 @@ namespace SoR.Logic.Game
             {
                 if (entity.Render)
                 {
-                    entity.RenderEntity(GraphicsDevice);
-                    entity.DrawText(spriteBatch, font);
+                    entity.RenderEntity(GraphicsDevice, camera.GetCamera());
+                    entity.DrawText(spriteBatch, font, camera.GetCamera());
                 }
             }
         }

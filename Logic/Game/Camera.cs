@@ -1,54 +1,43 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
 
 namespace Logic.Game
-{/*
-  * Positions the camera to follow the player.
-  */
+{
+    /*
+     * The game camera, which follows the player.
+     */
     public class Camera
     {
         private OrthographicCamera camera;
+        private Matrix viewMatrix;
 
-        public Camera(GraphicsDevice GraphicsDevice, GameWindow Window)
+        public Camera(GraphicsDevice GraphicsDevice, GameWindow Window, int screenWidth, int screenHeight)
         {
-            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, 800, 480);
+            // Instantiate the camera
+            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, screenWidth, screenHeight);
             camera = new OrthographicCamera(viewportAdapter);
+            viewMatrix = camera.GetViewMatrix();
         }
-
-        public Matrix RenderCamera()
-        {
-            Matrix transformMatrix = camera.GetViewMatrix();
-            return transformMatrix;
-        }
-
-
-
-        /*public Matrix Transform { get; private set; }
-        private Viewport viewport;
 
         /*
-         * Centre the camera over the player, clamp it to the stage bounds, and create the transformation
-         * matrix for moving it as the player moves.
+         * Follows the player.
+         * 
+         * TO DO:
+         * Fix issue where player moves off the bounds of the stage edge and springs back again.
          */
-        /*public void Follow(Player player, int screenWidth, int screenHeight)
+        public void FollowPlayer(Vector2 position, int screenWidth, int screenHeight)
         {
-            var position = Matrix.CreateTranslation(
-                -player.GetPosition().X - (player.GetHitbox().Width / 2),
-                -player.GetPosition().Y - (player.GetHitbox().Height / 2),
-                0);
+            camera.Move(camera.WorldToScreen(position.X - (screenWidth / 2), position.Y - (screenHeight / 2)));
+        }
 
-            var offset = Matrix.CreateTranslation(
-                    screenWidth / 2,
-                    screenHeight / 2,
-                    0);
-
-            Transform = position * offset;
-
-            /*Position = Vector2.Clamp(
-                Position, Vector2.Zero, new Vector2(
-                    stageWidth - viewport.Width, stageHeight - viewport.Height));
-        }*/
+        /*
+         * Get the camera.
+         */
+        public OrthographicCamera GetCamera()
+        {
+            return camera;
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
@@ -154,6 +155,20 @@ namespace Logic.Entities.Character.Player
         }
 
         /*
+         * Move to new position.
+         */
+        public override void Movement(GameTime gameTime, GraphicsDeviceManager graphics)
+        {
+            prevPosition = position;
+
+            movement.CheckMovement(gameTime, graphics, animState, Speed, position);
+            ChangeAnimation(movement.AnimateMovement());
+
+            // Set the new position according to player input
+            position = movement.UpdatePosition();
+        }
+
+        /*
          * Update entity position.
          */
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
@@ -170,20 +185,6 @@ namespace Logic.Entities.Character.Player
                 maxPosition);
 
             // Set the new position
-            position = movement.UpdatePosition();
-        }
-
-        /*
-         * Move to new position.
-         */
-        public override void Movement(GameTime gameTime, GraphicsDeviceManager graphics)
-        {
-            prevPosition = position;
-
-            movement.CheckMovement(gameTime, graphics, animState, Speed, position);
-            ChangeAnimation(movement.AnimateMovement());
-
-            // Set the new position according to player input
             position = movement.UpdatePosition();
         }
 

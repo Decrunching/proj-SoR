@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using Spine;
 
 namespace Logic.Locations
@@ -68,7 +69,7 @@ namespace Logic.Locations
         /*
          * Render the current skeleton to the screen.
          */
-        public void RenderScenery(GraphicsDevice GraphicsDevice)
+        public virtual void RenderScenery(GraphicsDevice GraphicsDevice, OrthographicCamera camera)
         {
             // Create the skeleton renderer projection matrix
             ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
@@ -76,13 +77,15 @@ namespace Logic.Locations
                 GraphicsDevice.Viewport.Width,
                 GraphicsDevice.Viewport.Height,
                 0, 1, 0);
+            ((BasicEffect)skeletonRenderer.Effect).View = camera.GetViewMatrix();
+
+            // Draw skeletons
+            skeletonRenderer.Begin();
 
             // Update the animation state and apply animations to skeletons
             skeleton.X = position.X;
             skeleton.Y = position.Y;
 
-            // Draw skeletons
-            skeletonRenderer.Begin();
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
         }
@@ -104,13 +107,13 @@ namespace Logic.Locations
         /*
          * Draw text to the screen.
          */
-        public void DrawText(SpriteBatch spriteBatch, SpriteFont font)
+        public void DrawText(SpriteBatch spriteBatch, SpriteFont font, OrthographicCamera camera)
         {
-            spriteBatch.Begin();
+            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
             spriteBatch.DrawString(
                 font,
-                "Position: " + skeleton.X + ", " + skeleton.Y,
-                new Vector2(position.X, position.Y + 200),
+                "",
+                new Vector2(position.X - 80, position.Y + 50),
                 Color.BlueViolet);
             spriteBatch.End();
         }

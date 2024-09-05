@@ -1,6 +1,7 @@
 ﻿using Logic.Game;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using MonoGame.Extended.ECS;
 using SoR.Logic.Input;
 using Spine;
@@ -112,26 +113,6 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Update entity position.
-         */
-        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
-        {
-            // Handle environmental collision
-            if (movement.EnvironCollision(
-                graphics,
-                GraphicsDevice,
-                GetHitbox(),
-                position,
-                maxPosition))
-            {
-                NewDirection(movement.TurnAround());
-            }
-
-            // Set the new position
-            position = movement.UpdatePosition();
-        }
-
-        /*
          * Choose a new direction to face.
          */
         public void NewDirection(int direction)
@@ -153,6 +134,25 @@ namespace SoR.Logic.Entities
                     movementDirection = new Vector2(0, 1); // Down
                     break;
             }
+        }
+
+        /*
+         * Check for collision with other entities.
+         */
+        public bool CollidesWith(Entity entity)
+        {
+            entity.UpdateEntityHitbox(new SkeletonBounds());
+            entity.GetHitbox().Update(entity.GetSkeleton(), true);
+
+            hitbox = new SkeletonBounds();
+            hitbox.Update(skeleton, true);
+
+            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /*
@@ -183,22 +183,23 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Check for collision with other entities.
+         * Update entity position.
          */
-        public bool CollidesWith(Entity entity)
+        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
-            entity.UpdateEntityHitbox(new SkeletonBounds());
-            entity.GetHitbox().Update(entity.GetSkeleton(), true);
-
-            hitbox = new SkeletonBounds();
-            hitbox.Update(skeleton, true);
-
-            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
+            // Handle environmental collision
+            if (movement.EnvironCollision(
+                graphics,
+                GraphicsDevice,
+                GetHitbox(),
+                position,
+                maxPosition))
             {
-                return true;
+                NewDirection(movement.TurnAround());
             }
 
-            return false;
+            // Set the new position
+            position = movement.UpdatePosition();
         }
 
         /*
@@ -207,29 +208,6 @@ namespace SoR.Logic.Entities
         public void UpdateEntityHitbox(SkeletonBounds updatedHitbox)
         {
             hitbox = updatedHitbox;
-        }
-
-        /*
-         * Render the current skeleton to the screen.
-         */
-        public virtual void RenderEntity(GraphicsDevice GraphicsDevice)
-        {
-            // Create the skeleton renderer projection matrix
-            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
-            0,
-                GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height,
-                0, 1, 0);
-
-            // Draw skeletons
-            skeletonRenderer.Begin();
-
-            // Update the animation state and apply animations to skeletons
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
-
-            skeletonRenderer.Draw(skeleton);
-            skeletonRenderer.End();
         }
 
         /*
@@ -247,15 +225,39 @@ namespace SoR.Logic.Entities
         }
 
         /*
+         * Render the current skeleton to the screen.
+         */
+        public virtual void RenderEntity(GraphicsDevice GraphicsDevice, OrthographicCamera camera)
+        {
+            // Create the skeleton renderer projection matrix
+            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
+            0,
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height,
+                0, 1, 0);
+            ((BasicEffect)skeletonRenderer.Effect).View = camera.GetViewMatrix();
+
+            // Draw skeletons
+            skeletonRenderer.Begin();
+
+            // Update the animation state and apply animations to skeletons
+            skeleton.X = position.X;
+            skeleton.Y = position.Y;
+
+            skeletonRenderer.Draw(skeleton);
+            skeletonRenderer.End();
+        }
+
+        /*
          * Draw text to the screen.
          */
-        public void DrawText(SpriteBatch spriteBatch, SpriteFont font)
+        public void DrawText(SpriteBatch spriteBatch, SpriteFont font, OrthographicCamera camera)
         {
-            spriteBatch.Begin();
+            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
             spriteBatch.DrawString(
                 font,
-                "position: " + position.X + ", " + position.Y,
-                new Vector2(skeleton.X - 50, skeleton.Y + hitbox.Height / 2),
+                "",
+                new Vector2(position.X - 80, position.Y + 50),
                 Color.BlueViolet);
             spriteBatch.End();
         }

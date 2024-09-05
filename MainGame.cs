@@ -85,7 +85,7 @@ namespace SoR
             settings = new Settings();
             graphicsSettings = new GraphicsSettings(game, graphics, Window, settings);
             graphicsSettings.InitialiseSettings(graphics, settings, Window);
-            gameLogic = new GameLogic(graphics, GraphicsDevice, graphicsSettings, Window);
+            gameLogic = new GameLogic(GraphicsDevice, graphicsSettings, Window);
 
             base.Initialize();
         }
