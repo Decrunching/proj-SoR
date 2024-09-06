@@ -18,20 +18,27 @@ namespace Logic.Game.Settings
      */
     public class GraphicsSettings : Settings
     {
-        private bool fixedTimeStep;
         private FontSystem fontSystem;
+        private bool fixedTimeStep;
+        private bool resizingWindow;
 
         public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
         {
             graphics.PreferredBackBufferWidth = 1280;
             graphics.PreferredBackBufferHeight = 720;
 
+            resizingWindow = false;
+
             game.IsMouseVisible = false;
 
             settings = EnsureJson("Settings.json", SettingsContext.Default.Settings);
 
             RestoreWindow(graphics, Window, settings);
+
+
+            //graphics.IsFullScreen = true;
         }
+        //ICondition toggleFullscreen = new KeyboardCondition(Keys.F5);
         ICondition toggleBorderless = new KeyboardCondition(Keys.F4);
         ICondition resetSettings = new KeyboardCondition(Keys.F1);
 
@@ -87,13 +94,13 @@ namespace Logic.Game.Settings
          */
         public void InitialiseSettings(GraphicsDeviceManager graphics, Settings settings, GameWindow Window)
         {
-            Window.AllowUserResizing = true;
+            Window.AllowUserResizing = false;
             Window.AllowAltF4 = true;
 
             fixedTimeStep = settings.IsFixedTimeStep;
             graphics.SynchronizeWithVerticalRetrace = settings.IsVSync;
 
-            settings.IsFullscreen = settings.IsFullscreen || settings.IsBorderless;
+            settings.IsFullscreen = settings.IsBorderless;
 
             RestoreWindow(graphics, Window, settings);
             if (settings.IsFullscreen)
@@ -136,6 +143,10 @@ namespace Logic.Game.Settings
             {
                 ToggleBorderlessMode(graphics, Window, settings);
             }
+            /*if (toggleFullscreen.Pressed())
+            {
+                ToggleFullscreenMode(graphics, Window, settings);
+            }*/
 
             if (resetSettings.Pressed())
             {
@@ -183,6 +194,7 @@ namespace Logic.Game.Settings
          */
         public void ToggleBorderlessMode(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
         {
+            resizingWindow = true;
             bool fullscreenLast = settings.IsFullscreen;
 
             settings.IsBorderless = !settings.IsBorderless;
@@ -200,16 +212,16 @@ namespace Logic.Game.Settings
             {
                 if (fullscreenLast)
                 {
-                    ApplyHardwareMode(graphics, settings);
+                    ApplyHardwareMode(graphics, settings); // Switch between borderless and fullscreen
                 }
                 else
                 {
-                    SetFullscreen(graphics, Window, settings);
+                    SetFullscreen(graphics, Window, settings); // Set fullscreen/borderless
                 }
             }
             else
             {
-                RemoveFullscreen(graphics, Window, settings);
+                RemoveFullscreen(graphics, Window, settings); // Set windowed
             }
         }
 
@@ -266,6 +278,22 @@ namespace Logic.Game.Settings
             graphics.PreferredBackBufferWidth = settings.Width;
             graphics.PreferredBackBufferHeight = settings.Height;
             graphics.ApplyChanges();
+        }
+
+        /*
+         * Return true if borderless mode has just been toggled.
+         */
+        public bool IsWindowResized()
+        {
+            return resizingWindow;
+        }
+
+        /*
+         * Set whether the window has just been resized to false once the viewport adapter is readjusted.
+         */
+        public void WindowResized()
+        {
+            resizingWindow = false;
         }
     }
 }
