@@ -8,6 +8,11 @@ namespace Logic.Game
 {
     /*
      * The game camera, which follows the player.
+     * 
+     * TO DO:
+     * Fix bug where camera doesn't follow the player in borderless or fullscreen unless game starts in borderless
+     * or fullscreen, but still stops working in these modes after switching to windowed and back despite continuing
+     * to work fine in windowed.
      */
     public class Camera
     {
