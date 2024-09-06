@@ -21,8 +21,8 @@
 /processorParam:TextureFormat=Compressed
 /build:Fonts/File.spritefont
 
-#begin Fonts/source-code-pro-medium.ttf
-/copy:Fonts/source-code-pro-medium.ttf
+#begin Fonts/LiberationMono-Regular.ttf
+/copy:Fonts/LiberationMono-Regular.ttf
 
 #begin SoR Resources/Entities/Chara/savedit.atlas
 /copy:SoR Resources/Entities/Chara/savedit.atlas
@@ -114,10 +114,10 @@
 /processorParam:TextureFormat=Color
 /build:SoR Resources/Locations/Interactables/Campfire/templecampfire.png
 
-#begin SoR Resources/Locations/Scenery/Grass/grasstiles.atlas
-/copy:SoR Resources/Locations/Scenery/Grass/grasstiles.atlas
+#begin SoR Resources/Locations/TiledScenery/Grass/grasstiles.atlas
+/copy:SoR Resources/Locations/TiledScenery/Grass/grasstiles.atlas
 
-#begin SoR Resources/Locations/Scenery/Grass/grasstiles.png
+#begin SoR Resources/Locations/TiledScenery/Grass/grasstiles.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -127,8 +127,8 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SoR Resources/Locations/Scenery/Grass/grasstiles.png
+/build:SoR Resources/Locations/TiledScenery/Grass/grasstiles.png
 
-#begin SoR Resources/Locations/Scenery/Grass/skeleton.json
-/copy:SoR Resources/Locations/Scenery/Grass/skeleton.json
+#begin SoR Resources/Locations/TiledScenery/Grass/skeleton.json
+/copy:SoR Resources/Locations/TiledScenery/Grass/skeleton.json
 

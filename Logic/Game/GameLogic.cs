@@ -1,13 +1,15 @@
 ﻿using Logic.Entities.Character.Player;
 using Logic.Game;
-using Logic.Locations;
-using Logic.Locations.Interactables;
 using Logic.Entities.Character.Mobs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SoR.Logic.Entities;
 using System.Collections.Generic;
 using System.Linq;
+using Logic.Game.GameMap.TiledScenery;
+using Logic.Game.GameMap.Interactables;
+using Logic.Game.GameMap;
+using Logic.Game.Settings;
 
 namespace SoR.Logic.Game
 {
@@ -68,7 +70,7 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Load content into the game.
+         * Load initial content into the game.
          */
         public void LoadGameContent(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, MainGame game)
         {
@@ -230,7 +232,7 @@ namespace SoR.Logic.Game
                     {
                         if (playerChar is Player player)
                         {
-                            camera.FollowPlayer(player.GetPosition(), screenWidth, screenHeight);
+                            camera.FollowPlayer(graphics, graphicsSettings, player.GetPosition(), screenWidth, screenHeight);
 
                             if (entity != player & player.CollidesWith(entity))
                             {

@@ -4,7 +4,7 @@ namespace SoR
 {
     public static class Globals
     {
-        public static ContentManager Content { get; set; }
+        //public static ContentManager Content { get; set; }
 
     }
 }

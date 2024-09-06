@@ -10,7 +10,7 @@
     <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Entities/Player/Char sprites.png</File>
     <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Entities/Slime/Slime.png</File>
     <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/Interactables/Campfire/templecampfire.png</File>
-    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/Scenery/Grass/grasstiles.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Grass/grasstiles.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

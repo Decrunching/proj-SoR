@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Logic.Game
+namespace Logic.Game.Settings
 {
     public class Settings
     {

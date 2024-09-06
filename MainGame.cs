@@ -1,4 +1,4 @@
-﻿using Logic.Game;
+﻿using Logic.Game.Settings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;

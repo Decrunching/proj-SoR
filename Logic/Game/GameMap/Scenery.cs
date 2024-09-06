@@ -2,9 +2,13 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using Spine;
+using System.IO;
 
-namespace Logic.Locations
+namespace Logic.Game.GameMap
 {
+    /*
+     * Spine Runtimes License
+     */
     /**************************************************************************************************************************
      * Copyright (c) 2013-2024, Esoteric Software LLC
      * 
@@ -153,5 +157,7 @@ namespace Logic.Locations
         {
             return hitbox;
         }
+
+        public static string GetPath(string name) => Path.Combine("../../../", name);
     }
 }

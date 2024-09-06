@@ -5,14 +5,14 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
 using SoR;
 
-namespace Logic.Locations
+namespace Logic.Game.GameMap
 {
     internal class Map
     {
-        protected Point TileSize {  get; private set; }
+        protected Point TileSize { get; private set; }
         protected Point MapSize { get; private set; }
         private readonly Point mapTileSize = new(4, 3);
-        private readonly Sprite[, ] tiles;
+        private readonly Sprite[,] tiles;
 
         public Map()
         {

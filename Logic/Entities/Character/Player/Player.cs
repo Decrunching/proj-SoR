@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
@@ -28,13 +27,14 @@ namespace Logic.Entities.Character.Player
             };
 
             // Load texture atlas and attachment loader
-            atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\SoR Resources\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas(GetPath("Content\\SoR Resources\\Entities\\Player\\Char sprites.atlas"), new XnaTextureLoader(GraphicsDevice));
+            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\SoR Resources\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData("F:\\MonoGame\\SoR\\SoR\\Content\\SoR Resources\\Entities\\Player\\skeleton.json");
+            skeletonData = json.ReadSkeletonData(GetPath("Content\\SoR Resources\\Entities\\Player\\skeleton.json"));
             //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
@@ -209,6 +209,11 @@ namespace Logic.Entities.Character.Player
 
             // Check whether to change the skin
             CheckSwitchSkin();
+        }
+
+        public Vector2 GetOffsetPosition(int screenWidth, int screenHeight)
+        {
+            return new Vector2(position.X - (screenWidth / 2), position.Y - (screenHeight / 2));
         }
     }
 }

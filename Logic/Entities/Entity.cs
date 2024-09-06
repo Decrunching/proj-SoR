@@ -1,4 +1,4 @@
-﻿using Logic.Game;
+﻿using Logic.Game.Settings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -6,9 +6,14 @@ using SoR.Logic.Input;
 using Spine;
 using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace SoR.Logic.Entities
 {
+    /*
+     * Spine Runtimes License
+     */
     /**************************************************************************************************************************
      * Copyright (c) 2013-2024, Esoteric Software LLC
      * 
@@ -312,5 +317,7 @@ namespace SoR.Logic.Entities
         {
             return position;
         }
+
+        public static string GetPath(string name) => Path.Combine("../../../", name);
     }
 }

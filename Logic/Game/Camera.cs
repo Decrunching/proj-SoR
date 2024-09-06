@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Game.Settings;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
@@ -27,9 +28,19 @@ namespace Logic.Game
          * TO DO:
          * Fix issue where player moves off the bounds of the stage edge and springs back again.
          */
-        public void FollowPlayer(Vector2 position, int screenWidth, int screenHeight)
+        public void FollowPlayer(GraphicsDeviceManager graphics, GraphicsSettings graphicsSettings, Vector2 position, int screenWidth, int screenHeight)
         {
-            camera.Move(camera.WorldToScreen(position.X - (screenWidth / 2), position.Y - (screenHeight / 2)));
+            if (graphicsSettings.IsBorderless)
+            {
+                camera.Move(camera.WorldToScreen(position.X - (
+                    GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2),
+                    position.Y - (
+                    GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2)));
+            }
+            else
+            {
+                camera.Move(camera.WorldToScreen(position.X - (screenWidth / 2), position.Y - (screenHeight / 2)));
+            }
         }
 
         /*

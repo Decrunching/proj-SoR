@@ -10,7 +10,7 @@ using Apos.Input;
 using SoR;
 using FontStashSharp;
 
-namespace Logic.Game
+namespace Logic.Game.Settings
 {
     /*
      * INCOMPLETE: Manage graphics settings. Currently switches between borderless and windowed mode with F4, and
@@ -109,7 +109,7 @@ namespace Logic.Game
         {
             InputHelper.Setup(game); // For Apos library
             fontSystem = new FontSystem();
-            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/source-code-pro-medium.ttf"));
+            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/LiberationMono-Regular.ttf"));
         }
 
         /*
