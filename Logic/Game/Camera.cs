@@ -61,12 +61,6 @@ namespace Logic.Game
                 viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, screenWidth, screenHeight);
                 camera = new OrthographicCamera(viewportAdapter);
             }
-            else if (!keyState.IsKeyDown(Keys.F4) & lastKeyState.IsKeyDown(Keys.F4))
-            {
-                // Get the new screen width and height
-                screenWidth = graphics.PreferredBackBufferWidth;
-                screenHeight = graphics.PreferredBackBufferHeight;
-            }
 
             camera.Move(camera.WorldToScreen(position.X - (screenWidth / 2), position.Y - (screenHeight / 2)));
 
