@@ -1,8 +1,10 @@
 ﻿using Logic.Game.Settings;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
+using SoR;
 
 namespace Logic.Game
 {
@@ -17,14 +19,23 @@ namespace Logic.Game
     public class Camera
     {
         private OrthographicCamera camera;
+        private BoxingViewportAdapter viewportAdapter;
         private Matrix viewMatrix;
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
+        private bool resolutionChange;
+        private int screenWidth;
+        private int screenHeight;
 
         public Camera(GraphicsDevice GraphicsDevice, GameWindow Window, int screenWidth, int screenHeight)
         {
             // Instantiate the camera
-            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, screenWidth, screenHeight);
+            viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, screenWidth, screenHeight);
             camera = new OrthographicCamera(viewportAdapter);
             viewMatrix = camera.GetViewMatrix();
+            resolutionChange = false;
+            this.screenWidth = screenWidth;
+            this.screenHeight = screenHeight;
         }
 
         /*
@@ -33,19 +44,35 @@ namespace Logic.Game
          * TO DO:
          * Fix issue where player moves off the bounds of the stage edge and springs back again.
          */
-        public void FollowPlayer(GraphicsDeviceManager graphics, GraphicsSettings graphicsSettings, Vector2 position, int screenWidth, int screenHeight)
+        public void FollowPlayer(
+            GraphicsDevice GraphicsDevice, 
+            GameWindow Window, 
+            GraphicsDeviceManager graphics, 
+            Vector2 position)
         {
-            if (graphicsSettings.IsBorderless)
+            keyState = Keyboard.GetState(); // Get the current keyboard state
+
+            // Check whether F4 was pressed and borderless toggled (TO DO: change to check this directly via ToggleBorderless later)
+            if (keyState.IsKeyDown(Keys.F4) & !lastKeyState.IsKeyDown(Keys.F4))
             {
-                camera.Move(camera.WorldToScreen(position.X - (
-                    GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2),
-                    position.Y - (
-                    GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2)));
+                // Get the new screen width and height
+                screenWidth = graphics.PreferredBackBufferWidth;
+                screenHeight = graphics.PreferredBackBufferHeight;
+
+                // Reset the viewport adapter and camera
+                viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, screenWidth, screenHeight);
+                camera = new OrthographicCamera(viewportAdapter);
             }
-            else
+            else if (!keyState.IsKeyDown(Keys.F4) & lastKeyState.IsKeyDown(Keys.F4))
             {
-                camera.Move(camera.WorldToScreen(position.X - (screenWidth / 2), position.Y - (screenHeight / 2)));
+                // Get the new screen width and height
+                screenWidth = graphics.PreferredBackBufferWidth;
+                screenHeight = graphics.PreferredBackBufferHeight;
             }
+
+            camera.Move(camera.WorldToScreen(position.X - (screenWidth / 2), position.Y - (screenHeight / 2)));
+
+            lastKeyState = keyState;
         }
 
         /*

@@ -25,8 +25,6 @@ namespace SoR.Logic.Game
         private Dictionary<string, Scenery> scenery;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
-        private int screenWidth;
-        private int screenHeight;
         private float relativePositionX;
         private float relativePositionY;
 
@@ -55,12 +53,8 @@ namespace SoR.Logic.Game
          */
         public GameLogic(GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
         {
-            // Get the screen width and height from GraphicsSettings
-            screenWidth = graphicsSettings.Width;
-            screenHeight = graphicsSettings.Height;
-
             // Instantiate the game camera
-            camera = new Camera (GraphicsDevice, Window, screenWidth, screenHeight);
+            camera = new Camera (GraphicsDevice, Window, graphicsSettings.Width, graphicsSettings.Height);
 
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
@@ -199,10 +193,10 @@ namespace SoR.Logic.Game
          * Update Spine animations and skeletons.
          */
         public void UpdateEntities(
+            GameWindow Window,
             GameTime gameTime,
             GraphicsDeviceManager graphics,
-            GraphicsDevice GraphicsDevice,
-            GraphicsSettings graphicsSettings)
+            GraphicsDevice GraphicsDevice)
         {
             foreach (var scenery in scenery.Values)
             {
@@ -232,7 +226,7 @@ namespace SoR.Logic.Game
                     {
                         if (playerChar is Player player)
                         {
-                            camera.FollowPlayer(graphics, graphicsSettings, player.GetPosition(), screenWidth, screenHeight);
+                            camera.FollowPlayer(GraphicsDevice, Window, graphics, player.GetPosition());
 
                             if (entity != player & player.CollidesWith(entity))
                             {
