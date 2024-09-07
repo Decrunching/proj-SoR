@@ -55,8 +55,12 @@ namespace SoR.Logic.Game
          */
         public GameLogic(GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
         {
+            // Get the screen width and height from GraphicsSettings
+            screenWidth = graphicsSettings.Width;
+            screenHeight = graphicsSettings.Height;
+
             // Instantiate the game camera
-            camera = new Camera (Window, GraphicsDevice, graphicsSettings);
+            camera = new Camera (GraphicsDevice, Window, screenWidth, screenHeight);
 
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
@@ -195,7 +199,6 @@ namespace SoR.Logic.Game
          * Update Spine animations and skeletons.
          */
         public void UpdateEntities(
-            GameWindow Window,
             GameTime gameTime,
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice,
@@ -229,7 +232,7 @@ namespace SoR.Logic.Game
                     {
                         if (playerChar is Player player)
                         {
-                            camera.FollowPlayer(Window, GraphicsDevice, graphicsSettings, player.GetPosition());
+                            camera.FollowPlayer(graphics, graphicsSettings, player.GetPosition(), screenWidth, screenHeight);
 
                             if (entity != player & player.CollidesWith(entity))
                             {

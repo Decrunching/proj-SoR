@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended.ViewportAdapters;
 using SoR.Logic.Game;
 
 namespace SoR
@@ -99,7 +98,7 @@ namespace SoR
             graphicsSettings.UpdateSettings(graphics, Window, settings);
 
             // Update player input and animations
-            gameLogic.UpdateEntities(Window, gameTime, graphics, GraphicsDevice, graphicsSettings);
+            gameLogic.UpdateEntities(gameTime, graphics, GraphicsDevice, graphicsSettings);
 
             base.Update(gameTime);
         }

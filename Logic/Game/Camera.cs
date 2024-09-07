@@ -17,66 +17,35 @@ namespace Logic.Game
     public class Camera
     {
         private OrthographicCamera camera;
-        private BoxingViewportAdapter viewportAdapter;
         private Matrix viewMatrix;
-        private int screenWidth;
-        private int screenHeight;
 
-        public Camera(GameWindow Window, GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings)
+        public Camera(GraphicsDevice GraphicsDevice, GameWindow Window, int screenWidth, int screenHeight)
         {
-            viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, graphicsSettings.Width, graphicsSettings.Height);
-
+            // Instantiate the camera
+            var viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, screenWidth, screenHeight);
             camera = new OrthographicCamera(viewportAdapter);
-
             viewMatrix = camera.GetViewMatrix();
-
-            screenWidth = graphicsSettings.Width;
-            screenHeight = graphicsSettings.Height;
         }
 
         /*
          * Follows the player.
+         * 
+         * TO DO:
+         * Fix issue where player moves off the bounds of the stage edge and springs back again.
          */
-        public void FollowPlayer(GameWindow Window,
-            GraphicsDevice GraphicsDevice,
-            GraphicsSettings graphicsSettings,
-            Vector2 position)
+        public void FollowPlayer(GraphicsDeviceManager graphics, GraphicsSettings graphicsSettings, Vector2 position, int screenWidth, int screenHeight)
         {
-            if (graphicsSettings.IsWindowResized())
+            if (graphicsSettings.IsBorderless)
             {
-                if (graphicsSettings.IsBorderless)
-                {
-                    viewportAdapter = new BoxingViewportAdapter(
-                        Window,
-                        GraphicsDevice,
-                        GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width,
-                        GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height);
-
-                    camera = new OrthographicCamera(viewportAdapter);
-
-                    viewMatrix = camera.GetViewMatrix();
-
-                    screenWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
-                    screenHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
-
-                    graphicsSettings.WindowResized();
-                }
-                else
-                {
-                    viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, graphicsSettings.Width, graphicsSettings.Height);
-
-                    camera = new OrthographicCamera(viewportAdapter);
-
-                    viewMatrix = camera.GetViewMatrix();
-
-                    screenWidth = graphicsSettings.Width;
-                    screenHeight = graphicsSettings.Height;
-
-                    graphicsSettings.WindowResized();
-                }
+                camera.Move(camera.WorldToScreen(position.X - (
+                    GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width / 2),
+                    position.Y - (
+                    GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height / 2)));
             }
-
-            camera.Move(camera.WorldToScreen(position.X - (screenWidth / 2), position.Y - (screenHeight / 2)));
+            else
+            {
+                camera.Move(camera.WorldToScreen(position.X - (screenWidth / 2), position.Y - (screenHeight / 2)));
+            }
         }
 
         /*

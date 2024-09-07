@@ -253,7 +253,7 @@ namespace SoR.Logic.Entities
          */
         public virtual void RenderEntity(GraphicsDevice GraphicsDevice, OrthographicCamera camera)
         {
-            // Create the skeleton renderer projection matrix and pass the camera's view matrix to it
+            // Create the skeleton renderer projection matrix
             ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
             0,
                 GraphicsDevice.Viewport.Width,
