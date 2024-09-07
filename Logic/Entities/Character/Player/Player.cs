@@ -161,7 +161,7 @@ namespace Logic.Entities.Character.Player
         {
             prevPosition = position;
 
-            movement.CheckMovement(gameTime, graphics, animState, Speed, position);
+            movement.CheckMovement(gameTime, Speed, position);
             ChangeAnimation(movement.AnimateMovement());
 
             // Set the new position according to player input
@@ -179,7 +179,6 @@ namespace Logic.Entities.Character.Player
             // Handle environmental collision
             movement.EnvironCollision(
                 graphics,
-                GraphicsDevice,
                 GetHitbox(),
                 position,
                 maxPosition);

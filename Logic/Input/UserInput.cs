@@ -59,8 +59,6 @@ namespace SoR.Logic.Input
          */
         public void CheckMovement(
             GameTime gameTime,
-            GraphicsDeviceManager graphics,
-            AnimationState animState,
             float speed,
             Vector2 position)
         {
@@ -122,7 +120,7 @@ namespace SoR.Logic.Input
                 }
             }
 
-            ChangeSkin(graphics); // Check all non-directional user input
+            ChangeSkin(); // Check all non-directional user input
 
             lastKeyState = keyState; // Get the previous keyboard state
 
@@ -141,7 +139,7 @@ namespace SoR.Logic.Input
         /*
          * All non-directional user input.
          */
-        public void ChangeSkin(GraphicsDeviceManager graphics)
+        public void ChangeSkin()
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
@@ -158,7 +156,6 @@ namespace SoR.Logic.Input
          */
         public bool EnvironCollision(
             GraphicsDeviceManager graphics,
-            GraphicsDevice GraphicsDevice,
             SkeletonBounds hitbox,
             Vector2 position,
             Vector2 maxPosition)

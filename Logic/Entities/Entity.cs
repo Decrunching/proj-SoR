@@ -214,7 +214,6 @@ namespace SoR.Logic.Entities
             // Handle environmental collision
             if (movement.EnvironCollision(
                 graphics,
-                GraphicsDevice,
                 GetHitbox(),
                 position,
                 maxPosition))

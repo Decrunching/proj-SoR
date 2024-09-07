@@ -152,7 +152,7 @@ namespace Logic.Game.Settings
         /*
          * Render settings choices.
          */
-        public void DrawSettings(GraphicsDevice GraphicsDevice, Settings settings)
+        public void DrawSettings(Settings settings)
         {
             var font = fontSystem.GetFont(24);
             string mode = settings.IsBorderless ? "Borderless" : settings.IsFullscreen ? "Fullscreen" : "Window";

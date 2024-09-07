@@ -171,25 +171,6 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Updates the player according to camera position.
-         */
-        /*public void UpdatePlayerPosition(Entity player)
-        {
-            if (entities.TryGetValue("player", out Entity playerChar))
-            {
-                if (playerChar is Player thePlayer)
-                {
-                    player.SetPosition(camera.GetCameraPositionX(), camera.GetCameraPositionY());
-                }
-                else
-                {
-                    // Throw exception if playerChar is somehow not of the type Player
-                    throw new System.InvalidOperationException("playerChar is not of type Player");
-                }
-            }
-        }*/
-
-        /*
          * Update Spine animations and skeletons.
          */
         public void UpdateEntities(

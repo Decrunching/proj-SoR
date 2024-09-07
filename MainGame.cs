@@ -110,7 +110,7 @@ namespace SoR
         {
             GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
 
-            graphicsSettings.DrawSettings(GraphicsDevice, settings);
+            graphicsSettings.DrawSettings(settings);
             
             gameLogic.Render(GraphicsDevice);
 
