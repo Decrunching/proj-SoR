@@ -61,10 +61,10 @@ namespace Logic.Game.GameMap.Interactables
         /*
          * Define what happens on collision with an entity.
          */
-        public override void Collision(Entity entity)
+        public override void Collision(Entity entity, GameTime gameTime)
         {
-            entity.TakeDamage(5);
-            entity.ThrownBack(this);
+            entity.TakeDamage(1);
+            entity.ThrownBackFromScenery(this, gameTime);
         }
     }
 }

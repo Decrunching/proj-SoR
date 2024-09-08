@@ -4,6 +4,7 @@ using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
 using System;
+using System.Collections.Generic;
 
 namespace Logic.Entities.Character.Mobs
 {
@@ -62,6 +63,8 @@ namespace Logic.Entities.Character.Mobs
             Speed = 80f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
+
+            countDistance = new List<int>();
         }
 
         /*

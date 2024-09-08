@@ -68,6 +68,8 @@ namespace Logic.Entities.Character.Player
             Speed = 200f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
+
+            countDistance = new List<int>();
         }
 
         /*
@@ -158,8 +160,14 @@ namespace Logic.Entities.Character.Player
         /*
          * Update entity position.
          */
-        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
+            if (countDistance.Count > 0)
+            {
+                GetMoved(gameTime);
+                countDistance.Remove(countDistance.Count - 1);
+            }
+
             // Process joypad inputs
             movement.ProcessJoypadInputs(gameTime, Speed);
 

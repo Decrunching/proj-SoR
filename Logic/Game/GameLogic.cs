@@ -115,35 +115,35 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.SetPosition(graphics, relativePositionX + 50, relativePositionY + 50);
+                        player.SetPosition(relativePositionX + 100, relativePositionY + 100);
                     }
                     break;
                 case EntityType.Pheasant:
                     entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
-                        pheasant.SetPosition(graphics, relativePositionX + 40, relativePositionY - 200);
+                        pheasant.SetPosition(relativePositionX + 40, relativePositionY - 200);
                     }
                     break;
                 case EntityType.Chara:
                     entities.Add("chara", new Chara(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
-                        chara.SetPosition(graphics, relativePositionX + 420, relativePositionY + 350);
+                        chara.SetPosition(relativePositionX + 420, relativePositionY + 350);
                     }
                     break;
                 case EntityType.Slime:
                     entities.Add("slime", new Slime(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
-                        slime.SetPosition(graphics, relativePositionX - 300, relativePositionY + 250);
+                        slime.SetPosition(relativePositionX - 300, relativePositionY + 250);
                     }
                     break;
                 case EntityType.Fishy:
                     entities.Add("fishy", new Fishy(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("fishy", out Entity fishy))
                     {
-                        fishy.SetPosition(graphics, relativePositionX + 340, relativePositionY + 100);
+                        fishy.SetPosition(relativePositionX + 340, relativePositionY + 100);
                     }
                     break;
             }
@@ -161,7 +161,7 @@ namespace SoR.Logic.Game
                     scenery.Add("grass", new Grass(graphics, GraphicsDevice) { Render = true });
                     if (scenery.TryGetValue("grass", out Scenery grass))
                     {
-                        grass.SetPosition(graphics, relativePositionX - 96, relativePositionY - 96);
+                        grass.SetPosition(relativePositionX - 96, relativePositionY - 96);
                     }
                     break;
             }
@@ -171,7 +171,7 @@ namespace SoR.Logic.Game
                     scenery.Add("campfire", new Campfire(graphics, GraphicsDevice) { Render = true });
                     if (scenery.TryGetValue("campfire", out Scenery campfire))
                     {
-                        campfire.SetPosition(graphics, relativePositionX, relativePositionY);
+                        campfire.SetPosition(relativePositionX, relativePositionY);
                     }
                     break;
             }
@@ -186,8 +186,6 @@ namespace SoR.Logic.Game
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice)
         {
-
-
             foreach (var scenery in scenery.Values)
             {
                 if (scenery.Render)
@@ -206,8 +204,7 @@ namespace SoR.Logic.Game
                     // Update position according to user input
                     entity.UpdatePosition(
                     gameTime,
-                    graphics,
-                    GraphicsDevice);
+                    graphics);
 
                     // Update animations
                     entity.UpdateAnimations(gameTime);
@@ -223,6 +220,9 @@ namespace SoR.Logic.Game
                                 player.ChangeAnimation("collision");
 
                                 entity.StopMoving();
+
+                                player.Collision(entity, gameTime);
+                                entity.Collision(player, gameTime);
                             }
                             else if (!entity.IsMoving())
                             {
@@ -233,10 +233,9 @@ namespace SoR.Logic.Game
                             {
                                 if (scenery.CollidesWith(entity))
                                 {
-                                    scenery.Collision(entity);
+                                    scenery.Collision(entity, gameTime);
                                 }
-                            }    
-
+                            }
                         }
                         else
                         {

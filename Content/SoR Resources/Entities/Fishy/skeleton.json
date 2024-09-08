@@ -1,49 +1,50 @@
 {
 "skeleton": {
-	"hash": "YM3mFsMpVu8",
+	"hash": "Eu5gW04m5I8",
 	"spine": "4.2.35",
 	"x": -64,
-	"y": -64,
+	"y": -45.08,
 	"width": 128,
 	"height": 128,
 	"images": "../../char sprites/fishy/",
 	"audio": "./audio"
 },
 "bones": [
-	{ "name": "root", "scaleX": 4, "scaleY": 4 }
+	{ "name": "root", "scaleX": 4, "scaleY": 4 },
+	{ "name": "middle", "parent": "root", "y": -0.58 }
 ],
 "slots": [
-	{ "name": "0", "bone": "root", "attachment": "0" },
-	{ "name": "1", "bone": "root" },
-	{ "name": "2", "bone": "root" },
-	{ "name": "3", "bone": "root" },
-	{ "name": "4", "bone": "root" },
-	{ "name": "hitbox", "bone": "root", "attachment": "hitbox" }
+	{ "name": "0", "bone": "middle", "attachment": "0" },
+	{ "name": "1", "bone": "middle" },
+	{ "name": "2", "bone": "middle" },
+	{ "name": "3", "bone": "middle" },
+	{ "name": "4", "bone": "middle" },
+	{ "name": "hitbox", "bone": "middle", "attachment": "hitbox" }
 ],
 "skins": [
 	{
 		"name": "default",
 		"attachments": {
 			"0": {
-				"0": { "width": 32, "height": 32 }
+				"0": { "y": 5.31, "width": 32, "height": 32 }
 			},
 			"1": {
-				"1": { "width": 32, "height": 32 }
+				"1": { "y": 5.31, "width": 32, "height": 32 }
 			},
 			"2": {
-				"2": { "width": 32, "height": 32 }
+				"2": { "y": 5.31, "width": 32, "height": 32 }
 			},
 			"3": {
-				"3": { "width": 32, "height": 32 }
+				"3": { "y": 5.31, "width": 32, "height": 32 }
 			},
 			"4": {
-				"4": { "width": 32, "height": 32 }
+				"4": { "y": 5.31, "width": 32, "height": 32 }
 			},
 			"hitbox": {
 				"hitbox": {
 					"type": "boundingbox",
 					"vertexCount": 4,
-					"vertices": [ -3.98, -3, -3.97, -11, 5, -11, 5, -3 ]
+					"vertices": [ -4.51, 3.99, -4.5, -4.02, 4.48, -4.02, 4.48, 3.98 ]
 				}
 			}
 		}

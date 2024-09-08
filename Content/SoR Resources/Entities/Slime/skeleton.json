@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "tiVi4BGltdc",
+	"hash": "saNf2Bo7RC4",
 	"spine": "4.2.35",
 	"x": -54.09,
 	"y": -35.97,
@@ -11,10 +11,10 @@
 },
 "bones": [
 	{ "name": "root", "rotation": -0.15, "scaleX": 2, "scaleY": 2 },
-	{ "name": "jelly", "parent": "root" }
+	{ "name": "middle", "parent": "root", "y": 1.2 }
 ],
 "slots": [
-	{ "name": "jellyanim-atkd and idle-01", "bone": "jelly", "attachment": "jellyanim/atkd and idle/01" },
+	{ "name": "jellyanim-atkd and idle-01", "bone": "middle", "attachment": "jellyanim/atkd and idle/01" },
 	{ "name": "hitbox", "bone": "root", "attachment": "hitbox" }
 ],
 "skins": [
@@ -29,11 +29,11 @@
 				}
 			},
 			"jellyanim-atkd and idle-01": {
-				"jellyanim/atkd and idle/01": { "y": 8.09, "width": 54, "height": 52 },
-				"jellyanim/atkd and idle/02": { "y": 8.09, "width": 54, "height": 52 },
-				"jellyanim/atkd and idle/03": { "y": 8.09, "width": 54, "height": 52 },
-				"jellyanim/atkd and idle/04": { "y": 8.09, "width": 54, "height": 52 },
-				"jellyanim/atkd and idle/05": { "y": 8.09, "width": 54, "height": 52 }
+				"jellyanim/atkd and idle/01": { "y": 6.89, "width": 54, "height": 52 },
+				"jellyanim/atkd and idle/02": { "y": 6.89, "width": 54, "height": 52 },
+				"jellyanim/atkd and idle/03": { "y": 6.89, "width": 54, "height": 52 },
+				"jellyanim/atkd and idle/04": { "y": 6.89, "width": 54, "height": 52 },
+				"jellyanim/atkd and idle/05": { "y": 6.89, "width": 54, "height": 52 }
 			}
 		}
 	}
@@ -55,7 +55,7 @@
 			}
 		},
 		"bones": {
-			"jelly": {
+			"middle": {
 				"translate": [
 					{},
 					{ "time": 0.2, "x": 5.94 },

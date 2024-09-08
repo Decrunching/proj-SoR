@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework;
 using Spine;
 using SoR.Logic.Entities;
+using System.Collections.Generic;
+using MonoGame.Extended;
 
 namespace Logic.Game.GameMap.TiledScenery
 {
@@ -71,6 +73,6 @@ namespace Logic.Game.GameMap.TiledScenery
         /*
          * Define what happens on collision with an entity.
          */
-        public override void Collision(Entity entity) { }
+        public override void Collision(Entity entity, GameTime gameTime) { }
     }
 }

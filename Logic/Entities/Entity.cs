@@ -2,10 +2,10 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using MonoGame.Extended.ECS;
 using SoR.Logic.Input;
 using Spine;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -54,9 +54,11 @@ namespace SoR.Logic.Entities
         protected TrackEntry trackEntry;
         protected Random random;
         protected UserInput movement;
+        protected List<int> countDistance;
         protected Vector2 position;
         protected Vector2 maxPosition;  
         protected Vector2 movementDirection;
+        protected Vector2 pushedDirection;
         protected Vector2 prevPosition;
         protected int hitpoints;
         protected string prevTrigger;
@@ -163,9 +165,9 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Check for collision with other entities.
+         * If the entity is thrown back from something, move away from that thing.
          */
-        public bool CollidesWith(Entity entity)
+        public void ThrownBackFromEntity(Entity entity, GameTime gameTime)
         {
             entity.UpdateHitbox(new SkeletonBounds());
             entity.GetHitbox().Update(entity.GetSkeleton(), true);
@@ -173,18 +175,35 @@ namespace SoR.Logic.Entities
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
-            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
+            while (countDistance.Count < 8)
             {
-                return true;
+                countDistance.Add(1);
             }
 
-            return false;
+            float newSpeed = (float)(Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (position.X > entity.GetPosition().X) // Right
+            {
+                pushedDirection.X += 1;
+            }
+            else if (position.X < entity.GetPosition().X) // Left
+            {
+                pushedDirection.X -= 1;
+            }
+            if (position.Y > entity.GetPosition().Y) // Down
+            {
+                pushedDirection.Y += 1;
+            }
+            else if (position.Y < entity.GetPosition().Y) // Up
+            {
+                pushedDirection.Y -= 1;
+            }
         }
 
         /*
          * If the entity is thrown back from something, move away from that thing.
          */
-        public void ThrownBack(Scenery scenery)
+        public void ThrownBackFromScenery(Scenery scenery, GameTime gameTime)
         {
             scenery.UpdateHitbox(new SkeletonBounds());
             scenery.GetHitbox().Update(scenery.GetSkeleton(), true);
@@ -192,33 +211,43 @@ namespace SoR.Logic.Entities
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
+            while (countDistance.Count < 8)
+            {
+                countDistance.Add(1);
+            }
 
+            float newSpeed = (float)(Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            /*
-             * hitbox.Width = maxX of width
-             * hitbox.Height = maxY of height
-             * 
-             * width / 2 = middle point of width (x)
-             * height / 2 = middle point of height (y)
-             * 
-             * so - I need to find the middle coordinate of entity and scenery
-             * if entity x > scenery x, bounce right
-             * if < bounce left
-             * if entity y > scenery y bounce down
-             * otherwise bounce up
-             * 
-             * if entity x,y > scenery x,y bounce right&down
-             * if both < bounce left&up
-             * if x > and y < bounce right and up
-             * otherwise bounce left and down
-             * 
-             * SO: find middle point
-             * 
-             * take root (position.Y) as middle Y
-             * take position.X + (hitbox.Width / 2) as middle X
-             * 
-             * 
-             */
+            if (position.X > scenery.GetPosition().X) // Right
+            {
+                pushedDirection.X += 1;
+            }
+            else if (position.X < scenery.GetPosition().X) // Left
+            {
+                pushedDirection.X -= 1;
+            }
+            if (position.Y > scenery.GetPosition().Y) // Down
+            {
+                pushedDirection.Y += 1;
+            }
+            else if (position.Y < scenery.GetPosition().Y) // Up
+            {
+                pushedDirection.Y -= 1;
+            }
+        }
+
+        /*
+         * Get moved automatically.
+         */
+        public void GetMoved(GameTime gameTime)
+        {
+            float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            position += pushedDirection * newSpeed;
+            countDistance.RemoveAt(0);
+            if (countDistance.Count == 0)
+            {
+                pushedDirection = Vector2.Zero;
+            }
         }
 
         /*
@@ -249,10 +278,43 @@ namespace SoR.Logic.Entities
         }
 
         /*
+         * Check for collision with other entities.
+         */
+        public bool CollidesWith(Entity entity)
+        {
+            entity.UpdateHitbox(new SkeletonBounds());
+            entity.GetHitbox().Update(entity.GetSkeleton(), true);
+
+            hitbox = new SkeletonBounds();
+            hitbox.Update(skeleton, true);
+
+            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /*
+         * Define what happens on collision with an entity.
+         */
+        public virtual void Collision(Entity entity, GameTime gameTime)
+        {
+            entity.TakeDamage(1);
+            entity.ThrownBackFromEntity(this, gameTime);
+        }
+
+        /*
          * Update entity position.
          */
-        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
+            if (countDistance.Count > 1)
+            {
+                GetMoved(gameTime);
+            }
+
             // Handle environmental collision
             if (movement.EnvironCollision(
                 graphics,
@@ -320,7 +382,7 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
             spriteBatch.DrawString(
                 font,
-                "hitbox width: " + hitbox.Width + " hitbox height: " + hitbox.Height,
+                "HP: " + hitpoints,
                 new Vector2(position.X - 80, position.Y + 50),
                 Color.BlueViolet);
             spriteBatch.End();
@@ -329,7 +391,7 @@ namespace SoR.Logic.Entities
         /*
          * Set entity position to the centre of the screen +/- any x,y axis adjustment.
          */
-        public void SetPosition(GraphicsDeviceManager graphics, float xAdjustment, float yAdjustment)
+        public void SetPosition(float xAdjustment, float yAdjustment)
         {
             position = new Vector2(xAdjustment, yAdjustment);
         }

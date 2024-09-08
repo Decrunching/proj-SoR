@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using SoR.Logic.Entities;
 using Spine;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Logic.Game.GameMap
@@ -67,7 +68,7 @@ namespace Logic.Game.GameMap
         /*
          * Define what happens on collision with an entity.
          */
-        public abstract void Collision(Entity entity);
+        public abstract void Collision(Entity entity, GameTime gameTime);
 
         /*
          * Check for collision with other entities.
@@ -142,8 +143,8 @@ namespace Logic.Game.GameMap
             spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
             spriteBatch.DrawString(
                 font,
-                "",
-                new Vector2(position.X - 80, position.Y + 50),
+                "position: " + position,
+                new Vector2(position.X - 80, position.Y + 100),
                 Color.BlueViolet);
             spriteBatch.End();
         }
@@ -151,7 +152,7 @@ namespace Logic.Game.GameMap
         /*
          * Set entity position to the centre of the screen +/- any x,y axis adjustment.
          */
-        public void SetPosition(GraphicsDeviceManager graphics, float xAdjustment, float yAdjustment)
+        public virtual void SetPosition(float xAdjustment, float yAdjustment)
         {
             position = new Vector2(xAdjustment, yAdjustment);
         }
@@ -170,6 +171,11 @@ namespace Logic.Game.GameMap
         public SkeletonBounds GetHitbox()
         {
             return hitbox;
+        }
+
+        public Vector2 GetPosition()
+        {
+            return position;
         }
 
         public static string GetPath(string name) => Path.Combine("../../../", name);
