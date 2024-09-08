@@ -216,6 +216,8 @@ namespace SoR.Logic.Entities
              * 
              * take root (position.Y) as middle Y
              * take position.X + (hitbox.Width / 2) as middle X
+             * 
+             * 
              */
         }
 
