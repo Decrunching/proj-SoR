@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "4r+SxX7tOFE",
+	"hash": "hI6QXnfTj+w",
 	"spine": "4.2.35",
 	"y": -64,
 	"width": 64,
@@ -31,7 +31,7 @@
 				"hitbox": {
 					"type": "boundingbox",
 					"vertexCount": 4,
-					"vertices": [ -0.03, -0.02, 31.97, 0.19, 31.76, -32.23, -0.03, -32.02 ]
+					"vertices": [ 7.99, -18.02, 22.94, -17.99, 22.96, -25.02, 7.99, -24.94 ]
 				}
 			}
 		}

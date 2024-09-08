@@ -65,19 +65,6 @@ namespace Logic.Entities.Character.Mobs
         }
 
         /*
-         * Placeholder function for dealing damage.
-         */
-        public override int Damage(Entity entity)
-        {
-            if (CollidesWith(entity))
-            {
-                int damage = 5;
-                return damage;
-            }
-            return 0;
-        }
-
-        /*
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          * 

@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Spine;
+using SoR.Logic.Entities;
 
 namespace Logic.Game.GameMap.TiledScenery
 {
@@ -61,5 +62,15 @@ namespace Logic.Game.GameMap.TiledScenery
          * Placeholder for Grass animation changes.
          */
         public override void ChangeAnimation(string eventTrigger) { }
+
+        /*
+         * Perform an interaction.
+         */
+        public override void InteractWith(Entity entity) { }
+
+        /*
+         * Define what happens on collision with an entity.
+         */
+        public override void Collision(Entity entity) { }
     }
 }

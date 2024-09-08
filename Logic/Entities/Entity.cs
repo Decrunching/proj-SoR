@@ -1,13 +1,13 @@
-﻿using Logic.Game.Settings;
+﻿using Logic.Game.GameMap;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using SoR.Logic.Input;
 using Spine;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 
 namespace SoR.Logic.Entities
 {
@@ -54,7 +54,6 @@ namespace SoR.Logic.Entities
         protected TrackEntry trackEntry;
         protected Random random;
         protected UserInput movement;
-        protected GraphicsSettings settings;
         protected Vector2 position;
         protected Vector2 maxPosition;  
         protected Vector2 movementDirection;
@@ -71,15 +70,18 @@ namespace SoR.Logic.Entities
         public bool Render { get; set; }
 
         /*
-         * Placeholder function for dealing damage.
-         */
-        public abstract int Damage(Entity entity);
-
-        /*
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          */
         public abstract void ChangeAnimation(string trigger);
+
+        /*
+         * Placeholder function for dealing damage.
+         */
+        public void TakeDamage(int damage)
+        {
+            hitpoints -= damage;
+        }
 
         /*
          * Check if moving.
@@ -165,7 +167,7 @@ namespace SoR.Logic.Entities
          */
         public bool CollidesWith(Entity entity)
         {
-            entity.UpdateEntityHitbox(new SkeletonBounds());
+            entity.UpdateHitbox(new SkeletonBounds());
             entity.GetHitbox().Update(entity.GetSkeleton(), true);
 
             hitbox = new SkeletonBounds();
@@ -177,6 +179,44 @@ namespace SoR.Logic.Entities
             }
 
             return false;
+        }
+
+        /*
+         * If the entity is thrown back from something, move away from that thing.
+         */
+        public void ThrownBack(Scenery scenery)
+        {
+            scenery.UpdateHitbox(new SkeletonBounds());
+            scenery.GetHitbox().Update(scenery.GetSkeleton(), true);
+
+            hitbox = new SkeletonBounds();
+            hitbox.Update(skeleton, true);
+
+
+
+            /*
+             * hitbox.Width = maxX of width
+             * hitbox.Height = maxY of height
+             * 
+             * width / 2 = middle point of width (x)
+             * height / 2 = middle point of height (y)
+             * 
+             * so - I need to find the middle coordinate of entity and scenery
+             * if entity x > scenery x, bounce right
+             * if < bounce left
+             * if entity y > scenery y bounce down
+             * otherwise bounce up
+             * 
+             * if entity x,y > scenery x,y bounce right&down
+             * if both < bounce left&up
+             * if x > and y < bounce right and up
+             * otherwise bounce left and down
+             * 
+             * SO: find middle point
+             * 
+             * take root (position.Y) as middle Y
+             * take position.X + (hitbox.Width / 2) as middle X
+             */
         }
 
         /*
@@ -215,8 +255,7 @@ namespace SoR.Logic.Entities
             if (movement.EnvironCollision(
                 graphics,
                 GetHitbox(),
-                position,
-                maxPosition))
+                position))
             {
                 NewDirection(movement.TurnAround());
             }
@@ -228,7 +267,7 @@ namespace SoR.Logic.Entities
         /*
          * Update the hitbox after a collision.
          */
-        public void UpdateEntityHitbox(SkeletonBounds updatedHitbox)
+        public void UpdateHitbox(SkeletonBounds updatedHitbox)
         {
             hitbox = updatedHitbox;
         }
@@ -279,7 +318,7 @@ namespace SoR.Logic.Entities
             spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
             spriteBatch.DrawString(
                 font,
-                "",
+                "hitbox width: " + hitbox.Width + " hitbox height: " + hitbox.Height,
                 new Vector2(position.X - 80, position.Y + 50),
                 Color.BlueViolet);
             spriteBatch.End();

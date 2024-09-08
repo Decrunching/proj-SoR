@@ -87,7 +87,7 @@ namespace Logic.Game.Settings
          */
         public void InitialiseSettings(GraphicsDeviceManager graphics, Settings settings, GameWindow Window)
         {
-            Window.AllowUserResizing = true;
+            Window.AllowUserResizing = false;
             Window.AllowAltF4 = true;
 
             fixedTimeStep = settings.IsFixedTimeStep;

@@ -1,9 +1,9 @@
-﻿using Logic.Entities.Character.Player;
+﻿using SoR.Logic.Entities;
+using Logic.Entities.Character.Player;
 using Logic.Game;
 using Logic.Entities.Character.Mobs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SoR.Logic.Entities;
 using System.Collections.Generic;
 using System.Linq;
 using Logic.Game.GameMap.TiledScenery;
@@ -36,7 +36,8 @@ namespace SoR.Logic.Game
             Player,
             Pheasant,
             Chara,
-            Slime
+            Slime,
+            Fishy
         }
 
         /*
@@ -78,27 +79,26 @@ namespace SoR.Logic.Game
             relativePositionX = graphics.PreferredBackBufferWidth / 2;
             relativePositionY = graphics.PreferredBackBufferHeight / 2;
 
-            // Create the Player entity
+            // Create entities
             entityType = EntityType.Player;
             CreateEntity(graphics, GraphicsDevice);
 
-            // Create the Slime entity
             entityType = EntityType.Slime;
             CreateEntity(graphics, GraphicsDevice);
 
-            // Create the Chara entity
             entityType = EntityType.Chara;
             CreateEntity(graphics, GraphicsDevice);
 
-            // Create the Pheasant entity
             entityType = EntityType.Pheasant;
             CreateEntity(graphics, GraphicsDevice);
 
-            // Create the Campfire object
+            entityType = EntityType.Fishy;
+            CreateEntity(graphics, GraphicsDevice);
+
+            // Create scenery
             sceneryType = SceneryType.Campfire;
             CreateObject(graphics, GraphicsDevice);
 
-            // Create the Campfire object
             sceneryType = SceneryType.Grass;
             CreateObject(graphics, GraphicsDevice);
         }
@@ -137,6 +137,13 @@ namespace SoR.Logic.Game
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
                         slime.SetPosition(graphics, relativePositionX - 300, relativePositionY + 250);
+                    }
+                    break;
+                case EntityType.Fishy:
+                    entities.Add("fishy", new Fishy(graphics, GraphicsDevice) { Render = true });
+                    if (entities.TryGetValue("fishy", out Entity fishy))
+                    {
+                        fishy.SetPosition(graphics, relativePositionX + 340, relativePositionY + 100);
                     }
                     break;
             }
@@ -179,6 +186,8 @@ namespace SoR.Logic.Game
             GraphicsDeviceManager graphics,
             GraphicsDevice GraphicsDevice)
         {
+
+
             foreach (var scenery in scenery.Values)
             {
                 if (scenery.Render)
@@ -219,6 +228,15 @@ namespace SoR.Logic.Game
                             {
                                 entity.StartMoving();
                             }
+
+                            foreach (var scenery in scenery.Values)
+                            {
+                                if (scenery.CollidesWith(entity))
+                                {
+                                    scenery.Collision(entity);
+                                }
+                            }    
+
                         }
                         else
                         {

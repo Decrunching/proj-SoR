@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
-using SoR;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Logic.Game.GameMap
 {
@@ -16,13 +16,10 @@ namespace Logic.Game.GameMap
 
         public Map()
         {
-
-
-
             /*tiles = new Sprite[mapTileSize.X, mapTileSize.Y];
 
             List<Texture2D> textures = new(5);
-            for (int i = 1; i < 6; i++) textures.Add(Globals.Content.Load<Texture2D>($"tile{i}"));
+            for (int i = 1; i < 6; i++) textures.Add(Content.Load<Texture2D>($"tile{i}"));
 
             TileSize = new(textures[0].Width, textures[0].Height);
             MapSize = new(TileSize.X * mapTileSize.X, TileSize.Y * mapTileSize.Y);
@@ -34,10 +31,14 @@ namespace Logic.Game.GameMap
                 for (int x = 0; x < mapTileSize.X; x++)
                 {
                     int r = random.Next(0, textures.Count);
-                    //tiles[x, y] = new(textures[r], new(x * TileSize.X, y * TileSize.Y));
+                    tiles[x, y] = new(textures[r], new(x * TileSize.X, y * TileSize.Y));
                 }
             }*/
+
+
+
         }
+        public static string GetPath(string name) => Path.Combine("../../../", name);
 
         public void DrawMap()
         {

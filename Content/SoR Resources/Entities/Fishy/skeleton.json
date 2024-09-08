@@ -1,0 +1,87 @@
+{
+"skeleton": {
+	"hash": "YM3mFsMpVu8",
+	"spine": "4.2.35",
+	"x": -64,
+	"y": -64,
+	"width": 128,
+	"height": 128,
+	"images": "../../char sprites/fishy/",
+	"audio": "./audio"
+},
+"bones": [
+	{ "name": "root", "scaleX": 4, "scaleY": 4 }
+],
+"slots": [
+	{ "name": "0", "bone": "root", "attachment": "0" },
+	{ "name": "1", "bone": "root" },
+	{ "name": "2", "bone": "root" },
+	{ "name": "3", "bone": "root" },
+	{ "name": "4", "bone": "root" },
+	{ "name": "hitbox", "bone": "root", "attachment": "hitbox" }
+],
+"skins": [
+	{
+		"name": "default",
+		"attachments": {
+			"0": {
+				"0": { "width": 32, "height": 32 }
+			},
+			"1": {
+				"1": { "width": 32, "height": 32 }
+			},
+			"2": {
+				"2": { "width": 32, "height": 32 }
+			},
+			"3": {
+				"3": { "width": 32, "height": 32 }
+			},
+			"4": {
+				"4": { "width": 32, "height": 32 }
+			},
+			"hitbox": {
+				"hitbox": {
+					"type": "boundingbox",
+					"vertexCount": 4,
+					"vertices": [ -3.98, -3, -3.97, -11, 5, -11, 5, -3 ]
+				}
+			}
+		}
+	}
+],
+"animations": {
+	"idle": {
+		"slots": {
+			"0": {
+				"attachment": [
+					{ "time": 0.1667 }
+				]
+			},
+			"1": {
+				"attachment": [
+					{ "time": 0.1667, "name": "1" },
+					{ "time": 0.3333 }
+				]
+			},
+			"2": {
+				"attachment": [
+					{ "time": 0.3333, "name": "2" },
+					{ "time": 0.5 }
+				]
+			},
+			"3": {
+				"attachment": [
+					{ "time": 0.5, "name": "3" },
+					{ "time": 0.6667 }
+				]
+			},
+			"4": {
+				"attachment": [
+					{ "time": 0.6667, "name": "4" },
+					{ "time": 0.8333, "name": "4" }
+				]
+			}
+		}
+	}
+}
+}

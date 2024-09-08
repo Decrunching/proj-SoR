@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using SoR.Logic.Entities;
 using Spine;
 using System.IO;
 
@@ -59,35 +60,32 @@ namespace Logic.Game.GameMap
         public abstract void ChangeAnimation(string trigger);
 
         /*
-         * Choose a method for playing the animation according to Player.ChangeAnimation(eventTrigger)
-         * animType.
+         * Perform an interaction.
          */
-        public void React(string reaction, int animType)
-        {
-            if (reaction != "none")
-            {
-                if (animType == 1)
-                {
-                    animState.AddAnimation(0, animOne, true, -trackEntry.TrackComplete);
-                }
-                if (animType == 2)
-                {
-                    animState.SetAnimation(0, animOne, false);
-                    trackEntry = animState.AddAnimation(0, animTwo, true, 0);
-                }
-                if (animType == 3)
-                {
-                    animState.AddAnimation(0, animOne, true, -trackEntry.TrackTime);
-                }
-            }
-        }
+        public abstract void InteractWith(Entity entity);
 
         /*
-         * Update the hitbox after a collision.
+         * Define what happens on collision with an entity.
          */
-        public void UpdateHitbox(SkeletonBounds updatedHitbox)
+        public abstract void Collision(Entity entity);
+
+        /*
+         * Check for collision with other entities.
+         */
+        public bool CollidesWith(Entity entity)
         {
-            hitbox = updatedHitbox;
+            entity.UpdateHitbox(new SkeletonBounds());
+            entity.GetHitbox().Update(entity.GetSkeleton(), true);
+
+            hitbox = new SkeletonBounds();
+            hitbox.Update(skeleton, true);
+
+            if (hitbox.AabbIntersectsSkeleton(entity.GetHitbox()))
+            {
+                return true;
+            }
+
+            return false;
         }
 
         /*
@@ -112,6 +110,14 @@ namespace Logic.Game.GameMap
 
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
+        }
+
+        /*
+         * Update the hitbox after a collision.
+         */
+        public void UpdateHitbox(SkeletonBounds updatedHitbox)
+        {
+            hitbox = updatedHitbox;
         }
 
         /*
@@ -148,6 +154,14 @@ namespace Logic.Game.GameMap
         public void SetPosition(GraphicsDeviceManager graphics, float xAdjustment, float yAdjustment)
         {
             position = new Vector2(xAdjustment, yAdjustment);
+        }
+
+        /*
+         * Get the skeleton.
+         */
+        public Skeleton GetSkeleton()
+        {
+            return skeleton;
         }
 
         /*

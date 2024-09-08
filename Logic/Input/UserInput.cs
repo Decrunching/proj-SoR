@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using Microsoft.Xna.Framework.Graphics;
 using System.Linq;
 
 namespace SoR.Logic.Input
@@ -16,7 +15,6 @@ namespace SoR.Logic.Input
         private KeyboardState lastKeyState;
         private Vector2 newPosition;
         private Vector2 prevPosition;
-        private Vector2 maxPosition;
         private Dictionary<Keys, InputKeys> inputKeys;
         private int deadZone;
         private bool switchSkin;
@@ -157,32 +155,30 @@ namespace SoR.Logic.Input
         public bool EnvironCollision(
             GraphicsDeviceManager graphics,
             SkeletonBounds hitbox,
-            Vector2 position,
-            Vector2 maxPosition)
+            Vector2 position)
         {
             newPosition = position;
-            this.maxPosition = maxPosition;
 
-            if (newPosition.X > graphics.PreferredBackBufferWidth - hitbox.Width)
+            if (position.X > graphics.PreferredBackBufferWidth - hitbox.Width)
             {
                 newPosition.X = graphics.PreferredBackBufferWidth - hitbox.Width;
                 turnAround = 1; // Left
                 return true;
             }
-            else if (newPosition.X < hitbox.Width)
+            else if (position.X < hitbox.Width)
             {
                 newPosition.X = hitbox.Width;
                 turnAround = 2; // Right
                 return true;
             }
 
-            if (newPosition.Y > graphics.PreferredBackBufferHeight - hitbox.Height)
+            if (position.Y > graphics.PreferredBackBufferHeight - hitbox.Height)
             {
                 newPosition.Y = graphics.PreferredBackBufferHeight - hitbox.Height;
                 turnAround = 3; // Up
                 return true;
             }
-            else if (newPosition.Y < hitbox.Height * 4)
+            else if (position.Y < hitbox.Height * 4)
             {
                 newPosition.Y = hitbox.Height * 4;
                 turnAround = 4; // Down

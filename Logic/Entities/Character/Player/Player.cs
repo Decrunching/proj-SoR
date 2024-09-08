@@ -71,19 +71,6 @@ namespace Logic.Entities.Character.Player
         }
 
         /*
-         * Placeholder function for dealing damage.
-         */
-        public override int Damage(Entity entity)
-        {
-            if (CollidesWith(entity))
-            {
-                int damage = 5;
-                return damage;
-            }
-            return 0;
-        }
-
-        /*
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          */
@@ -180,8 +167,7 @@ namespace Logic.Entities.Character.Player
             movement.EnvironCollision(
                 graphics,
                 GetHitbox(),
-                position,
-                maxPosition);
+                position);
 
             // Set the new position
             position = movement.UpdatePosition();

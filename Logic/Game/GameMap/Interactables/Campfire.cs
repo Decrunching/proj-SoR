@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Spine;
+using SoR.Logic.Entities;
 
 namespace Logic.Game.GameMap.Interactables
 {
@@ -51,5 +52,19 @@ namespace Logic.Game.GameMap.Interactables
          * Placeholder for Campfire animation changes.
          */
         public override void ChangeAnimation(string eventTrigger) { }
+
+        /*
+         * Perform an interaction. Won't just deal damage later on - only collision will.
+         */
+        public override void InteractWith(Entity entity) { }
+
+        /*
+         * Define what happens on collision with an entity.
+         */
+        public override void Collision(Entity entity)
+        {
+            entity.TakeDamage(5);
+            entity.ThrownBack(this);
+        }
     }
 }
