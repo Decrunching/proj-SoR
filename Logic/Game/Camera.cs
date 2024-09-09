@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
-using System;
 
 namespace Logic.Game
 {
@@ -15,7 +14,6 @@ namespace Logic.Game
     {
         private OrthographicCamera camera;
         private BoxingViewportAdapter viewportAdapter;
-        private Matrix viewMatrix;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
         private bool resolutionChange;
@@ -27,7 +25,6 @@ namespace Logic.Game
             // Instantiate the camera
             viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, screenWidth, screenHeight);
             camera = new OrthographicCamera(viewportAdapter);
-            viewMatrix = camera.GetViewMatrix();
             resolutionChange = false;
             this.screenWidth = screenWidth;
             this.screenHeight = screenHeight;
@@ -40,8 +37,8 @@ namespace Logic.Game
          * Fix issue where player moves off the bounds of the stage edge and springs back again.
          */
         public void FollowPlayer(
-            GraphicsDevice GraphicsDevice, 
-            GameWindow Window, 
+            GraphicsDevice GraphicsDevice,
+            GameWindow Window,
             GraphicsDeviceManager graphics,
             GraphicsSettings graphicsSettings,
             Vector2 position)
@@ -53,6 +50,12 @@ namespace Logic.Game
                 screenWidth = graphics.PreferredBackBufferWidth;
                 screenHeight = graphics.PreferredBackBufferHeight;
 
+                /*
+                 * Need to upscale everything
+                 * so take the new screen width & height, find out how many times the old ones divide
+                 * into the new ones, and multiply them
+                 */
+
                 // Reset the viewport adapter and camera
                 viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, screenWidth, screenHeight);
                 camera = new OrthographicCamera(viewportAdapter);
@@ -61,6 +64,10 @@ namespace Logic.Game
 
                 // Debugging
                 System.Diagnostics.Debug.WriteLine("Screen resolution changed: " + screenWidth + ", " + screenHeight);
+                System.Diagnostics.Debug.WriteLine("Mid screen: " + screenWidth / 2 + ", " + screenHeight / 2);
+                System.Diagnostics.Debug.WriteLine("Camera centre: " + camera.Center);
+                System.Diagnostics.Debug.WriteLine("Graphics centre: " + graphics.PreferredBackBufferWidth / 2 + ", " + graphics.PreferredBackBufferHeight / 2);
+                System.Diagnostics.Debug.WriteLine("Player position: " + position.X + ", " + position.Y);
             }
 
             camera.Move(camera.WorldToScreen(position.X - (screenWidth / 2), position.Y - (screenHeight / 2)));

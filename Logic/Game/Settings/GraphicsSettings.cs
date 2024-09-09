@@ -13,8 +13,7 @@ using FontStashSharp;
 namespace Logic.Game.Settings
 {
     /*
-     * INCOMPLETE: Manage graphics settings. Currently switches between borderless and windowed mode with F4, and
-     * resets to windowed (default) with F1.
+     * Manage graphics settings.
      * 
      * TO DO:
      * Figure out why windowed resolution can't be changed either here or in Settings or both without

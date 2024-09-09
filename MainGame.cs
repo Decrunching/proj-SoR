@@ -38,7 +38,7 @@ namespace SoR
 
     public class MainGame : Game
     {
-        protected GraphicsDeviceManager graphics;
+        private GraphicsDeviceManager graphics;
         private GameLogic gameLogic;
         private MainGame game;
         private GraphicsSettings graphicsSettings;
