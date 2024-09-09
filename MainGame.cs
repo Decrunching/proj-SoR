@@ -98,7 +98,7 @@ namespace SoR
             graphicsSettings.UpdateSettings(graphics, Window, settings);
 
             // Update player input and animations
-            gameLogic.UpdateEntities(Window, gameTime, graphics, GraphicsDevice);
+            gameLogic.UpdateEntities(Window, gameTime, graphics, graphicsSettings, GraphicsDevice);
 
             base.Update(gameTime);
         }

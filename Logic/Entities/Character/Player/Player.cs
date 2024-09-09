@@ -176,9 +176,6 @@ namespace Logic.Entities.Character.Player
                 graphics,
                 GetHitbox(),
                 position);
-
-            // Set the new position
-            position = movement.UpdatePosition();
         }
 
         /*

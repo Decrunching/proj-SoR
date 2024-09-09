@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using MonoGame.Extended.ECS;
 using SoR.Logic.Input;
 using Spine;
 using System;
@@ -383,7 +382,7 @@ namespace SoR.Logic.Entities
             spriteBatch.DrawString(
                 font,
                 "HP: " + hitpoints,
-                new Vector2(position.X - 80, position.Y + 50),
+                new Vector2(position.X - 30, position.Y + 30),
                 Color.BlueViolet);
             spriteBatch.End();
         }
@@ -402,6 +401,22 @@ namespace SoR.Logic.Entities
         public Skeleton GetSkeleton()
         {
             return skeleton;
+        }
+
+        /*
+         * 
+         */
+        public float GetSkeletonX()
+        {
+            return skeleton.X;
+        }
+
+        /*
+         * 
+         */
+        public float GetSkeletonY()
+        {
+            return skeleton.X;
         }
 
         /*

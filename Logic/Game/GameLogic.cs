@@ -10,6 +10,7 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Settings;
+using System;
 
 namespace SoR.Logic.Game
 {
@@ -184,6 +185,7 @@ namespace SoR.Logic.Game
             GameWindow Window,
             GameTime gameTime,
             GraphicsDeviceManager graphics,
+            GraphicsSettings graphicsSettings,
             GraphicsDevice GraphicsDevice)
         {
             foreach (var scenery in scenery.Values)
@@ -213,7 +215,7 @@ namespace SoR.Logic.Game
                     {
                         if (playerChar is Player player)
                         {
-                            camera.FollowPlayer(GraphicsDevice, Window, graphics, player.GetPosition());
+                            camera.FollowPlayer(GraphicsDevice, Window, graphics, graphicsSettings, player.GetPosition());
 
                             if (entity != player & player.CollidesWith(entity))
                             {

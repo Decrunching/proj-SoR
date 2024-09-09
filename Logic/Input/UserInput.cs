@@ -64,7 +64,7 @@ namespace SoR.Logic.Input
 
             float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            prevPosition = newPosition = position;
+            newPosition = position;
 
             if (inputKeys.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
             {

@@ -22,15 +22,14 @@ namespace Logic.Game.Settings
      */
     public class GraphicsSettings : Settings
     {
+        private bool resolutionChange;
         private bool fixedTimeStep;
         private FontSystem fontSystem;
 
         public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
         {
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
-
             game.IsMouseVisible = false;
+            resolutionChange = false;
 
             settings = EnsureJson("Settings.json", SettingsContext.Default.Settings);
 
@@ -93,6 +92,7 @@ namespace Logic.Game.Settings
         {
             Window.AllowUserResizing = false;
             Window.AllowAltF4 = true;
+            //settings.IsVSync = true;
 
             fixedTimeStep = settings.IsFixedTimeStep;
             graphics.SynchronizeWithVerticalRetrace = settings.IsVSync;
@@ -154,6 +154,23 @@ namespace Logic.Game.Settings
         }
 
         /*
+         * The resolution has just been changed.
+         */
+        public bool ResolutionHasChanged()
+        {
+            return resolutionChange;
+        }
+
+        /*
+         * Everything has been updated and the resolution change is complete.
+         */
+        public void ResolutionChangeFinished()
+        {
+            resolutionChange = false;
+        }
+
+
+        /*
          * Render settings choices.
          */
         public void DrawSettings(Settings settings)
@@ -200,6 +217,8 @@ namespace Logic.Game.Settings
          */
         public void ChangeFullscreen(GraphicsDeviceManager graphics, GameWindow Window, bool fullscreenLast, Settings settings)
         {
+            resolutionChange = true;
+
             if (settings.IsFullscreen)
             {
                 if (fullscreenLast)
