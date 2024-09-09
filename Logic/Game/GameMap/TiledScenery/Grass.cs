@@ -2,8 +2,7 @@
 using Microsoft.Xna.Framework;
 using Spine;
 using SoR.Logic.Entities;
-using System.Collections.Generic;
-using MonoGame.Extended;
+using SoR;
 
 namespace Logic.Game.GameMap.TiledScenery
 {
@@ -17,13 +16,13 @@ namespace Logic.Game.GameMap.TiledScenery
 
 
             // Load texture atlas and attachment loader
-            atlas = new Atlas(GetPath("Content\\SoR Resources\\Locations\\TiledScenery\\Grass\\grasstiles.atlas"), new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Locations\\TiledScenery\\Grass\\grasstiles.atlas"), new XnaTextureLoader(GraphicsDevice));
             //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Scenery\\Grass\\skeleton.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData(GetPath("Content\\SoR Resources\\Locations\\TiledScenery\\Grass\\skeleton.json"));
+            skeletonData = json.ReadSkeletonData(Globals.GetPath("Content\\SoR Resources\\Locations\\TiledScenery\\Grass\\skeleton.json"));
             //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Scenery\\Grass\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 

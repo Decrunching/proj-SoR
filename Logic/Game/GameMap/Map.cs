@@ -1,9 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.Graphics;
-using System;
-using System.Collections.Generic;
-using System.IO;
+using SoR;
 
 namespace Logic.Game.GameMap
 {
@@ -12,10 +9,29 @@ namespace Logic.Game.GameMap
         protected Point TileSize { get; private set; }
         protected Point MapSize { get; private set; }
         private readonly Point mapTileSize = new(4, 3);
-        private readonly Sprite[,] tiles;
+        //private readonly Sprite[,] tiles;
+        private int[] tiles;
 
-        public Map()
+        public Map(GraphicsDevice GraphicsDevice, MainGame game)
         {
+            //tiles = new Texture2D(GraphicsDevice, 32, 32)[] { game.Content.Load<Texture2D>("id0") };
+
+            string filePath = "SoR Resources/Locations/TiledScenery/Temple/";
+            string fileExtension = ".png";
+
+            tiles = new int[64];
+
+            for (int i = 0; i < tiles.Length; i++)
+            {
+                tiles[i] = i;
+            }
+
+            // Render floor first
+
+
+            // Separately from floor, render scenery & entities in order of y-axis position
+
+
             /*tiles = new Sprite[mapTileSize.X, mapTileSize.Y];
 
             List<Texture2D> textures = new(5);
@@ -34,11 +50,7 @@ namespace Logic.Game.GameMap
                     tiles[x, y] = new(textures[r], new(x * TileSize.X, y * TileSize.Y));
                 }
             }*/
-
-
-
         }
-        public static string GetPath(string name) => Path.Combine("../../../", name);
 
         public void DrawMap()
         {

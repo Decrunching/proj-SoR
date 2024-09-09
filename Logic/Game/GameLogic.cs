@@ -10,6 +10,7 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Settings;
+using Logic.Game.ScreenManagment;
 
 namespace SoR.Logic.Game
 {
@@ -20,6 +21,7 @@ namespace SoR.Logic.Game
     {
         private EntityType entityType;
         private SceneryType sceneryType;
+        private IScreenManager splashScreen;
         private Camera camera;
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
@@ -69,6 +71,8 @@ namespace SoR.Logic.Game
          */
         public void LoadGameContent(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, MainGame game)
         {
+            splashScreen = new SplashScreen();
+
             // Initialise SpriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -175,6 +179,15 @@ namespace SoR.Logic.Game
                     }
                     break;
             }
+        }
+
+        /*
+         * 
+         */
+        public void UpdateScreen(GameTime gameTime)
+        {
+            float delta = (float)gameTime.ElapsedGameTime.TotalMilliseconds / 1000f;
+            splashScreen.Update(delta);
         }
 
         /*

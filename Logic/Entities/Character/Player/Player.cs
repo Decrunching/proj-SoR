@@ -1,9 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using SoR;
 using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Media.Media3D;
 
 namespace Logic.Entities.Character.Player
 {
@@ -27,14 +30,14 @@ namespace Logic.Entities.Character.Player
             };
 
             // Load texture atlas and attachment loader
-            atlas = new Atlas(GetPath("Content\\SoR Resources\\Entities\\Player\\Char sprites.atlas"), new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Entities\\Player\\Char sprites.atlas"), new XnaTextureLoader(GraphicsDevice));
             //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\SoR Resources\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData(GetPath("Content\\SoR Resources\\Entities\\Player\\skeleton.json"));
+            skeletonData = json.ReadSkeletonData(Globals.GetPath("Content\\SoR Resources\\Entities\\Player\\skeleton.json"));
             //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
@@ -186,12 +189,6 @@ namespace Logic.Entities.Character.Player
          */
         public override void UpdateAnimations(GameTime gameTime)
         {
-            // Update the animation state and apply animations to skeletons
-            //skeleton.X = position.X - cameraPosition.X;
-            //skeleton.Y = position.Y - cameraPosition.Y;
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
-
             hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
