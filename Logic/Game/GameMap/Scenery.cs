@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using SoR.Logic.Entities;
 using Spine;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Logic.Game.GameMap
@@ -143,7 +142,7 @@ namespace Logic.Game.GameMap
             spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
             spriteBatch.DrawString(
                 font,
-                "position: " + position,
+                "",
                 new Vector2(position.X - 80, position.Y + 100),
                 Color.BlueViolet);
             spriteBatch.End();

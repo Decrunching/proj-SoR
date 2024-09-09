@@ -10,7 +10,6 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Settings;
-using System;
 
 namespace SoR.Logic.Game
 {
@@ -172,7 +171,7 @@ namespace SoR.Logic.Game
                     scenery.Add("campfire", new Campfire(graphics, GraphicsDevice) { Render = true });
                     if (scenery.TryGetValue("campfire", out Scenery campfire))
                     {
-                        campfire.SetPosition(relativePositionX, relativePositionY);
+                        campfire.SetPosition(relativePositionX + 32, relativePositionY + 32);
                     }
                     break;
             }

@@ -340,6 +340,9 @@ namespace SoR.Logic.Entities
          */
         public virtual void UpdateAnimations(GameTime gameTime)
         {
+            skeleton.X = position.X;
+            skeleton.Y = position.Y;
+
             hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
             skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);

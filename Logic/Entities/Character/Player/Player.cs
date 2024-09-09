@@ -183,19 +183,7 @@ namespace Logic.Entities.Character.Player
          */
         public override void UpdateAnimations(GameTime gameTime)
         {
-            // Update the animation state and apply animations to skeletons
-            //skeleton.X = position.X - cameraPosition.X;
-            //skeleton.Y = position.Y - cameraPosition.Y;
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
-
-            hitbox.Update(skeleton, true);
-            animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            animState.Apply(skeleton);
-
-            // Update skeletal transformations
-            skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
+            base.UpdateAnimations(gameTime);
 
             // Check whether to change the skin
             CheckSwitchSkin();
