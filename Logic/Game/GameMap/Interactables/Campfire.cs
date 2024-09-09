@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Spine;
 using SoR.Logic.Entities;
-using SoR;
 
 namespace Logic.Game.GameMap.Interactables
 {
@@ -14,13 +13,13 @@ namespace Logic.Game.GameMap.Interactables
         public Campfire(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
-            atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Locations\\Interactables\\Campfire\\templecampfire.atlas"), new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas(GetPath("Content\\SoR Resources\\Locations\\Interactables\\Campfire\\templecampfire.atlas"), new XnaTextureLoader(GraphicsDevice));
             //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Campfire\\templecampfire.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData(Globals.GetPath("Content\\SoR Resources\\Locations\\Interactables\\Campfire\\skeleton.json"));
+            skeletonData = json.ReadSkeletonData(GetPath("Content\\SoR Resources\\Locations\\Interactables\\Campfire\\skeleton.json"));
             //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Campfire\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 

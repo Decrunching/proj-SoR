@@ -1,9 +1,10 @@
-﻿using System.IO;
+﻿using Microsoft.Xna.Framework.Content;
 
 namespace SoR
 {
     public static class Globals
     {
-        public static string GetPath(string name) => Path.Combine("../../../", name);
+        //public static ContentManager Content { get; set; }
+
     }
 }

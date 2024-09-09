@@ -2,10 +2,12 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using MonoGame.Extended.ECS;
 using SoR.Logic.Input;
 using Spine;
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 namespace SoR.Logic.Entities
 {
@@ -173,7 +175,7 @@ namespace SoR.Logic.Entities
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
-            while (countDistance.Count < 5)
+            while (countDistance.Count < 8)
             {
                 countDistance.Add(1);
             }
@@ -381,7 +383,7 @@ namespace SoR.Logic.Entities
             spriteBatch.DrawString(
                 font,
                 "HP: " + hitpoints,
-                new Vector2(position.X - 30, position.Y + 25),
+                new Vector2(position.X - 80, position.Y + 50),
                 Color.BlueViolet);
             spriteBatch.End();
         }
@@ -417,5 +419,7 @@ namespace SoR.Logic.Entities
         {
             return position;
         }
+
+        public static string GetPath(string name) => Path.Combine("../../../", name);
     }
 }

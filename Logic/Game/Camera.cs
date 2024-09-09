@@ -1,5 +1,4 @@
-﻿using Logic.Game.Settings;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
@@ -9,6 +8,11 @@ namespace Logic.Game
 {
     /*
      * The game camera, which follows the player.
+     * 
+     * TO DO:
+     * Fix bug where camera doesn't follow the player in borderless or fullscreen unless game starts in borderless
+     * or fullscreen, but still stops working in these modes after switching to windowed and back despite continuing
+     * to work fine in windowed.
      */
     public class Camera
     {
@@ -41,22 +45,22 @@ namespace Logic.Game
         public void FollowPlayer(
             GraphicsDevice GraphicsDevice, 
             GameWindow Window, 
-            GraphicsDeviceManager graphics,
+            GraphicsDeviceManager graphics, 
             Vector2 position)
         {
+            keyState = Keyboard.GetState(); // Get the current keyboard state
+
             // Check whether F4 was pressed and borderless toggled (TO DO: change to check this directly via ToggleBorderless later)
-            /*if (graphicsSettings.ResolutionChanged())
+            if (keyState.IsKeyDown(Keys.F4) & !lastKeyState.IsKeyDown(Keys.F4))
             {
                 // Get the new screen width and height
-                screenWidth = Window.ClientBounds.Width;
-                screenHeight = Window.ClientBounds.Height;
+                screenWidth = graphics.PreferredBackBufferWidth;
+                screenHeight = graphics.PreferredBackBufferHeight;
 
                 // Reset the viewport adapter and camera
                 viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, screenWidth, screenHeight);
                 camera = new OrthographicCamera(viewportAdapter);
-
-                graphicsSettings.ResolutionChangeFinished();
-            }*/
+            }
 
             camera.Move(camera.WorldToScreen(position.X - (screenWidth / 2), position.Y - (screenHeight / 2)));
 
