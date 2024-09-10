@@ -1,239 +1,131 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Content;
-using System;
-using System.Text.Json.Serialization.Metadata;
-using System.Text.Json;
-using System.IO;
-using Apos.Input;
 using SoR;
-using FontStashSharp;
 
 namespace Logic.Game.Graphics
 {
     /*
-     * Manage graphics settings.
-     * 
-     * TO DO:
-     * Figure out why windowed resolution can't be changed either here or in Settings or both without
-     * messing up resolution when switching between borderless and windowed.
+     * Switch between windowed and borderless.
      */
-    public class GraphicsSettings : Settings
+    internal class GraphicsSettingsTemp
     {
-        private bool fixedTimeStep;
-        private FontSystem fontSystem;
+        private float x;
+        private float y;
+        private bool isFullscreen;
+        private bool isBorderless;
+        private bool resolutionChange;
+        private int screenWidth;
+        private int screenHeight;
+        private GameWindow Window;
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
 
-        public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
+        public GraphicsSettingsTemp(MainGame game, GraphicsDeviceManager graphics)
         {
+            screenWidth = graphics.PreferredBackBufferWidth;
+            screenHeight = graphics.PreferredBackBufferHeight;
+            x = graphics.PreferredBackBufferWidth / 2;
+            y = graphics.PreferredBackBufferHeight / 2;
+
+            graphics.IsFullScreen = isFullscreen = false;
+            isBorderless = false;
+            Window.AllowAltF4 = true;
+            Window.AllowUserResizing = false;
             game.IsMouseVisible = false;
 
-            settings = EnsureJson("Settings.json", SettingsContext.Default.Settings);
-
-            RestoreWindow(graphics, Window, settings);
+            RestoreWindow(graphics);
         }
-        ICondition toggleBorderless = new KeyboardCondition(Keys.F4);
-        ICondition resetSettings = new KeyboardCondition(Keys.F1);
 
-        public static string GetPath(string name) => Path.Combine(AppDomain.CurrentDomain.BaseDirectory, name);
-
-        public static T LoadJson<T>(string name, JsonTypeInfo<T> typeInfo) where T : new()
+        /*
+         * Toggle between borderless and windowed when F4 is pressed.
+         */
+        public void ToggleBorderlessWindowed(GraphicsDeviceManager graphics)
         {
-            T json;
-            string jsonPath = GetPath(name);
+            keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            if (File.Exists(jsonPath))
+            if (keyState.IsKeyDown(Keys.F4) & !lastKeyState.IsKeyDown(Keys.F4))
             {
-                json = JsonSerializer.Deserialize(File.ReadAllText(jsonPath), typeInfo)!;
+                ToggleBorderlessMode(graphics, Window);
+            }
+
+            lastKeyState = keyState; // Get the previous keyboard state
+        }
+
+        /*
+         * (NOT ENABLED) Toggle fullscreen.
+         */
+        public void ToggleFullscreenMode(GraphicsDeviceManager graphics, GameWindow Window)
+        {
+            bool fullscreenLast = isFullscreen;
+
+            if (isBorderless)
+            {
+                isBorderless = false;
             }
             else
             {
-                json = new T();
+                isFullscreen = !isFullscreen;
             }
 
-            return json;
-        }
-
-        public static void SaveJson<T>(string name, T json, JsonTypeInfo<T> typeInfo)
-        {
-            string jsonPath = GetPath(name);
-            Directory.CreateDirectory(Path.GetDirectoryName(jsonPath)!);
-            string jsonString = JsonSerializer.Serialize(json, typeInfo);
-            File.WriteAllText(jsonPath, jsonString);
-        }
-
-        public static T EnsureJson<T>(string name, JsonTypeInfo<T> typeInfo) where T : new()
-        {
-            T json;
-            string jsonPath = GetPath(name);
-
-            if (File.Exists(jsonPath))
-            {
-                json = JsonSerializer.Deserialize(File.ReadAllText(jsonPath), typeInfo)!;
-            }
-            else
-            {
-                json = new T();
-                string jsonString = JsonSerializer.Serialize(json, typeInfo);
-                Directory.CreateDirectory(Path.GetDirectoryName(jsonPath)!);
-                File.WriteAllText(jsonPath, jsonString);
-            }
-
-            return json;
-        }
-
-        /*
-         * Initialise the game settings.
-         */
-        public void InitialiseSettings(GraphicsDeviceManager graphics, Settings settings, GameWindow Window)
-        {
-            Window.AllowUserResizing = false;
-            Window.AllowAltF4 = true;
-            //settings.IsVSync = true;
-
-            fixedTimeStep = settings.IsFixedTimeStep;
-            graphics.SynchronizeWithVerticalRetrace = settings.IsVSync;
-
-            settings.IsFullscreen = settings.IsFullscreen || settings.IsBorderless;
-
-            RestoreWindow(graphics, Window, settings);
-            if (settings.IsFullscreen)
-            {
-                ChangeFullscreen(graphics, Window, false, settings);
-            }
-        }
-
-        /*
-         * Setup InputHelper for Apos library and FontSystem.
-         */
-        public void LoadSettings(MainGame game, ContentManager Content)
-        {
-            InputHelper.Setup(game); // For Apos library
-            fontSystem = new FontSystem();
-            fontSystem.AddFont(TitleContainer.OpenStream($"{Content.RootDirectory}/Fonts/LiberationMono-Regular.ttf"));
-        }
-
-        /*
-         * Unload settings content.
-         */
-        public void UnloadSettings(GameWindow Window, Settings settings)
-        {
-            if (!settings.IsFullscreen)
-            {
-                SaveWindow(Window, settings);
-            }
-
-            SaveJson("Settings.json", settings, SettingsContext.Default.Settings);
-        }
-
-        /*
-         * Update the game settings.
-         */
-        public void UpdateSettings(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
-        {
-            InputHelper.UpdateSetup();
-
-            if (toggleBorderless.Pressed())
-            {
-                ToggleBorderlessMode(graphics, Window, settings);
-            }
-
-            if (resetSettings.Pressed())
-            {
-                bool fullscreenLast = settings.IsFullscreen;
-                settings = new Settings();
-                SaveJson("Settings.json", settings, SettingsContext.Default.Settings);
-
-                ChangeFullscreen(graphics, Window, fullscreenLast, settings);
-
-                InputHelper.UpdateCleanup();
-            }
-        }
-
-        /*
-         * Render settings choices.
-         */
-        public void DrawSettings(Settings settings)
-        {
-            var font = fontSystem.GetFont(24);
-            string mode = settings.IsBorderless ? "Borderless" : settings.IsFullscreen ? "Fullscreen" : "Window";
-            Vector2 modeCenter = font.MeasureString(mode) / 2f;
-        }
-
-        /*
-         * Turn off borderless mode or toggle fullscreen state.
-         */
-        public void ToggleFullscreenMode(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
-        {
-            bool fullscreenLast = settings.IsFullscreen;
-
-            if (settings.IsBorderless)
-            {
-                settings.IsBorderless = false;
-            }
-            else
-            {
-                settings.IsFullscreen = !settings.IsFullscreen;
-            }
-
-            ChangeFullscreen(graphics, Window, fullscreenLast, settings);
+            ChangeFullscreen(graphics, Window, fullscreenLast);
         }
 
         /*
          * Toggle borderless state and set fullscreen state to the same.
          */
-        public void ToggleBorderlessMode(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
+        public void ToggleBorderlessMode(GraphicsDeviceManager graphics, GameWindow Window)
         {
-            bool fullscreenLast = settings.IsFullscreen;
+            bool fullscreenLast = isFullscreen;
 
-            settings.IsBorderless = !settings.IsBorderless;
-            settings.IsFullscreen = settings.IsBorderless;
+            isBorderless = !isBorderless;
+            isFullscreen = isBorderless;
 
-            ChangeFullscreen(graphics, Window, fullscreenLast, settings);
+            ChangeFullscreen(graphics, Window, fullscreenLast);
         }
 
         /*
          * Set or remove fullscreen mode.
          */
-        public void ChangeFullscreen(GraphicsDeviceManager graphics, GameWindow Window, bool fullscreenLast, Settings settings)
+        public void ChangeFullscreen(GraphicsDeviceManager graphics, GameWindow Window, bool fullscreenLast)
         {
-            if (settings.IsFullscreen)
+            if (isFullscreen)
             {
                 if (fullscreenLast)
                 {
-                    ApplyHardwareMode(graphics, settings);
+                    ApplyHardwareMode(graphics);
                 }
                 else
                 {
-                    SetFullscreen(graphics, Window, settings);
+                    SetFullscreen(graphics, Window);
                 }
             }
             else
             {
-                RemoveFullscreen(graphics, Window, settings);
+                RemoveFullscreen(graphics, Window);
             }
         }
 
         /*
          * Called when already in fullscreen. When hardware mode switch set to false, will be borderless.
          */
-        public void ApplyHardwareMode(GraphicsDeviceManager graphics, Settings settings)
+        public void ApplyHardwareMode(GraphicsDeviceManager graphics)
         {
-            graphics.HardwareModeSwitch = !settings.IsBorderless;
+            graphics.HardwareModeSwitch = !isBorderless;
             graphics.ApplyChanges();
         }
 
         /*
          * Set screen width and height to the size of the monitor, then switch to fullscreen mode.
          */
-        public void SetFullscreen(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
+        public void SetFullscreen(GraphicsDeviceManager graphics, GameWindow Window)
         {
-            SaveWindow(Window, settings);
+            SaveWindow(Window);
 
             graphics.PreferredBackBufferWidth = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Width;
             graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
 
-            graphics.HardwareModeSwitch = !settings.IsBorderless;
+            graphics.HardwareModeSwitch = !isBorderless;
 
             graphics.IsFullScreen = true;
             graphics.ApplyChanges();
@@ -242,31 +134,31 @@ namespace Logic.Game.Graphics
         /*
          * Restore window dimensions to their previous state, and remove fullscreen mode.
          */
-        public void RemoveFullscreen(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
+        public void RemoveFullscreen(GraphicsDeviceManager graphics, GameWindow Window)
         {
             graphics.IsFullScreen = false;
-            RestoreWindow(graphics, Window, settings);
+            RestoreWindow(graphics);
         }
 
         /*
          * Save window settings.
          */
-        public void SaveWindow(GameWindow Window, Settings settings)
+        public void SaveWindow(GameWindow Window)
         {
-            settings.X = Window.ClientBounds.X;
-            settings.Y = Window.ClientBounds.Y;
-            settings.Width = Window.ClientBounds.Width;
-            settings.Height = Window.ClientBounds.Height;
+            x = Window.ClientBounds.X;
+            y = Window.ClientBounds.Y;
+            screenWidth = Window.ClientBounds.Width;
+            screenHeight = Window.ClientBounds.Height;
         }
 
         /*
          * Restore the window to defaults.
          */
-        public void RestoreWindow(GraphicsDeviceManager graphics, GameWindow Window, Settings settings)
+        public void RestoreWindow(GraphicsDeviceManager graphics)
         {
-            Window.Position = new Point(settings.X, settings.Y);
-            graphics.PreferredBackBufferWidth = settings.Width;
-            graphics.PreferredBackBufferHeight = settings.Height;
+            Window.Position = new Point((int)x, (int)y);
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
             graphics.ApplyChanges();
         }
     }

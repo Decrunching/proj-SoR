@@ -18,12 +18,16 @@ namespace Logic.Game.Graphics
         private Matrix scaleMatrix;
         private int _virtualWidth;
         private int _virtualHeight;
+        private int screenX;
+        private int screenY;
 
         public Camera(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, GameWindow Window, int virtualWidth, int virtualHeight)
         {
             _virtualWidth = virtualWidth;
             _virtualHeight = virtualHeight;
-            
+            screenX = virtualWidth / 2;
+            screenY = virtualHeight / 2;
+
             // Instantiate the camera
             viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, virtualWidth, virtualHeight);
             
@@ -37,7 +41,7 @@ namespace Logic.Game.Graphics
         {
             //Resolution.currentResolution().X != Window.ClientBounds.Width || Resolution.currentResolution().Y != Window.ClientBounds.Height;
 
-            camera.Move(camera.WorldToScreen(position.X - _virtualWidth / 2, position.Y - _virtualHeight / 2));
+            camera.Move(camera.WorldToScreen(position.X - screenX, position.Y - screenY));
         }
 
         /*
@@ -49,14 +53,12 @@ namespace Logic.Game.Graphics
         }
 
         /*
-         * 
+         * Set the x,y coordinates for centring the camera.
          */
-        public void ScaleViewport(GraphicsDeviceManager graphics)
+        public void SetXY(int x, int y)
         {
-            _virtualWidth = graphics.PreferredBackBufferWidth / 800;
-            _virtualHeight = graphics.PreferredBackBufferHeight / 600;
-
-
+            screenX = x;
+            screenY = y;
         }
     }
 }

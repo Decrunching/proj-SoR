@@ -131,8 +131,34 @@ namespace SoR
 
             if (resolutionChanging)
             {
-                graphics.PreferredBackBufferWidth = 800;
-                graphics.PreferredBackBufferHeight = 600;
+                float width = Window.ClientBounds.Width;
+                float height = Window.ClientBounds.Height;
+
+                float aspectRatio = (width / height);
+                //System.Diagnostics.Debug.WriteLine();
+
+                float x;
+                float y;
+
+                graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+
+                if (graphics.PreferredBackBufferWidth > 800 |
+                    graphics.PreferredBackBufferHeight > 600)
+                {
+                    x = graphics.PreferredBackBufferWidth / (aspectRatio * 1.5f);
+                    y = graphics.PreferredBackBufferHeight / (aspectRatio * 1.5f);
+                }
+                else
+                {
+                    graphics.PreferredBackBufferWidth = 800;
+                    graphics.PreferredBackBufferHeight = 600;
+
+                    x = 400;
+                    y = 300;
+                }
+
+                gameLogic.RefocusCamera((int)x, (int)y);
 
                 graphics.ApplyChanges();
 
