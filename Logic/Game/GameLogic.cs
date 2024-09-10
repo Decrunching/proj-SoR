@@ -277,9 +277,9 @@ namespace SoR.Logic.Game
         /*
          * Refocus the camera to centre on the player after screen resolution change.
          */
-        public void RefocusCamera(int x, int y)
+        public void RefocusCamera(int x)
         {
-            camera.SetXY(x, y);
+            camera.SetXY(x);
         }
     }
 }

@@ -55,10 +55,10 @@ namespace Logic.Game.Graphics
         /*
          * Set the x,y coordinates for centring the camera.
          */
-        public void SetXY(int x, int y)
+        public void SetXY(int x)
         {
             screenX = x;
-            screenY = y;
+            //screenY = y;
         }
     }
 }

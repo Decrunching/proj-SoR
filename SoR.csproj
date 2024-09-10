@@ -27,6 +27,10 @@
     <Page Remove="Content\Entities\**" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Logic\Game\Graphics\GraphicsSettingsTemp.cs" />
+    <Compile Remove="Logic\Game\Graphics\Settings.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <None Remove="Content\haltija.atlas" />
     <None Remove="Content\haltija.png" />
     <None Remove="Content\skeleton.json" />

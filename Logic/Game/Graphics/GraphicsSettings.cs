@@ -8,7 +8,7 @@ namespace Logic.Game.Graphics
     /*
      * Switch between windowed and borderless.
      */
-    internal class GraphicsSettingsTemp
+    public class GraphicsSettings
     {
         private float x;
         private float y;
@@ -17,30 +17,29 @@ namespace Logic.Game.Graphics
         private bool resolutionChange;
         private int screenWidth;
         private int screenHeight;
-        private GameWindow Window;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
 
-        public GraphicsSettingsTemp(MainGame game, GraphicsDeviceManager graphics)
+        public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window)
         {
-            screenWidth = graphics.PreferredBackBufferWidth;
-            screenHeight = graphics.PreferredBackBufferHeight;
-            x = graphics.PreferredBackBufferWidth / 2;
-            y = graphics.PreferredBackBufferHeight / 2;
+            screenWidth = 800;
+            screenHeight = 600;
+            x = 400;
+            y = 300;
 
             graphics.IsFullScreen = isFullscreen = false;
             isBorderless = false;
             Window.AllowAltF4 = true;
-            Window.AllowUserResizing = false;
+            Window.AllowUserResizing = true;
             game.IsMouseVisible = false;
 
-            RestoreWindow(graphics);
+            RestoreWindow(graphics, Window);
         }
 
         /*
          * Toggle between borderless and windowed when F4 is pressed.
          */
-        public void ToggleBorderlessWindowed(GraphicsDeviceManager graphics)
+        public void ToggleBorderlessWindowed(GraphicsDeviceManager graphics, GameWindow Window)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
@@ -137,7 +136,7 @@ namespace Logic.Game.Graphics
         public void RemoveFullscreen(GraphicsDeviceManager graphics, GameWindow Window)
         {
             graphics.IsFullScreen = false;
-            RestoreWindow(graphics);
+            RestoreWindow(graphics, Window);
         }
 
         /*
@@ -154,7 +153,7 @@ namespace Logic.Game.Graphics
         /*
          * Restore the window to defaults.
          */
-        public void RestoreWindow(GraphicsDeviceManager graphics)
+        public void RestoreWindow(GraphicsDeviceManager graphics, GameWindow Window)
         {
             Window.Position = new Point((int)x, (int)y);
             graphics.PreferredBackBufferWidth = screenWidth;

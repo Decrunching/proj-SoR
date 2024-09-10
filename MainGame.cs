@@ -43,7 +43,6 @@ namespace SoR
         private GameLogic gameLogic;
         private MainGame game;
         private GraphicsSettings graphicsSettings;
-        private Settings settings;
         private bool resolutionChanging;
 
         /*
@@ -63,10 +62,7 @@ namespace SoR
         {
             game = this;
 
-            settings = new Settings();
-
-            graphicsSettings = new GraphicsSettings(game, graphics, Window, settings);
-            graphicsSettings.InitialiseSettings(graphics, settings, Window);
+            graphicsSettings = new GraphicsSettings(game, graphics, Window);
 
             gameLogic = new GameLogic(graphics, GraphicsDevice, graphicsSettings, Window);
 
@@ -81,7 +77,6 @@ namespace SoR
         protected override void LoadContent()
         {
             gameLogic.LoadGameContent(graphics, GraphicsDevice, game);
-            graphicsSettings.LoadSettings(game, Content);
         }
 
         /*
@@ -89,7 +84,6 @@ namespace SoR
          */
         protected override void UnloadContent()
         {
-            graphicsSettings.UnloadSettings(Window, settings);
 
             base.UnloadContent();
         }
@@ -103,7 +97,7 @@ namespace SoR
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            graphicsSettings.UpdateSettings(graphics, Window, settings);
+            graphicsSettings.ToggleBorderlessWindowed(graphics, Window);
 
             // Update player input and animations
             gameLogic.UpdateEntities(Window, gameTime, graphics, graphicsSettings, GraphicsDevice);
@@ -117,8 +111,6 @@ namespace SoR
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
-
-            graphicsSettings.DrawSettings(settings);
             
             gameLogic.Render(GraphicsDevice);
 
@@ -131,34 +123,31 @@ namespace SoR
 
             if (resolutionChanging)
             {
-                float width = Window.ClientBounds.Width;
-                float height = Window.ClientBounds.Height;
+                float width = graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                float height = graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
 
-                float aspectRatio = (width / height);
-                //System.Diagnostics.Debug.WriteLine();
+                float virtualWidth = 800;
+                float virtualHeight = 600;
 
-                float x;
-                float y;
+                int x = (int)width / 2;
+                int y = (int)height / 2;
 
-                graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-                graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
-
-                if (graphics.PreferredBackBufferWidth > 800 |
-                    graphics.PreferredBackBufferHeight > 600)
+                if (width > virtualWidth | height > virtualHeight)
                 {
-                    x = graphics.PreferredBackBufferWidth / (aspectRatio * 1.5f);
-                    y = graphics.PreferredBackBufferHeight / (aspectRatio * 1.5f);
-                }
-                else
-                {
-                    graphics.PreferredBackBufferWidth = 800;
-                    graphics.PreferredBackBufferHeight = 600;
+                    float ratio = virtualHeight / height;
 
-                    x = 400;
-                    y = 300;
+                    //int x = Window.ClientBounds.X;
+                    //int y = Window.ClientBounds.Y;
+
+                    x = (int)(width * ratio) - ((int)virtualWidth / 2);
+                    y = (int)(height * ratio);
                 }
 
-                gameLogic.RefocusCamera((int)x, (int)y);
+                System.Diagnostics.Debug.WriteLine(x + ", " + y);
+                System.Diagnostics.Debug.WriteLine(width + ", " + height);
+
+
+                gameLogic.RefocusCamera(x);
 
                 graphics.ApplyChanges();
 
