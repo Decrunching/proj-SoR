@@ -51,10 +51,10 @@ namespace SoR.Logic.Game
         /*
          * Constructor for initial game setup.
          */
-        public GameLogic(GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
+        public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
         {
             // Instantiate the game camera
-            camera = new Camera (GraphicsDevice, Window, graphicsSettings.Width, graphicsSettings.Height);
+            camera = new Camera (graphics, GraphicsDevice, Window, 800, 600);
 
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
@@ -213,7 +213,7 @@ namespace SoR.Logic.Game
                     {
                         if (playerChar is Player player)
                         {
-                            camera.FollowPlayer(GraphicsDevice, Window, graphics, graphicsSettings, player.GetPosition());
+                            camera.FollowPlayer(player.GetPosition());
 
                             if (entity != player & player.CollidesWith(entity))
                             {
@@ -272,6 +272,14 @@ namespace SoR.Logic.Game
                     entity.DrawText(spriteBatch, font, camera.GetCamera());
                 }
             }
+        }
+
+        /*
+         * 
+         */
+        public void UpdateCamera(GraphicsDeviceManager graphics)
+        {
+            camera.ScaleViewport(graphics);
         }
     }
 }

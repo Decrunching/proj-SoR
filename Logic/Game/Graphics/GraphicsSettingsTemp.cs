@@ -5,17 +5,16 @@ namespace Logic.Game.Graphics
 {
     internal class GraphicsSettingsTemp
     {
-        /* private bool isFullscreen;
+         private bool isFullscreen;
          private bool isBorderless;
          private bool resolutionChange;
          private int screenWidth;
          private int screenHeight;
-         private GraphicsDeviceManager graphicsDeviceManager;
          private GameWindow Window;
 
-         public GraphicsSettingsTemp(MainGame game)
+         public GraphicsSettingsTemp(MainGame game, GraphicsDeviceManager graphics)
          {
-             graphicsDeviceManager.IsFullScreen = isFullscreen = false;
+             graphics.IsFullScreen = isFullscreen = false;
              isBorderless = false;
              Window.AllowAltF4 = true;
              Window.AllowUserResizing = false;
@@ -26,7 +25,7 @@ namespace Logic.Game.Graphics
          /*
           * The resolution has just been changed.
           */
-        /* public bool ResolutionHasChanged()
+         public bool ResolutionHasChanged()
          {
              return resolutionChange;
          }
@@ -34,9 +33,9 @@ namespace Logic.Game.Graphics
          /*
           * Everything has been updated and the resolution change is complete.
           */
-        /* public void ResolutionChangeFinished()
+         public void ResolutionChangeFinished()
          {
              resolutionChange = false;
-         }*/
+         }
     }
 }

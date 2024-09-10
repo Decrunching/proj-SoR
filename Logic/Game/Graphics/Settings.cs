@@ -4,10 +4,10 @@ namespace Logic.Game.Graphics
 {
     public class Settings
     {
-        public int X { get; set; } = 320; // 320 200
-        public int Y { get; set; } = 180; // 180 150
-        public int Width { get; set; } = 1280; //1280 800
-        public int Height { get; set; } = 720; // 720 600
+        public int X { get; set; } = 200; // 320 200
+        public int Y { get; set; } = 150; // 180 150
+        public int Width { get; set; } = 800; //1280 800
+        public int Height { get; set; } = 600; // 720 600
         public bool IsFixedTimeStep { get; set; } = true;
         public bool IsVSync { get; set; } = false;
         public bool IsFullscreen { get; set; } = false;

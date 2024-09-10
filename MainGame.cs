@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Game;
+using System;
 
 namespace SoR
 {
@@ -43,6 +44,7 @@ namespace SoR
         private MainGame game;
         private GraphicsSettings graphicsSettings;
         private Settings settings;
+        private bool resolutionChanging;
 
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
@@ -51,6 +53,7 @@ namespace SoR
         {
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
+            resolutionChanging = false;
         }
 
         /*
@@ -59,10 +62,15 @@ namespace SoR
         protected override void Initialize()
         {
             game = this;
+
             settings = new Settings();
+
             graphicsSettings = new GraphicsSettings(game, graphics, Window, settings);
             graphicsSettings.InitialiseSettings(graphics, settings, Window);
-            gameLogic = new GameLogic(GraphicsDevice, graphicsSettings, Window);
+
+            gameLogic = new GameLogic(graphics, GraphicsDevice, graphicsSettings, Window);
+
+            Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
             base.Initialize();
         }
@@ -115,6 +123,21 @@ namespace SoR
             gameLogic.Render(GraphicsDevice);
 
             base.Draw(gameTime);
+        }
+
+        void Window_ClientSizeChanged(object sender, EventArgs e)
+        {
+            resolutionChanging = !resolutionChanging;
+
+            if (resolutionChanging)
+            {
+                graphics.PreferredBackBufferWidth = 800;
+                graphics.PreferredBackBufferHeight = 600;
+
+                graphics.ApplyChanges();
+
+                resolutionChanging = false;
+            }
         }
     }
 }
