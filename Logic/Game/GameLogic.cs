@@ -1,6 +1,5 @@
 ﻿using SoR.Logic.Entities;
 using Logic.Entities.Character.Player;
-using Logic.Game;
 using Logic.Entities.Character.Mobs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -9,7 +8,7 @@ using System.Linq;
 using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
-using Logic.Game.Settings;
+using Logic.Game.Graphics;
 
 namespace SoR.Logic.Game
 {

@@ -10,7 +10,7 @@ using Apos.Input;
 using SoR;
 using FontStashSharp;
 
-namespace Logic.Game.Settings
+namespace Logic.Game.Graphics
 {
     /*
      * Manage graphics settings.
