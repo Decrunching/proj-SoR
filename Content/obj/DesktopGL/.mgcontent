@@ -129,8 +129,10 @@
     <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Temple/id7.png</File>
     <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Temple/id8.png</File>
     <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Temple/id9.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Temple/Spine/Temple.png</File>
   </SourceFiles>
   <DestFiles>
+    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

@@ -1,5 +1,4 @@
-﻿using Logic.Game.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using SoR.Logic.Entities;

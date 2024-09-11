@@ -8,25 +8,25 @@ namespace Logic.Game.GameMap.TiledScenery
     /*
      * Stores information unique to Campfire.
      */
-    internal class Grass : Scenery
+    internal class Temple : Scenery
     {
-        public Grass(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public Temple(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
 
 
             // Load texture atlas and attachment loader
-            atlas = new Atlas(GetPath("Content\\SoR Resources\\Locations\\TiledScenery\\Grass\\grasstiles.atlas"), new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas(GetPath("Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\Spine\\Temple.atlas"), new XnaTextureLoader(GraphicsDevice));
             //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Scenery\\Grass\\skeleton.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData(GetPath("Content\\SoR Resources\\Locations\\TiledScenery\\Grass\\skeleton.json"));
+            skeletonData = json.ReadSkeletonData(GetPath("Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\Spine\\skeleton.json"));
             //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Scenery\\Grass\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
-            skeleton.SetSkin(skeletonData.FindSkin("default"));
+            //skeleton.SetSkin(skeletonData.FindSkin("0"));
 
             // Setup animation
             animStateData = new AnimationStateData(skeleton.Data);
@@ -38,10 +38,10 @@ namespace Logic.Game.GameMap.TiledScenery
             //trackEntry = animState.SetAnimation(0, "idle", true);
 
             // Create hitbox
-            //slot = skeleton.FindSlot("hitbox");
-            //hitboxAttachment = skeleton.GetAttachment("hitbox", "hitbox");
-            //slot.Attachment = hitboxAttachment;
-            //skeleton.SetAttachment("hitbox", "hitbox");
+            slot = skeleton.FindSlot("hitbox");
+            hitboxAttachment = skeleton.GetAttachment("hitbox", "hitbox");
+            slot.Attachment = hitboxAttachment;
+            skeleton.SetAttachment("hitbox", "hitbox");
 
             // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
