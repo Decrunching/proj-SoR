@@ -19,11 +19,13 @@ namespace Logic.Game.Graphics
         private int screenHeight;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
+        private Vector2 resolution;
 
         public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window)
         {
             screenWidth = 800;
             screenHeight = 600;
+            resolution = new Vector2(screenWidth, screenHeight);
             x = 400;
             y = 300;
 
@@ -39,16 +41,19 @@ namespace Logic.Game.Graphics
         /*
          * Toggle between borderless and windowed when F4 is pressed.
          */
-        public void ToggleBorderlessWindowed(GraphicsDeviceManager graphics, GameWindow Window)
+        public Vector2 CheckIfBorderlessToggled(GraphicsDeviceManager graphics, GameWindow Window)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
             if (keyState.IsKeyDown(Keys.F4) & !lastKeyState.IsKeyDown(Keys.F4))
             {
                 ToggleBorderlessMode(graphics, Window);
+                resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             }
 
             lastKeyState = keyState; // Get the previous keyboard state
+
+            return resolution;
         }
 
         /*

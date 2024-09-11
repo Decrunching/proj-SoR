@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Game;
-using System;
+using System.Windows.Media.Media3D;
 
 namespace SoR
 {
@@ -43,7 +43,8 @@ namespace SoR
         private GameLogic gameLogic;
         private MainGame game;
         private GraphicsSettings graphicsSettings;
-        private bool resolutionChanging;
+        private int screenWidth;
+        private int screenHeight;
 
         /*
          * Constructor for the main game class. Initialises the graphics and mouse visibility.
@@ -52,7 +53,6 @@ namespace SoR
         {
             Content.RootDirectory = "Content";
             graphics = new GraphicsDeviceManager(this);
-            resolutionChanging = false;
         }
 
         /*
@@ -65,8 +65,6 @@ namespace SoR
             graphicsSettings = new GraphicsSettings(game, graphics, Window);
 
             gameLogic = new GameLogic(graphics, GraphicsDevice, graphicsSettings, Window);
-
-            Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
             base.Initialize();
         }
@@ -97,9 +95,8 @@ namespace SoR
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            graphicsSettings.ToggleBorderlessWindowed(graphics, Window);
+            UpdateResolution(graphicsSettings.CheckIfBorderlessToggled(graphics, Window));
 
-            // Update player input and animations
             gameLogic.UpdateEntities(Window, gameTime, graphics, graphicsSettings, GraphicsDevice);
 
             base.Update(gameTime);
@@ -117,41 +114,20 @@ namespace SoR
             base.Draw(gameTime);
         }
 
-        void Window_ClientSizeChanged(object sender, EventArgs e)
+        /*
+         * Get the updated screen resolution if it changes.
+         */
+        public void UpdateResolution(Vector2 resolution)
         {
-            resolutionChanging = !resolutionChanging;
-
-            if (resolutionChanging)
+            if (screenWidth != (int)resolution.X |
+                screenHeight != (int)resolution.Y)
             {
-                float width = graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-                float height = graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
+                screenWidth = (int)resolution.X;
+                screenHeight = (int)resolution.Y;
 
-                float virtualWidth = 800;
-                float virtualHeight = 600;
-
-                int x = (int)width / 2;
-                int y = (int)height / 2;
-
-                if (width > virtualWidth | height > virtualHeight)
-                {
-                    float ratio = virtualHeight / height;
-
-                    //int x = Window.ClientBounds.X;
-                    //int y = Window.ClientBounds.Y;
-
-                    x = (int)(width * ratio) - ((int)virtualWidth / 2);
-                    y = (int)(height * ratio);
-                }
-
-                System.Diagnostics.Debug.WriteLine(x + ", " + y);
-                System.Diagnostics.Debug.WriteLine(width + ", " + height);
-
-
-                gameLogic.RefocusCamera(x);
+                gameLogic.UpdateViewportGraphics(screenWidth, screenHeight);
 
                 graphics.ApplyChanges();
-
-                resolutionChanging = false;
             }
         }
     }

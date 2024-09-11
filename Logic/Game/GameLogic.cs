@@ -24,6 +24,7 @@ namespace SoR.Logic.Game
         private Dictionary<string, Scenery> scenery;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
+        private Vector2 playerPosition;
         private float relativePositionX;
         private float relativePositionY;
 
@@ -54,7 +55,7 @@ namespace SoR.Logic.Game
         public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
         {
             // Instantiate the game camera
-            camera = new Camera (graphics, GraphicsDevice, Window, 800, 600);
+            camera = new Camera (Window, GraphicsDevice, 800, 600);
 
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
@@ -248,6 +249,14 @@ namespace SoR.Logic.Game
         }
 
         /*
+         * Update the graphics device with the new screen resolution after a resolution change.
+         */
+        public void UpdateViewportGraphics(int screenWidth, int screenHeight)
+        {
+            camera.UpdateGraphicsDevice(screenWidth, screenHeight);
+        }
+
+        /*
          * Render Spine objects in order of y-axis position.
          */
         public void Render(GraphicsDevice GraphicsDevice)
@@ -259,8 +268,8 @@ namespace SoR.Logic.Game
             {
                 if (scenery.Render)
                 {
-                    scenery.RenderScenery(GraphicsDevice, camera.GetCamera());
-                    scenery.DrawText(spriteBatch, font, camera.GetCamera());
+                    scenery.RenderScenery(GraphicsDevice, camera);
+                    scenery.DrawText(spriteBatch, font, camera);
                 }
             }
 
@@ -268,18 +277,10 @@ namespace SoR.Logic.Game
             {
                 if (entity.Render)
                 {
-                    entity.RenderEntity(GraphicsDevice, camera.GetCamera());
-                    entity.DrawText(spriteBatch, font, camera.GetCamera());
+                    entity.RenderEntity(GraphicsDevice, camera);
+                    entity.DrawText(spriteBatch, font, camera);
                 }
             }
-        }
-
-        /*
-         * Refocus the camera to centre on the player after screen resolution change.
-         */
-        public void RefocusCamera(int x)
-        {
-            camera.SetXY(x);
         }
     }
 }
