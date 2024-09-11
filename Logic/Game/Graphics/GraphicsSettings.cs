@@ -23,8 +23,8 @@ namespace Logic.Game.Graphics
 
         public GraphicsSettingsTemp(MainGame game, GraphicsDeviceManager graphics)
         {
-            screenWidth = graphics.PreferredBackBufferWidth;
-            screenHeight = graphics.PreferredBackBufferHeight;
+            screenWidth = graphics.PreferredBackBufferWidth = 800;
+            screenHeight = graphics.PreferredBackBufferHeight = 600;
             x = graphics.PreferredBackBufferWidth / 2;
             y = graphics.PreferredBackBufferHeight / 2;
 

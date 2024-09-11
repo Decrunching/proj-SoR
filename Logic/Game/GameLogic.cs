@@ -54,7 +54,7 @@ namespace SoR.Logic.Game
         public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
         {
             // Instantiate the game camera
-            camera = new Camera (graphics, GraphicsDevice, Window, 800, 600);
+            camera = new Camera (GraphicsDevice, Window);
 
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
@@ -277,9 +277,10 @@ namespace SoR.Logic.Game
         /*
          * Refocus the camera to centre on the player after screen resolution change.
          */
-        public void RefocusCamera(int x, int y)
+        public void RefocusCamera(GraphicsDevice GraphicsDevice, GameWindow Window, int x, int y)
         {
             camera.SetXY(x, y);
+            camera.ResetViewport(GraphicsDevice, Window);
         }
     }
 }

@@ -70,8 +70,6 @@ namespace SoR
 
             gameLogic = new GameLogic(graphics, GraphicsDevice, graphicsSettings, Window);
 
-            Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
-
             base.Initialize();
         }
 
@@ -146,8 +144,8 @@ namespace SoR
                 if (graphics.PreferredBackBufferWidth > 800 |
                     graphics.PreferredBackBufferHeight > 600)
                 {
-                    x = graphics.PreferredBackBufferWidth / (aspectRatio * 1.5f);
-                    y = graphics.PreferredBackBufferHeight / (aspectRatio * 1.5f);
+                    x = graphics.PreferredBackBufferWidth / 2;
+                    y = graphics.PreferredBackBufferHeight / 2;
                 }
                 else
                 {
@@ -158,7 +156,7 @@ namespace SoR
                     y = 300;
                 }
 
-                gameLogic.RefocusCamera((int)x, (int)y);
+                gameLogic.RefocusCamera(GraphicsDevice, Window, (int)x, (int)y);
 
                 graphics.ApplyChanges();
 
