@@ -3,19 +3,17 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
-using SoR.Logic.Game;
 using System;
-using System.Drawing;
 
 namespace Logic.Game.Graphics
 {
     /*
      * The game camera, which follows the player.
      */
-    public class Camera : BoxingViewportAdapter
+    public class Camera : ScalingViewportAdapter
     {
         private OrthographicCamera camera;
-        private BoxingViewportAdapter viewportAdapter;
+        private ScalingViewportAdapter viewportAdapter;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
         private Matrix scaleMatrix;
@@ -29,19 +27,22 @@ namespace Logic.Game.Graphics
         private int screenY;
 
         public Camera(GameWindow Window, GraphicsDevice GraphicsDevice, int virtualWidth, int virtualHeight)
-            : base(Window, GraphicsDevice, virtualWidth, virtualHeight)
+            : base(GraphicsDevice, virtualWidth, virtualHeight)
         {
             this.virtualWidth = virtualWidth;
             this.virtualHeight = virtualHeight;
             screenX = virtualWidth / 2;
             screenY = virtualHeight / 2;
 
+            playerPosition = new Vector2(screenX, screenY);
+
             // Instantiate the camera
-            viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, virtualWidth, virtualHeight);
+            viewportAdapter = new ScalingViewportAdapter(GraphicsDevice, virtualWidth, virtualHeight);
             
             camera = new OrthographicCamera(viewportAdapter);
+            camera.Zoom = 1f;
 
-            Window.ClientSizeChanged += new EventHandler<EventArgs>(OnClientSizeChanged);
+            Window.ClientSizeChanged += OnClientSizeChanged;
         }
 
         /*
@@ -50,8 +51,9 @@ namespace Logic.Game.Graphics
         public void FollowPlayer(Vector2 position)
         {
             playerPosition = position;
-
-            camera.Move(camera.WorldToScreen(position.X - screenX, position.Y - screenY));
+            
+            camera.LookAt(playerPosition);
+            //camera.Move(camera.WorldToScreen(position.X - screenX, position.Y - screenY));
         }
 
         public void UpdateGraphicsDevice(int width, int height)
@@ -60,24 +62,33 @@ namespace Logic.Game.Graphics
             newHeight = height;
         }
 
-        /*
-         * Recentre the camera after a resolution change.
-         */
-        public void CentreCamera()
-        {
-            camera.LookAt(playerPosition);
-        }
-
         void OnClientSizeChanged(object sender, EventArgs e)
         {
             resolutionChanging = !resolutionChanging;
 
             if (resolutionChanging)
             {
-                CentreCamera();
+                viewportAdapter = new ScalingViewportAdapter(GraphicsDevice, virtualWidth, virtualHeight);
+
+                camera = new OrthographicCamera(viewportAdapter);
+
+                camera.LookAt(playerPosition);
+
+                System.Diagnostics.Debug.WriteLine("Camera centre: " + camera.Center);
+                System.Diagnostics.Debug.WriteLine("Player centre: " + playerPosition);
+                System.Diagnostics.Debug.WriteLine("Viewport centre: " + Viewport.X + ", " + Viewport.Y);
+
 
                 resolutionChanging = false;
             }
+        }
+
+        /*
+         * 
+         */
+        public OrthographicCamera GetCamera()
+        {
+            return camera;
         }
     }
 }

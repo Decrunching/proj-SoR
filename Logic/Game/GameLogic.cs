@@ -268,8 +268,8 @@ namespace SoR.Logic.Game
             {
                 if (scenery.Render)
                 {
-                    scenery.RenderScenery(GraphicsDevice, camera);
-                    scenery.DrawText(spriteBatch, font, camera);
+                    scenery.RenderScenery(GraphicsDevice, camera.GetCamera());
+                    scenery.DrawText(spriteBatch, font, camera.GetCamera());
                 }
             }
 
@@ -277,8 +277,8 @@ namespace SoR.Logic.Game
             {
                 if (entity.Render)
                 {
-                    entity.RenderEntity(GraphicsDevice, camera);
-                    entity.DrawText(spriteBatch, font, camera);
+                    entity.RenderEntity(GraphicsDevice, camera.GetCamera());
+                    entity.DrawText(spriteBatch, font, camera.GetCamera());
                 }
             }
         }

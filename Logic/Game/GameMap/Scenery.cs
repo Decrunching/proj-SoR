@@ -1,6 +1,7 @@
 ﻿using Logic.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended;
 using SoR.Logic.Entities;
 using Spine;
 using System.IO;
@@ -91,29 +92,17 @@ namespace Logic.Game.GameMap
         }
 
         /*
-         * Get the translation matrix for positioning the camera.
-         */
-        public void SetProjectionMatrix(Matrix viewportMatrix)
-        {
-            viewMatrix = viewportMatrix;
-        }
-
-        /*
-         * Get the translation matrix for positioning the camera.
-         */
-        public void SetViewportMatrix(Matrix viewportMatrix)
-        {
-            viewMatrix = viewportMatrix;
-        }
-
-        /*
          * Render the current skeleton to the screen.
          */
-        public virtual void RenderScenery(GraphicsDevice GraphicsDevice, Camera camera)
+        public virtual void RenderScenery(GraphicsDevice GraphicsDevice, OrthographicCamera camera)
         {
             // Create the skeleton renderer projection matrix
-            ((BasicEffect)skeletonRenderer.Effect).Projection = projectMatrix;
-            ((BasicEffect)skeletonRenderer.Effect).View = viewMatrix;
+            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
+            0,
+                GraphicsDevice.Viewport.Width,
+                GraphicsDevice.Viewport.Height,
+                0, 1, 0);
+            ((BasicEffect)skeletonRenderer.Effect).View = camera.GetViewMatrix();
 
             // Draw skeletons
             skeletonRenderer.Begin();
@@ -129,9 +118,9 @@ namespace Logic.Game.GameMap
         /*
          * Draw text to the screen.
          */
-        public void DrawText(SpriteBatch spriteBatch, SpriteFont font, Camera camera)
+        public void DrawText(SpriteBatch spriteBatch, SpriteFont font, OrthographicCamera camera)
         {
-            spriteBatch.Begin(transformMatrix: viewMatrix);
+            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
             spriteBatch.DrawString(
                 font,
                 "",

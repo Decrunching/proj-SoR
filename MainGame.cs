@@ -1,9 +1,8 @@
-﻿using Logic.Game.Graphics;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Logic.Game.Graphics;
 using SoR.Logic.Game;
-using System.Windows.Media.Media3D;
 
 namespace SoR
 {
