@@ -1,7 +1,7 @@
 ﻿using Logic.Game.GameMap;
+using Logic.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using SoR.Logic.Input;
 using Spine;
 using System;
@@ -59,6 +59,8 @@ namespace SoR.Logic.Entities
         protected Vector2 movementDirection;
         protected Vector2 pushedDirection;
         protected Vector2 prevPosition;
+        protected Matrix viewMatrix;
+        protected Matrix projectMatrix;
         protected int hitpoints;
         protected string prevTrigger;
         protected string animOne;
@@ -353,17 +355,29 @@ namespace SoR.Logic.Entities
         }
 
         /*
+         * Get the translation matrix for positioning the camera.
+         */
+        public void SetProjectionMatrix(Matrix projectionMatrix)
+        {
+            projectMatrix = projectionMatrix;
+        }
+
+        /*
+         * Get the translation matrix for positioning the camera.
+         */
+        public void SetViewportMatrix(Matrix viewportMatrix)
+        {
+            viewMatrix = viewportMatrix;
+        }
+
+        /*
          * Render the current skeleton to the screen.
          */
-        public virtual void RenderEntity(GraphicsDevice GraphicsDevice, OrthographicCamera camera)
+        public virtual void RenderEntity(GraphicsDevice GraphicsDevice, Camera camera)
         {
             // Create the skeleton renderer projection matrix
-            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
-            0,
-                GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height,
-                0, 1, 0);
-            ((BasicEffect)skeletonRenderer.Effect).View = camera.GetViewMatrix();
+            ((BasicEffect)skeletonRenderer.Effect).Projection = projectMatrix;
+            ((BasicEffect)skeletonRenderer.Effect).View = viewMatrix;
 
             // Draw skeletons
             skeletonRenderer.Begin();
@@ -379,9 +393,9 @@ namespace SoR.Logic.Entities
         /*
          * Draw text to the screen.
          */
-        public void DrawText(SpriteBatch spriteBatch, SpriteFont font, OrthographicCamera camera)
+        public void DrawText(SpriteBatch spriteBatch, SpriteFont font, Camera camera)
         {
-            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
+            spriteBatch.Begin(transformMatrix: viewMatrix);
             spriteBatch.DrawString(
                 font,
                 "HP: " + hitpoints,

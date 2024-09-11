@@ -68,7 +68,7 @@ namespace SoR
             graphicsSettings = new GraphicsSettings(game, graphics, Window, settings);
             graphicsSettings.InitialiseSettings(graphics, settings, Window);
 
-            gameLogic = new GameLogic(graphics, GraphicsDevice, graphicsSettings, Window);
+            gameLogic = new GameLogic(graphics, GraphicsDevice);
 
             Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
@@ -131,38 +131,19 @@ namespace SoR
 
             if (resolutionChanging)
             {
-                float width = Window.ClientBounds.Width;
-                float height = Window.ClientBounds.Height;
+                float scale = graphics.GraphicsDevice.Viewport.Width / 800f;
+                System.Diagnostics.Debug.WriteLine("Scale: " + scale);
 
-                float aspectRatio = (width / height);
-                //System.Diagnostics.Debug.WriteLine();
+                gameLogic.RefreshViewport(scale, graphics);
 
-                float x;
-                float y;
-
-                graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
-                graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
-
-                if (graphics.PreferredBackBufferWidth > 800 |
-                    graphics.PreferredBackBufferHeight > 600)
-                {
-                    x = graphics.PreferredBackBufferWidth / (aspectRatio * 1.5f);
-                    y = graphics.PreferredBackBufferHeight / (aspectRatio * 1.5f);
-                }
-                else
-                {
-                    graphics.PreferredBackBufferWidth = 800;
-                    graphics.PreferredBackBufferHeight = 600;
-
-                    x = 400;
-                    y = 300;
-                }
-
-                gameLogic.RefocusCamera((int)x, (int)y);
+                gameLogic.GetViewportMatrix();
+                gameLogic.GetProjectionMatrix(graphics);
 
                 graphics.ApplyChanges();
 
                 resolutionChanging = false;
+
+                //System.Diagnostics.Debug.WriteLine();
             }
         }
     }

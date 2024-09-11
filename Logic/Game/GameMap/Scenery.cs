@@ -1,6 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Game.Graphics;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using SoR.Logic.Entities;
 using Spine;
 using System.IO;
@@ -48,6 +48,8 @@ namespace Logic.Game.GameMap
         protected Slot slot;
         protected TrackEntry trackEntry;
         protected Vector2 position;
+        protected Matrix viewMatrix;
+        protected Matrix projectMatrix;
         protected string prevTrigger;
         protected string animOne;
         protected string animTwo;
@@ -89,17 +91,29 @@ namespace Logic.Game.GameMap
         }
 
         /*
+         * Get the translation matrix for positioning the camera.
+         */
+        public void SetProjectionMatrix(Matrix viewportMatrix)
+        {
+            viewMatrix = viewportMatrix;
+        }
+
+        /*
+         * Get the translation matrix for positioning the camera.
+         */
+        public void SetViewportMatrix(Matrix viewportMatrix)
+        {
+            viewMatrix = viewportMatrix;
+        }
+
+        /*
          * Render the current skeleton to the screen.
          */
-        public virtual void RenderScenery(GraphicsDevice GraphicsDevice, OrthographicCamera camera)
+        public virtual void RenderScenery(GraphicsDevice GraphicsDevice, Camera camera)
         {
             // Create the skeleton renderer projection matrix
-            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
-            0,
-                GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height,
-                0, 1, 0);
-            ((BasicEffect)skeletonRenderer.Effect).View = camera.GetViewMatrix();
+            ((BasicEffect)skeletonRenderer.Effect).Projection = projectMatrix;
+            ((BasicEffect)skeletonRenderer.Effect).View = viewMatrix;
 
             // Draw skeletons
             skeletonRenderer.Begin();
@@ -110,6 +124,20 @@ namespace Logic.Game.GameMap
 
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
+        }
+
+        /*
+         * Draw text to the screen.
+         */
+        public void DrawText(SpriteBatch spriteBatch, SpriteFont font, Camera camera)
+        {
+            spriteBatch.Begin(transformMatrix: viewMatrix);
+            spriteBatch.DrawString(
+                font,
+                "",
+                new Vector2(position.X - 80, position.Y + 100),
+                Color.BlueViolet);
+            spriteBatch.End();
         }
 
         /*
@@ -132,20 +160,6 @@ namespace Logic.Game.GameMap
 
             // Update skeletal transformations
             skeleton.UpdateWorldTransform(Skeleton.Physics.Update);
-        }
-
-        /*
-         * Draw text to the screen.
-         */
-        public void DrawText(SpriteBatch spriteBatch, SpriteFont font, OrthographicCamera camera)
-        {
-            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
-            spriteBatch.DrawString(
-                font,
-                "",
-                new Vector2(position.X - 80, position.Y + 100),
-                Color.BlueViolet);
-            spriteBatch.End();
         }
 
         /*
