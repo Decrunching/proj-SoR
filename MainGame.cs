@@ -43,7 +43,6 @@ namespace SoR
         private GameLogic gameLogic;
         private MainGame game;
         private GraphicsSettings graphicsSettings;
-        private Settings settings;
         private bool resolutionChanging;
 
         /*
@@ -63,12 +62,9 @@ namespace SoR
         {
             game = this;
 
-            settings = new Settings();
+            graphicsSettings = new GraphicsSettings(game, graphics, Window);
 
-            graphicsSettings = new GraphicsSettings(game, graphics, Window, settings);
-            graphicsSettings.InitialiseSettings(graphics, settings, Window);
-
-            gameLogic = new GameLogic(graphics, GraphicsDevice);
+            gameLogic = new GameLogic(graphics, GraphicsDevice, graphicsSettings, Window);
 
             Window.ClientSizeChanged += new EventHandler<EventArgs>(Window_ClientSizeChanged);
 
@@ -81,7 +77,6 @@ namespace SoR
         protected override void LoadContent()
         {
             gameLogic.LoadGameContent(graphics, GraphicsDevice, game);
-            graphicsSettings.LoadSettings(game, Content);
         }
 
         /*
@@ -89,7 +84,6 @@ namespace SoR
          */
         protected override void UnloadContent()
         {
-            graphicsSettings.UnloadSettings(Window, settings);
 
             base.UnloadContent();
         }
@@ -103,7 +97,7 @@ namespace SoR
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
-            graphicsSettings.UpdateSettings(graphics, Window, settings);
+            graphicsSettings.ToggleBorderlessWindowed(graphics, Window);
 
             // Update player input and animations
             gameLogic.UpdateEntities(Window, gameTime, graphics, graphicsSettings, GraphicsDevice);
@@ -117,8 +111,6 @@ namespace SoR
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
-
-            graphicsSettings.DrawSettings(settings);
             
             gameLogic.Render(GraphicsDevice);
 
@@ -131,19 +123,35 @@ namespace SoR
 
             if (resolutionChanging)
             {
-                float scale = graphics.GraphicsDevice.Viewport.Width / 800f;
-                System.Diagnostics.Debug.WriteLine("Scale: " + scale);
+                float width = graphics.PreferredBackBufferWidth = Window.ClientBounds.Width;
+                float height = graphics.PreferredBackBufferHeight = Window.ClientBounds.Height;
 
-                gameLogic.RefreshViewport(scale, graphics);
+                float virtualWidth = 800;
+                float virtualHeight = 600;
 
-                gameLogic.GetViewportMatrix();
-                gameLogic.GetProjectionMatrix(graphics);
+                int x = (int)width / 2;
+                int y = (int)height / 2;
+
+                if (width > virtualWidth | height > virtualHeight)
+                {
+                    float ratio = virtualHeight / height;
+
+                    //int x = Window.ClientBounds.X;
+                    //int y = Window.ClientBounds.Y;
+
+                    x = (int)(width * ratio) - ((int)virtualWidth / 2);
+                    y = (int)(height * ratio);
+                }
+
+                System.Diagnostics.Debug.WriteLine(x + ", " + y);
+                System.Diagnostics.Debug.WriteLine(width + ", " + height);
+
+
+                gameLogic.RefocusCamera(x);
 
                 graphics.ApplyChanges();
 
                 resolutionChanging = false;
-
-                //System.Diagnostics.Debug.WriteLine();
             }
         }
     }

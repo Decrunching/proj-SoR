@@ -9,7 +9,6 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
-using System.Drawing;
 
 namespace SoR.Logic.Game
 {
@@ -25,9 +24,8 @@ namespace SoR.Logic.Game
         private Dictionary<string, Scenery> scenery;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
-        private Vector2 playerPosition;
-        private float screenX;
-        private float screenY;
+        private float relativePositionX;
+        private float relativePositionY;
 
         /*
          * Enums for differentiating between entities.
@@ -53,10 +51,10 @@ namespace SoR.Logic.Game
         /*
          * Constructor for initial game setup.
          */
-        public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
         {
             // Instantiate the game camera
-            camera = new Camera (graphics, GraphicsDevice);
+            camera = new Camera (graphics, GraphicsDevice, Window, 800, 600);
 
             // Create dictionary for storing entities as values with string labels for keys
             entities = new Dictionary<string, Entity>();
@@ -77,11 +75,10 @@ namespace SoR.Logic.Game
             font = game.Content.Load<SpriteFont>("Fonts/File");
 
             // The centre of the screen
-            screenX = graphics.PreferredBackBufferWidth / 2;
-            screenY = graphics.PreferredBackBufferHeight / 2;
+            relativePositionX = graphics.PreferredBackBufferWidth / 2;
+            relativePositionY = graphics.PreferredBackBufferHeight / 2;
 
             // Create entities
-            playerPosition = new Vector2(screenX + 100, screenY + 100);
             entityType = EntityType.Player;
             CreateEntity(graphics, GraphicsDevice);
 
@@ -117,37 +114,35 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.SetPosition(playerPosition.X, playerPosition.Y);
-                        camera.CreateViewportMatrix(1f, player.GetPosition(), graphics);
-                        player.SetViewportMatrix(camera.GetViewportMatrix());
+                        player.SetPosition(relativePositionX + 100, relativePositionY + 100);
                     }
                     break;
                 case EntityType.Pheasant:
                     entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
-                        pheasant.SetPosition(screenX + 40, screenY - 200);
+                        pheasant.SetPosition(relativePositionX + 40, relativePositionY - 200);
                     }
                     break;
                 case EntityType.Chara:
                     entities.Add("chara", new Chara(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
-                        chara.SetPosition(screenX + 420, screenY + 350);
+                        chara.SetPosition(relativePositionX + 420, relativePositionY + 350);
                     }
                     break;
                 case EntityType.Slime:
                     entities.Add("slime", new Slime(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
-                        slime.SetPosition(screenX - 300, screenY + 250);
+                        slime.SetPosition(relativePositionX - 300, relativePositionY + 250);
                     }
                     break;
                 case EntityType.Fishy:
                     entities.Add("fishy", new Fishy(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("fishy", out Entity fishy))
                     {
-                        fishy.SetPosition(screenX + 340, screenY + 100);
+                        fishy.SetPosition(relativePositionX + 340, relativePositionY + 100);
                     }
                     break;
             }
@@ -165,7 +160,7 @@ namespace SoR.Logic.Game
                     scenery.Add("grass", new Grass(graphics, GraphicsDevice) { Render = true });
                     if (scenery.TryGetValue("grass", out Scenery grass))
                     {
-                        grass.SetPosition(screenX - 96, screenY - 96);
+                        grass.SetPosition(relativePositionX - 96, relativePositionY - 96);
                     }
                     break;
             }
@@ -175,7 +170,7 @@ namespace SoR.Logic.Game
                     scenery.Add("campfire", new Campfire(graphics, GraphicsDevice) { Render = true });
                     if (scenery.TryGetValue("campfire", out Scenery campfire))
                     {
-                        campfire.SetPosition(screenX + 32, screenY + 32);
+                        campfire.SetPosition(relativePositionX + 32, relativePositionY + 32);
                     }
                     break;
             }
@@ -264,8 +259,8 @@ namespace SoR.Logic.Game
             {
                 if (scenery.Render)
                 {
-                    scenery.RenderScenery(GraphicsDevice, camera);
-                    scenery.DrawText(spriteBatch, font, camera);
+                    scenery.RenderScenery(GraphicsDevice, camera.GetCamera());
+                    scenery.DrawText(spriteBatch, font, camera.GetCamera());
                 }
             }
 
@@ -273,8 +268,8 @@ namespace SoR.Logic.Game
             {
                 if (entity.Render)
                 {
-                    entity.RenderEntity(GraphicsDevice, camera);
-                    entity.DrawText(spriteBatch, font, camera);
+                    entity.RenderEntity(GraphicsDevice, camera.GetCamera());
+                    entity.DrawText(spriteBatch, font, camera.GetCamera());
                 }
             }
         }
@@ -282,74 +277,9 @@ namespace SoR.Logic.Game
         /*
          * Refocus the camera to centre on the player after screen resolution change.
          */
-        public void GetViewportMatrix()
+        public void RefocusCamera(int x)
         {
-            foreach (var scenery in scenery.Values)
-            {
-                if (scenery.Render)
-                {
-                    scenery.SetViewportMatrix(camera.GetViewportMatrix());
-                }
-            }
-            foreach (var entity in entities.Values)
-            {
-                if (entity.Render)
-                {
-                    entity.SetViewportMatrix(camera.GetViewportMatrix());
-                }
-            }
-        }
-
-        /*
-         * Refocus the camera to centre on the player after screen resolution change.
-         */
-        public void GetProjectionMatrix(GraphicsDeviceManager graphics)
-        {
-            foreach (var scenery in scenery.Values)
-            {
-                if (scenery.Render)
-                {
-                    scenery.SetProjectionMatrix(camera.CreateProjectionMatrix(graphics));
-                }
-            }
-            foreach (var entity in entities.Values)
-            {
-                if (entity.Render)
-                {
-                    entity.SetProjectionMatrix(camera.CreateProjectionMatrix(graphics));
-                }
-            }
-        }
-
-        /*
-         * Refocus the camera to centre on the player after screen resolution change.
-         */
-        public void RefreshViewport(float scale, GraphicsDeviceManager graphics)
-        {
-            camera.UpdateViewportMatrix(scale, GetPlayerPosition(), graphics);
-        }
-
-        /*
-         * Get the current player position.
-         */
-        public Vector2 GetPlayerPosition()
-        {
-            foreach (var entity in entities.Values)
-            {
-                if (entities.TryGetValue("player", out Entity playerChar))
-                {
-                    if (playerChar is Player player)
-                    {
-                        Vector2 playerPosition = player.GetPosition();
-                    }
-                    else
-                    {
-                        // Throw exception if playerChar is somehow not of the type Player
-                        throw new System.InvalidOperationException("playerChar is not of type Player");
-                    }
-                }
-            }
-            return playerPosition;
+            camera.SetXY(x);
         }
     }
 }
