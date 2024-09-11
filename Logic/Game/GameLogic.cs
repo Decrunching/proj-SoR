@@ -251,9 +251,10 @@ namespace SoR.Logic.Game
         /*
          * Update the graphics device with the new screen resolution after a resolution change.
          */
-        public void UpdateViewportGraphics(int screenWidth, int screenHeight)
+        public void UpdateViewportGraphics(GameWindow Window, int screenWidth, int screenHeight)
         {
-            camera.UpdateGraphicsDevice(screenWidth, screenHeight);
+            camera.GetResolutionUpdate(screenWidth, screenHeight);
+            camera.UpdateViewportAdapter(Window);
         }
 
         /*

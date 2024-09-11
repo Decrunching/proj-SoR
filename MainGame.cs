@@ -124,7 +124,7 @@ namespace SoR
                 screenWidth = (int)resolution.X;
                 screenHeight = (int)resolution.Y;
 
-                gameLogic.UpdateViewportGraphics(screenWidth, screenHeight);
+                gameLogic.UpdateViewportGraphics(Window, screenWidth, screenHeight);
 
                 graphics.ApplyChanges();
             }

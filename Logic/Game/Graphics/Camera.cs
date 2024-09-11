@@ -10,10 +10,10 @@ namespace Logic.Game.Graphics
     /*
      * The game camera, which follows the player.
      */
-    public class Camera : ScalingViewportAdapter
+    public class Camera : BoxingViewportAdapter
     {
         private OrthographicCamera camera;
-        private ScalingViewportAdapter viewportAdapter;
+        private BoxingViewportAdapter viewportAdapter;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
         private Matrix scaleMatrix;
@@ -27,7 +27,7 @@ namespace Logic.Game.Graphics
         private int screenY;
 
         public Camera(GameWindow Window, GraphicsDevice GraphicsDevice, int virtualWidth, int virtualHeight)
-            : base(GraphicsDevice, virtualWidth, virtualHeight)
+            : base(Window, GraphicsDevice, virtualWidth, virtualHeight)
         {
             this.virtualWidth = virtualWidth;
             this.virtualHeight = virtualHeight;
@@ -37,7 +37,7 @@ namespace Logic.Game.Graphics
             playerPosition = new Vector2(screenX, screenY);
 
             // Instantiate the camera
-            viewportAdapter = new ScalingViewportAdapter(GraphicsDevice, virtualWidth, virtualHeight);
+            viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, virtualWidth, virtualHeight);
             
             camera = new OrthographicCamera(viewportAdapter);
             camera.Zoom = 1f;
@@ -56,35 +56,39 @@ namespace Logic.Game.Graphics
             //camera.Move(camera.WorldToScreen(position.X - screenX, position.Y - screenY));
         }
 
-        public void UpdateGraphicsDevice(int width, int height)
+        /*
+         * Update the viewport adapter and camera after a resolution change.
+         */
+        public void UpdateViewportAdapter(GameWindow Window)
+        {
+            viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, virtualWidth, virtualHeight);
+            camera = new OrthographicCamera(viewportAdapter);
+        }
+
+        /*
+         * Get the new screen size after a resolution change;
+         */
+        public void GetResolutionUpdate(int width, int height)
         {
             newWidth = width;
             newHeight = height;
         }
 
+        /*
+         * Trigger if the window resolution changes to update the graphics device, camera and viewport.
+         */
         void OnClientSizeChanged(object sender, EventArgs e)
         {
-            resolutionChanging = !resolutionChanging;
-
             if (resolutionChanging)
             {
-                viewportAdapter = new ScalingViewportAdapter(GraphicsDevice, virtualWidth, virtualHeight);
-
-                camera = new OrthographicCamera(viewportAdapter);
-
                 camera.LookAt(playerPosition);
-
-                System.Diagnostics.Debug.WriteLine("Camera centre: " + camera.Center);
-                System.Diagnostics.Debug.WriteLine("Player centre: " + playerPosition);
-                System.Diagnostics.Debug.WriteLine("Viewport centre: " + Viewport.X + ", " + Viewport.Y);
-
 
                 resolutionChanging = false;
             }
         }
 
         /*
-         * 
+         * Get the Camera.
          */
         public OrthographicCamera GetCamera()
         {
@@ -92,94 +96,3 @@ namespace Logic.Game.Graphics
         }
     }
 }
-
-/*
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using MonoGame.Extended;
-using MonoGame.Extended.ViewportAdapters;
-using System;
-
-namespace Logic.Game.Graphics
-{
-    /*
-     * The game camera, which follows the player.
-     *//*
-    public class Camera
-    {
-        private OrthographicCamera camera;
-        private BoxingViewportAdapter viewportAdapter;
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
-        private Matrix scaleMatrix;
-        private int virtualWidth;
-        private int virtualHeight;
-        private int screenX;
-        private int screenY;
-
-        public Camera(GraphicsDevice GraphicsDevice, GameWindow Window)
-        {
-            virtualWidth = 800;
-            virtualHeight = 600;
-            screenX = virtualWidth / 2;
-            screenY = virtualHeight / 2;
-
-            // Instantiate the camera
-            viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, virtualWidth, virtualHeight);
-
-            camera = new OrthographicCamera(viewportAdapter);
-
-            Window.ClientSizeChanged += new EventHandler<EventArgs>(OnClientSizeChanged);
-        }
-
-        /*
-         * Follows the player.
-         *//*
-        public void FollowPlayer(Vector2 position)
-        {
-            //Resolution.currentResolution().X != Window.ClientBounds.Width || Resolution.currentResolution().Y != Window.ClientBounds.Height;
-
-            camera.Move(camera.WorldToScreen(position.X - screenX, position.Y - screenY));
-        }
-
-        /*
-         * Reset the viewport after a resolution change.
-         *//*
-        public void ResetViewport(GraphicsDevice GraphicsDevice, GameWindow Window)
-        {
-            viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, virtualWidth, virtualHeight);
-            //camera = new OrthographicCamera(viewportAdapter);
-        }
-
-        /*
-         * Get the camera.
-         *//*
-        public OrthographicCamera GetCamera()
-        {
-            return camera;
-        }
-
-        /*
-         * Set the x,y coordinates for centring the camera.
-         *//*
-        public void SetXY(int x, int y)
-        {
-            screenX = x;
-            screenY = y;
-        }
-
-        /*
-         * 
-         *//*
-        public void CentreCamera()
-        {
-            camera.LookAt(position)
-        }
-
-        void OnClientSizeChanged(object sender, EventArgs e)
-        {
-
-        }
-    }
-}*/
