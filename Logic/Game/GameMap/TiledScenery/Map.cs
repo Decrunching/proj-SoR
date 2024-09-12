@@ -27,7 +27,7 @@ namespace Logic.Game.GameMap.TiledScenery
         public int Columns { get; set; }
         public bool Render { get; set; }
 
-        public Map(GraphicsDevice GraphicsDevice, int row)
+        public Map(GraphicsDevice GraphicsDevice, int row, string skin)
         {
             // Load texture atlas and attachment loader
             atlas = new Atlas(Globals.GetPath(UseTileset(row, 0)), new XnaTextureLoader(GraphicsDevice));
@@ -41,7 +41,7 @@ namespace Logic.Game.GameMap.TiledScenery
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
-            skeleton.SetSkin(skeletonData.FindSkin("0"));
+            skeleton.SetSkin(skeletonData.FindSkin(skin));
 
             // Setup animation
             animStateData = new AnimationStateData(skeleton.Data);
@@ -116,9 +116,9 @@ namespace Logic.Game.GameMap.TiledScenery
         /*
          * Set entity position to the centre of the screen +/- any x,y axis adjustment.
          */
-        public virtual void SetPosition(float xAdjustment, float yAdjustment)
+        public virtual void SetPosition(Vector2 tilePosition)
         {
-            position = new Vector2(xAdjustment, yAdjustment);
+            position = tilePosition;
         }
 
         /*

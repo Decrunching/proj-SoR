@@ -10,6 +10,7 @@ using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
 using Spine;
+using System;
 
 namespace SoR.Logic.Game
 {
@@ -25,6 +26,7 @@ namespace SoR.Logic.Game
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
         private Dictionary<string, Map> tiles;
+        private TileLocations tileLocations;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
         private Vector2 playerPosition;
@@ -72,6 +74,7 @@ namespace SoR.Logic.Game
             entities = new Dictionary<string, Entity>();
             scenery = new Dictionary<string, Scenery>();
             tiles = new Dictionary<string, Map>();
+            tileLocations = new TileLocations();
         }
 
         /*
@@ -186,26 +189,37 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * CHoose map item to create, give it a unique string identifier as a key and set Render to true.
+         * Choose map item to create, give it a unique string identifier as a key and set Render to true.
          */
-        public void CreateMap(GraphicsDevice GraphicsDevice)
+        public void CreateMap(GraphicsDevice GraphicsDevice,int rows, int columns, int map)
         {
-            switch (tileType)
+            int rowNumber = 0;
+            int columnNumber = 0;
+
+            for (int i = columnNumber; i < tileLocations.GetTempleLayout().GetLength(columns); i++)
             {
-                case TileType.Temple:
-                    tiles.Add("temple", new Map(GraphicsDevice, 0) { Render = true });
-                    if (tiles.TryGetValue("temple", out Map temple))
+                for (int j = rowNumber; j < tileLocations.GetTempleLayout().GetLength(columns); j++)
+                {
+                    tiles.Add(j.ToString(), new Map(GraphicsDevice, map, j.ToString()) { Render = true });
+
+                    if (tiles.TryGetValue(j.ToString(), out Map tile))
                     {
-                        temple.SetPosition(0, 0);
+                        int previousTile = j - 1;
+
+                        if (tiles.TryGetValue(previousTile.ToString(), out Map previous))
+                        {
+                            Vector2 position = new Vector2(previous.GetPosition().X + 32, previous.GetPosition().Y);
+                            tile.SetPosition(position);
+                        }
                     }
-                    break;
+                }
             }
         }
 
-            /*
-             * Update world progress.
-             */
-            public void UpdateWorld(
+        /*
+         * Update world progress.
+         */
+        public void UpdateWorld(
             GameWindow Window,
             GameTime gameTime,
             GraphicsDeviceManager graphics,
