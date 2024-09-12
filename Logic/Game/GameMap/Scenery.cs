@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using SoR.Logic.Entities;
 using Spine;
-using System.IO;
 
 namespace Logic.Game.GameMap
 {
@@ -48,8 +47,6 @@ namespace Logic.Game.GameMap
         protected Slot slot;
         protected TrackEntry trackEntry;
         protected Vector2 position;
-        protected Matrix viewMatrix;
-        protected Matrix projectMatrix;
         protected string prevTrigger;
         protected string animOne;
         protected string animTwo;
@@ -178,7 +175,5 @@ namespace Logic.Game.GameMap
         {
             return position;
         }
-
-        public static string GetPath(string name) => Path.Combine("../../../", name);
     }
 }

@@ -59,8 +59,6 @@ namespace SoR.Logic.Entities
         protected Vector2 movementDirection;
         protected Vector2 pushedDirection;
         protected Vector2 prevPosition;
-        protected Matrix viewMatrix;
-        protected Matrix projectMatrix;
         protected int hitpoints;
         protected string prevTrigger;
         protected string animOne;
@@ -439,7 +437,5 @@ namespace SoR.Logic.Entities
         {
             return position;
         }
-
-        public static string GetPath(string name) => Path.Combine("../../../", name);
     }
 }

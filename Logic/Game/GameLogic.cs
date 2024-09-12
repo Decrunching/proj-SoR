@@ -9,6 +9,7 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
+using Spine;
 
 namespace SoR.Logic.Game
 {
@@ -19,9 +20,11 @@ namespace SoR.Logic.Game
     {
         private EntityType entityType;
         private SceneryType sceneryType;
+        private TileType tileType;
         private Camera camera;
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
+        private Dictionary<string, Map> tiles;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
         private Vector2 playerPosition;
@@ -29,7 +32,7 @@ namespace SoR.Logic.Game
         private float relativePositionY;
 
         /*
-         * Enums for differentiating between entities.
+         * Differentiate between entities.
          */
         enum EntityType
         {
@@ -41,7 +44,7 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Enums for differentiating between environmental ojects.
+         * Differentiate between environmental ojects.
          */
         enum SceneryType
         {
@@ -50,18 +53,25 @@ namespace SoR.Logic.Game
         }
 
         /*
+         * Differentiate between tilesets.
+         */
+        enum TileType
+        {
+            Temple
+        }
+
+        /*
          * Constructor for initial game setup.
          */
         public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
         {
-            // Instantiate the game camera
+            // Set up the camera
             camera = new Camera (Window, GraphicsDevice, 800, 600);
 
-            // Create dictionary for storing entities as values with string labels for keys
+            // Create dictionaries for game components
             entities = new Dictionary<string, Entity>();
-
-            // Create dictionary for storing entities as values with string labels for keys
             scenery = new Dictionary<string, Scenery>();
+            tiles = new Dictionary<string, Map>();
         }
 
         /*
@@ -99,13 +109,12 @@ namespace SoR.Logic.Game
             sceneryType = SceneryType.Campfire;
             CreateObject(graphics, GraphicsDevice);
 
-            sceneryType = SceneryType.Grass;
-            CreateObject(graphics, GraphicsDevice);
+            tileType = TileType.Temple;
+            CreateMap(GraphicsDevice);
         }
 
         /*
-         * Choose entity to create and place it as a value in the entities dictionary with
-         * a unique string identifier as a key.
+         * Choose entity to create, give it a unique string identifier as a key and set Render to true.
          */
         public void CreateEntity(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
@@ -150,8 +159,7 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Choose environmental object to create and place it as a value in the objects dictionary with
-         * a unique string identifier as a key.
+         * Choose environmental object to create, give it a unique string identifier as a key and set Render to true.
          */
         public void CreateObject(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
@@ -178,9 +186,26 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Update Spine animations and skeletons.
+         * CHoose map item to create, give it a unique string identifier as a key and set Render to true.
          */
-        public void UpdateEntities(
+        public void CreateMap(GraphicsDevice GraphicsDevice)
+        {
+            switch (tileType)
+            {
+                case TileType.Temple:
+                    tiles.Add("temple", new Map(GraphicsDevice, 0) { Render = true });
+                    if (tiles.TryGetValue("temple", out Map temple))
+                    {
+                        temple.SetPosition(0, 0);
+                    }
+                    break;
+            }
+        }
+
+            /*
+             * Update world progress.
+             */
+            public void UpdateWorld(
             GameWindow Window,
             GameTime gameTime,
             GraphicsDeviceManager graphics,
@@ -264,6 +289,17 @@ namespace SoR.Logic.Game
         {
             var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetHitbox().MaxY);
             var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
+            var sortTilesByYAxis = tiles.Values.OrderBy(tile => tile.GetSkeleton().Y);
+
+            foreach (var tile in sortTilesByYAxis)
+            {
+
+                if (tile.Render & !tile.GetSkeleton().Skin.Name.Contains("f"))
+                {
+                    tile.RenderFloorTile(GraphicsDevice, camera.GetCamera());
+                    tile.DrawText(spriteBatch, font, camera.GetCamera());
+                }
+            }
 
             foreach (var scenery in sortSceneryByYAxis)
             {
@@ -280,6 +316,16 @@ namespace SoR.Logic.Game
                 {
                     entity.RenderEntity(GraphicsDevice, camera.GetCamera());
                     entity.DrawText(spriteBatch, font, camera.GetCamera());
+                }
+            }
+
+            foreach (var tile in sortTilesByYAxis)
+            {
+
+                if (tile.Render & tile.GetSkeleton().Skin.Name.Contains("f"))
+                {
+                    tile.RenderFloorTile(GraphicsDevice, camera.GetCamera());
+                    tile.DrawText(spriteBatch, font, camera.GetCamera());
                 }
             }
         }

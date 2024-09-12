@@ -96,7 +96,7 @@ namespace SoR
 
             UpdateResolution(graphicsSettings.CheckIfBorderlessToggled(graphics, Window));
 
-            gameLogic.UpdateEntities(Window, gameTime, graphics, graphicsSettings, GraphicsDevice);
+            gameLogic.UpdateWorld(Window, gameTime, graphics, graphicsSettings, GraphicsDevice);
 
             base.Update(gameTime);
         }

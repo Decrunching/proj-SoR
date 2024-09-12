@@ -1,38 +1,25 @@
 {
 "skeleton": {
-	"hash": "Y5W4DMHaiLU",
+	"hash": "Bv7xk7liXc0",
 	"spine": "4.2.35",
-	"x": -16,
-	"width": 32,
-	"height": 32,
-	"images": "../../../SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Temple/",
+	"x": -32,
+	"width": 64,
+	"height": 64,
+	"images": "./Temple/pngs/",
 	"audio": "./audio"
 },
 "bones": [
 	{ "name": "root", "scaleX": 2, "scaleY": 2 }
 ],
 "slots": [
-	{ "name": "root", "bone": "root", "attachment": "root" },
-	{ "name": "hitbox", "bone": "root", "attachment": "hitbox" }
+	{ "name": "root", "bone": "root", "attachment": "root" }
 ],
 "skins": [
-	{
-		"name": "default",
-		"attachments": {
-			"hitbox": {
-				"hitbox": {
-					"type": "boundingbox",
-					"vertexCount": 4,
-					"vertices": [ -8, 16, -8.01, 0, 8.01, 0, 7.99, 15.99 ]
-				}
-			}
-		}
-	},
 	{
 		"name": "0",
 		"attachments": {
 			"root": {
-				"root": { "name": "id0", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id0", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -40,15 +27,15 @@
 		"name": "1",
 		"attachments": {
 			"root": {
-				"root": { "name": "id1", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id1", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "2",
+		"name": "2 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id2", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id2", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -56,23 +43,23 @@
 		"name": "3",
 		"attachments": {
 			"root": {
-				"root": { "name": "id3", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id3", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "4",
+		"name": "4 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id4", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id4", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "5",
+		"name": "5 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id5", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id5", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -80,7 +67,7 @@
 		"name": "6",
 		"attachments": {
 			"root": {
-				"root": { "name": "id7", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id0", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -88,7 +75,7 @@
 		"name": "7",
 		"attachments": {
 			"root": {
-				"root": { "name": "id8", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id7", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -96,151 +83,151 @@
 		"name": "8",
 		"attachments": {
 			"root": {
-				"root": { "name": "id9", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id8", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "9",
+		"name": "9 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id10", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id9", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "10",
+		"name": "10 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id11", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id10", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "11",
+		"name": "11 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id12", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id11", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "12",
+		"name": "12 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id13", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id12", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "13",
+		"name": "13 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id14", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id13", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "14",
+		"name": "14 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id15", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id14", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "15",
+		"name": "15 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id16", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id15", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "16",
+		"name": "16 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id17", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id16", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "17",
+		"name": "17 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id18", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id17", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "18",
+		"name": "18 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id19", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id18", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "19",
+		"name": "19 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id20", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id19", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "20",
+		"name": "20 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id21", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id20", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "21",
+		"name": "21 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id22", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id21", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "22",
+		"name": "22 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id23", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id22", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "23",
+		"name": "23 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id24", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id23", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "24",
+		"name": "24 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id25", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id24", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "25",
+		"name": "25 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id26", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id25", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "26",
+		"name": "26 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id27", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id26", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -248,15 +235,15 @@
 		"name": "27",
 		"attachments": {
 			"root": {
-				"root": { "name": "id28", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id27", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "28",
+		"name": "28 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id29", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id28", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -264,15 +251,15 @@
 		"name": "29",
 		"attachments": {
 			"root": {
-				"root": { "name": "id30", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id29", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "30",
+		"name": "30 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id31", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id30", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -280,7 +267,7 @@
 		"name": "31",
 		"attachments": {
 			"root": {
-				"root": { "name": "id32", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id31", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -288,7 +275,7 @@
 		"name": "32",
 		"attachments": {
 			"root": {
-				"root": { "name": "id33", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id32", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -296,7 +283,7 @@
 		"name": "33",
 		"attachments": {
 			"root": {
-				"root": { "name": "id34", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id33", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -304,7 +291,7 @@
 		"name": "34",
 		"attachments": {
 			"root": {
-				"root": { "name": "id35", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id34", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -312,15 +299,15 @@
 		"name": "35",
 		"attachments": {
 			"root": {
-				"root": { "name": "id36", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id35", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "36",
+		"name": "36 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id37", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id36", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -328,63 +315,63 @@
 		"name": "37",
 		"attachments": {
 			"root": {
-				"root": { "name": "id38", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id37", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "38",
+		"name": "38 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id39", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id38", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "39",
+		"name": "39 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id40", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id39", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "40",
+		"name": "40 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id41", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id40", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "41",
+		"name": "41 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id42", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id41", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "42",
+		"name": "42 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id43", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id42", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "43",
+		"name": "43 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id44", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id43", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "44",
+		"name": "44 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id45", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id44", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -392,7 +379,7 @@
 		"name": "45",
 		"attachments": {
 			"root": {
-				"root": { "name": "id46", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id45", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -400,47 +387,47 @@
 		"name": "46",
 		"attachments": {
 			"root": {
-				"root": { "name": "id47", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id46", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "47",
+		"name": "47 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id48", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id47", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "48",
+		"name": "48 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id49", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id48", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "49",
+		"name": "49 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id50", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id49", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "50",
+		"name": "50 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id51", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id50", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "51",
+		"name": "51 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id52", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id51", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -448,23 +435,23 @@
 		"name": "52",
 		"attachments": {
 			"root": {
-				"root": { "name": "id53", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id52", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "53",
+		"name": "53 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id54", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id53", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "54",
+		"name": "54 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id55", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id54", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -472,15 +459,15 @@
 		"name": "55",
 		"attachments": {
 			"root": {
-				"root": { "name": "id56", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id55", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "56",
+		"name": "56 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id57", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id56", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -488,15 +475,15 @@
 		"name": "57",
 		"attachments": {
 			"root": {
-				"root": { "name": "id58", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id57", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
 	{
-		"name": "58",
+		"name": "58 f",
 		"attachments": {
 			"root": {
-				"root": { "name": "id59", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id58", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -504,7 +491,7 @@
 		"name": "59",
 		"attachments": {
 			"root": {
-				"root": { "name": "id60", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id59", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -512,7 +499,7 @@
 		"name": "60",
 		"attachments": {
 			"root": {
-				"root": { "name": "id61", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id60", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -520,7 +507,7 @@
 		"name": "61",
 		"attachments": {
 			"root": {
-				"root": { "name": "id62", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id61", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	},
@@ -528,7 +515,15 @@
 		"name": "62",
 		"attachments": {
 			"root": {
-				"root": { "name": "id63", "y": 8, "scaleX": 0.5, "scaleY": 0.5, "width": 32, "height": 32 }
+				"root": { "name": "id62", "y": 16, "width": 32, "height": 32 }
+			}
+		}
+	},
+	{
+		"name": "63",
+		"attachments": {
+			"root": {
+				"root": { "name": "id63", "y": 16, "width": 32, "height": 32 }
 			}
 		}
 	}
