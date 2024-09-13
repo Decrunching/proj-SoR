@@ -222,7 +222,7 @@ namespace SoR.Logic.Game
                             tile.Name = tileName;
                             tile.SkinName = tileName;
                         }
-                        catch (Exception)
+                        catch (Exception) // TO DO: Add null reference exception - this one isn't working
                         {
                             tile.SetSkin(string.Concat(tileName + " f"));
                             tile.Name = string.Concat(tileName + " f");
