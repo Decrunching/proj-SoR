@@ -11,6 +11,8 @@ using Logic.Game.GameMap;
 using Logic.Game.Graphics;
 using Spine;
 using System;
+using System.Data.Common;
+using System.Xml.Linq;
 
 namespace SoR.Logic.Game
 {
@@ -112,8 +114,11 @@ namespace SoR.Logic.Game
             sceneryType = SceneryType.Campfire;
             CreateObject(graphics, GraphicsDevice);
 
-            tileType = TileType.Temple;
-            CreateMap(GraphicsDevice);
+            // Debugging tile placements
+            DebugMap(GraphicsDevice);
+
+            // Create a map
+            CreateMap(GraphicsDevice, 0, 0, 0, Vector2.Zero);
         }
 
         /*
@@ -191,28 +196,101 @@ namespace SoR.Logic.Game
         /*
          * Choose map item to create, give it a unique string identifier as a key and set Render to true.
          */
-        public void CreateMap(GraphicsDevice GraphicsDevice,int rows, int columns, int map)
+        public void CreateMap(GraphicsDevice GraphicsDevice,int row, int column, int mapRow, Vector2 firstTile)
         {
             int rowNumber = 0;
             int columnNumber = 0;
+            int previousColumn = -1;
+            int previousRow = -1;
 
-            for (int i = columnNumber; i < tileLocations.GetTempleLayout().GetLength(columns); i++)
+            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(rowNumber); i++)
             {
-                for (int j = rowNumber; j < tileLocations.GetTempleLayout().GetLength(columns); j++)
+                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(columnNumber); j++)
                 {
-                    tiles.Add(j.ToString(), new Map(GraphicsDevice, map, j.ToString()) { Render = true });
+                    string tileName = tileLocations.GetTempleLayout()[i, j];
+                    string id = string.Concat(i + "," + j);
 
-                    if (tiles.TryGetValue(j.ToString(), out Map tile))
+                    tiles.Add(id, new Map(GraphicsDevice, mapRow) { Render = true });
+
+                    if (tiles.TryGetValue(id, out Map tile))
                     {
-                        int previousTile = j - 1;
+                        tile.SetTileDimensions(mapRow);
 
-                        if (tiles.TryGetValue(previousTile.ToString(), out Map previous))
+                        try
                         {
-                            Vector2 position = new Vector2(previous.GetPosition().X + 32, previous.GetPosition().Y);
-                            tile.SetPosition(position);
+                            tile.SetSkin(tileName);
+                            tile.Name = tileName;
+                            tile.SkinName = tileName;
+                        }
+                        catch (Exception)
+                        {
+                            tile.SetSkin(string.Concat(tileName + " f"));
+                            tile.Name = string.Concat(tileName + " f");
+                            tile.SkinName = string.Concat(tileName + " f");
+                        }
+
+                        if (previousRow < 0 & previousColumn < 0)
+                        {
+                            tile.Position = firstTile;
+                        }
+                        
+                        if (previousRow == i & previousColumn >= 0)
+                        {
+                            string previousTile = string.Concat(i + "," + (j - 1));
+
+                            if (tiles.TryGetValue(previousTile, out Map previous))
+                            {
+                                Vector2 position = new Vector2(previous.Position.X + previous.GetWidth(), previous.Position.Y);
+                                tile.Position = position;
+                            }
+                        }
+                        else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
+                        {
+                            string previousTile = string.Concat(previousRow + "," + previousColumn);
+
+                            if (tiles.TryGetValue(previousTile, out Map previous))
+                            {
+                                Vector2 position = new Vector2(previous.Position.X, previous.Position.Y + tile.GetHeight());
+                                tile.Position = position;
+                            }
                         }
                     }
+                    previousColumn = j;
+                    previousRow = i;
                 }
+            }
+        }
+
+        public void DebugMap(GraphicsDevice GraphicsDevice, int row = 0, int column = 1)
+        {
+            int rowNumber = 0;
+            int columnNumber = 0;
+            int previousColumn = -1;
+            int previousRow = -1;
+
+            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(row); i++)
+            {
+                System.Diagnostics.Debug.Write(i + ": ");
+                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(column); j++)
+                {
+                    if (previousRow < 0 & previousColumn < 0)
+                    {
+                        System.Diagnostics.Debug.Write("First: ");
+                    }
+                    System.Diagnostics.Debug.Write(tileLocations.GetTempleLayout()[i, j] + ", ");
+
+                    if (previousRow == i & previousColumn >= 0)
+                    {
+                        System.Diagnostics.Debug.Write("(" + tileLocations.GetTempleLayout()[i, j - 1] + "), ");
+                    }
+                    else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
+                    {
+                        System.Diagnostics.Debug.Write("(" + tileLocations.GetTempleLayout()[previousRow, previousColumn] + "), ");
+                    }    
+                    previousColumn = j;
+                    previousRow = i;
+                }
+                System.Diagnostics.Debug.Write("\n");
             }
         }
 

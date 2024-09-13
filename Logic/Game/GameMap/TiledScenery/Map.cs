@@ -11,23 +11,23 @@ namespace Logic.Game.GameMap.TiledScenery
      */
     internal class Map
     {
-        protected Atlas atlas;
-        protected AtlasAttachmentLoader atlasAttachmentLoader;
-        protected SkeletonJson json;
-        protected SkeletonData skeletonData;
-        protected SkeletonRenderer skeletonRenderer;
-        protected Skeleton skeleton;
-        protected AnimationStateData animStateData;
-        protected AnimationState animState;
-        protected Vector2 position;
-        protected string[,] maps;
-        private int currentTile;
-        private int totalTiles;
-        public int Rows { get; set; }
-        public int Columns { get; set; }
+        private Atlas atlas;
+        private AtlasAttachmentLoader atlasAttachmentLoader;
+        private SkeletonJson json;
+        private SkeletonData skeletonData;
+        private SkeletonRenderer skeletonRenderer;
+        private Skeleton skeleton;
+        private AnimationStateData animStateData;
+        private AnimationState animState;
+        private int width;
+        private int height;
+        public Vector2 Position { get; set; }
+        public string Name { get; set; }
         public bool Render { get; set; }
+        public int[] MapDimensions { get; private set; }
+        public string SkinName { get; set; }
 
-        public Map(GraphicsDevice GraphicsDevice, int row, string skin)
+        public Map(GraphicsDevice GraphicsDevice, int row)
         {
             // Load texture atlas and attachment loader
             atlas = new Atlas(Globals.GetPath(UseTileset(row, 0)), new XnaTextureLoader(GraphicsDevice));
@@ -39,9 +39,6 @@ namespace Logic.Game.GameMap.TiledScenery
             skeletonData = json.ReadSkeletonData(Globals.GetPath(UseTileset(row, 1)));
             //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Scenery\\Grass\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
-
-            // Set the skin
-            skeleton.SetSkin(skeletonData.FindSkin(skin));
 
             // Setup animation
             animStateData = new AnimationStateData(skeleton.Data);
@@ -58,13 +55,45 @@ namespace Logic.Game.GameMap.TiledScenery
          */
         public string UseTileset(int row, int column)
         {
-            maps = new string[,]
+            string[,] maps = new string[,]
                 {
-                { "Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\Spine\\Temple.atlas",
+                    { "Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\Spine\\Temple.atlas",
                         "Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\Spine\\skeleton.json" } // 0: Temple
             };
 
             return maps[row, column];
+        }
+
+        /*
+         * Set the tile dimensions for the current map. The first array element is the width, the second is the height.
+         */
+        public void SetTileDimensions(int mapNumber)
+        {
+            MapDimensions = [64, 64]; // 0: Temple
+        }
+
+        /*
+         * Get the tile width.
+         */
+        public int GetWidth()
+        {
+            return MapDimensions[0];
+        }
+
+        /*
+         * Get the tile width.
+         */
+        public int GetHeight()
+        {
+            return MapDimensions[1];
+        }
+
+        /*
+         * Set the tile name.
+         */
+        public void SetName(string name)
+        {
+            Name = name;
         }
 
         /*
@@ -92,8 +121,8 @@ namespace Logic.Game.GameMap.TiledScenery
             skeletonRenderer.Begin();
 
             // Update the animation state and apply animations to skeletons
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
+            skeleton.X = Position.X;
+            skeleton.Y = Position.Y;
 
             skeletonRenderer.Draw(skeleton);
             skeletonRenderer.End();
@@ -108,17 +137,9 @@ namespace Logic.Game.GameMap.TiledScenery
             spriteBatch.DrawString(
                 font,
                 "",
-                new Vector2(position.X - 80, position.Y + 100),
+                new Vector2(Position.X - 80, Position.Y + 100),
                 Color.BlueViolet);
             spriteBatch.End();
-        }
-
-        /*
-         * Set entity position to the centre of the screen +/- any x,y axis adjustment.
-         */
-        public virtual void SetPosition(Vector2 tilePosition)
-        {
-            position = tilePosition;
         }
 
         /*
@@ -127,11 +148,6 @@ namespace Logic.Game.GameMap.TiledScenery
         public Skeleton GetSkeleton()
         {
             return skeleton;
-        }
-
-        public Vector2 GetPosition()
-        {
-            return position;
         }
     }
 }

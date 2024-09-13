@@ -4,6 +4,7 @@ using SoR;
 using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
+using System;
 using System.Collections.Generic;
 
 namespace Logic.Entities.Character.Player
