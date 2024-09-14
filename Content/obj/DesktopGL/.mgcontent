@@ -4,70 +4,70 @@
   <Platform>DesktopGL</Platform>
   <Config />
   <SourceFiles>
-    <File>D:/GitHub projects/Proj-SoR/Content/Fonts/File.spritefont</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Entities/Chara/savedit.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Entities/Fishy/Fishy.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Entities/Pheasant/savedthepheasant.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Entities/Player/Char sprites.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Entities/Slime/Slime.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/Interactables/Campfire/templecampfire.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/Interactables/House/House.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/00.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/01.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/02.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/03.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/04.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/05.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/06.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/07.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/08.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/09.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/10.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/11.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/12.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/13.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/14.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/15.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Grass/grasstiles.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/0.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/1.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/10.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/11.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/12.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/13.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/14.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/15.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/16.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/2.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/3.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/4.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/5.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/6.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/7.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/8.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/9.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Outside wall light/00.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Outside wall light/01.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Outside wall light/02.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Outside wall light/03.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/00.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/01.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/02.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/03.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/04.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/05.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/06.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/07.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/08.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/09.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/10.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/11.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/12.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/13.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/14.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/15.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Temple/spritesheet.png</File>
-    <File>D:/GitHub projects/Proj-SoR/Content/SoR Resources/Locations/TiledScenery/Temple/Temple.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/Fonts/File.spritefont</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Entities/Chara/savedit.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Entities/Fishy/Fishy.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Entities/Pheasant/savedthepheasant.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Entities/Player/Char sprites.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Entities/Slime/Slime.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/Interactables/Campfire/templecampfire.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/Interactables/House/House.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/00.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/01.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/02.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/03.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/04.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/05.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/06.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/07.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/08.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/09.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/10.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/11.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/12.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/13.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/14.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/15.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Grass/grasstiles.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/0.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/1.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/10.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/11.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/12.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/13.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/14.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/15.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/16.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/2.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/3.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/4.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/5.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/6.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/7.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/8.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Lake/9.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Outside wall light/00.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Outside wall light/01.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Outside wall light/02.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Outside wall light/03.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/00.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/01.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/02.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/03.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/04.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/05.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/06.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/07.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/08.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/09.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/10.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/11.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/12.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/13.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/14.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/15.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Temple/floorSpritesheet.png</File>
+    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet.png</File>
   </SourceFiles>
   <DestFiles>
     <File xsi:nil="true" />

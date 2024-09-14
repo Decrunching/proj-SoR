@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using MonoGame.Extended.Tiled;
 
 namespace Logic.Game.GameMap.TiledScenery
 {
@@ -9,63 +10,96 @@ namespace Logic.Game.GameMap.TiledScenery
      */
     internal class DrawTiles
     {
+        private Texture2D floorTexture;
+        private Texture2D wallTexture;
         private Rectangle targetRectangle;
-        private int tileCountWidth;
-        private int tileCountHeight;
-        private int currentTile;
-        private int totalTiles;
-        public Texture2D TileSet { get; set; }
+        private string floorTiles;
+        private string wallTiles;
+        private int mapWidth;
+        private int mapHeight;
         public Vector2 Position { get; set; }
-        public int Rows { get; set; }
-        public int Columns { get; set; }
 
-
-        public DrawTiles(int map, int rows, int columns)
+        public DrawTiles(int map, string floorTileset, string wallTileset)
         {
-            Rows = rows;
-            Columns = columns;
             Position = Vector2.Zero;
-            tileCountWidth = 2;
-            tileCountHeight = 2;
-            currentTile = 0;
-            totalTiles = 0;
+            floorTiles = floorTileset;
+            wallTiles = wallTileset;
+        }
+
+        /*
+         * Load map content.
+         */
+        public void LoadMap(ContentManager Content, int rows, int columns)
+        {
+            mapWidth = 64 * rows;
+            mapHeight = 64 * columns;
+
+            targetRectangle = new Rectangle(0, 0, mapWidth, mapHeight);
+
+            floorTexture = Content.Load<Texture2D>(floorTiles);
+            wallTexture = Content.Load<Texture2D>(wallTiles);
         }
 
         /*
          * 
          */
-        public void LoadMap(ContentManager Content, GraphicsDevice GraphicsDevice)
+        public void DebugMap(GraphicsDevice GraphicsDevice, int row = 0, int column = 1)
         {
-            TileSet = Content.Load<Texture2D>("SoR Resources/Locations/TiledScenery/Temple/spritesheet");
-            targetRectangle = new Rectangle(0, 0, TileSet.Width * tileCountWidth, TileSet.Height * tileCountHeight);
-            Viewport viewport = GraphicsDevice.Viewport;
+            int rowNumber = 0;
+            int columnNumber = 0;
+            int previousColumn = -1;
+            int previousRow = -1;
+
+            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(row); i++)
+            {
+                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(column); j++)
+                {
+                    if (previousRow < 0 & previousColumn < 0)
+                    {
+
+                    }
+
+                    if (previousRow == i & previousColumn >= 0)
+                    {
+
+                    }
+                    else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
+                    {
+
+                    }
+                    previousColumn = j;
+                    previousRow = i;
+                }
+            }
         }
 
         /*
-         * 
+         * Draw the map.
          */
-        public void UpdateMap() { }
-
-        /*
-         * 
-         */
-        public void DrawMap(SpriteBatch spriteBatch, Vector2 location)
+        public void DrawMap(SpriteBatch spriteBatch, Vector2 location, int tileWidth, int tileHeight)
         {
+            Rectangle sourceRectangle = new Rectangle(tileWidth * column, tileHeight * row, tileWidth, tileHeight);
+            Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, tileWidth, tileHeight);
+
             int width = TileSet.Width / Columns;
             int height = TileSet.Height / Rows;
             int row = currentTile / Columns;
             int column = currentTile % Columns;
 
-            Rectangle sourceRectangle = new Rectangle(width * column, height * row, width, height);
-            Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, width, height);
-
             if (currentTile != totalTiles)
             {
                 currentTile++;
             }
-            spriteBatch.Begin(SpriteSortMode.FrontToBack, BlendState.Opaque, SamplerState.LinearWrap,
-                DepthStencilState.Default, RasterizerState.CullNone);
-            spriteBatch.Draw(TileSet, Vector2.Zero, targetRectangle, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+
+
+
+
+            spriteBatch.Begin();
+
+
+            spriteBatch.Draw(Map, location, targetRectangle, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+
+
             spriteBatch.End();
         }
     }

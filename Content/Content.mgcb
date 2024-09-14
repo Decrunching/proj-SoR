@@ -798,10 +798,7 @@
 /processorParam:TextureFormat=Color
 /build:SoR Resources/Locations/TiledScenery/t-grass/15.png
 
-#begin SoR Resources/Locations/TiledScenery/Temple/skeleton.json
-/copy:SoR Resources/Locations/TiledScenery/Temple/skeleton.json
-
-#begin SoR Resources/Locations/TiledScenery/Temple/spritesheet.png
+#begin SoR Resources/Locations/TiledScenery/Temple/floorSpritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -811,12 +808,9 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SoR Resources/Locations/TiledScenery/Temple/spritesheet.png
+/build:SoR Resources/Locations/TiledScenery/Temple/floorSpritesheet.png
 
-#begin SoR Resources/Locations/TiledScenery/Temple/Temple.atlas
-/copy:SoR Resources/Locations/TiledScenery/Temple/Temple.atlas
-
-#begin SoR Resources/Locations/TiledScenery/Temple/Temple.png
+#begin SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -826,5 +820,5 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:SoR Resources/Locations/TiledScenery/Temple/Temple.png
+/build:SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet.png
 

@@ -55,8 +55,8 @@ namespace Logic.Game.GameMap.TiledScenery
         {
             string[,] maps = new string[,]
                 {
-                    { "Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\Temple.atlas",
-                        "Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\skeleton.json" } // 0: Temple
+                    { "SoR Resources/Locations/TiledScenery/Temple/floorSpritesheet",
+                        "SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet" } // 0: Temple
             };
 
             return maps[row, column];

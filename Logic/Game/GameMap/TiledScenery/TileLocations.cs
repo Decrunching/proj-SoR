@@ -1,7 +1,8 @@
 ﻿namespace Logic.Game.GameMap.TiledScenery
-{/*
-  * Tiles are mapped to multidimnesional arrays, with each element corresponding to a tile skin.
-  */
+{
+    /*
+     * Tiles are mapped to multidimnesional arrays, with each element corresponding to a tile skin.
+     */
     public class TileLocations
     {
         private string[,] temple;
@@ -21,10 +22,37 @@
                 { "10", "1", "1", "0", "1", "1", "1", "1", "29", "30" },        // 3
                 { "10", "35", "1", "17", "16", "16", "18", "1", "1", "14" },    // 4
                 { "15", "16", "16", "19", "21", "21", "20", "16", "16", "26" }, // 5
-                { "22", "24", "25", "23", "0", "0", "22", "24", "25", "23" }    // 6
+                { "22", "24", "25", "23", "0", "0", "22", "24", "25", "23" }    // 6 // 0: Temple
             };
 
             return temple;
+        }
+
+        /*
+         * Get the required tileset.
+         */
+        public string UseTileset(int row, int column)
+        {
+            string[,] maps = new string[,]
+            {
+                { "SoR Resources/Locations/TiledScenery/Temple/floorSpritesheet",
+                    "SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet" } // 0: Temple
+            };
+
+            return maps[row, column];
+        }
+
+        /*
+         * Get the width and height of each tile in this set.
+         */
+        public int GetTileDimensions(int row, int column)
+        {
+            int[,] dimensions = new int[,]
+            {
+                { 64, 64 } // 0: Temple
+            };
+
+            return dimensions[row, column];
         }
     }
 }
