@@ -25,6 +25,7 @@ namespace SoR.Logic.Game
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
         private Dictionary<string, Map> tiles;
+        private DrawTiles drawTiles;
         private TileLocations tileLocations;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
@@ -73,6 +74,7 @@ namespace SoR.Logic.Game
             // Create dictionaries for game components
             entities = new Dictionary<string, Entity>();
             scenery = new Dictionary<string, Scenery>();
+            drawTiles = new DrawTiles(0, 7, 10);
             tiles = new Dictionary<string, Map>();
             tileLocations = new TileLocations();
         }
@@ -121,6 +123,8 @@ namespace SoR.Logic.Game
 
             // Create a map
             CreateMap(GraphicsDevice, 0, 0, 0, Vector2.Zero);
+
+            drawTiles.LoadMap(game.Content, GraphicsDevice);
         }
 
         /*
@@ -377,6 +381,10 @@ namespace SoR.Logic.Game
          */
         public void Render(GraphicsDevice GraphicsDevice)
         {
+            Vector2 mapLocation = new Vector2(playerPosition.X - 400, playerPosition.Y - 400);
+
+            drawTiles.DrawMap(spriteBatch, mapLocation);
+
             ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
                     0,
                         GraphicsDevice.Viewport.Width,
