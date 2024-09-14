@@ -42,10 +42,6 @@ namespace Logic.Game.GameMap.Interactables
             slot.Attachment = hitboxAttachment;
             skeleton.SetAttachment("hitbox", "hitbox");
 
-            // Initialise skeleton renderer with premultiplied alpha
-            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
-            skeletonRenderer.PremultipliedAlpha = true;
-
             hitbox = new SkeletonBounds();
         }
 

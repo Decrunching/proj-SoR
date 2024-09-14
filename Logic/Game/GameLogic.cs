@@ -10,9 +10,6 @@ using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
 using Spine;
-using System;
-using System.Data.Common;
-using System.Xml.Linq;
 
 namespace SoR.Logic.Game
 {
@@ -31,6 +28,7 @@ namespace SoR.Logic.Game
         private TileLocations tileLocations;
         private SpriteBatch spriteBatch;
         private SpriteFont font;
+        private SkeletonRenderer skeletonRenderer;
         private Vector2 playerPosition;
         private float relativePositionX;
         private float relativePositionY;
@@ -93,6 +91,10 @@ namespace SoR.Logic.Game
             // The centre of the screen
             relativePositionX = graphics.PreferredBackBufferWidth / 2;
             relativePositionY = graphics.PreferredBackBufferHeight / 2;
+
+            // Initialise skeleton renderer with premultiplied alpha
+            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
+            skeletonRenderer.PremultipliedAlpha = true;
 
             // Create entities
             entityType = EntityType.Player;
@@ -194,107 +196,6 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Choose map item to create, give it a unique string identifier as a key and set Render to true.
-         */
-        public void CreateMap(GraphicsDevice GraphicsDevice,int row, int column, int mapRow, Vector2 firstTile)
-        {
-            int rowNumber = 0;
-            int columnNumber = 0;
-            int previousColumn = -1;
-            int previousRow = -1;
-
-            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(rowNumber); i++)
-            {
-                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(columnNumber); j++)
-                {
-                    string tileName = tileLocations.GetTempleLayout()[i, j];
-                    string id = string.Concat(i + "," + j);
-
-                    tiles.Add(id, new Map(GraphicsDevice, mapRow) { Render = true });
-
-                    if (tiles.TryGetValue(id, out Map tile))
-                    {
-                        tile.SetTileDimensions(mapRow);
-
-                        try
-                        {
-                            tile.SetSkin(tileName);
-                            tile.Name = tileName;
-                            tile.SkinName = tileName;
-                        }
-                        catch (Exception) // TO DO: Add null reference exception - this one isn't working
-                        {
-                            tile.SetSkin(string.Concat(tileName + " f"));
-                            tile.Name = string.Concat(tileName + " f");
-                            tile.SkinName = string.Concat(tileName + " f");
-                        }
-
-                        if (previousRow < 0 & previousColumn < 0)
-                        {
-                            tile.Position = firstTile;
-                        }
-                        
-                        if (previousRow == i & previousColumn >= 0)
-                        {
-                            string previousTile = string.Concat(i + "," + (j - 1));
-
-                            if (tiles.TryGetValue(previousTile, out Map previous))
-                            {
-                                Vector2 position = new Vector2(previous.Position.X + previous.GetWidth(), previous.Position.Y);
-                                tile.Position = position;
-                            }
-                        }
-                        else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
-                        {
-                            string previousTile = string.Concat(previousRow + "," + previousColumn);
-
-                            if (tiles.TryGetValue(previousTile, out Map previous))
-                            {
-                                Vector2 position = new Vector2(previous.Position.X, previous.Position.Y + tile.GetHeight());
-                                tile.Position = position;
-                            }
-                        }
-                    }
-                    previousColumn = j;
-                    previousRow = i;
-                }
-            }
-        }
-
-        public void DebugMap(GraphicsDevice GraphicsDevice, int row = 0, int column = 1)
-        {
-            int rowNumber = 0;
-            int columnNumber = 0;
-            int previousColumn = -1;
-            int previousRow = -1;
-
-            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(row); i++)
-            {
-                System.Diagnostics.Debug.Write(i + ": ");
-                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(column); j++)
-                {
-                    if (previousRow < 0 & previousColumn < 0)
-                    {
-                        System.Diagnostics.Debug.Write("First: ");
-                    }
-                    System.Diagnostics.Debug.Write(tileLocations.GetTempleLayout()[i, j] + ", ");
-
-                    if (previousRow == i & previousColumn >= 0)
-                    {
-                        System.Diagnostics.Debug.Write("(" + tileLocations.GetTempleLayout()[i, j - 1] + "), ");
-                    }
-                    else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
-                    {
-                        System.Diagnostics.Debug.Write("(" + tileLocations.GetTempleLayout()[previousRow, previousColumn] + "), ");
-                    }    
-                    previousColumn = j;
-                    previousRow = i;
-                }
-                System.Diagnostics.Debug.Write("\n");
-            }
-        }
-
-        /*
          * Update world progress.
          */
         public void UpdateWorld(
@@ -374,11 +275,115 @@ namespace SoR.Logic.Game
             camera.UpdateViewportAdapter(Window);
         }
 
+        public void DebugMap(GraphicsDevice GraphicsDevice, int row = 0, int column = 1)
+        {
+            int rowNumber = 0;
+            int columnNumber = 0;
+            int previousColumn = -1;
+            int previousRow = -1;
+
+            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(row); i++)
+            {
+                System.Diagnostics.Debug.Write(i + ": ");
+                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(column); j++)
+                {
+                    if (previousRow < 0 & previousColumn < 0)
+                    {
+                        System.Diagnostics.Debug.Write("First: ");
+                    }
+                    System.Diagnostics.Debug.Write(tileLocations.GetTempleLayout()[i, j] + ", ");
+
+                    if (previousRow == i & previousColumn >= 0)
+                    {
+                        System.Diagnostics.Debug.Write("(" + tileLocations.GetTempleLayout()[i, j - 1] + "), ");
+                    }
+                    else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
+                    {
+                        System.Diagnostics.Debug.Write("(" + tileLocations.GetTempleLayout()[previousRow, previousColumn] + "), ");
+                    }
+                    previousColumn = j;
+                    previousRow = i;
+                }
+                System.Diagnostics.Debug.Write("\n");
+            }
+        }
+
+        /*
+         * Choose map item to create, give it a unique string identifier as a key and set Render to true.
+         */
+        public void CreateMap(GraphicsDevice GraphicsDevice, int row, int column, int mapRow, Vector2 firstTile)
+        {
+            int rowNumber = 0;
+            int columnNumber = 0;
+            int previousColumn = -1;
+            int previousRow = -1;
+
+            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(rowNumber); i++)
+            {
+                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(columnNumber); j++)
+                {
+                    string tileName = tileLocations.GetTempleLayout()[i, j];
+                    string id = string.Concat(mapRow + ":" + i + "," + j);
+
+                    tiles.Add(id, new Map(GraphicsDevice, mapRow) { Render = true });
+
+                    if (tiles.TryGetValue(id, out Map tile))
+                    {
+                        tile.SetTileDimensions(mapRow);
+
+                        if (tile.GetSkeletonData().FindSkin(tileName) == null)
+                        {
+                            tile.GetSkeleton().SetSkin(tile.GetSkeletonData().FindSkin(string.Concat(tileName + " f")));
+                        }
+                        else
+                        {
+                            tile.GetSkeleton().SetSkin(tile.GetSkeletonData().FindSkin(tileName));
+                        }
+
+                        if (previousRow < 0 & previousColumn < 0)
+                        {
+                            tile.Position = firstTile;
+                        }
+
+                        if (previousRow == i & previousColumn >= 0)
+                        {
+                            string previousTile = string.Concat(i + "," + (j - 1));
+
+                            if (tiles.TryGetValue(previousTile, out Map previous))
+                            {
+                                Vector2 position = new Vector2(previous.Position.X + previous.GetWidth(), previous.Position.Y);
+                                tile.Position = position;
+                            }
+                        }
+                        else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
+                        {
+                            string previousTile = string.Concat(previousRow + "," + previousColumn);
+
+                            if (tiles.TryGetValue(previousTile, out Map previous))
+                            {
+                                Vector2 position = new Vector2(previous.Position.X, previous.Position.Y + tile.GetHeight());
+                                tile.Position = position;
+                            }
+                        }
+                    }
+                    previousColumn = j;
+                    previousRow = i;
+                }
+            }
+        }
+
         /*
          * Render Spine objects in order of y-axis position.
          */
         public void Render(GraphicsDevice GraphicsDevice)
         {
+            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
+                    0,
+                        GraphicsDevice.Viewport.Width,
+                        GraphicsDevice.Viewport.Height,
+                        0, 1, 0);
+            ((BasicEffect)skeletonRenderer.Effect).View = camera.GetCamera().GetViewMatrix();
+
             var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetHitbox().MaxY);
             var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
             var sortTilesByYAxis = tiles.Values.OrderBy(tile => tile.GetSkeleton().Y);
@@ -397,7 +402,11 @@ namespace SoR.Logic.Game
             {
                 if (scenery.Render)
                 {
-                    scenery.RenderScenery(GraphicsDevice, camera.GetCamera());
+                    // Draw skeletons
+                    skeletonRenderer.Begin();
+                    skeletonRenderer.Draw(scenery.GetSkeleton());
+                    skeletonRenderer.End();
+
                     scenery.DrawText(spriteBatch, font, camera.GetCamera());
                 }
             }
@@ -406,7 +415,12 @@ namespace SoR.Logic.Game
             {
                 if (entity.Render)
                 {
-                    entity.RenderEntity(GraphicsDevice, camera.GetCamera());
+                    // Draw skeletons
+                    skeletonRenderer.Begin();
+                    skeletonRenderer.Draw(entity.GetSkeleton());
+                    skeletonRenderer.End();
+
+                    //entity.RenderEntity(GraphicsDevice, camera.GetCamera());
                     entity.DrawText(spriteBatch, font, camera.GetCamera());
                 }
             }

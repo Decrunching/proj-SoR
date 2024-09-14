@@ -66,11 +66,9 @@
     <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/13.png</File>
     <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/14.png</File>
     <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/t-grass/15.png</File>
-    <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Temple/Spine/Temple.png</File>
     <File>F:/MonoGame/SoR/SoR/Content/SoR Resources/Locations/TiledScenery/Temple/Temple.png</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />

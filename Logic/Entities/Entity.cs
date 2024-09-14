@@ -353,30 +353,6 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Render the current skeleton to the screen.
-         */
-        public virtual void RenderEntity(GraphicsDevice GraphicsDevice, OrthographicCamera camera)
-        {
-            // Create the skeleton renderer projection matrix
-            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
-            0,
-                GraphicsDevice.Viewport.Width,
-                GraphicsDevice.Viewport.Height,
-                0, 1, 0);
-            ((BasicEffect)skeletonRenderer.Effect).View = camera.GetViewMatrix();
-
-            // Draw skeletons
-            skeletonRenderer.Begin();
-
-            // Update the animation state and apply animations to skeletons
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
-
-            skeletonRenderer.Draw(skeleton);
-            skeletonRenderer.End();
-        }
-
-        /*
          * Draw text to the screen.
          */
         public void DrawText(SpriteBatch spriteBatch, SpriteFont font, OrthographicCamera camera)

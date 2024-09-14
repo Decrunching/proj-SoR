@@ -7,7 +7,8 @@ using Microsoft.Xna.Framework;
 namespace Logic.Game.GameMap.TiledScenery
 {
     /*
-     * Create a map.
+     * Create a map. Each tile has a unique id of the format "0:0,0", where the first digit represents which map layout
+     * it belongs to in the TileLocation array, and the second and third are its row and column position.
      */
     internal class Map
     {
@@ -19,26 +20,23 @@ namespace Logic.Game.GameMap.TiledScenery
         private Skeleton skeleton;
         private AnimationStateData animStateData;
         private AnimationState animState;
-        private int width;
-        private int height;
         public Vector2 Position { get; set; }
-        public string Name { get; set; }
         public bool Render { get; set; }
         public int[] MapDimensions { get; private set; }
-        public string SkinName { get; set; }
 
         public Map(GraphicsDevice GraphicsDevice, int row)
         {
             // Load texture atlas and attachment loader
             atlas = new Atlas(Globals.GetPath(UseTileset(row, 0)), new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Scenery\\Grass\\skeleton.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
             skeletonData = json.ReadSkeletonData(Globals.GetPath(UseTileset(row, 1)));
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Scenery\\Grass\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
+
+            // Set the skin
+            skeleton.SetSkin(skeletonData.FindSkin("0"));
 
             // Setup animation
             animStateData = new AnimationStateData(skeleton.Data);
@@ -57,8 +55,8 @@ namespace Logic.Game.GameMap.TiledScenery
         {
             string[,] maps = new string[,]
                 {
-                    { "Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\Spine\\Temple.atlas",
-                        "Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\Spine\\skeleton.json" } // 0: Temple
+                    { "Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\Temple.atlas",
+                        "Content\\SoR Resources\\Locations\\TiledScenery\\Temple\\skeleton.json" } // 0: Temple
             };
 
             return maps[row, column];
@@ -86,14 +84,6 @@ namespace Logic.Game.GameMap.TiledScenery
         public int GetHeight()
         {
             return MapDimensions[1];
-        }
-
-        /*
-         * Set the tile name.
-         */
-        public void SetName(string name)
-        {
-            Name = name;
         }
 
         /*
@@ -148,6 +138,14 @@ namespace Logic.Game.GameMap.TiledScenery
         public Skeleton GetSkeleton()
         {
             return skeleton;
+        }
+
+        /*
+         * Get the skeleton data.
+         */
+        public SkeletonData GetSkeletonData()
+        {
+            return skeletonData;
         }
     }
 }

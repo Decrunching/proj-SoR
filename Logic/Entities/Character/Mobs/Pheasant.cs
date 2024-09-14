@@ -45,10 +45,6 @@ namespace Logic.Entities.Character.Mobs
             slot.Attachment = hitboxAttachment;
             skeleton.SetAttachment("hitbox", "hitbox");
 
-            // Initialise skeleton renderer with premultiplied alpha
-            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
-            skeletonRenderer.PremultipliedAlpha = true;
-
             hitbox = new SkeletonBounds();
 
             random = new Random();
@@ -72,7 +68,7 @@ namespace Logic.Entities.Character.Mobs
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          * 
-         * TO DO: Fix this.
+         * TO DO: Needs updating to the way it's handled in Player.
          */
         public override void ChangeAnimation(string eventTrigger)
         {

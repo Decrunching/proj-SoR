@@ -8,18 +8,26 @@ namespace Logic.Game.GameMap.TiledScenery
      */
     internal class DrawTiles
     {
-        public Texture2D Texture {  get; set; }
+        private Vector2 position;
+        private int tileCountWidth;
+        private int tileCountHeight;
+        private int currentTile;
+        private int totalTiles;
+        public Texture2D TileSet { get; set; }
         public int Rows { get; set; }
         public int Columns { get; set; }
 
-        private int currentTile;
-        private int totalTiles;
 
-        public DrawTiles(Texture2D texture, int rows, int columns)
+        public DrawTiles(Texture2D texture, int map, int rows, int columns)
         {
-            Texture = texture;
+            TileSet = texture;
             Rows = rows;
             Columns = columns;
+            position = Vector2.Zero;
+            tileCountWidth = 2;
+            tileCountHeight = 2;
+            currentTile = 0;
+            totalTiles = 0;
         }
 
         /*
@@ -40,8 +48,8 @@ namespace Logic.Game.GameMap.TiledScenery
          */
         public void DrawMap(SpriteBatch spriteBatch, Vector2 location)
         {
-            int width = Texture.Width / Columns;
-            int height = Texture.Height / Rows;
+            int width = TileSet.Width / Columns;
+            int height = TileSet.Height / Rows;
             int row = currentTile / Columns;
             int column = currentTile % Columns;
 
@@ -53,7 +61,7 @@ namespace Logic.Game.GameMap.TiledScenery
                 currentTile++;
             }
             spriteBatch.Begin();
-            spriteBatch.Draw(Texture, destinationRectangle, sourceRectangle, Color.White);
+            spriteBatch.Draw(TileSet, destinationRectangle, sourceRectangle, Color.White);
             spriteBatch.End();
         }
     }

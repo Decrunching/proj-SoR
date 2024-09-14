@@ -4,7 +4,6 @@ using SoR;
 using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
-using System;
 using System.Collections.Generic;
 
 namespace Logic.Entities.Character.Player
@@ -30,14 +29,11 @@ namespace Logic.Entities.Character.Player
 
             // Load texture atlas and attachment loader
             atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Entities\\Player\\Char sprites.atlas"), new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("F:\\MonoGame\\SoR\\SoR\\Content\\SoR Resources\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\Char sprites.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
             skeletonData = json.ReadSkeletonData(Globals.GetPath("Content\\SoR Resources\\Entities\\Player\\skeleton.json"));
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Player\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -58,10 +54,6 @@ namespace Logic.Entities.Character.Player
             hitboxAttachment = skeleton.GetAttachment("hitbox", "hitbox");
             slot.Attachment = hitboxAttachment;
             skeleton.SetAttachment("hitbox", "hitbox");
-
-            // Initialise skeleton renderer with premultiplied alpha
-            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
-            skeletonRenderer.PremultipliedAlpha = true;
 
             hitbox = new SkeletonBounds();
 

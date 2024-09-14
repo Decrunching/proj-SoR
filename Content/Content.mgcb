@@ -798,23 +798,11 @@
 /processorParam:TextureFormat=Color
 /build:SoR Resources/Locations/TiledScenery/t-grass/15.png
 
-#begin SoR Resources/Locations/TiledScenery/Temple/Spine/skeleton.json
-/copy:SoR Resources/Locations/TiledScenery/Temple/Spine/skeleton.json
+#begin SoR Resources/Locations/TiledScenery/Temple/skeleton.json
+/copy:SoR Resources/Locations/TiledScenery/Temple/skeleton.json
 
-#begin SoR Resources/Locations/TiledScenery/Temple/Spine/Temple.atlas
-/copy:SoR Resources/Locations/TiledScenery/Temple/Spine/Temple.atlas
-
-#begin SoR Resources/Locations/TiledScenery/Temple/Spine/Temple.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:SoR Resources/Locations/TiledScenery/Temple/Spine/Temple.png
+#begin SoR Resources/Locations/TiledScenery/Temple/Temple.atlas
+/copy:SoR Resources/Locations/TiledScenery/Temple/Temple.atlas
 
 #begin SoR Resources/Locations/TiledScenery/Temple/Temple.png
 /importer:TextureImporter
