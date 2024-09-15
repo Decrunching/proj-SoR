@@ -1,7 +1,5 @@
 ﻿using Logic.Game.GameMap;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended;
 using SoR.Logic.Input;
 using Spine;
 using System;

@@ -9,8 +9,7 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
-using Spine;
-using MonoGame.Extended.ECS;
+using System.Data.Common;
 
 namespace SoR.Logic.Game
 {
@@ -25,7 +24,6 @@ namespace SoR.Logic.Game
         private Camera camera;
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
-        private Dictionary<string, Map> tiles;
         private DrawTiles drawTiles;
         private TileLocations tileLocations;
         private SpriteFont font;
@@ -75,7 +73,6 @@ namespace SoR.Logic.Game
             render = new Render(GraphicsDevice);
             entities = new Dictionary<string, Entity>();
             scenery = new Dictionary<string, Scenery>();
-            tiles = new Dictionary<string, Map>();
             tileLocations = new TileLocations();
             drawTiles = new DrawTiles(0, tileLocations.UseTileset(0, 0), tileLocations.UseTileset(0, 1));
         }
@@ -119,7 +116,9 @@ namespace SoR.Logic.Game
             // Create a map
             CreateMap(GraphicsDevice, 0, 0, 0, Vector2.Zero);
 
-            drawTiles.LoadMap(game.Content, GraphicsDevice);
+            drawTiles.LoadMap(game.Content,
+                tileLocations.GetTempleLayout().GetLength(0),
+                tileLocations.GetTempleLayout().GetLength(1));
         }
 
         /*
@@ -372,39 +371,6 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * 
-         */
-        public void RenderMap(GraphicsDevice GraphicsDevice, int row = 0, int column = 1)
-        {
-            int rowNumber = 0;
-            int columnNumber = 0;
-            int previousColumn = -1;
-            int previousRow = -1;
-
-            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(row); i++)
-            {
-                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(column); j++)
-                {
-                    if (previousRow < 0 & previousColumn < 0)
-                    {
-
-                    }
-
-                    if (previousRow == i & previousColumn >= 0)
-                    {
-
-                    }
-                    else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
-                    {
-
-                    }
-                    previousColumn = j;
-                    previousRow = i;
-                }
-            }
-        }
-
-        /*
          * Render Spine objects in order of y-axis position.
          */
         public void Render(GraphicsDevice GraphicsDevice)
@@ -415,7 +381,6 @@ namespace SoR.Logic.Game
 
             var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetHitbox().MaxY);
             var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
-            var sortTilesByYAxis = tiles.Values.OrderBy(tile => tile.GetSkeleton().Y);
 
             foreach (var tile in sortTilesByYAxis)
             {

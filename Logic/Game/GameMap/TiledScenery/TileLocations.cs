@@ -32,17 +32,6 @@ namespace Logic.Game.GameMap.TiledScenery
         }
 
         /*
-         * 
-         */
-        public Rectangle[,] GetTemple()
-        {
-            templeRectangle = new Rectangle[,]
-            {
-                { new Rectangle(0, 0, 64, 64), new Rectangle(64, 0, 64, 64), new Rectangle(0, 0, 64, 64) }
-            };
-        }
-
-        /*
          * Get the required tileset.
          */
         public string UseTileset(int row, int column)

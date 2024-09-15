@@ -19,6 +19,8 @@ namespace Logic.Game.GameMap.TiledScenery
         private int mapWidth;
         private int mapHeight;
         private int totalTiles;
+        private int rowLength;
+        private int columnLength;
         public Vector2 Position { get; set; }
 
         public DrawTiles(int map, string floorTileset, string wallTileset)
@@ -36,6 +38,8 @@ namespace Logic.Game.GameMap.TiledScenery
             mapWidth = 64 * rows;
             mapHeight = 64 * columns;
             totalTiles = rows * columns;
+            rowLength = rows;
+            columnLength = columns;
 
             targetRectangle = new Rectangle(-mapWidth / 2, -mapHeight / 2, mapWidth, mapHeight);
 
@@ -51,39 +55,6 @@ namespace Logic.Game.GameMap.TiledScenery
             Rectangle rectangle = new Rectangle(xStart, yStart, tileWidth, tileHeight);
 
             return rectangle;
-        }
-
-        /*
-         * 
-         */
-        public void DebugMap(GraphicsDevice GraphicsDevice, int row = 0, int column = 1)
-        {
-            int rowNumber = 0;
-            int columnNumber = 0;
-            int previousColumn = -1;
-            int previousRow = -1;
-
-            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(row); i++)
-            {
-                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(column); j++)
-                {
-                    if (previousRow < 0 & previousColumn < 0)
-                    {
-
-                    }
-
-                    if (previousRow == i & previousColumn >= 0)
-                    {
-
-                    }
-                    else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
-                    {
-
-                    }
-                    previousColumn = j;
-                    previousRow = i;
-                }
-            }
         }
 
         /*
@@ -104,16 +75,6 @@ namespace Logic.Game.GameMap.TiledScenery
                 currentTile++;
             }
 
-
-
-
-            spriteBatch.Begin();
-
-
-            spriteBatch.Draw(tileSet, location, GetNextTile(xStart, yStart, tileWidth, tileHeight), Color.White);
-
-
-            spriteBatch.End();
         }
     }
 }

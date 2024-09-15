@@ -3,6 +3,7 @@ using Logic.Game.GameMap.TiledScenery;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using MonoGame.Extended.Tiled;
 using SoR.Logic.Entities;
 using Spine;
 
@@ -91,6 +92,39 @@ namespace Logic.Game.Graphics
                 "",
                 new Vector2(scenery.GetPosition().X - 80, scenery.GetPosition().Y + 100),
                 Color.BlueViolet);
+        }
+
+        /*
+         * Draw the map.
+         */
+        public void RenderMap(GraphicsDevice GraphicsDevice, int rowLength, int columnLength)
+        {
+            int rowNumber = 0;
+            int columnNumber = 0;
+            int previousColumn = -1;
+            int previousRow = -1;
+
+            for (int i = rowNumber; i < rowLength; i++)
+            {
+                for (int j = columnNumber; j < columnLength; j++)
+                {
+                    if (previousRow < 0 & previousColumn < 0)
+                    {
+                        spriteBatch.Draw(tileSet, location, GetNextTile(xStart, yStart, tileWidth, tileHeight), Color.White);
+                    }
+
+                    if (previousRow == i & previousColumn >= 0)
+                    {
+
+                    }
+                    else if (previousRow - 1 < i & previousColumn == columnLength - 1)
+                    {
+
+                    }
+                    previousColumn = j;
+                    previousRow = i;
+                }
+            }
         }
 
         /*
