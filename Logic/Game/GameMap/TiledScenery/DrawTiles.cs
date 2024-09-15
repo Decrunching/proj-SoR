@@ -1,7 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using MonoGame.Extended.Tiled;
+using MonoGame.Extended.Graphics;
 
 namespace Logic.Game.GameMap.TiledScenery
 {
@@ -12,11 +12,13 @@ namespace Logic.Game.GameMap.TiledScenery
     {
         private Texture2D floorTexture;
         private Texture2D wallTexture;
+        private Texture2DRegion textureRegion;
         private Rectangle targetRectangle;
         private string floorTiles;
         private string wallTiles;
         private int mapWidth;
         private int mapHeight;
+        private int totalTiles;
         public Vector2 Position { get; set; }
 
         public DrawTiles(int map, string floorTileset, string wallTileset)
@@ -33,11 +35,22 @@ namespace Logic.Game.GameMap.TiledScenery
         {
             mapWidth = 64 * rows;
             mapHeight = 64 * columns;
+            totalTiles = rows * columns;
 
-            targetRectangle = new Rectangle(0, 0, mapWidth, mapHeight);
+            targetRectangle = new Rectangle(-mapWidth / 2, -mapHeight / 2, mapWidth, mapHeight);
 
             floorTexture = Content.Load<Texture2D>(floorTiles);
             wallTexture = Content.Load<Texture2D>(wallTiles);
+        }
+
+        /*
+         * Get the next tile from the spritesheet. Try using instead of a new rectangle for each spritesheet region.
+         */
+        public Rectangle GetNextTile(int xStart, int yStart, int tileWidth, int tileHeight)
+        {
+            Rectangle rectangle = new Rectangle(xStart, yStart, tileWidth, tileHeight);
+
+            return rectangle;
         }
 
         /*
@@ -76,7 +89,7 @@ namespace Logic.Game.GameMap.TiledScenery
         /*
          * Draw the map.
          */
-        public void DrawMap(SpriteBatch spriteBatch, Vector2 location, int tileWidth, int tileHeight)
+        public void DrawMap(Texture2D tileSet, SpriteBatch spriteBatch, Vector2 location, int xStart, int yStart, int tileWidth, int tileHeight)
         {
             Rectangle sourceRectangle = new Rectangle(tileWidth * column, tileHeight * row, tileWidth, tileHeight);
             Rectangle destinationRectangle = new Rectangle((int)location.X, (int)location.Y, tileWidth, tileHeight);
@@ -97,7 +110,7 @@ namespace Logic.Game.GameMap.TiledScenery
             spriteBatch.Begin();
 
 
-            spriteBatch.Draw(Map, location, targetRectangle, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.Draw(tileSet, location, GetNextTile(xStart, yStart, tileWidth, tileHeight), Color.White);
 
 
             spriteBatch.End();

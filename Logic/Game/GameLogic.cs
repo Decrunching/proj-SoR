@@ -10,6 +10,7 @@ using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
 using Spine;
+using MonoGame.Extended.ECS;
 
 namespace SoR.Logic.Game
 {
@@ -27,9 +28,8 @@ namespace SoR.Logic.Game
         private Dictionary<string, Map> tiles;
         private DrawTiles drawTiles;
         private TileLocations tileLocations;
-        private SpriteBatch spriteBatch;
         private SpriteFont font;
-        private SkeletonRenderer skeletonRenderer;
+        private Render render;
         private Vector2 playerPosition;
         private float relativePositionX;
         private float relativePositionY;
@@ -72,11 +72,12 @@ namespace SoR.Logic.Game
             camera = new Camera (Window, GraphicsDevice, 800, 600);
 
             // Create dictionaries for game components
+            render = new Render(GraphicsDevice);
             entities = new Dictionary<string, Entity>();
             scenery = new Dictionary<string, Scenery>();
-            drawTiles = new DrawTiles(0, 7, 10);
             tiles = new Dictionary<string, Map>();
             tileLocations = new TileLocations();
+            drawTiles = new DrawTiles(0, tileLocations.UseTileset(0, 0), tileLocations.UseTileset(0, 1));
         }
 
         /*
@@ -84,8 +85,6 @@ namespace SoR.Logic.Game
          */
         public void LoadGameContent(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, MainGame game)
         {
-            // Initialise SpriteBatch
-            spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
@@ -93,10 +92,6 @@ namespace SoR.Logic.Game
             // The centre of the screen
             relativePositionX = graphics.PreferredBackBufferWidth / 2;
             relativePositionY = graphics.PreferredBackBufferHeight / 2;
-
-            // Initialise skeleton renderer with premultiplied alpha
-            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
-            skeletonRenderer.PremultipliedAlpha = true;
 
             // Create entities
             entityType = EntityType.Player;
@@ -377,20 +372,46 @@ namespace SoR.Logic.Game
         }
 
         /*
+         * 
+         */
+        public void RenderMap(GraphicsDevice GraphicsDevice, int row = 0, int column = 1)
+        {
+            int rowNumber = 0;
+            int columnNumber = 0;
+            int previousColumn = -1;
+            int previousRow = -1;
+
+            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(row); i++)
+            {
+                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(column); j++)
+                {
+                    if (previousRow < 0 & previousColumn < 0)
+                    {
+
+                    }
+
+                    if (previousRow == i & previousColumn >= 0)
+                    {
+
+                    }
+                    else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
+                    {
+
+                    }
+                    previousColumn = j;
+                    previousRow = i;
+                }
+            }
+        }
+
+        /*
          * Render Spine objects in order of y-axis position.
          */
         public void Render(GraphicsDevice GraphicsDevice)
         {
+            render.StartDrawingSpriteBatch(camera.GetCamera());
+
             Vector2 mapLocation = new Vector2(playerPosition.X - 400, playerPosition.Y - 400);
-
-            drawTiles.DrawMap(spriteBatch, mapLocation);
-
-            ((BasicEffect)skeletonRenderer.Effect).Projection = Matrix.CreateOrthographicOffCenter(
-                    0,
-                        GraphicsDevice.Viewport.Width,
-                        GraphicsDevice.Viewport.Height,
-                        0, 1, 0);
-            ((BasicEffect)skeletonRenderer.Effect).View = camera.GetCamera().GetViewMatrix();
 
             var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetHitbox().MaxY);
             var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
@@ -399,11 +420,6 @@ namespace SoR.Logic.Game
             foreach (var tile in sortTilesByYAxis)
             {
 
-                if (tile.Render & !tile.GetSkeleton().Skin.Name.Contains("f"))
-                {
-                    tile.RenderFloorTile(GraphicsDevice, camera.GetCamera());
-                    tile.DrawText(spriteBatch, font, camera.GetCamera());
-                }
             }
 
             foreach (var scenery in sortSceneryByYAxis)
@@ -411,11 +427,11 @@ namespace SoR.Logic.Game
                 if (scenery.Render)
                 {
                     // Draw skeletons
-                    skeletonRenderer.Begin();
-                    skeletonRenderer.Draw(scenery.GetSkeleton());
-                    skeletonRenderer.End();
+                    render.StartDrawingSkeleton(GraphicsDevice, camera);
+                    render.DrawScenerySkeleton(scenery);
+                    render.FinishDrawingSkeleton();
 
-                    scenery.DrawText(spriteBatch, font, camera.GetCamera());
+                    render.DrawScenerySpriteBatch(scenery, font);
                 }
             }
 
@@ -424,24 +440,20 @@ namespace SoR.Logic.Game
                 if (entity.Render)
                 {
                     // Draw skeletons
-                    skeletonRenderer.Begin();
-                    skeletonRenderer.Draw(entity.GetSkeleton());
-                    skeletonRenderer.End();
+                    render.StartDrawingSkeleton(GraphicsDevice, camera);
+                    render.DrawEntitySkeleton(entity);
+                    render.FinishDrawingSkeleton();
 
-                    //entity.RenderEntity(GraphicsDevice, camera.GetCamera());
-                    entity.DrawText(spriteBatch, font, camera.GetCamera());
+                    render.DrawEntitySpriteBatch(entity, font);
                 }
             }
 
             foreach (var tile in sortTilesByYAxis)
             {
 
-                if (tile.Render & tile.GetSkeleton().Skin.Name.Contains("f"))
-                {
-                    tile.RenderFloorTile(GraphicsDevice, camera.GetCamera());
-                    tile.DrawText(spriteBatch, font, camera.GetCamera());
-                }
             }
+
+            render.FinishDrawingSpriteBatch();
         }
     }
 }

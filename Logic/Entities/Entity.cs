@@ -6,7 +6,6 @@ using SoR.Logic.Input;
 using Spine;
 using System;
 using System.Collections.Generic;
-using System.IO;
 
 namespace SoR.Logic.Entities
 {
@@ -354,7 +353,7 @@ namespace SoR.Logic.Entities
 
         /*
          * Draw text to the screen.
-         */
+         *//*
         public void DrawText(SpriteBatch spriteBatch, SpriteFont font, OrthographicCamera camera)
         {
             spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
@@ -364,7 +363,7 @@ namespace SoR.Logic.Entities
                 new Vector2(position.X - 30, position.Y + 30),
                 Color.BlueViolet);
             spriteBatch.End();
-        }
+        }*/
 
         /*
          * Set entity position to the centre of the screen +/- any x,y axis adjustment.
@@ -412,6 +411,11 @@ namespace SoR.Logic.Entities
         public Vector2 GetPosition()
         {
             return position;
+        }
+
+        public int GetHitPoints()
+        {
+            return hitpoints;
         }
     }
 }

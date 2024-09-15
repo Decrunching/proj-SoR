@@ -1,4 +1,6 @@
-﻿namespace Logic.Game.GameMap.TiledScenery
+﻿using System.Drawing;
+
+namespace Logic.Game.GameMap.TiledScenery
 {
     /*
      * Tiles are mapped to multidimnesional arrays, with each element corresponding to a tile skin.
@@ -6,6 +8,7 @@
     public class TileLocations
     {
         private string[,] temple;
+        private Rectangle[,] templeRectangle;
 
         public TileLocations() { }
 
@@ -26,6 +29,17 @@
             };
 
             return temple;
+        }
+
+        /*
+         * 
+         */
+        public Rectangle[,] GetTemple()
+        {
+            templeRectangle = new Rectangle[,]
+            {
+                { new Rectangle(0, 0, 64, 64), new Rectangle(64, 0, 64, 64), new Rectangle(0, 0, 64, 64) }
+            };
         }
 
         /*
