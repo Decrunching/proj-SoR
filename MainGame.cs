@@ -106,8 +106,6 @@ namespace SoR
          */
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
-            
             gameLogic.Render(GraphicsDevice);
 
             base.Draw(gameTime);

@@ -9,8 +9,6 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
-using MonoGame.Extended.Tiled;
-using Spine;
 
 namespace SoR.Logic.Game
 {
@@ -21,12 +19,10 @@ namespace SoR.Logic.Game
     {
         private EntityType entityType;
         private SceneryType sceneryType;
-        private TileType tileType;
         private Camera camera;
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
-        private DrawTiles drawTiles;
-        private TileLocations tileLocations;
+        private Map map;
         private SpriteFont font;
         private Render render;
         private Vector2 playerPosition;
@@ -50,16 +46,7 @@ namespace SoR.Logic.Game
          */
         enum SceneryType
         {
-            Campfire,
-            Grass
-        }
-
-        /*
-         * Differentiate between tilesets.
-         */
-        enum TileType
-        {
-            Temple
+            Campfire
         }
 
         /*
@@ -74,8 +61,7 @@ namespace SoR.Logic.Game
             render = new Render(GraphicsDevice);
             entities = new Dictionary<string, Entity>();
             scenery = new Dictionary<string, Scenery>();
-            tileLocations = new TileLocations();
-            drawTiles = new DrawTiles(0, tileLocations.UseTileset(0, 0), tileLocations.UseTileset(0, 1));
+            map = new Map(0, map.UseTileset(0, 0), map.UseTileset(0, 1));
         }
 
         /*
@@ -111,9 +97,9 @@ namespace SoR.Logic.Game
             sceneryType = SceneryType.Campfire;
             CreateObject(graphics, GraphicsDevice);
 
-            drawTiles.LoadMap(game.Content,
-                tileLocations.GetTempleLayout().GetLength(0),
-                tileLocations.GetTempleLayout().GetLength(1));
+            map.LoadMap(game.Content,
+                map.GetTempleLayout().GetLength(0),
+                map.GetTempleLayout().GetLength(1));
         }
 
         /*
@@ -263,6 +249,8 @@ namespace SoR.Logic.Game
          */
         public void Render(GraphicsDevice GraphicsDevice)
         {
+            GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
+
             render.StartDrawingSpriteBatch(camera.GetCamera());
 
             Vector2 mapLocation = new Vector2(playerPosition.X - 400, playerPosition.Y - 400);

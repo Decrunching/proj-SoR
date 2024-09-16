@@ -3,6 +3,7 @@ using Logic.Game.GameMap.TiledScenery;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using MonoGame.Extended.Graphics;
 using SoR.Logic.Entities;
 using Spine;
 
@@ -15,6 +16,7 @@ namespace Logic.Game.Graphics
     {
         private SpriteBatch spriteBatch;
         private SkeletonRenderer skeletonRenderer;
+        private Vector2 position;
 
         public Render(GraphicsDevice GraphicsDevice)
         {
@@ -24,6 +26,9 @@ namespace Logic.Game.Graphics
             // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
+
+            // The position the tile will be drawn at.
+            position = Vector2.Zero;
         }
 
         /*
@@ -46,7 +51,7 @@ namespace Logic.Game.Graphics
          */
         public void StartDrawingSpriteBatch(OrthographicCamera camera)
         {
-            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
+            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix(), samplerState: SamplerState.PointClamp);
         }
 
         /*
@@ -96,7 +101,7 @@ namespace Logic.Game.Graphics
         /*
          * Draw the map.
          */
-        public void RenderMap(GraphicsDevice GraphicsDevice, int rowLength, int columnLength, Texture2D tileSet, Rectangle targetRectangle)
+        public void RenderMap(int rowLength, int columnLength, Texture2DRegion tileSet)
         {
             int rowNumber = 0;
             int columnNumber = 0;
@@ -109,7 +114,11 @@ namespace Logic.Game.Graphics
                 {
                     if (previousRow < 0 & previousColumn < 0)
                     {
-                        Vector2 location = new Vector2(targetRectangle.X, targetRectangle.Y);
+                        position = new Vector2(0, 0);
+
+                        spriteBatch.Draw(tileSet, position, Color.White);
+
+                        position.Y += 64;
                     }
 
                     if (previousRow == i & previousColumn >= 0)
@@ -135,7 +144,7 @@ namespace Logic.Game.Graphics
             SpriteBatch spriteBatch,
             Texture2D tileSet,
             Vector2 location,
-            DrawTiles drawTiles,
+            Map drawTiles,
             int xStart,
             int yStart,
             int tileWidth,
