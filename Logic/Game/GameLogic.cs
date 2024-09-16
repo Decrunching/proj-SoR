@@ -9,7 +9,8 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
-using System.Data.Common;
+using MonoGame.Extended.Tiled;
+using Spine;
 
 namespace SoR.Logic.Game
 {
@@ -110,12 +111,6 @@ namespace SoR.Logic.Game
             sceneryType = SceneryType.Campfire;
             CreateObject(graphics, GraphicsDevice);
 
-            // Debugging tile placements
-            DebugMap(GraphicsDevice);
-
-            // Create a map
-            CreateMap(GraphicsDevice, 0, 0, 0, Vector2.Zero);
-
             drawTiles.LoadMap(game.Content,
                 tileLocations.GetTempleLayout().GetLength(0),
                 tileLocations.GetTempleLayout().GetLength(1));
@@ -171,16 +166,6 @@ namespace SoR.Logic.Game
          */
         public void CreateObject(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
         {
-            switch (sceneryType)
-            {
-                case SceneryType.Grass:
-                    scenery.Add("grass", new Grass(graphics, GraphicsDevice) { Render = true });
-                    if (scenery.TryGetValue("grass", out Scenery grass))
-                    {
-                        grass.SetPosition(relativePositionX - 96, relativePositionY - 96);
-                    }
-                    break;
-            }
             switch (sceneryType)
             {
                 case SceneryType.Campfire:
@@ -273,103 +258,6 @@ namespace SoR.Logic.Game
             camera.UpdateViewportAdapter(Window);
         }
 
-        public void DebugMap(GraphicsDevice GraphicsDevice, int row = 0, int column = 1)
-        {
-            int rowNumber = 0;
-            int columnNumber = 0;
-            int previousColumn = -1;
-            int previousRow = -1;
-
-            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(row); i++)
-            {
-                System.Diagnostics.Debug.Write(i + ": ");
-                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(column); j++)
-                {
-                    if (previousRow < 0 & previousColumn < 0)
-                    {
-                        System.Diagnostics.Debug.Write("First: ");
-                    }
-                    System.Diagnostics.Debug.Write(tileLocations.GetTempleLayout()[i, j] + ", ");
-
-                    if (previousRow == i & previousColumn >= 0)
-                    {
-                        System.Diagnostics.Debug.Write("(" + tileLocations.GetTempleLayout()[i, j - 1] + "), ");
-                    }
-                    else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
-                    {
-                        System.Diagnostics.Debug.Write("(" + tileLocations.GetTempleLayout()[previousRow, previousColumn] + "), ");
-                    }
-                    previousColumn = j;
-                    previousRow = i;
-                }
-                System.Diagnostics.Debug.Write("\n");
-            }
-        }
-
-        /*
-         * Choose map item to create, give it a unique string identifier as a key and set Render to true.
-         */
-        public void CreateMap(GraphicsDevice GraphicsDevice, int row, int column, int mapRow, Vector2 firstTile)
-        {
-            int rowNumber = 0;
-            int columnNumber = 0;
-            int previousColumn = -1;
-            int previousRow = -1;
-
-            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(rowNumber); i++)
-            {
-                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(columnNumber); j++)
-                {
-                    string tileName = tileLocations.GetTempleLayout()[i, j];
-                    string id = string.Concat(mapRow + ":" + i + "," + j);
-
-                    tiles.Add(id, new Map(GraphicsDevice, mapRow) { Render = true });
-
-                    if (tiles.TryGetValue(id, out Map tile))
-                    {
-                        tile.SetTileDimensions(mapRow);
-
-                        if (tile.GetSkeletonData().FindSkin(tileName) == null)
-                        {
-                            tile.GetSkeleton().SetSkin(tile.GetSkeletonData().FindSkin(string.Concat(tileName + " f")));
-                        }
-                        else
-                        {
-                            tile.GetSkeleton().SetSkin(tile.GetSkeletonData().FindSkin(tileName));
-                        }
-
-                        if (previousRow < 0 & previousColumn < 0)
-                        {
-                            tile.Position = firstTile;
-                        }
-
-                        if (previousRow == i & previousColumn >= 0)
-                        {
-                            string previousTile = string.Concat(i + "," + (j - 1));
-
-                            if (tiles.TryGetValue(previousTile, out Map previous))
-                            {
-                                Vector2 position = new Vector2(previous.Position.X + previous.GetWidth(), previous.Position.Y);
-                                tile.Position = position;
-                            }
-                        }
-                        else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
-                        {
-                            string previousTile = string.Concat(previousRow + "," + previousColumn);
-
-                            if (tiles.TryGetValue(previousTile, out Map previous))
-                            {
-                                Vector2 position = new Vector2(previous.Position.X, previous.Position.Y + tile.GetHeight());
-                                tile.Position = position;
-                            }
-                        }
-                    }
-                    previousColumn = j;
-                    previousRow = i;
-                }
-            }
-        }
-
         /*
          * Render Spine objects in order of y-axis position.
          */
@@ -382,10 +270,7 @@ namespace SoR.Logic.Game
             var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetHitbox().MaxY);
             var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
 
-            foreach (var tile in sortTilesByYAxis)
-            {
 
-            }
 
             foreach (var scenery in sortSceneryByYAxis)
             {
@@ -413,10 +298,7 @@ namespace SoR.Logic.Game
                 }
             }
 
-            foreach (var tile in sortTilesByYAxis)
-            {
 
-            }
 
             render.FinishDrawingSpriteBatch();
         }
