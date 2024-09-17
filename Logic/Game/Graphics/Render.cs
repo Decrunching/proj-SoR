@@ -1,4 +1,5 @@
 ﻿using Logic.Game.GameMap;
+using Logic.Game.GameMap.TiledScenery;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -44,7 +45,7 @@ namespace Logic.Game.Graphics
          */
         public void StartDrawingSpriteBatch(OrthographicCamera camera)
         {
-            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix(), samplerState: SamplerState.PointClamp);
+            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix(), samplerState: SamplerState.PointClamp, blendState: BlendState.AlphaBlend);
         }
 
         /*
@@ -92,9 +93,14 @@ namespace Logic.Game.Graphics
         }
 
         /*
-         * Draw the map.
+         * Draws the map to the screen.
+         * 
+         * Currently destroys framerate - Too many spritebatch calls? Repeated multidimensional array iterations
+         * too memory intensive?
+         * 
+         * Not currently aligning tiles correctly.
          */
-        public void RenderMap(Texture2DAtlas atlas, int row = 1, int column = 2)
+        public void DrawMap(Texture2DAtlas atlas, int[,] map, int row = 0, int column = 1)
         {
             Vector2 position = new Vector2(0, 0);
             int rowNumber = 0;
@@ -102,40 +108,42 @@ namespace Logic.Game.Graphics
             int previousColumn = -1;
             int previousRow = -1;
 
-            for (int i = 0; i < 1; i++) // Which map tileset to iterate through
+            for (int i = rowNumber; i < map.GetLength(row); i++)
             {
-                for (int j = rowNumber; j < GetTempleLayout().GetLength(row); j++) // Which row
+                System.Diagnostics.Debug.Write(i + ": ");
+                for (int j = columnNumber; j < map.GetLength(column); j++)
                 {
-                    for (int k = columnNumber; k < GetTempleLayout().GetLength(column); k++) // Which column
+                    int tile = map[i, j];
+                    if (previousRow < 0 & previousColumn < 0)
                     {
-                        int tile = GetTempleLayout()[i, j, k];
-
-                        if (previousRow < 0 & previousColumn < 0) // On the first tile placed from each tileset
-                        {
-                            if (tile > 0)
-                            {
-                                spriteBatch.Draw(atlas[tile], position, Color.White);
-                            }
-                            position.Y += 64;
-                        }
-
-                        if (previousRow == j & previousColumn >= 0)
+                        System.Diagnostics.Debug.Write("First: ");
+                        if (tile > -1)
                         {
                             spriteBatch.Draw(atlas[tile], position, Color.White);
-                            position.Y += 64;
                         }
-                        else if (previousRow - 1 < j & previousColumn == GetTempleLayout().GetLength(column) - 1)
-                        {
-                            position.X += 64;
-                            position.Y = 0;
-                            spriteBatch.Draw(atlas[tile], position, Color.White);
-                        }
-                        previousColumn = k;
-                        previousRow = j;
+                        position.X += 64;
                     }
+                    System.Diagnostics.Debug.Write(map[i, j] + ", ");
+
+                    if (tile > -1 & previousRow == i & previousColumn >= 0)
+                    {
+                        spriteBatch.Draw(atlas[tile], position, Color.White);
+                        position.X += 64;
+                        System.Diagnostics.Debug.Write("(" + map[i, j - 1] + "), ");
+                    }
+                    else if (tile > -1 & previousRow - 1 < i & previousColumn == map.GetLength(column) - 1)
+                    {
+                        position.Y += 64;
+                        position.X = 0;
+                        spriteBatch.Draw(atlas[tile], position, Color.White);
+                        System.Diagnostics.Debug.Write("(" + map[previousRow, previousColumn] + "), ");
+                    }
+                    previousColumn = j;
+                    previousRow = i;
                 }
-                position = new Vector2(0, 0);
+                System.Diagnostics.Debug.Write("\n");
             }
+            position = new Vector2(0, 0);
         }
 
         /*

@@ -13,18 +13,13 @@ namespace Logic.Game.GameMap.TiledScenery
     {
         private Texture2DAtlas floorAtlas;
         private Texture2DAtlas wallAtlas;
-        private Dictionary<int, Texture2DRegion> floorTileSet;
-        private Dictionary<int, Texture2DRegion> wallTileSet;
         private Texture2D floorTexture;
         private Texture2D wallTexture;
         private string floorTiles;
         private string wallTiles;
 
-        public Vector2 Position { get; set; }
-
         public Map(string floorTileset, string wallTileset)
         {
-            Position = Vector2.Zero;
             floorTiles = floorTileset;
             wallTiles = wallTileset;
         }
@@ -32,7 +27,7 @@ namespace Logic.Game.GameMap.TiledScenery
         /*
          * Load map content.
          */
-        public void LoadMap(ContentManager Content, int rows, int columns)
+        public void LoadMap(ContentManager Content)
         {
             floorTexture = Content.Load<Texture2D>(floorTiles);
             wallTexture = Content.Load<Texture2D>(wallTiles);
@@ -57,11 +52,6 @@ namespace Logic.Game.GameMap.TiledScenery
 
             floorAtlas = Texture2DAtlas.Create("background", floorTexture, GetTileDimensions(0, 0), GetTileDimensions(0, 1));
             wallAtlas = Texture2DAtlas.Create("foreground", wallTexture, GetTileDimensions(0, 0), GetTileDimensions(0, 1));
-
-            CreateAtlas(floorTileSet, floorAtlas, totalFloorTiles);
-            CreateAtlas(wallTileSet, wallAtlas, totalWallTiles, totalFloorTiles);
-            System.Diagnostics.Debug.Write("wall tile start = " + (totalFloorTiles));
-            System.Diagnostics.Debug.Write("last wall tile = " + (totalWallTiles + totalFloorTiles));
         }
 
         /*
@@ -75,17 +65,6 @@ namespace Logic.Game.GameMap.TiledScenery
             };
 
             return dimensions[row, column];
-        }
-
-        /*
-         * Create an atlas from a spritesheet.
-         */
-        public void CreateAtlas(Dictionary<int, Texture2DRegion> tileSet, Texture2DAtlas atlas, int totalTiles, int offset = 0)
-        {
-            for (int i = 0; i < totalTiles + offset; i++)
-            {
-                tileSet.Add(i, atlas[i]);
-            }
         }
 
         /*

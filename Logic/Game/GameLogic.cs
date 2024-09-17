@@ -9,8 +9,6 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
-using MonoGame.Extended.Graphics;
-using Spine;
 
 namespace SoR.Logic.Game
 {
@@ -60,12 +58,8 @@ namespace SoR.Logic.Game
             camera = new Camera (Window, GraphicsDevice, 800, 600);
 
             // Create dictionaries for game components
-            render = new Render(GraphicsDevice);
             entities = new Dictionary<string, Entity>();
             scenery = new Dictionary<string, Scenery>();
-
-            // Get the map to be used
-            map = new Map(render.UseTileset(0, 0), render.UseTileset(0, 1));
         }
 
         /*
@@ -73,10 +67,13 @@ namespace SoR.Logic.Game
          */
         public void LoadGameContent(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, MainGame game)
         {
+            render = new Render(GraphicsDevice);
+
+            // Get the map to be used
+            map = new Map(render.UseTileset(0, 0), render.UseTileset(0, 1));
+
             // Load map content
-            map.LoadMap(game.Content,
-                render.GetTempleLayout().GetLength(1),
-                render.GetTempleLayout().GetLength(2));
+            map.LoadMap(game.Content);
 
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
@@ -257,12 +254,13 @@ namespace SoR.Logic.Game
 
             render.StartDrawingSpriteBatch(camera.GetCamera());
 
+            // Draw the floor - doesn't need to update
+            render.DrawMap(map.GetFloorAtlas(), render.GetTempleFloor());
+
             Vector2 mapLocation = new Vector2(playerPosition.X - 400, playerPosition.Y - 400);
 
             var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetHitbox().MaxY);
             var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
-
-            render.RenderMap(map.GetFloorAtlas(), 0);
 
             foreach (var scenery in sortSceneryByYAxis)
             {
@@ -290,7 +288,7 @@ namespace SoR.Logic.Game
                 }
             }
 
-            render.RenderMap(map.GetWallAtlas(), 1);
+            render.DrawMap(map.GetWallAtlas(), render.GetTempleWalls());
 
             render.FinishDrawingSpriteBatch();
         }
