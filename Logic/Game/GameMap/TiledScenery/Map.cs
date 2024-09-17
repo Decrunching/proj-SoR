@@ -22,7 +22,7 @@ namespace Logic.Game.GameMap.TiledScenery
 
         public Vector2 Position { get; set; }
 
-        public Map(int map, string floorTileset, string wallTileset)
+        public Map(string floorTileset, string wallTileset)
         {
             Position = Vector2.Zero;
             floorTiles = floorTileset;
@@ -32,8 +32,11 @@ namespace Logic.Game.GameMap.TiledScenery
         /*
          * Load map content.
          */
-        public void LoadMap(ContentManager Content, int map, int rows, int columns)
+        public void LoadMap(ContentManager Content, int rows, int columns)
         {
+            floorTexture = Content.Load<Texture2D>(floorTiles);
+            wallTexture = Content.Load<Texture2D>(wallTiles);
+
             int totalFloorTiles = floorTexture.Width / GetTileDimensions(0, 0) * floorTexture.Height / GetTileDimensions(0, 1);
             System.Diagnostics.Debug.Write("total floor tiles = " + totalFloorTiles);
 
@@ -52,9 +55,6 @@ namespace Logic.Game.GameMap.TiledScenery
             int wallColumns = wallTexture.Height / GetTileDimensions(0, 1);
             System.Diagnostics.Debug.Write("wall tiles per column = " + wallColumns);
 
-            floorTexture = Content.Load<Texture2D>(floorTiles);
-            wallTexture = Content.Load<Texture2D>(wallTiles);
-
             floorAtlas = Texture2DAtlas.Create("background", floorTexture, GetTileDimensions(0, 0), GetTileDimensions(0, 1));
             wallAtlas = Texture2DAtlas.Create("foreground", wallTexture, GetTileDimensions(0, 0), GetTileDimensions(0, 1));
 
@@ -62,20 +62,6 @@ namespace Logic.Game.GameMap.TiledScenery
             CreateAtlas(wallTileSet, wallAtlas, totalWallTiles, totalFloorTiles);
             System.Diagnostics.Debug.Write("wall tile start = " + (totalFloorTiles));
             System.Diagnostics.Debug.Write("last wall tile = " + (totalWallTiles + totalFloorTiles));
-        }
-
-        /*
-         * Get the required tileset.
-         */
-        public string UseTileset(int row, int column)
-        {
-            string[,] maps = new string[,]
-            {
-                { "SoR Resources/Locations/TiledScenery/Temple/floorSpritesheet",
-                    "SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet" } // 0: Temple
-            };
-
-            return maps[row, column];
         }
 
         /*
@@ -103,66 +89,19 @@ namespace Logic.Game.GameMap.TiledScenery
         }
 
         /*
-         * Create and return the temple map layout.
+         * Get the floor atlas.
          */
-        public int[,] GetMapLayout()
+        public Texture2DAtlas GetFloorAtlas()
         {
-            int[,,] map = new int[,,]
-            {
-                {
-                    { -1, 6, 7, 7, 7, 7, 7, 7, 7, 8 },
-                    { 4, 0, 2, 2, 2, 3, 2, 2, 2, 9 },
-                    { 5, 1, -1, -1, -1, -1, -1, -1, -1, 23 },
-                    { 5, -1, -1, -1, -1, -1, -1, -1, -1, 22 },
-                    { 5, -1, -1, 12, 11, 11, 13, -1, -1, 9 },
-                    { 10, 11, 11, 14, 16, 16, 15, 11, 11, 21 },
-                    { 17, 19, 20, 18, -1, -1, 17, 19, 20, 18 }// 0: Temple walls
-                },
-                {
-                    { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-                    { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-                    { -1, 0, 2, 3, 0, 7, 0, 6, 5, -1 },
-                    { -1, 0, 0, -1, 0, 0, 0, 0, 1, -1 },
-                    { 4, 0, 0, 0, 0, 0, 0, 0, 0, -1 },
-                    { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-                    { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 } // 1: Temple floors
-                }
-            };
-
-            return map;
+            return floorAtlas;
         }
 
-        public void DebugMap(GraphicsDevice GraphicsDevice, int row = 0, int column = 1)
+        /*
+         * Get the wall atlas.
+         */
+        public Texture2DAtlas GetWallAtlas()
         {
-            int rowNumber = 0;
-            int columnNumber = 0;
-            int previousColumn = -1;
-            int previousRow = -1;
-
-            for (int i = rowNumber; i < tileLocations.GetTempleLayout().GetLength(row); i++)
-            {
-                System.Diagnostics.Debug.Write(i + ": ");
-                for (int j = columnNumber; j < tileLocations.GetTempleLayout().GetLength(column); j++)
-                {
-                    if (previousRow < 0 & previousColumn < 0)
-                    {
-                        System.Diagnostics.Debug.Write("First: ");
-                    }
-                    System.Diagnostics.Debug.Write(tileLocations.GetTempleLayout()[i, j] + ", ");
-
-                    if (previousRow == i & previousColumn >= 0)
-                    {
-                        System.Diagnostics.Debug.Write("(" + tileLocations.GetTempleLayout()[i, j - 1] + "), ");
-                    }
-                    else if (previousRow - 1 < i & previousColumn == tileLocations.GetTempleLayout().GetLength(column) - 1)
-                    {
-                        System.Diagnostics.Debug.Write("(" + tileLocations.GetTempleLayout()[previousRow, previousColumn] + "), ");
-                    }
-                    previousColumn = j;
-                    previousRow = i;
-                }
-                System.Diagnostics.Debug.Write("\n");
-            }
+            return wallAtlas;
         }
     }
 }

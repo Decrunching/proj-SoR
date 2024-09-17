@@ -9,6 +9,8 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
+using MonoGame.Extended.Graphics;
+using Spine;
 
 namespace SoR.Logic.Game
 {
@@ -20,9 +22,9 @@ namespace SoR.Logic.Game
         private EntityType entityType;
         private SceneryType sceneryType;
         private Camera camera;
+        private Map map;
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
-        private Map map;
         private SpriteFont font;
         private Render render;
         private Vector2 playerPosition;
@@ -61,7 +63,9 @@ namespace SoR.Logic.Game
             render = new Render(GraphicsDevice);
             entities = new Dictionary<string, Entity>();
             scenery = new Dictionary<string, Scenery>();
-            map = new Map(0, map.UseTileset(0, 0), map.UseTileset(0, 1));
+
+            // Get the map to be used
+            map = new Map(render.UseTileset(0, 0), render.UseTileset(0, 1));
         }
 
         /*
@@ -69,6 +73,10 @@ namespace SoR.Logic.Game
          */
         public void LoadGameContent(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, MainGame game)
         {
+            // Load map content
+            map.LoadMap(game.Content,
+                render.GetTempleLayout().GetLength(1),
+                render.GetTempleLayout().GetLength(2));
 
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
@@ -96,10 +104,6 @@ namespace SoR.Logic.Game
             // Create scenery
             sceneryType = SceneryType.Campfire;
             CreateObject(graphics, GraphicsDevice);
-
-            map.LoadMap(game.Content,
-                map.GetTempleLayout().GetLength(0),
-                map.GetTempleLayout().GetLength(1));
         }
 
         /*
@@ -258,7 +262,7 @@ namespace SoR.Logic.Game
             var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetHitbox().MaxY);
             var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
 
-
+            render.RenderMap(map.GetFloorAtlas(), 0);
 
             foreach (var scenery in sortSceneryByYAxis)
             {
@@ -286,7 +290,7 @@ namespace SoR.Logic.Game
                 }
             }
 
-
+            render.RenderMap(map.GetWallAtlas(), 1);
 
             render.FinishDrawingSpriteBatch();
         }

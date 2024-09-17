@@ -1,5 +1,4 @@
 ﻿using Logic.Game.GameMap;
-using Logic.Game.GameMap.TiledScenery;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -12,23 +11,17 @@ namespace Logic.Game.Graphics
     /*
      * Draw graphics to the screen.
      */
-    internal class Render
+    internal partial class Render
     {
         private SpriteBatch spriteBatch;
         private SkeletonRenderer skeletonRenderer;
-        private Vector2 position;
 
         public Render(GraphicsDevice GraphicsDevice)
         {
-            // Initialise SpriteBatch
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Initialise skeleton renderer with premultiplied alpha
             skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
             skeletonRenderer.PremultipliedAlpha = true;
-
-            // The position the tile will be drawn at.
-            position = Vector2.Zero;
         }
 
         /*
@@ -101,61 +94,48 @@ namespace Logic.Game.Graphics
         /*
          * Draw the map.
          */
-        public void RenderMap(int rowLength, int columnLength, Texture2DRegion tileSet)
+        public void RenderMap(Texture2DAtlas atlas, int row = 1, int column = 2)
         {
+            Vector2 position = new Vector2(0, 0);
             int rowNumber = 0;
             int columnNumber = 0;
             int previousColumn = -1;
             int previousRow = -1;
 
-            for (int i = rowNumber; i < rowLength; i++)
+            for (int i = 0; i < 1; i++) // Which map tileset to iterate through
             {
-                for (int j = columnNumber; j < columnLength; j++)
+                for (int j = rowNumber; j < GetTempleLayout().GetLength(row); j++) // Which row
                 {
-                    if (previousRow < 0 & previousColumn < 0)
+                    for (int k = columnNumber; k < GetTempleLayout().GetLength(column); k++) // Which column
                     {
-                        position = new Vector2(0, 0);
+                        int tile = GetTempleLayout()[i, j, k];
 
-                        spriteBatch.Draw(tileSet, position, Color.White);
+                        if (previousRow < 0 & previousColumn < 0) // On the first tile placed from each tileset
+                        {
+                            if (tile > 0)
+                            {
+                                spriteBatch.Draw(atlas[tile], position, Color.White);
+                            }
+                            position.Y += 64;
+                        }
 
-                        position.Y += 64;
+                        if (previousRow == j & previousColumn >= 0)
+                        {
+                            spriteBatch.Draw(atlas[tile], position, Color.White);
+                            position.Y += 64;
+                        }
+                        else if (previousRow - 1 < j & previousColumn == GetTempleLayout().GetLength(column) - 1)
+                        {
+                            position.X += 64;
+                            position.Y = 0;
+                            spriteBatch.Draw(atlas[tile], position, Color.White);
+                        }
+                        previousColumn = k;
+                        previousRow = j;
                     }
-
-                    if (previousRow == i & previousColumn >= 0)
-                    {
-
-                    }
-                    else if (previousRow - 1 < i & previousColumn == columnLength - 1)
-                    {
-
-                    }
-                    previousColumn = j;
-                    previousRow = i;
-
-                    spriteBatch.Draw(tileSet, location, GetNextTile(xStart, yStart, tileWidth, tileHeight), Color.White);
                 }
+                position = new Vector2(0, 0);
             }
-        }
-
-        /*
-         * Draw SpriteBatch for the map.
-         */
-        public void DrawMapSpriteBatch(
-            SpriteBatch spriteBatch,
-            Texture2D tileSet,
-            Vector2 location,
-            Map drawTiles,
-            int xStart,
-            int yStart,
-            int tileWidth,
-            int tileHeight)
-        {
-            // Map
-            spriteBatch.Draw(
-                tileSet,
-                location,
-                drawTiles.GetNextTile(xStart, yStart, tileWidth, tileHeight),
-                Color.White);
         }
 
         /*
