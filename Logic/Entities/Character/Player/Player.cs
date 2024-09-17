@@ -15,7 +15,7 @@ namespace Logic.Entities.Character.Player
     {
         private string skin;
 
-        public Player(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public Player(GraphicsDevice GraphicsDevice)
         {
             // The possible animations to play as a string and the method to use for playing them as an int
             animations = new Dictionary<string, int>()
@@ -64,28 +64,6 @@ namespace Logic.Entities.Character.Player
             hitpoints = 100; // Set the starting number of hitpoints
 
             countDistance = new List<int>();
-        }
-
-        /*
-         * If something changes to trigger a new animation, apply the animation.
-         * If the animation is already applied, do nothing.
-         */
-        public override void ChangeAnimation(string eventTrigger)
-        {
-            string reaction = "none"; // Default to "none" if there will be no animation change
-
-            if (prevTrigger != eventTrigger)
-            {
-                foreach (string animation in animations.Keys)
-                {
-                    if (eventTrigger == animation)
-                    {
-                        prevTrigger = animOne = reaction = animation;
-
-                        React(reaction, animations[animation]);
-                    }
-                }
-            }
         }
 
         /*
@@ -140,7 +118,7 @@ namespace Logic.Entities.Character.Player
         /*
          * Move to new position.
          */
-        public override void Movement(GameTime gameTime, GraphicsDeviceManager graphics)
+        public override void Movement(GameTime gameTime)
         {
             prevPosition = position;
 

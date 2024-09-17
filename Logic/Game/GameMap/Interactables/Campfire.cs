@@ -11,7 +11,7 @@ namespace Logic.Game.GameMap.Interactables
      */
     internal class Campfire : Scenery
     {
-        public Campfire(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public Campfire(GraphicsDevice GraphicsDevice)
         {
             // Load texture atlas and attachment loader
             atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Locations\\Interactables\\Campfire\\templecampfire.atlas"), new XnaTextureLoader(GraphicsDevice));

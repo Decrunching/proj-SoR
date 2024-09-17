@@ -50,7 +50,6 @@ namespace Logic.Game.GameMap
         protected string prevTrigger;
         protected string animOne;
         protected string animTwo;
-        public bool Render { get; set; }
 
         /*
          * If something changes to trigger a new animation, apply the animation.

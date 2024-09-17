@@ -1,6 +1,6 @@
 {
 "skeleton": {
-	"hash": "Eu5gW04m5I8",
+	"hash": "zsJyP88BPrs",
 	"spine": "4.2.35",
 	"x": -64,
 	"y": -45.08,
@@ -11,7 +11,7 @@
 },
 "bones": [
 	{ "name": "root", "scaleX": 4, "scaleY": 4 },
-	{ "name": "middle", "parent": "root", "y": -0.58 }
+	{ "name": "middle", "parent": "root", "y": -0.58, "scaleX": -1 }
 ],
 "slots": [
 	{ "name": "0", "bone": "middle", "attachment": "0" },

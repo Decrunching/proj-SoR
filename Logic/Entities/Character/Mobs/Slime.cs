@@ -14,8 +14,16 @@ namespace Logic.Entities.Character.Mobs
      */
     internal class Slime : Entity
     {
-        public Slime(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public Slime(GraphicsDevice GraphicsDevice)
         {
+            // The possible animations to play as a string and the method to use for playing them as an int
+            animations = new Dictionary<string, int>()
+            {
+                { "idle", 1 },
+                { "hit", 2 },
+                { "attack", 2 }
+            };
+
             // Load texture atlas and attachment loader
             atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Entities\\Slime\\Slime.atlas"), new XnaTextureLoader(GraphicsDevice));
             //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Slime\\Slime.atlas", new XnaTextureLoader(GraphicsDevice));
@@ -62,55 +70,6 @@ namespace Logic.Entities.Character.Mobs
             hitpoints = 100; // Set the starting number of hitpoints
 
             countDistance = new List<int>();
-        }
-
-        /*
-         * If something changes to trigger a new animation, apply the animation.
-         * If the animation is already applied, do nothing.
-         * 
-         * TO DO: Needs updating to the way it's handled in Player.
-         */
-        public override void ChangeAnimation(string eventTrigger)
-        {
-            string reaction = "none"; // Default to "none" if there will be no animation change
-
-            /*
-             * 0 = no animation, 1 = rapidly transition to next, 2 = set new animation then queue
-             * the next, 3 = start animation on the same frame the previous animation was at.
-             */
-            int animType = 0;
-
-            //string setAnim = "set"; // Interrupt the last animation
-            //string addAnim = "add"; // Wait for the previous animation to finish looping
-
-            if (prevTrigger != eventTrigger)
-            {
-                if (eventTrigger == "turnleft")
-                {
-                    skeleton.ScaleX = 1;
-                }
-                if (eventTrigger == "turnright")
-                {
-                    skeleton.ScaleX = 1;
-                }
-                if (eventTrigger == "collision")
-                {
-                    prevTrigger = eventTrigger;
-                    animType = 2;
-                    animOne = "attack";
-                    animTwo = "idle";
-                    reaction = eventTrigger;
-                    React(reaction, animType);
-                }
-                if (eventTrigger == "move")
-                {
-                    prevTrigger = eventTrigger;
-                    animType = 1;
-                    animOne = "idle";
-                    reaction = eventTrigger;
-                    React(reaction, animType);
-                }
-            }
         }
     }
 }

@@ -14,7 +14,6 @@ namespace Logic.Game.Graphics
         private float y;
         private bool isFullscreen;
         private bool isBorderless;
-        private bool resolutionChange;
         private int screenWidth;
         private int screenHeight;
         private KeyboardState keyState;

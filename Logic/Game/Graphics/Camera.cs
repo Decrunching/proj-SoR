@@ -14,9 +14,6 @@ namespace Logic.Game.Graphics
     {
         private OrthographicCamera camera;
         private BoxingViewportAdapter viewportAdapter;
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
-        private Matrix scaleMatrix;
         private Vector2 playerPosition;
         private bool resolutionChanging;
         private int virtualWidth;

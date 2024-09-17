@@ -23,11 +23,14 @@ namespace SoR.Logic.Game
         private Map map;
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
+        private Dictionary<string, string> renderAll;
         private SpriteFont font;
         private Render render;
-        private Vector2 playerPosition;
         private float relativePositionX;
         private float relativePositionY;
+        private int counter;
+
+        public Dictionary<string, string> RenderAll { get { return renderAll; } }
 
         /*
          * Differentiate between entities.
@@ -50,9 +53,20 @@ namespace SoR.Logic.Game
         }
 
         /*
+         * Manage the draw order of game components
+         */
+        enum DrawOrder
+        {
+            Floor,
+            Interactables,
+            Entities,
+            Walls
+        }
+
+        /*
          * Constructor for initial game setup.
          */
-        public GameLogic(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, GraphicsSettings graphicsSettings, GameWindow Window)
+        public GameLogic(GraphicsDevice GraphicsDevice, GameWindow Window)
         {
             // Set up the camera
             camera = new Camera (Window, GraphicsDevice, 800, 600);
@@ -60,6 +74,9 @@ namespace SoR.Logic.Game
             // Create dictionaries for game components
             entities = new Dictionary<string, Entity>();
             scenery = new Dictionary<string, Scenery>();
+
+            // Manage the draw order of game components
+            renderAll = new Dictionary<string, string>();
         }
 
         /*
@@ -84,62 +101,70 @@ namespace SoR.Logic.Game
 
             // Create entities
             entityType = EntityType.Player;
-            CreateEntity(graphics, GraphicsDevice);
+            CreateEntity(GraphicsDevice);
+            renderAll.Add("player", "");
 
             entityType = EntityType.Slime;
-            CreateEntity(graphics, GraphicsDevice);
+            CreateEntity(GraphicsDevice);
+            renderAll.Add("slime", "");
 
             entityType = EntityType.Chara;
-            CreateEntity(graphics, GraphicsDevice);
+            CreateEntity(GraphicsDevice);
+            renderAll.Add("chara", "");
 
             entityType = EntityType.Pheasant;
-            CreateEntity(graphics, GraphicsDevice);
+            CreateEntity(GraphicsDevice);
+            renderAll.Add("pheasant", "");
 
             entityType = EntityType.Fishy;
-            CreateEntity(graphics, GraphicsDevice);
+            CreateEntity(GraphicsDevice);
+            renderAll.Add("fishy", "");
 
             // Create scenery
             sceneryType = SceneryType.Campfire;
-            CreateObject(graphics, GraphicsDevice);
+            CreateObject(GraphicsDevice);
+            renderAll.Add("campfire", "");
+
+
         }
 
         /*
          * Choose entity to create, give it a unique string identifier as a key and set Render to true.
          */
-        public void CreateEntity(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public void CreateEntity(GraphicsDevice GraphicsDevice)
         {
             switch (entityType)
             {
                 case EntityType.Player:
-                    entities.Add("player", new Player(graphics, GraphicsDevice) { Render = true });
+                    entities.Add("player", new Player(GraphicsDevice));
                     if (entities.TryGetValue("player", out Entity player))
                     {
                         player.SetPosition(relativePositionX, relativePositionY);
                     }
                     break;
                 case EntityType.Pheasant:
-                    entities.Add("pheasant", new Pheasant(graphics, GraphicsDevice) { Render = true });
+                    entities.Add("pheasant", new Pheasant(GraphicsDevice));
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
                         pheasant.SetPosition(relativePositionX + 40, relativePositionY - 200);
                     }
                     break;
                 case EntityType.Chara:
-                    entities.Add("chara", new Chara(graphics, GraphicsDevice) { Render = true });
+                    entities.Add("chara", new Chara(GraphicsDevice));
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
                         chara.SetPosition(relativePositionX + 420, relativePositionY + 350);
                     }
                     break;
                 case EntityType.Slime:
-                    entities.Add("slime", new Slime(graphics, GraphicsDevice) { Render = true });
+                    entities.Add("slime", new Slime(GraphicsDevice));
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
                         slime.SetPosition(relativePositionX - 300, relativePositionY + 250);
                     }
                     break;
                 case EntityType.Fishy:
-                    entities.Add("fishy", new Fishy(graphics, GraphicsDevice) { Render = true });
+                    entities.Add("fishy", new Fishy(GraphicsDevice));
                     if (entities.TryGetValue("fishy", out Entity fishy))
                     {
                         fishy.SetPosition(relativePositionX + 340, relativePositionY + 100);
@@ -151,12 +176,12 @@ namespace SoR.Logic.Game
         /*
          * Choose environmental object to create, give it a unique string identifier as a key and set Render to true.
          */
-        public void CreateObject(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice)
+        public void CreateObject(GraphicsDevice GraphicsDevice)
         {
             switch (sceneryType)
             {
                 case SceneryType.Campfire:
-                    scenery.Add("campfire", new Campfire(graphics, GraphicsDevice) { Render = true });
+                    scenery.Add("campfire", new Campfire(GraphicsDevice));
                     if (scenery.TryGetValue("campfire", out Scenery campfire))
                     {
                         campfire.SetPosition(160, 256);
@@ -168,69 +193,58 @@ namespace SoR.Logic.Game
         /*
          * Update world progress.
          */
-        public void UpdateWorld(
-            GameWindow Window,
-            GameTime gameTime,
-            GraphicsDeviceManager graphics,
-            GraphicsSettings graphicsSettings,
-            GraphicsDevice GraphicsDevice)
+        public void UpdateWorld(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             foreach (var scenery in scenery.Values)
             {
-                if (scenery.Render)
-                {
-                    // Update animations
-                    scenery.UpdateAnimations(gameTime);
-                }
+                // Update animations
+                scenery.UpdateAnimations(gameTime);
             }
 
             foreach (var entity in entities.Values)
             {
-                if (entity.Render)
+                entity.Movement(gameTime);
+
+                // Update position according to user input
+                entity.UpdatePosition(
+                gameTime,
+                graphics);
+
+                // Update animations
+                entity.UpdateAnimations(gameTime);
+
+                if (entities.TryGetValue("player", out Entity playerChar))
                 {
-                    entity.Movement(gameTime, graphics);
-
-                    // Update position according to user input
-                    entity.UpdatePosition(
-                    gameTime,
-                    graphics);
-
-                    // Update animations
-                    entity.UpdateAnimations(gameTime);
-
-                    if (entities.TryGetValue("player", out Entity playerChar))
+                    if (playerChar is Player player)
                     {
-                        if (playerChar is Player player)
+                        camera.FollowPlayer(player.GetPosition());
+
+                        if (entity != player & player.CollidesWith(entity))
                         {
-                            camera.FollowPlayer(player.GetPosition());
+                            player.ChangeAnimation("collision");
 
-                            if (entity != player & player.CollidesWith(entity))
+                            entity.StopMoving();
+
+                            player.Collision(entity, gameTime);
+                            entity.Collision(player, gameTime);
+                        }
+                        else if (!entity.IsMoving())
+                        {
+                            entity.StartMoving();
+                        }
+
+                        foreach (var scenery in scenery.Values)
+                        {
+                            if (scenery.CollidesWith(entity))
                             {
-                                player.ChangeAnimation("collision");
-
-                                entity.StopMoving();
-
-                                player.Collision(entity, gameTime);
-                                entity.Collision(player, gameTime);
-                            }
-                            else if (!entity.IsMoving())
-                            {
-                                entity.StartMoving();
-                            }
-
-                            foreach (var scenery in scenery.Values)
-                            {
-                                if (scenery.CollidesWith(entity))
-                                {
-                                    scenery.Collision(entity, gameTime);
-                                }
+                                scenery.Collision(entity, gameTime);
                             }
                         }
-                        else
-                        {
-                            // Throw exception if playerChar is somehow not of the type Player
-                            throw new System.InvalidOperationException("playerChar is not of type Player");
-                        }
+                    }
+                    else
+                    {
+                        // Throw exception if playerChar is somehow not of the type Player
+                        throw new System.InvalidOperationException("playerChar is not of type Player");
                     }
                 }
             }
@@ -256,36 +270,28 @@ namespace SoR.Logic.Game
             render.DrawMap(map.GetFloorAtlas(), map, render.GetTempleFloor());
             render.FinishDrawingSpriteBatch();
 
-            Vector2 mapLocation = new Vector2(playerPosition.X - 400, playerPosition.Y - 400);
-
             var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetHitbox().MaxY);
             var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
 
             render.StartDrawingSpriteBatch(camera.GetCamera());
             foreach (var scenery in sortSceneryByYAxis)
             {
-                if (scenery.Render)
-                {
-                    // Draw skeletons
-                    render.StartDrawingSkeleton(GraphicsDevice, camera);
-                    render.DrawScenerySkeleton(scenery);
-                    render.FinishDrawingSkeleton();
+                // Draw skeletons
+                render.StartDrawingSkeleton(GraphicsDevice, camera);
+                render.DrawScenerySkeleton(scenery);
+                render.FinishDrawingSkeleton();
 
-                    render.DrawScenerySpriteBatch(scenery, font);
-                }
+                render.DrawScenerySpriteBatch(scenery, font);
             }
 
             foreach (var entity in sortEntitiesByYAxis)
             {
-                if (entity.Render)
-                {
-                    // Draw skeletons
-                    render.StartDrawingSkeleton(GraphicsDevice, camera);
-                    render.DrawEntitySkeleton(entity);
-                    render.FinishDrawingSkeleton();
+                // Draw skeletons
+                render.StartDrawingSkeleton(GraphicsDevice, camera);
+                render.DrawEntitySkeleton(entity);
+                render.FinishDrawingSkeleton();
 
-                    render.DrawEntitySpriteBatch(entity, font);
-                }
+                render.DrawEntitySpriteBatch(entity, font);
             }
             render.FinishDrawingSpriteBatch();
 

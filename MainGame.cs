@@ -1,5 +1,4 @@
 ﻿using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Logic.Game.Graphics;
 using SoR.Logic.Game;
@@ -63,7 +62,7 @@ namespace SoR
 
             graphicsSettings = new GraphicsSettings(game, graphics, Window);
 
-            gameLogic = new GameLogic(graphics, GraphicsDevice, graphicsSettings, Window);
+            gameLogic = new GameLogic(GraphicsDevice, Window);
 
             base.Initialize();
         }
@@ -77,15 +76,6 @@ namespace SoR
         }
 
         /*
-         * Unload graphics content.
-         */
-        protected override void UnloadContent()
-        {
-
-            base.UnloadContent();
-        }
-
-        /*
          * Update game components.
          */
         protected override void Update(GameTime gameTime)
@@ -96,7 +86,7 @@ namespace SoR
 
             UpdateResolution(graphicsSettings.CheckIfBorderlessToggled(graphics, Window));
 
-            gameLogic.UpdateWorld(Window, gameTime, graphics, graphicsSettings, GraphicsDevice);
+            gameLogic.UpdateWorld(gameTime, graphics);
 
             base.Update(gameTime);
         }

@@ -65,13 +65,6 @@ namespace SoR.Logic.Entities
         protected bool inMotion;
 
         public float Speed { get; set; }
-        public bool Render { get; set; }
-
-        /*
-         * If something changes to trigger a new animation, apply the animation.
-         * If the animation is already applied, do nothing.
-         */
-        public abstract void ChangeAnimation(string trigger);
 
         /*
          * Placeholder function for dealing damage.
@@ -106,6 +99,28 @@ namespace SoR.Logic.Entities
             inMotion = false;
             ChangeAnimation("collision"); // TO DO: Fix - see collision
             position = prevPosition;
+        }
+
+        /*
+         * If something changes to trigger a new animation, apply the animation.
+         * If the animation is already applied, do nothing.
+         */
+        public void ChangeAnimation(string eventTrigger)
+        {
+            string reaction = "none"; // Default to "none" if there will be no animation change
+
+            if (prevTrigger != eventTrigger)
+            {
+                foreach (string animation in animations.Keys)
+                {
+                    if (eventTrigger == animation)
+                    {
+                        prevTrigger = animOne = reaction = animation;
+
+                        React(reaction, animations[animation]);
+                    }
+                }
+            }
         }
 
         /*
@@ -146,10 +161,12 @@ namespace SoR.Logic.Entities
                 case 1:
                     movementDirection = new Vector2(-1, 0); // Left
                     ChangeAnimation("turnleft");
+                    skeleton.ScaleX = 1;
                     break;
                 case 2:
                     movementDirection = new Vector2(1, 0); // Right
                     ChangeAnimation("turnright");
+                    skeleton.ScaleX = -1;
                     break;
                 case 3:
                     movementDirection = new Vector2(0, -1); // Up
@@ -249,7 +266,7 @@ namespace SoR.Logic.Entities
         /*
          * Move to new position.
          */
-        public virtual void Movement(GameTime gameTime, GraphicsDeviceManager graphics)
+        public virtual void Movement(GameTime gameTime)
         {
             prevPosition = position;
 
