@@ -114,7 +114,7 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(graphics, GraphicsDevice) { Render = true });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.SetPosition(relativePositionX + 100, relativePositionY + 100);
+                        player.SetPosition(relativePositionX, relativePositionY);
                     }
                     break;
                 case EntityType.Pheasant:
@@ -253,15 +253,15 @@ namespace SoR.Logic.Game
             GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
 
             render.StartDrawingSpriteBatch(camera.GetCamera());
-
-            // Draw the floor - doesn't need to update
-            render.DrawMap(map.GetFloorAtlas(), render.GetTempleFloor());
+            render.DrawMap(map.GetFloorAtlas(), map, render.GetTempleFloor());
+            render.FinishDrawingSpriteBatch();
 
             Vector2 mapLocation = new Vector2(playerPosition.X - 400, playerPosition.Y - 400);
 
             var sortSceneryByYAxis = scenery.Values.OrderBy(scenery => scenery.GetHitbox().MaxY);
             var sortEntitiesByYAxis = entities.Values.OrderBy(entity => entity.GetHitbox().MaxY);
 
+            render.StartDrawingSpriteBatch(camera.GetCamera());
             foreach (var scenery in sortSceneryByYAxis)
             {
                 if (scenery.Render)
@@ -287,9 +287,10 @@ namespace SoR.Logic.Game
                     render.DrawEntitySpriteBatch(entity, font);
                 }
             }
+            render.FinishDrawingSpriteBatch();
 
-            render.DrawMap(map.GetWallAtlas(), render.GetTempleWalls());
-
+            render.StartDrawingSpriteBatch(camera.GetCamera());
+            render.DrawMap(map.GetWallAtlas(), map, render.GetTempleWalls());
             render.FinishDrawingSpriteBatch();
         }
     }

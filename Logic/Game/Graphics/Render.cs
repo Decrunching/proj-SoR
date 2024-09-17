@@ -95,53 +95,36 @@ namespace Logic.Game.Graphics
         /*
          * Draws the map to the screen.
          * 
-         * Currently destroys framerate - Too many spritebatch calls? Repeated multidimensional array iterations
-         * too memory intensive?
-         * 
-         * Not currently aligning tiles correctly.
+         * Try:
+         * Use once to create dictionary with position mapped to Atlas region for each tile to be placed. Combine
+         * with entity & scenery dictionaries to render everything in order of y-axis.
          */
-        public void DrawMap(Texture2DAtlas atlas, int[,] map, int row = 0, int column = 1)
+        public void DrawMap(Texture2DAtlas atlas, Map map, int[,] tileLocations, int row = 0, int column = 1)
         {
             Vector2 position = new Vector2(0, 0);
             int rowNumber = 0;
             int columnNumber = 0;
-            int previousColumn = -1;
-            int previousRow = -1;
+            int previousColumn = 0;
+            int previousRow = 0;
 
-            for (int i = rowNumber; i < map.GetLength(row); i++)
+            for (int i = rowNumber; i < tileLocations.GetLength(row); i++)
             {
-                System.Diagnostics.Debug.Write(i + ": ");
-                for (int j = columnNumber; j < map.GetLength(column); j++)
+                for (int j = columnNumber; j < tileLocations.GetLength(column); j++)
                 {
-                    int tile = map[i, j];
-                    if (previousRow < 0 & previousColumn < 0)
-                    {
-                        System.Diagnostics.Debug.Write("First: ");
-                        if (tile > -1)
-                        {
-                            spriteBatch.Draw(atlas[tile], position, Color.White);
-                        }
-                        position.X += 64;
-                    }
-                    System.Diagnostics.Debug.Write(map[i, j] + ", ");
+                    int tile = tileLocations[i, j];
 
-                    if (tile > -1 & previousRow == i & previousColumn >= 0)
+                    if (tile > -1)
                     {
-                        spriteBatch.Draw(atlas[tile], position, Color.White);
-                        position.X += 64;
-                        System.Diagnostics.Debug.Write("(" + map[i, j - 1] + "), ");
+                        spriteBatch.Draw(atlas[tile], position, Color.White); // Draw the tile
                     }
-                    else if (tile > -1 & previousRow - 1 < i & previousColumn == map.GetLength(column) - 1)
-                    {
-                        position.Y += 64;
-                        position.X = 0;
-                        spriteBatch.Draw(atlas[tile], position, Color.White);
-                        System.Diagnostics.Debug.Write("(" + map[previousRow, previousColumn] + "), ");
-                    }
+
+                    position.X += map.GetTileDimensions(0, 0);
+
                     previousColumn = j;
                     previousRow = i;
                 }
-                System.Diagnostics.Debug.Write("\n");
+                position.X = 0;
+                position.Y += map.GetTileDimensions(0, 1);
             }
             position = new Vector2(0, 0);
         }

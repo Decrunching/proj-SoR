@@ -33,7 +33,7 @@ namespace Logic.Game.Graphics
             isBorderless = false;
             Window.AllowAltF4 = true;
             Window.AllowUserResizing = true;
-            game.IsMouseVisible = false;
+            game.IsMouseVisible = true;
 
             RestoreWindow(graphics, Window);
         }
