@@ -102,31 +102,23 @@ namespace Logic.Game.Graphics
         public void DrawMap(Texture2DAtlas atlas, Map map, int[,] tileLocations, int row = 0, int column = 1)
         {
             Vector2 position = new Vector2(0, 0);
-            int rowNumber = 0;
-            int columnNumber = 0;
-            int previousColumn = 0;
-            int previousRow = 0;
 
-            for (int i = rowNumber; i < tileLocations.GetLength(row); i++)
+            for (int x = 0; x < tileLocations.GetLength(row); x++) // For each row in the 2D array
             {
-                for (int j = columnNumber; j < tileLocations.GetLength(column); j++)
+                for (int y = 0; y < tileLocations.GetLength(column); y++) // For each column
                 {
-                    int tile = tileLocations[i, j];
+                    int tile = tileLocations[x, y]; // Get the value of the current tile
 
                     if (tile > -1)
                     {
-                        spriteBatch.Draw(atlas[tile], position, Color.White); // Draw the tile
+                        spriteBatch.Draw(atlas[tile], position, Color.White); // Draw the tile if not blank
                     }
 
-                    position.X += map.GetTileDimensions(0, 0);
-
-                    previousColumn = j;
-                    previousRow = i;
+                    position.X += map.GetTileDimensions(0, 0); // Step right by one tile space
                 }
                 position.X = 0;
-                position.Y += map.GetTileDimensions(0, 1);
+                position.Y += map.GetTileDimensions(0, 1); // Reset the x-axis and step down by one tile space
             }
-            position = new Vector2(0, 0);
         }
 
         /*
