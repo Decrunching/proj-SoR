@@ -159,7 +159,7 @@ namespace SoR.Logic.Game
                     scenery.Add("campfire", new Campfire(graphics, GraphicsDevice) { Render = true });
                     if (scenery.TryGetValue("campfire", out Scenery campfire))
                     {
-                        campfire.SetPosition(relativePositionX + 32, relativePositionY + 32);
+                        campfire.SetPosition(160, 256);
                     }
                     break;
             }
