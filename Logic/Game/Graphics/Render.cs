@@ -97,7 +97,7 @@ namespace Logic.Game.Graphics
         /*
          * Draws the map to the screen.
          */
-        public Dictionary<string, Vector2> CreateMap(Texture2DAtlas atlas, Map map, int[,] tileLocations, bool drawing, int row = 0, int column = 1)
+        public Dictionary<string, Vector2> CreateMap(Texture2DAtlas atlas, Map map, int[,] tileLocations, int row = 0, int column = 1)
         {
             Dictionary<string, Vector2> sortByYAxis = new Dictionary<string, Vector2>();
             Vector2 position = new Vector2(0, 0);
@@ -111,18 +111,9 @@ namespace Logic.Game.Graphics
 
                     if (tile > -1)
                     {
-                        if (drawing)
-                        {
-                            position.Y -= map.GetTileDimensions(0, 1);
-                            spriteBatch.Draw(atlas[tile], position, Color.White); // Draw the tile if not blank
-                            position.Y += map.GetTileDimensions(0, 1);
-                        }
-                        else
-                        {
-                            string tileName = string.Concat(tileID + tile.ToString());
-                            sortByYAxis.Add(tileName, position);
-                            tileID++;
-                        }
+                        string tileName = string.Concat(tileID + tile.ToString());
+                        sortByYAxis.Add(tileName, position);
+                        tileID++;
                     }
 
                     position.X += map.GetTileDimensions(0, 0); // Step right by one tile space
@@ -137,13 +128,15 @@ namespace Logic.Game.Graphics
         /*
          * Draw the map walls to the screen.
          */
-        public void DrawMapWalls(Texture2DAtlas atlas, Map map, string tileName, Vector2 position)
+        public void DrawMap(Texture2DAtlas atlas, Map map, string tileName, Vector2 position)
         {
             string tile = tileName.Remove(0, 4);
 
             int tileNumber = Convert.ToInt32(tile);
 
-            position.Y -= map.GetTileDimensions(0, 1);
+            // Offset drawing position by tile height to draw in front of the components that use a different positioning reference
+            position.Y -= (float)(map.GetTileDimensions(0, 1) * 1.25);
+
             spriteBatch.Draw(atlas[tileNumber], position, Color.White);
         }
 

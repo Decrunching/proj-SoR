@@ -52,7 +52,6 @@ namespace SoR.Logic.Entities
         protected UserInput movement;
         protected List<int> countDistance;
         protected Vector2 position;
-        protected Vector2 maxPosition;  
         protected Vector2 movementDirection;
         protected Vector2 pushedDirection;
         protected Vector2 prevPosition;
@@ -63,6 +62,7 @@ namespace SoR.Logic.Entities
         protected float newDirectionTime;
         protected float sinceLastChange;
         protected bool inMotion;
+        public int Height { get; protected set; }
         public string Name { get; set; }
         public float Speed { get; set; }
 
@@ -97,7 +97,7 @@ namespace SoR.Logic.Entities
         public void StopMoving()
         {
             inMotion = false;
-            ChangeAnimation("collision"); // TO DO: Fix - see collision
+            ChangeAnimation("collision");
             position = prevPosition;
         }
 
@@ -367,20 +367,6 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Draw text to the screen.
-         *//*
-        public void DrawText(SpriteBatch spriteBatch, SpriteFont font, OrthographicCamera camera)
-        {
-            spriteBatch.Begin(transformMatrix: camera.GetViewMatrix());
-            spriteBatch.DrawString(
-                font,
-                "HP: " + hitpoints,
-                new Vector2(position.X - 30, position.Y + 30),
-                Color.BlueViolet);
-            spriteBatch.End();
-        }*/
-
-        /*
          * Set entity position to the centre of the screen +/- any x,y axis adjustment.
          */
         public void SetPosition(float xAdjustment, float yAdjustment)
@@ -394,22 +380,6 @@ namespace SoR.Logic.Entities
         public Skeleton GetSkeleton()
         {
             return skeleton;
-        }
-
-        /*
-         * 
-         */
-        public float GetSkeletonX()
-        {
-            return skeleton.X;
-        }
-
-        /*
-         * 
-         */
-        public float GetSkeletonY()
-        {
-            return skeleton.X;
         }
 
         /*
@@ -428,6 +398,9 @@ namespace SoR.Logic.Entities
             return position;
         }
 
+        /*
+         * Get the current hitpoints.
+         */
         public int GetHitPoints()
         {
             return hitpoints;

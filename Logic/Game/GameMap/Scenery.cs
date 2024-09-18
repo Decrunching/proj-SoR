@@ -50,6 +50,7 @@ namespace Logic.Game.GameMap
         protected string prevTrigger;
         protected string animOne;
         protected string animTwo;
+        public int Height { get; protected set; }
         public string Name { get; set; }
 
         /*

@@ -64,6 +64,8 @@ namespace Logic.Entities.Character.Player
             hitpoints = 100; // Set the starting number of hitpoints
 
             countDistance = new List<int>();
+
+            Height = 1;
         }
 
         /*

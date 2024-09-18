@@ -38,7 +38,7 @@ namespace SoR
     public class MainGame : Game
     {
         private GraphicsDeviceManager graphics;
-        private GameLogic gameLogic;
+        private Interactions gameLogic;
         private MainGame game;
         private GraphicsSettings graphicsSettings;
         private int screenWidth;
@@ -62,7 +62,7 @@ namespace SoR
 
             graphicsSettings = new GraphicsSettings(game, graphics, Window);
 
-            gameLogic = new GameLogic(GraphicsDevice, Window);
+            gameLogic = new Interactions(GraphicsDevice, Window);
 
             base.Initialize();
         }

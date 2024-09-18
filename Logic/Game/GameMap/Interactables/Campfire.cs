@@ -43,6 +43,8 @@ namespace Logic.Game.GameMap.Interactables
             skeleton.SetAttachment("hitbox", "hitbox");
 
             hitbox = new SkeletonBounds();
+
+            Height = 1;
         }
 
         /*

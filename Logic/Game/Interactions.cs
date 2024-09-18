@@ -15,7 +15,7 @@ namespace SoR.Logic.Game
     /*
      * Placeholder class for handling game progression.
      */
-    public class GameLogic
+    public class Interactions
     {
         private EntityType entityType;
         private SceneryType sceneryType;
@@ -24,12 +24,12 @@ namespace SoR.Logic.Game
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
         private Dictionary<string, Vector2> mapWalls;
-        private Dictionary<string, Vector2> renderAll;
+        private Dictionary<string, Vector2> mapFloor;
+        private List<Vector2> positions;
         private SpriteFont font;
         private Render render;
         private float relativePositionX;
         private float relativePositionY;
-        private int counter;
 
         /*
          * Differentiate between entities.
@@ -52,20 +52,19 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Manage the draw order of game components
+         * The height of individual components in the game world.
          */
-        enum DrawOrder
+        enum Height
         {
-            Floor,
-            Interactables,
-            Entities,
-            Walls
+            Small = 0,
+            Medium = 1,
+            Large = 2
         }
 
         /*
          * Constructor for initial game setup.
          */
-        public GameLogic(GraphicsDevice GraphicsDevice, GameWindow Window)
+        public Interactions(GraphicsDevice GraphicsDevice, GameWindow Window)
         {
             // Set up the camera
             camera = new Camera (Window, GraphicsDevice, 800, 600);
@@ -95,8 +94,9 @@ namespace SoR.Logic.Game
             relativePositionX = graphics.PreferredBackBufferWidth / 2;
             relativePositionY = graphics.PreferredBackBufferHeight / 2;
 
-            mapWalls = render.CreateMap(map.GetWallAtlas(), map, render.GetTempleWalls(), false);
-            renderAll = render.CreateMap(map.GetWallAtlas(), map, render.GetTempleWalls(), false);
+            // Map the tiles to be drawn to their atlas positions
+            mapWalls = render.CreateMap(map.GetWallAtlas(), map, render.GetTempleWalls());
+            mapFloor = render.CreateMap(map.GetFloorAtlas(), map, render.GetTempleFloor());
 
             // Create entities
             entityType = EntityType.Player;
@@ -175,7 +175,7 @@ namespace SoR.Logic.Game
                     scenery.Add("campfire", new Campfire(GraphicsDevice) { Name = "campfire" });
                     if (scenery.TryGetValue("campfire", out Scenery campfire))
                     {
-                        campfire.SetPosition(224, 128);
+                        campfire.SetPosition(224, 160);
                     }
                     break;
             }
@@ -251,30 +251,50 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * Render Spine objects in order of y-axis position.
+         * Get the positions of game components before rendering.
+         */
+        public void RefreshPositions()
+        {
+            positions = new List<Vector2>();
+            foreach (var scenery in scenery.Values)
+            {
+                if (!positions.Contains(scenery.GetPosition()))
+                {
+                    positions.Add(scenery.GetPosition());
+                }
+            }
+            foreach (var entity in entities.Values)
+            {
+                if (!positions.Contains(entity.GetPosition()))
+                {
+                    positions.Add(entity.GetPosition());
+                }
+            }
+            foreach (var tile in mapWalls.Values)
+            {
+                positions.Add(tile);
+            }
+        }
+
+        /*
+         * Render game components in order of y-axis position.
          */
         public void Render(GraphicsDevice GraphicsDevice)
         {
             GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
 
-            render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.CreateMap(map.GetFloorAtlas(), map, render.GetTempleFloor(), true);
-            render.FinishDrawingSpriteBatch();
-
-            renderAll = render.CreateMap(map.GetWallAtlas(), map, render.GetTempleWalls(), false);
-
-            foreach (var scenery in scenery.Values)
+            foreach (var tileName in mapFloor)
             {
-                renderAll.Add(scenery.Name, scenery.GetPosition());
-            }
-            foreach (var entity in entities.Values)
-            {
-                renderAll.Add(entity.Name, entity.GetPosition());
+                render.StartDrawingSpriteBatch(camera.GetCamera());
+                render.DrawMap(map.GetFloorAtlas(), map, tileName.Key, tileName.Value);
+                render.FinishDrawingSpriteBatch();
             }
 
-            var sortByYAxisPosition = renderAll.Values.OrderBy(render => render.Y);
+            RefreshPositions();
+            var sortPositionsByYAxis = positions.OrderBy(position => position.Y);
 
-            foreach (var position in sortByYAxisPosition)
+            // Draw components to the screen in order of y-axis position
+            foreach (var position in sortPositionsByYAxis)
             {
                 render.StartDrawingSpriteBatch(camera.GetCamera());
                 foreach (var entity in entities.Values)
@@ -308,7 +328,7 @@ namespace SoR.Logic.Game
                     if (tileName.Value.Y == position.Y && tileName.Value.X == position.X)
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.DrawMapWalls(map.GetWallAtlas(), map, tileName.Key, position);
+                        render.DrawMap(map.GetWallAtlas(), map, tileName.Key, position);
                         render.FinishDrawingSpriteBatch();
                     }
                 }
