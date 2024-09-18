@@ -31,7 +31,7 @@ namespace Logic.Game.Graphics
             graphics.IsFullScreen = isFullscreen = false;
             isBorderless = false;
             Window.AllowAltF4 = true;
-            Window.AllowUserResizing = true;
+            Window.AllowUserResizing = false;
             game.IsMouseVisible = true;
 
             RestoreWindow(graphics, Window);

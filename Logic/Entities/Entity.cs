@@ -63,7 +63,7 @@ namespace SoR.Logic.Entities
         protected float newDirectionTime;
         protected float sinceLastChange;
         protected bool inMotion;
-
+        public string Name { get; set; }
         public float Speed { get; set; }
 
         /*

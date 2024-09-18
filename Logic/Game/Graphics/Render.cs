@@ -6,6 +6,8 @@ using MonoGame.Extended;
 using MonoGame.Extended.Graphics;
 using SoR.Logic.Entities;
 using Spine;
+using System;
+using System.Collections.Generic;
 
 namespace Logic.Game.Graphics
 {
@@ -94,14 +96,12 @@ namespace Logic.Game.Graphics
 
         /*
          * Draws the map to the screen.
-         * 
-         * Try:
-         * Use once to create dictionary with position mapped to Atlas region for each tile to be placed. Combine
-         * with entity & scenery dictionaries to render everything in order of y-axis.
          */
-        public void DrawMap(Texture2DAtlas atlas, Map map, int[,] tileLocations, int row = 0, int column = 1)
+        public Dictionary<string, Vector2> CreateMap(Texture2DAtlas atlas, Map map, int[,] tileLocations, bool drawing, int row = 0, int column = 1)
         {
+            Dictionary<string, Vector2> sortByYAxis = new Dictionary<string, Vector2>();
             Vector2 position = new Vector2(0, 0);
+            int tileID = 1000;
 
             for (int x = 0; x < tileLocations.GetLength(row); x++) // For each row in the 2D array
             {
@@ -111,7 +111,18 @@ namespace Logic.Game.Graphics
 
                     if (tile > -1)
                     {
-                        spriteBatch.Draw(atlas[tile], position, Color.White); // Draw the tile if not blank
+                        if (drawing)
+                        {
+                            position.Y -= map.GetTileDimensions(0, 1);
+                            spriteBatch.Draw(atlas[tile], position, Color.White); // Draw the tile if not blank
+                            position.Y += map.GetTileDimensions(0, 1);
+                        }
+                        else
+                        {
+                            string tileName = string.Concat(tileID + tile.ToString());
+                            sortByYAxis.Add(tileName, position);
+                            tileID++;
+                        }
                     }
 
                     position.X += map.GetTileDimensions(0, 0); // Step right by one tile space
@@ -119,6 +130,21 @@ namespace Logic.Game.Graphics
                 position.X = 0;
                 position.Y += map.GetTileDimensions(0, 1); // Reset the x-axis and step down by one tile space
             }
+
+            return sortByYAxis;
+        }
+
+        /*
+         * Draw the map walls to the screen.
+         */
+        public void DrawMapWalls(Texture2DAtlas atlas, Map map, string tileName, Vector2 position)
+        {
+            string tile = tileName.Remove(0, 4);
+
+            int tileNumber = Convert.ToInt32(tile);
+
+            position.Y -= map.GetTileDimensions(0, 1);
+            spriteBatch.Draw(atlas[tileNumber], position, Color.White);
         }
 
         /*
