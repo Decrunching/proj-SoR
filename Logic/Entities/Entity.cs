@@ -188,6 +188,7 @@ namespace SoR.Logic.Entities
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
+            countDistance = new List<int>();
             while (countDistance.Count < 8)
             {
                 countDistance.Add(1);
@@ -224,6 +225,7 @@ namespace SoR.Logic.Entities
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
+            countDistance = new List<int>();
             while (countDistance.Count < 8)
             {
                 countDistance.Add(1);
