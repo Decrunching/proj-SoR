@@ -61,6 +61,9 @@ namespace SoR.Logic.Entities
         protected float newDirectionTime;
         protected float sinceLastChange;
         protected bool inMotion;
+
+        public Rectangle rect; // debugging
+
         public int Height { get; protected set; }
         public string Name { get; set; }
         public float Speed { get; set; }
@@ -293,8 +296,9 @@ namespace SoR.Logic.Entities
 
             // Handle environmental collision
             if (movement.EnvironCollision(
+                gameTime,
+                Speed,
                 graphics,
-                GetHitbox(),
                 position,
                 BoundingArea))
             {

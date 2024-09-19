@@ -128,7 +128,7 @@ namespace Logic.Game.Graphics
         /*
          * Draw the map walls to the screen.
          */
-        public void DrawMap(Texture2DAtlas atlas, Map map, string tileName, Vector2 position)
+        public void DrawMap(Texture2DAtlas atlas, Map map, string tileName, Vector2 position, SpriteFont font)
         {
             string tile = tileName.Remove(0, 4);
 
@@ -138,6 +138,14 @@ namespace Logic.Game.Graphics
             position.Y -= (float)(map.GetTileDimensions(0, 1) * 1.25);
 
             spriteBatch.Draw(atlas[tileNumber], position, Color.White);
+
+            // Entity text
+            spriteBatch.DrawString(
+            font,
+                "Rect X:" + map.BoundingArea.X + ", Rect Y: " + map.BoundingArea.Y +
+            "\nRect width: " + map.BoundingArea.Width + ", Rect height: " + map.BoundingArea.Height,
+            new Vector2(map.BoundingArea.X, map.BoundingArea.Y),
+                Color.BlueViolet);
         }
 
         /*

@@ -131,7 +131,7 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(GraphicsDevice) { Name = "player" });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.SetPosition(relativePositionX, relativePositionY);
+                        player.SetPosition(map.BoundingArea.X, map.BoundingArea.Y);
                     }
                     break;
                 case EntityType.Pheasant:
@@ -290,7 +290,7 @@ namespace SoR.Logic.Game
             foreach (var tileName in mapFloor)
             {
                 render.StartDrawingSpriteBatch(camera.GetCamera());
-                render.DrawMap(map.GetFloorAtlas(), map, tileName.Key, tileName.Value);
+                render.DrawMap(map.GetFloorAtlas(), map, tileName.Key, tileName.Value, font);
                 render.FinishDrawingSpriteBatch();
             }
 
@@ -332,7 +332,7 @@ namespace SoR.Logic.Game
                     if (tileName.Value.Y == position.Y && tileName.Value.X == position.X)
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.DrawMap(map.GetWallAtlas(), map, tileName.Key, position);
+                        render.DrawMap(map.GetWallAtlas(), map, tileName.Key, position, font);
                         render.FinishDrawingSpriteBatch();
                     }
                 }

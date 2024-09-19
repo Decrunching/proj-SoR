@@ -60,6 +60,7 @@ namespace Logic.Entities.Character.Mobs
             skeletonRenderer.PremultipliedAlpha = true;
 
             hitbox = new SkeletonBounds();
+            hitbox.Update(skeleton, true);
 
             random = new Random();
             movementDirection = new Vector2(0, 0); // The direction of movement

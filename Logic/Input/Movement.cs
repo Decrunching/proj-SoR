@@ -154,39 +154,42 @@ namespace SoR.Logic.Input
          * player entities also reverse direction and walk away.
          */
         public bool EnvironCollision(
+            GameTime gameTime,
+            float speed,
             GraphicsDeviceManager graphics,
-            SkeletonBounds hitbox,
             Vector2 position,
             Rectangle boundingArea)
         {
+            float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             newPosition = position;
 
-            if (boundingArea.Contains((int)hitbox.MaxX, (int)hitbox.MaxY) |
-                boundingArea.Contains((int)hitbox.MinX, (int)hitbox.MinY) |
-                boundingArea.Contains((int)hitbox.MaxX, (int)hitbox.MinY) |
-                boundingArea.Contains((int)hitbox.MinX, (int)hitbox.MaxY))
+            if (boundingArea.Contains((int)position.X, (int)position.Y) ||
+                boundingArea.Contains((int)position.X, (int)position.Y) ||
+                boundingArea.Contains((int)position.X, (int)position.Y) ||
+                boundingArea.Contains((int)position.X, (int)position.Y))
             {
-                if (position.X < boundingArea.X + (boundingArea.Width / 2))
+                if (position.X < boundingArea.Center.X)
                 {
-                    newPosition.X -= 1;
+                    newPosition.X -= 1 * newPlayerSpeed;
                     turnAround = 1; // Left
                     return true;
                 }
-                if (position.X > boundingArea.X + (boundingArea.Width / 2))
+                if (position.X > boundingArea.Center.X)
                 {
-                    newPosition.X += 1;
+                    newPosition.X += 1 * newPlayerSpeed;
                     turnAround = 2; // Right
                     return true;
                 }
-                if (position.Y < boundingArea.Y + (boundingArea.Height / 2))
+                if (position.Y < boundingArea.Center.Y)
                 {
-                    newPosition.Y -= 1;
+                    newPosition.Y -= 1 * newPlayerSpeed;
                     turnAround = 3; // Up
                     return true;
                 }
-                if (position.Y > boundingArea.Y + (boundingArea.Height / 2))
+                if (position.Y > boundingArea.Center.Y)
                 {
-                    newPosition.Y += 1;
+                    newPosition.Y += 1 * newPlayerSpeed;
                     turnAround = 4; // Down
                     return true;
                 }

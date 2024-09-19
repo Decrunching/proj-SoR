@@ -56,6 +56,7 @@ namespace Logic.Entities.Character.Player
             skeleton.SetAttachment("hitbox", "hitbox");
 
             hitbox = new SkeletonBounds();
+            hitbox.Update(skeleton, true);
 
             movement = new Movement(); // Environmental collision handling
 
@@ -143,10 +144,14 @@ namespace Logic.Entities.Character.Player
 
             // Handle environmental collision
             movement.EnvironCollision(
+                gameTime,
+                Speed,
                 graphics,
-                GetHitbox(),
                 position,
                 BoundingArea);
+
+            // Set the new position
+            position = movement.UpdatePosition();
         }
 
         /*

@@ -54,6 +54,7 @@ namespace Logic.Entities.Character.Mobs
             skeleton.SetAttachment("hitbox", "hitbox");
 
             hitbox = new SkeletonBounds();
+            hitbox.Update(skeleton, true);
 
             random = new Random();
             movementDirection = new Vector2(0, 0); // The direction of movement

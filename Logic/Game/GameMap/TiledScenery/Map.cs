@@ -25,8 +25,6 @@ namespace Logic.Game.GameMap.TiledScenery
         {
             this.mapNumber = mapNumber;
             GetMapLayout();
-            MapBoundaries();
-
         }
 
         /*
@@ -79,6 +77,16 @@ namespace Logic.Game.GameMap.TiledScenery
                         { -1,  4,  0, -1, -1, -1, -1,  0,  0, -1 },
                         { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
                     };
+
+                    int width = GetTileDimensions(0, 0);
+                    int height = GetTileDimensions(0, 1);
+
+                    BoundingArea = new Rectangle(
+                        (width * 2) - (int)(width * 0.5),
+                        height + (int)(height * 1.25),
+                        width * 8,
+                        (int)(height * 0.5));
+
                     break;
             }
         }
@@ -108,23 +116,6 @@ namespace Logic.Game.GameMap.TiledScenery
             };
 
             return dimensions[row, column];
-        }
-
-        /*
-         * Get the unwalkable areas of the map.
-         */
-        public void MapBoundaries()
-        {
-            switch (mapNumber)
-            {
-                case 0:
-                    BoundingArea = new Rectangle(
-                        (GetTileDimensions(0, 0) * 2) - (int)(GetTileDimensions(0, 0) * 0.5),
-                        GetTileDimensions(0, 1) + (int)(GetTileDimensions(0, 1) * 1.25),
-                        GetTileDimensions(0, 0) * 8,
-                        (int)(GetTileDimensions(0, 1) * 0.5));
-                    break;
-            }
         }
 
         /*
