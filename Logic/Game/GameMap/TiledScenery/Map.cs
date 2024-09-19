@@ -83,7 +83,7 @@ namespace Logic.Game.GameMap.TiledScenery
 
                     BoundingArea = new Rectangle(
                         (width * 2) - (int)(width * 0.5),
-                        height + (int)(height * 1.25),
+                        height - (int)(height * 1.25),
                         width * 8,
                         (int)(height * 0.5));
 

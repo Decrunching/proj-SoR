@@ -119,28 +119,18 @@ namespace Logic.Entities.Character.Player
         }
 
         /*
-         * Move to new position.
-         */
-        public override void Movement(GameTime gameTime)
-        {
-            prevPosition = position;
-
-            movement.CheckMovement(gameTime, Speed, position);
-            ChangeAnimation(movement.AnimateMovement());
-
-            // Set the new position according to player input
-            position = movement.UpdatePosition();
-        }
-
-        /*
          * Update entity position.
          */
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, Rectangle BoundingArea)
         {
+            prevPosition = position;
+
             GetMoved(gameTime);
 
             // Process joypad inputs
             movement.ProcessJoypadInputs(gameTime, Speed);
+            movement.CheckMovement(gameTime, Speed, position);
+            ChangeAnimation(movement.AnimateMovement());
 
             // Handle environmental collision
             movement.EnvironCollision(
@@ -148,7 +138,9 @@ namespace Logic.Entities.Character.Player
                 Speed,
                 graphics,
                 position,
-                BoundingArea);
+                BoundingArea,
+                this);
+
 
             // Set the new position
             position = movement.UpdatePosition();

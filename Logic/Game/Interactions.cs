@@ -131,7 +131,7 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(GraphicsDevice) { Name = "player" });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.SetPosition(map.BoundingArea.X, map.BoundingArea.Y);
+                        player.SetPosition(relativePositionX -200, relativePositionY + 100);
                     }
                     break;
                 case EntityType.Pheasant:
@@ -195,8 +195,6 @@ namespace SoR.Logic.Game
 
             foreach (var entity in entities.Values)
             {
-                entity.Movement(gameTime);
-
                 // Update position according to user input
                 entity.UpdatePosition(
                 gameTime,

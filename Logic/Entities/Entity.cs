@@ -182,13 +182,13 @@ namespace SoR.Logic.Entities
         /*
          * If the entity is thrown back from something, move away from that thing.
          */
-        public void ThrownBack(GameTime gameTime, float thrownFromX, float thrownFromY)
+        public void ThrownBack(GameTime gameTime, float thrownFromX, float thrownFromY, int throwDistance)
         {
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
-            countDistance = 0;
-            while (countDistance < 8)
+            countDistance = throwDistance;
+            while (countDistance < throwDistance)
             {
                 countDistance++;
             }
@@ -233,33 +233,6 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Move to new position.
-         */
-        public virtual void Movement(GameTime gameTime)
-        {
-            prevPosition = position;
-
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            float newSpeed = Speed * deltaTime;
-
-            sinceLastChange += deltaTime;
-
-            if (IsMoving())
-            {
-                if (sinceLastChange >= newDirectionTime)
-                {
-                    int direction = random.Next(4);
-                    NewDirection(direction);
-                    newDirectionTime = (float)random.NextDouble() * 3f + 0.33f;
-                    sinceLastChange = 0;
-                }
-
-                position += movementDirection * newSpeed;
-            }
-        }
-
-        /*
          * Check for collision with other entities.
          */
         public bool CollidesWith(Entity entity)
@@ -284,7 +257,7 @@ namespace SoR.Logic.Entities
         public virtual void Collision(Entity entity, GameTime gameTime)
         {
             entity.TakeDamage(1);
-            entity.ThrownBack(gameTime, position.X, position.Y);
+            entity.ThrownBack(gameTime, position.X, position.Y, 5);
         }
 
         /*
@@ -292,6 +265,25 @@ namespace SoR.Logic.Entities
          */
         public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, Rectangle BoundingArea)
         {
+            prevPosition = position;
+
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float newSpeed = Speed * deltaTime;
+            sinceLastChange += deltaTime;
+
+            if (IsMoving())
+            {
+                if (sinceLastChange >= newDirectionTime)
+                {
+                    int direction = random.Next(4);
+                    NewDirection(direction);
+                    newDirectionTime = (float)random.NextDouble() * 3f + 0.33f;
+                    sinceLastChange = 0;
+                }
+
+                position += movementDirection * newSpeed;
+            }
+
             GetMoved(gameTime);
 
             // Handle environmental collision
@@ -300,13 +292,11 @@ namespace SoR.Logic.Entities
                 Speed,
                 graphics,
                 position,
-                BoundingArea))
+                BoundingArea,
+                this))
             {
                 NewDirection(movement.TurnAround());
             }
-
-            // Set the new position
-            position = movement.UpdatePosition();
         }
 
         /*
