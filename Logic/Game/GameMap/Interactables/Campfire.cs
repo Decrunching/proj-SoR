@@ -63,7 +63,7 @@ namespace Logic.Game.GameMap.Interactables
         public override void Collision(Entity entity, GameTime gameTime)
         {
             entity.TakeDamage(1);
-            entity.ThrownBackFromScenery(this, gameTime);
+            entity.ThrownBack(gameTime, position.X, position.Y);
         }
     }
 }

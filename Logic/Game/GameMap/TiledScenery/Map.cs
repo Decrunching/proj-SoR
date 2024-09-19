@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework.Content;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
 
@@ -15,41 +16,85 @@ namespace Logic.Game.GameMap.TiledScenery
         private Texture2D wallTexture;
         private string floorTiles;
         private string wallTiles;
+        private int mapNumber;
+        public int[,] MapFloor { get; set; }
+        public int[,] MapWalls { get; set; }
+        public Rectangle BoundingArea { get; set; }
 
-        public Map(string floorTileset, string wallTileset)
+        public Map(int mapNumber)
         {
-            floorTiles = floorTileset;
-            wallTiles = wallTileset;
+            this.mapNumber = mapNumber;
+            GetMapLayout();
+            MapBoundaries();
+
         }
 
         /*
          * Load map content.
          */
-        public void LoadMap(ContentManager Content)
+        public void LoadMap(ContentManager Content, string floorTileset, string wallTileset)
         {
+            floorTiles = floorTileset;
+            wallTiles = wallTileset;
+
             floorTexture = Content.Load<Texture2D>(floorTiles);
             wallTexture = Content.Load<Texture2D>(wallTiles);
 
             int totalFloorTiles = floorTexture.Width / GetTileDimensions(0, 0) * floorTexture.Height / GetTileDimensions(0, 1);
-            System.Diagnostics.Debug.Write("total floor tiles = " + totalFloorTiles);
-
             int totalWallTiles = wallTexture.Width / GetTileDimensions(0, 0) * wallTexture.Height / GetTileDimensions(0, 1);
-            System.Diagnostics.Debug.Write("total wall tiles = " + totalWallTiles);
-
             int floorRows = floorTexture.Width / GetTileDimensions(0, 0);
-            System.Diagnostics.Debug.Write("floor tiles per row = " + floorRows);
-
             int floorColumns = floorTexture.Height / GetTileDimensions(0, 1);
-            System.Diagnostics.Debug.Write("floor tiles per column = " + floorColumns);
-
             int wallRows = wallTexture.Width / GetTileDimensions(0, 0);
-            System.Diagnostics.Debug.Write("wall tiles per row = " + wallRows);
-
             int wallColumns = wallTexture.Height / GetTileDimensions(0, 1);
-            System.Diagnostics.Debug.Write("wall tiles per column = " + wallColumns);
 
             floorAtlas = Texture2DAtlas.Create("background", floorTexture, GetTileDimensions(0, 0), GetTileDimensions(0, 1));
             wallAtlas = Texture2DAtlas.Create("foreground", wallTexture, GetTileDimensions(0, 0), GetTileDimensions(0, 1));
+        }
+
+        /*
+         * Create and return the temple wall layout.
+         */
+        public void GetMapLayout()
+        {
+            switch (mapNumber)
+            {
+                case 0:
+                    MapWalls = new int[,]
+                    {
+                        { -1,  6,  7,  7,  7,  7,  7,  7,  7,  8  },
+                        {  4,  0,  2,  2,  2,  3,  2,  2,  2,  9  },
+                        {  5,  1, -1, -1, -1, -1, -1, -1, -1,  23 },
+                        {  5, -1, -1, -1, -1, -1, -1, -1, -1,  22 },
+                        {  5, -1, -1,  12, 11, 11, 13,-1, -1,  9  },
+                        {  10, 11, 11, 14, 16, 16, 15, 11, 11, 21 },
+                        {  17, 19, 20, 18,-1, -1,  17, 19, 20, 18 }
+                    };
+                    MapFloor = new int[,]
+                    {
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
+                        { -1,  0,  2,  3,  0,  7,  0,  6,  5, -1 },
+                        { -1,  0,  0,  0,  0,  0,  0,  0,  1, -1 },
+                        { -1,  0,  0,  0,  0,  0,  0,  0,  0, -1 },
+                        { -1,  4,  0, -1, -1, -1, -1,  0,  0, -1 },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
+                    };
+                    break;
+            }
+        }
+
+        /*
+         * Get the required tileset.
+         */
+        public string UseTileset(int row, int column)
+        {
+            string[,] maps = new string[,]
+            {
+                { "SoR Resources/Locations/TiledScenery/Temple/floorSpritesheet",
+                    "SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet" } // 0: Temple
+            };
+
+            return maps[row, column];
         }
 
         /*
@@ -63,6 +108,23 @@ namespace Logic.Game.GameMap.TiledScenery
             };
 
             return dimensions[row, column];
+        }
+
+        /*
+         * Get the unwalkable areas of the map.
+         */
+        public void MapBoundaries()
+        {
+            switch (mapNumber)
+            {
+                case 0:
+                    BoundingArea = new Rectangle(
+                        (GetTileDimensions(0, 0) * 2) - (int)(GetTileDimensions(0, 0) * 0.5),
+                        GetTileDimensions(0, 1) + (int)(GetTileDimensions(0, 1) * 1.25),
+                        GetTileDimensions(0, 0) * 8,
+                        (int)(GetTileDimensions(0, 1) * 0.5));
+                    break;
+            }
         }
 
         /*

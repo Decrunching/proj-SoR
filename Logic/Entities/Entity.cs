@@ -1,5 +1,4 @@
-﻿using Logic.Game.GameMap;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using SoR.Logic.Input;
 using Spine;
 using System;
@@ -49,8 +48,8 @@ namespace SoR.Logic.Entities
         protected Slot slot;
         protected TrackEntry trackEntry;
         protected Random random;
-        protected UserInput movement;
-        protected List<int> countDistance;
+        protected Movement movement;
+        protected int countDistance;
         protected Vector2 position;
         protected Vector2 movementDirection;
         protected Vector2 pushedDirection;
@@ -180,72 +179,32 @@ namespace SoR.Logic.Entities
         /*
          * If the entity is thrown back from something, move away from that thing.
          */
-        public void ThrownBackFromEntity(Entity entity, GameTime gameTime)
+        public void ThrownBack(GameTime gameTime, float thrownFromX, float thrownFromY)
         {
-            entity.UpdateHitbox(new SkeletonBounds());
-            entity.GetHitbox().Update(entity.GetSkeleton(), true);
-
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
-            countDistance = new List<int>();
-            while (countDistance.Count < 8)
+            countDistance = 0;
+            while (countDistance < 8)
             {
-                countDistance.Add(1);
+                countDistance++;
             }
 
             float newSpeed = (float)(Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (position.X > entity.GetPosition().X) // Right
+            if (position.X > thrownFromX) // Right
             {
                 pushedDirection.X += 1;
             }
-            else if (position.X < entity.GetPosition().X) // Left
+            else if (position.X < thrownFromX) // Left
             {
                 pushedDirection.X -= 1;
             }
-            if (position.Y > entity.GetPosition().Y) // Down
+            if (position.Y > thrownFromY) // Down
             {
                 pushedDirection.Y += 1;
             }
-            else if (position.Y < entity.GetPosition().Y) // Up
-            {
-                pushedDirection.Y -= 1;
-            }
-        }
-
-        /*
-         * If the entity is thrown back from something, move away from that thing.
-         */
-        public void ThrownBackFromScenery(Scenery scenery, GameTime gameTime)
-        {
-            scenery.UpdateHitbox(new SkeletonBounds());
-            scenery.GetHitbox().Update(scenery.GetSkeleton(), true);
-
-            hitbox = new SkeletonBounds();
-            hitbox.Update(skeleton, true);
-
-            countDistance = new List<int>();
-            while (countDistance.Count < 8)
-            {
-                countDistance.Add(1);
-            }
-
-            float newSpeed = (float)(Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (position.X > scenery.GetPosition().X) // Right
-            {
-                pushedDirection.X += 1;
-            }
-            else if (position.X < scenery.GetPosition().X) // Left
-            {
-                pushedDirection.X -= 1;
-            }
-            if (position.Y > scenery.GetPosition().Y) // Down
-            {
-                pushedDirection.Y += 1;
-            }
-            else if (position.Y < scenery.GetPosition().Y) // Up
+            else if (position.Y < thrownFromY) // Up
             {
                 pushedDirection.Y -= 1;
             }
@@ -256,12 +215,17 @@ namespace SoR.Logic.Entities
          */
         public void GetMoved(GameTime gameTime)
         {
-            float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-            position += pushedDirection * newSpeed;
-            countDistance.RemoveAt(0);
-            if (countDistance.Count == 0)
+            if (countDistance > 0)
             {
-                pushedDirection = Vector2.Zero;
+                float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position += pushedDirection * newSpeed;
+
+                if (countDistance == 1)
+                {
+                    pushedDirection = Vector2.Zero;
+                }
+
+                countDistance--;
             }
         }
 
@@ -317,24 +281,22 @@ namespace SoR.Logic.Entities
         public virtual void Collision(Entity entity, GameTime gameTime)
         {
             entity.TakeDamage(1);
-            entity.ThrownBackFromEntity(this, gameTime);
+            entity.ThrownBack(gameTime, position.X, position.Y);
         }
 
         /*
          * Update entity position.
          */
-        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
+        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, Rectangle BoundingArea)
         {
-            if (countDistance.Count > 1)
-            {
-                GetMoved(gameTime);
-            }
+            GetMoved(gameTime);
 
             // Handle environmental collision
             if (movement.EnvironCollision(
                 graphics,
                 GetHitbox(),
-                position))
+                position,
+                BoundingArea))
             {
                 NewDirection(movement.TurnAround());
             }

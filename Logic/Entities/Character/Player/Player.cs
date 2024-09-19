@@ -57,13 +57,13 @@ namespace Logic.Entities.Character.Player
 
             hitbox = new SkeletonBounds();
 
-            movement = new UserInput(); // Environmental collision handling
+            movement = new Movement(); // Environmental collision handling
 
             Speed = 200f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
 
-            countDistance = new List<int>();
+            countDistance = 0;
 
             Height = 1;
         }
@@ -134,13 +134,9 @@ namespace Logic.Entities.Character.Player
         /*
          * Update entity position.
          */
-        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, Rectangle BoundingArea)
         {
-            if (countDistance.Count > 0)
-            {
-                GetMoved(gameTime);
-                countDistance.Remove(countDistance.Count - 1);
-            }
+            GetMoved(gameTime);
 
             // Process joypad inputs
             movement.ProcessJoypadInputs(gameTime, Speed);
@@ -149,7 +145,8 @@ namespace Logic.Entities.Character.Player
             movement.EnvironCollision(
                 graphics,
                 GetHitbox(),
-                position);
+                position,
+                BoundingArea);
         }
 
         /*
@@ -161,11 +158,6 @@ namespace Logic.Entities.Character.Player
 
             // Check whether to change the skin
             CheckSwitchSkin();
-        }
-
-        public Vector2 GetOffsetPosition(int screenWidth, int screenHeight)
-        {
-            return new Vector2(position.X - (screenWidth / 2), position.Y - (screenHeight / 2));
         }
     }
 }

@@ -61,13 +61,13 @@ namespace Logic.Entities.Character.Mobs
 
             inMotion = true; // Move freely
 
-            movement = new UserInput(); // Environmental collision handling
+            movement = new Movement(); // Environmental collision handling
 
             Speed = 80f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
 
-            countDistance = new List<int>();
+            countDistance = 0;
 
             Height = 1;
         }

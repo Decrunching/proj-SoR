@@ -9,6 +9,7 @@ using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
+using Spine;
 
 namespace SoR.Logic.Game
 {
@@ -82,10 +83,10 @@ namespace SoR.Logic.Game
             render = new Render(GraphicsDevice);
 
             // Get the map to be used
-            map = new Map(render.UseTileset(0, 0), render.UseTileset(0, 1));
+            map = new Map(0);
 
             // Load map content
-            map.LoadMap(game.Content);
+            map.LoadMap(game.Content, map.UseTileset(0, 0), map.UseTileset(0, 1));
 
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
@@ -94,9 +95,9 @@ namespace SoR.Logic.Game
             relativePositionX = graphics.PreferredBackBufferWidth / 2;
             relativePositionY = graphics.PreferredBackBufferHeight / 2;
 
-            // Map the tiles to be drawn to their atlas positions
-            mapWalls = render.CreateMap(map.GetWallAtlas(), map, render.GetTempleWalls());
-            mapFloor = render.CreateMap(map.GetFloorAtlas(), map, render.GetTempleFloor());
+            // Map the tile drawing positions to their atlases
+            mapWalls = render.CreateMap(map.GetWallAtlas(), map, map.MapWalls);
+            mapFloor = render.CreateMap(map.GetFloorAtlas(), map, map.MapFloor);
 
             // Create entities
             entityType = EntityType.Player;
@@ -199,7 +200,7 @@ namespace SoR.Logic.Game
                 // Update position according to user input
                 entity.UpdatePosition(
                 gameTime,
-                graphics);
+                graphics, map.BoundingArea);
 
                 // Update animations
                 entity.UpdateAnimations(gameTime);
@@ -228,6 +229,9 @@ namespace SoR.Logic.Game
                         {
                             if (scenery.CollidesWith(entity))
                             {
+                                scenery.UpdateHitbox(new SkeletonBounds());
+                                scenery.GetHitbox().Update(scenery.GetSkeleton(), true);
+
                                 scenery.Collision(entity, gameTime);
                             }
                         }

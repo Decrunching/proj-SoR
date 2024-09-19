@@ -9,7 +9,7 @@ namespace SoR.Logic.Input
     /*
      * This class handles player input and animation application.
      */
-    public class UserInput
+    public class Movement
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
@@ -23,7 +23,7 @@ namespace SoR.Logic.Input
         private int turnAround;
         private string animation;
 
-        public UserInput()
+        public Movement()
         {
             deadZone = 4096; // Set the joystick deadzone
             idle = true; // Player is currently idle
@@ -150,40 +150,48 @@ namespace SoR.Logic.Input
         }
 
         /*
-         * Handle environmental collision. Currently just the edge of the game window.
+         * Check whether the position is a walkable area, and prevent from entering if so. Non-
+         * player entities also reverse direction and walk away.
          */
         public bool EnvironCollision(
             GraphicsDeviceManager graphics,
             SkeletonBounds hitbox,
-            Vector2 position)
+            Vector2 position,
+            Rectangle boundingArea)
         {
             newPosition = position;
 
-            if (position.X > graphics.PreferredBackBufferWidth - hitbox.Width)
+            if (boundingArea.Contains((int)hitbox.MaxX, (int)hitbox.MaxY) |
+                boundingArea.Contains((int)hitbox.MinX, (int)hitbox.MinY) |
+                boundingArea.Contains((int)hitbox.MaxX, (int)hitbox.MinY) |
+                boundingArea.Contains((int)hitbox.MinX, (int)hitbox.MaxY))
             {
-                newPosition.X = graphics.PreferredBackBufferWidth - hitbox.Width;
-                turnAround = 1; // Left
-                return true;
-            }
-            else if (position.X < hitbox.Width)
-            {
-                newPosition.X = hitbox.Width;
-                turnAround = 2; // Right
-                return true;
+                if (position.X < boundingArea.X + (boundingArea.Width / 2))
+                {
+                    newPosition.X -= 1;
+                    turnAround = 1; // Left
+                    return true;
+                }
+                if (position.X > boundingArea.X + (boundingArea.Width / 2))
+                {
+                    newPosition.X += 1;
+                    turnAround = 2; // Right
+                    return true;
+                }
+                if (position.Y < boundingArea.Y + (boundingArea.Height / 2))
+                {
+                    newPosition.Y -= 1;
+                    turnAround = 3; // Up
+                    return true;
+                }
+                if (position.Y > boundingArea.Y + (boundingArea.Height / 2))
+                {
+                    newPosition.Y += 1;
+                    turnAround = 4; // Down
+                    return true;
+                }
             }
 
-            if (position.Y > graphics.PreferredBackBufferHeight - hitbox.Height)
-            {
-                newPosition.Y = graphics.PreferredBackBufferHeight - hitbox.Height;
-                turnAround = 3; // Up
-                return true;
-            }
-            else if (position.Y < hitbox.Height * 4)
-            {
-                newPosition.Y = hitbox.Height * 4;
-                turnAround = 4; // Down
-                return true;
-            }
             return false;
         }
 
