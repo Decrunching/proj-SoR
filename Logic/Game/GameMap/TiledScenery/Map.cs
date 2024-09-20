@@ -17,9 +17,12 @@ namespace Logic.Game.GameMap.TiledScenery
         private string floorTiles;
         private string wallTiles;
         private int mapNumber;
+        public string FloorSpriteSheet { get; set; }
+        public string WallSpriteSheet { get; set; }
         public int[,] MapFloor { get; set; }
         public int[,] MapWalls { get; set; }
-        public Rectangle BoundingArea { get; set; }
+        public int Width {  get; set; }
+        public int Height { get; set; }
 
         public Map(int mapNumber)
         {
@@ -38,15 +41,15 @@ namespace Logic.Game.GameMap.TiledScenery
             floorTexture = Content.Load<Texture2D>(floorTiles);
             wallTexture = Content.Load<Texture2D>(wallTiles);
 
-            int totalFloorTiles = floorTexture.Width / GetTileDimensions(0, 0) * floorTexture.Height / GetTileDimensions(0, 1);
-            int totalWallTiles = wallTexture.Width / GetTileDimensions(0, 0) * wallTexture.Height / GetTileDimensions(0, 1);
-            int floorRows = floorTexture.Width / GetTileDimensions(0, 0);
-            int floorColumns = floorTexture.Height / GetTileDimensions(0, 1);
-            int wallRows = wallTexture.Width / GetTileDimensions(0, 0);
-            int wallColumns = wallTexture.Height / GetTileDimensions(0, 1);
+            int totalFloorTiles = floorTexture.Width / Width * floorTexture.Height / Height;
+            int totalWallTiles = wallTexture.Width / Width * wallTexture.Height / Height;
+            int floorRows = floorTexture.Width / Width;
+            int floorColumns = floorTexture.Height / Height;
+            int wallRows = wallTexture.Width / Width;
+            int wallColumns = wallTexture.Height / Height;
 
-            floorAtlas = Texture2DAtlas.Create("background", floorTexture, GetTileDimensions(0, 0), GetTileDimensions(0, 1));
-            wallAtlas = Texture2DAtlas.Create("foreground", wallTexture, GetTileDimensions(0, 0), GetTileDimensions(0, 1));
+            floorAtlas = Texture2DAtlas.Create("background", floorTexture, Width, Height);
+            wallAtlas = Texture2DAtlas.Create("foreground", wallTexture, Width, Height);
         }
 
         /*
@@ -67,10 +70,11 @@ namespace Logic.Game.GameMap.TiledScenery
                         {  10, 11, 11, 14, 16, 16, 15, 11, 11, 21 },
                         {  17, 19, 20, 18,-1, -1,  17, 19, 20, 18 }
                     };
+
                     MapFloor = new int[,]
                     {
-                        { -1, -1, -1, -1, -1,  0, -1, -1, -1, -1 },
-                        { -1, -1, -1, -1, -1,  0, -1, -1, -1, -1 },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
                         { -1,  0,  2,  3,  0,  7,  0,  6,  5, -1 },
                         { -1,  0,  0,  0,  0,  0,  0,  0,  1, -1 },
                         { -1,  0,  0,  0,  0,  0,  0,  0,  0, -1 },
@@ -78,51 +82,14 @@ namespace Logic.Game.GameMap.TiledScenery
                         { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 }
                     };
 
-                    int width = GetTileDimensions(0, 0);
-                    int height = GetTileDimensions(0, 1);
+                    Width = 64;
+                    Height = 64;
 
-                    BoundingArea = new Rectangle(
-                        (width * 2) - (int)(width * 0.5),
-                        height - (int)(height * 1.25),
-                        width * 8,
-                        (int)(height * 0.5));
+                    FloorSpriteSheet = "SoR Resources/Locations/TiledScenery/Temple/floorSpritesheet";
+                    WallSpriteSheet = "SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet";
 
                     break;
             }
-        }
-
-        /*
-         * if MapFloor > -1
-         * walkable = > tile.X, < tile.X + width, > tile.Y, < tile.Y + height
-         * 
-         * walkableList = [ x,y, +w,+h ]
-         */
-
-        /*
-         * Get the required tileset.
-         */
-        public string UseTileset(int row, int column)
-        {
-            string[,] maps = new string[,]
-            {
-                { "SoR Resources/Locations/TiledScenery/Temple/floorSpritesheet",
-                    "SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet" } // 0: Temple
-            };
-
-            return maps[row, column];
-        }
-
-        /*
-         * Get the width and height of each tile in this set.
-         */
-        public int GetTileDimensions(int row, int column)
-        {
-            int[,] dimensions = new int[,]
-            {
-                { 64, 64 } // 0: Temple
-            };
-
-            return dimensions[row, column];
         }
 
         /*

@@ -15,7 +15,6 @@ namespace SoR.Logic.Input
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
         private Vector2 newPosition;
-        private Vector2 prevPosition;
         private Dictionary<Keys, InputKeys> inputKeys;
         private int deadZone;
         private bool switchSkin;
@@ -23,12 +22,14 @@ namespace SoR.Logic.Input
         private string lastPressedKey;
         private int turnAround;
         private string animation;
+        private bool traversable;
 
         public Movement()
         {
             deadZone = 4096; // Set the joystick deadzone
             idle = true; // Player is currently idle
             lastPressedKey = ""; // Get the last key pressed
+            traversable = true; // Player is on walkable terrain
 
             // Dictionary to store the input keys, whether they are currently up or pressed, and which animation to apply
             // TO DO: Simplify to remove duplicated code
@@ -60,11 +61,12 @@ namespace SoR.Logic.Input
             GameTime gameTime,
             float speed,
             Vector2 position,
-            Map map)
+            List<Rectangle> WalkableArea,
+            Entity entity)
         {
-            keyState = Keyboard.GetState(); // Get the current keyboard state
+            float newSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            keyState = Keyboard.GetState(); // Get the current keyboard state
 
             newPosition = position;
 
@@ -77,6 +79,17 @@ namespace SoR.Logic.Input
                 }
             }
 
+            // Check the player is on walkable terrain
+            foreach (Rectangle area in WalkableArea)
+            {
+                if (area.Contains(position))
+                {
+                    traversable = true;
+                    break;
+                }
+                traversable = false;
+            }
+
             // Set player animation and position according to keyboard input
             foreach (var key in inputKeys.Keys)
             {
@@ -86,22 +99,24 @@ namespace SoR.Logic.Input
 
                 if (pressed)
                 {
-                    if (inputKeys[key].NextAnimation == "runleft")
+                    if (inputKeys[key].NextAnimation == "runleft" && traversable)
                     {
-                        newPosition.X -= newPlayerSpeed;
+                        newPosition.X -= newSpeed;
                     }
-                    else if (inputKeys[key].NextAnimation == "runright")
+
+                    if (inputKeys[key].NextAnimation == "runright" && traversable)
                     {
-                        newPosition.X += newPlayerSpeed;
+                        newPosition.X += newSpeed;
                     }
-                    
-                    if (inputKeys[key].NextAnimation == "runup")
+
+                    if (inputKeys[key].NextAnimation == "runup" && traversable)
                     {
-                        newPosition.Y -= newPlayerSpeed;
+                        newPosition.Y -= newSpeed;
                     }
-                    else if (inputKeys[key].NextAnimation == "rundown")
+
+                    if (inputKeys[key].NextAnimation == "rundown" && traversable)
                     {
-                        newPosition.Y += newPlayerSpeed;
+                        newPosition.Y += newSpeed;
                     }
 
                     idle = false; // Idle will no longer be playing
@@ -123,9 +138,6 @@ namespace SoR.Logic.Input
             ChangeSkin(); // Check all non-directional user input
 
             lastKeyState = keyState; // Get the previous keyboard state
-
-            // Get the previous x,y co-ordinates
-            prevPosition = newPosition;
         }
 
         /*
@@ -149,48 +161,6 @@ namespace SoR.Logic.Input
             {
                 switchSkin = true; // Space was pressed, so switch skins
             }
-        }
-
-        /*
-         * Check whether the position is a walkable area, and prevent from entering if so. Non-
-         * player entities also reverse direction and walk away.
-         */
-        public bool EnvironCollision(
-            GameTime gameTime,
-            float speed,
-            GraphicsDeviceManager graphics,
-            Vector2 position,
-            Rectangle BoundingArea,
-            Entity entity)
-        {
-            float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (BoundingArea.Contains(position))
-            {
-                entity.ThrownBack(gameTime, BoundingArea.Center.X, BoundingArea.Center.Y, 1);
-                if (position.X < BoundingArea.Center.X)
-                {
-                    turnAround = 1; // Left
-                    return true;
-                }
-                if (position.X > BoundingArea.Center.X)
-                {
-                    turnAround = 2; // Right
-                    return true;
-                }
-                if (position.Y < BoundingArea.Center.Y)
-                {
-                    turnAround = 3; // Up
-                    return true;
-                }
-                if (position.Y > BoundingArea.Center.Y)
-                {
-                    turnAround = 4; // Down
-                    return true;
-                }
-            }
-
-            return false;
         }
 
         /*
@@ -230,6 +200,22 @@ namespace SoR.Logic.Input
                     newPosition.X += newPlayerSpeed;
                 }
             }
+        }
+
+        /*
+         * Check whether the player is on traversable terrain.
+         */
+        public bool IsTraversable()
+        {
+            return traversable;
+        }
+
+        /*
+         * Get the last keyboard state.
+         */
+        public KeyboardState GetLastKeyState()
+        {
+            return lastKeyState;
         }
 
         /*

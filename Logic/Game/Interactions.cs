@@ -86,7 +86,7 @@ namespace SoR.Logic.Game
             map = new Map(0);
 
             // Load map content
-            map.LoadMap(game.Content, map.UseTileset(0, 0), map.UseTileset(0, 1));
+            map.LoadMap(game.Content, map.FloorSpriteSheet, map.WallSpriteSheet);
 
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
@@ -96,8 +96,8 @@ namespace SoR.Logic.Game
             relativePositionY = graphics.PreferredBackBufferHeight / 2;
 
             // Map the tile drawing positions to their atlases
-            mapWalls = render.CreateMap(map.GetWallAtlas(), map, map.MapWalls);
-            mapFloor = render.CreateMap(map.GetFloorAtlas(), map, map.MapFloor);
+            mapWalls = render.CreateMap(map, map.MapWalls);
+            mapFloor = render.CreateMap( map, map.MapFloor);
 
             // Create entities
             entityType = EntityType.Player;
@@ -131,7 +131,7 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(GraphicsDevice) { Name = "player" });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.SetPosition(relativePositionX -200, relativePositionY + 100);
+                        player.SetPosition(200, 250);
                     }
                     break;
                 case EntityType.Pheasant:
@@ -199,7 +199,7 @@ namespace SoR.Logic.Game
                 entity.UpdatePosition(
                 gameTime,
                 graphics,
-                map);
+                render.WalkableMapArea());
 
                 // Update animations
                 entity.UpdateAnimations(gameTime);

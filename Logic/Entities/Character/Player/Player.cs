@@ -1,11 +1,13 @@
 ﻿using Logic.Game.GameMap.TiledScenery;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using SoR;
 using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
 using System.Collections.Generic;
+using System.Windows.Input;
 
 namespace Logic.Entities.Character.Player
 {
@@ -15,6 +17,7 @@ namespace Logic.Entities.Character.Player
     public class Player : Entity
     {
         private string skin;
+        private KeyboardState lastKeyState;
 
         public Player(GraphicsDevice GraphicsDevice)
         {
@@ -122,7 +125,7 @@ namespace Logic.Entities.Character.Player
         /*
          * Update entity position.
          */
-        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, Map map)
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, List<Rectangle> WalkableArea)
         {
             prevPosition = position;
 
@@ -130,21 +133,36 @@ namespace Logic.Entities.Character.Player
 
             // Process joypad inputs
             movement.ProcessJoypadInputs(gameTime, Speed);
-            movement.CheckMovement(gameTime, Speed, position, map);
+            movement.CheckMovement(gameTime, Speed, position, WalkableArea, this);
             ChangeAnimation(movement.AnimateMovement());
-
-            // Handle environmental collision
-            movement.EnvironCollision(
-                gameTime,
-                Speed,
-                graphics,
-                position,
-                map.BoundingArea,
-                this);
-
 
             // Set the new position
             position = movement.UpdatePosition();
+
+            if (movement.IsTraversable())
+            {
+                lastKeyState = movement.GetLastKeyState();
+            }
+
+            if (!movement.IsTraversable())
+            {
+                if (lastKeyState.IsKeyDown(Keys.Left) || lastKeyState.IsKeyDown(Keys.A)) // Right
+                {
+                    ThrownBack(gameTime, position.X - 1, position.Y, 1);
+                }
+                if (lastKeyState.IsKeyDown(Keys.Right) || lastKeyState.IsKeyDown(Keys.D)) // Left
+                {
+                    ThrownBack(gameTime, position.X + 1, position.Y, 1);
+                }
+                if (lastKeyState.IsKeyDown(Keys.Up) || lastKeyState.IsKeyDown(Keys.W)) // Down
+                {
+                    ThrownBack(gameTime, position.X, position.Y - 1, 1);
+                }
+                if (lastKeyState.IsKeyDown(Keys.Down) || lastKeyState.IsKeyDown(Keys.S)) // Up
+                {
+                    ThrownBack(gameTime, position.X, position.Y + 1, 1);
+                }
+            }
         }
 
         /*

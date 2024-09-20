@@ -264,7 +264,7 @@ namespace SoR.Logic.Entities
         /*
          * Update entity position.
          */
-        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, Map map)
+        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, List<Rectangle> WalkableArea)
         {
             prevPosition = position;
 
@@ -286,18 +286,6 @@ namespace SoR.Logic.Entities
             }
 
             GetMoved(gameTime);
-
-            // Handle environmental collision
-            if (movement.EnvironCollision(
-                gameTime,
-                Speed,
-                graphics,
-                position,
-                map.BoundingArea,
-                this))
-            {
-                NewDirection(movement.TurnAround());
-            }
         }
 
         /*

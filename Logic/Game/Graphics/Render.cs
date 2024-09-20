@@ -18,13 +18,18 @@ namespace Logic.Game.Graphics
     {
         private SpriteBatch spriteBatch;
         private SkeletonRenderer skeletonRenderer;
+        public List<Rectangle> WalkableTiles { get; private set; }
 
         public Render(GraphicsDevice GraphicsDevice)
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
-            skeletonRenderer.PremultipliedAlpha = true;
+            skeletonRenderer = new SkeletonRenderer(GraphicsDevice)
+            {
+                PremultipliedAlpha = true
+            };
+
+            WalkableTiles = new List<Rectangle>();
         }
 
         /*
@@ -95,13 +100,15 @@ namespace Logic.Game.Graphics
         }
 
         /*
-         * Draws the map to the screen.
+         * Pair the atlas position of each tile with its world position.
          */
-        public Dictionary<string, Vector2> CreateMap(Texture2DAtlas atlas, Map map, int[,] tileLocations, int row = 0, int column = 1)
+        public Dictionary<string, Vector2> CreateMap(Map map, int[,] tileLocations)
         {
-            Dictionary<string, Vector2> sortByYAxis = new Dictionary<string, Vector2>();
-            Vector2 position = new Vector2(0, 0);
+            Dictionary<string, Vector2> sortByYAxis = [];
+            Vector2 position = new(0, 0);
             int tileID = 1000;
+            int row = 0;
+            int column = 1;
 
             for (int x = 0; x < tileLocations.GetLength(row); x++) // For each row in the 2D array
             {
@@ -114,19 +121,53 @@ namespace Logic.Game.Graphics
                         string tileName = string.Concat(tileID + tile.ToString());
                         sortByYAxis.Add(tileName, position);
                         tileID++;
+
+                        Rectangle tileArea = new Rectangle ((int)position.X, (int)position.Y, map.Width, map.Height);
+                        WalkableTiles.Add(tileArea);
                     }
 
-                    position.X += map.GetTileDimensions(0, 0); // Step right by one tile space
+                    position.X += map.Width; // Step right by one tile space
                 }
                 position.X = 0;
-                position.Y += map.GetTileDimensions(0, 1); // Reset the x-axis and step down by one tile space
+                position.Y += map.Height; // Reset the x-axis and step down by one tile space
             }
 
             return sortByYAxis;
         }
 
         /*
-         * Draw the map walls to the screen.
+         * Create a list of rectangles containing the walkable map area.
+         */
+        public List<Rectangle> WalkableMapArea()
+        {
+            List<Rectangle> walkableArea = [];
+            Rectangle block = new();
+            int yPrev = 0;
+
+            foreach (Rectangle area in WalkableTiles)
+            {
+                block.Y = area.Y;
+                block.Height = area.Height;
+
+                if (yPrev == area.Y && block.X + block.Width + 1 !< area.X)
+                {
+                    block.Width += area.Width;
+                }
+                else
+                {
+                    walkableArea.Add(block);
+                    block.X = area.X;
+                    block.Width = area.Width;
+                }
+
+                yPrev = area.Y;
+            }
+
+            return walkableArea;
+        }
+
+        /*
+         * Draw the map to the screen.
          */
         public void DrawMap(Texture2DAtlas atlas, Map map, string tileName, Vector2 position, SpriteFont font)
         {
@@ -135,17 +176,9 @@ namespace Logic.Game.Graphics
             int tileNumber = Convert.ToInt32(tile);
 
             // Offset drawing position by tile height to draw in front of the components that use a different positioning reference
-            position.Y -= (float)(map.GetTileDimensions(0, 1) * 1.25);
+            position.Y -= (float)(map.Height * 1.25);
 
             spriteBatch.Draw(atlas[tileNumber], position, Color.White);
-
-            // Entity text
-            spriteBatch.DrawString(
-            font,
-                "Rect X:" + map.BoundingArea.X + ", Rect Y: " + map.BoundingArea.Y +
-            "\nRect width: " + map.BoundingArea.Width + ", Rect height: " + map.BoundingArea.Height,
-            new Vector2(map.BoundingArea.X, map.BoundingArea.Y),
-                Color.BlueViolet);
         }
 
         /*
