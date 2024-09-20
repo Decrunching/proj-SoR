@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Game.GameMap.TiledScenery;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
 using System.Collections.Generic;
@@ -58,7 +59,8 @@ namespace SoR.Logic.Input
         public void CheckMovement(
             GameTime gameTime,
             float speed,
-            Vector2 position)
+            Vector2 position,
+            Map map)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
@@ -163,10 +165,7 @@ namespace SoR.Logic.Input
         {
             float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (position.X > BoundingArea.X &&
-                position.X < BoundingArea.X + BoundingArea.Width &&
-                position.Y > BoundingArea.Y &&
-                position.Y < BoundingArea.Y + BoundingArea.Height)
+            if (BoundingArea.Contains(position))
             {
                 entity.ThrownBack(gameTime, BoundingArea.Center.X, BoundingArea.Center.Y, 1);
                 if (position.X < BoundingArea.Center.X)

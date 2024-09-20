@@ -8,7 +8,7 @@ namespace Logic.Game.GameMap.TiledScenery
     /*
      * Create a map using a specified tileset and layout.
      */
-    internal class Map
+    public class Map
     {
         private Texture2DAtlas floorAtlas;
         private Texture2DAtlas wallAtlas;
@@ -69,8 +69,8 @@ namespace Logic.Game.GameMap.TiledScenery
                     };
                     MapFloor = new int[,]
                     {
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
+                        { -1, -1, -1, -1, -1,  0, -1, -1, -1, -1 },
+                        { -1, -1, -1, -1, -1,  0, -1, -1, -1, -1 },
                         { -1,  0,  2,  3,  0,  7,  0,  6,  5, -1 },
                         { -1,  0,  0,  0,  0,  0,  0,  0,  1, -1 },
                         { -1,  0,  0,  0,  0,  0,  0,  0,  0, -1 },
@@ -90,6 +90,13 @@ namespace Logic.Game.GameMap.TiledScenery
                     break;
             }
         }
+
+        /*
+         * if MapFloor > -1
+         * walkable = > tile.X, < tile.X + width, > tile.Y, < tile.Y + height
+         * 
+         * walkableList = [ x,y, +w,+h ]
+         */
 
         /*
          * Get the required tileset.

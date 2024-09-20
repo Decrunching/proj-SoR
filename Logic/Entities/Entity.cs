@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Game.GameMap.TiledScenery;
+using Microsoft.Xna.Framework;
 using SoR.Logic.Input;
 using Spine;
 using System;
@@ -263,7 +264,7 @@ namespace SoR.Logic.Entities
         /*
          * Update entity position.
          */
-        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, Rectangle BoundingArea)
+        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, Map map)
         {
             prevPosition = position;
 
@@ -292,7 +293,7 @@ namespace SoR.Logic.Entities
                 Speed,
                 graphics,
                 position,
-                BoundingArea,
+                map.BoundingArea,
                 this))
             {
                 NewDirection(movement.TurnAround());

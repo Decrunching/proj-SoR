@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Game.GameMap.TiledScenery;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SoR;
 using SoR.Logic.Entities;
@@ -121,7 +122,7 @@ namespace Logic.Entities.Character.Player
         /*
          * Update entity position.
          */
-        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, Rectangle BoundingArea)
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, Map map)
         {
             prevPosition = position;
 
@@ -129,7 +130,7 @@ namespace Logic.Entities.Character.Player
 
             // Process joypad inputs
             movement.ProcessJoypadInputs(gameTime, Speed);
-            movement.CheckMovement(gameTime, Speed, position);
+            movement.CheckMovement(gameTime, Speed, position, map);
             ChangeAnimation(movement.AnimateMovement());
 
             // Handle environmental collision
@@ -138,7 +139,7 @@ namespace Logic.Entities.Character.Player
                 Speed,
                 graphics,
                 position,
-                BoundingArea,
+                map.BoundingArea,
                 this);
 
 

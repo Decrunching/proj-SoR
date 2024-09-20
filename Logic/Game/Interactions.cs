@@ -198,7 +198,8 @@ namespace SoR.Logic.Game
                 // Update position according to user input
                 entity.UpdatePosition(
                 gameTime,
-                graphics, map.BoundingArea);
+                graphics,
+                map);
 
                 // Update animations
                 entity.UpdateAnimations(gameTime);
