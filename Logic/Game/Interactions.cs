@@ -97,7 +97,8 @@ namespace SoR.Logic.Game
 
             // Map the tile drawing positions to their atlases
             mapWalls = render.CreateMap(map, map.MapWalls);
-            mapFloor = render.CreateMap( map, map.MapFloor);
+            mapFloor = render.CreateMap( map, map.MapFloor, true);
+            render.WalkableMapArea();
 
             // Create entities
             entityType = EntityType.Player;
@@ -131,7 +132,7 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(GraphicsDevice) { Name = "player" });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.SetPosition(200, 250);
+                        player.SetPosition(250, 200);
                     }
                     break;
                 case EntityType.Pheasant:
@@ -199,7 +200,7 @@ namespace SoR.Logic.Game
                 entity.UpdatePosition(
                 gameTime,
                 graphics,
-                render.WalkableMapArea());
+                render.WalkableTiles);
 
                 // Update animations
                 entity.UpdateAnimations(gameTime);

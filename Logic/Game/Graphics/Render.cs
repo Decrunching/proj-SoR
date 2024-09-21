@@ -29,7 +29,7 @@ namespace Logic.Game.Graphics
                 PremultipliedAlpha = true
             };
 
-            WalkableTiles = new List<Rectangle>();
+            WalkableTiles = [];
         }
 
         /*
@@ -102,7 +102,7 @@ namespace Logic.Game.Graphics
         /*
          * Pair the atlas position of each tile with its world position.
          */
-        public Dictionary<string, Vector2> CreateMap(Map map, int[,] tileLocations)
+        public Dictionary<string, Vector2> CreateMap(Map map, int[,] tileLocations, bool floor = false)
         {
             Dictionary<string, Vector2> sortByYAxis = [];
             Vector2 position = new(0, 0);
@@ -122,8 +122,11 @@ namespace Logic.Game.Graphics
                         sortByYAxis.Add(tileName, position);
                         tileID++;
 
-                        Rectangle tileArea = new Rectangle ((int)position.X, (int)position.Y, map.Width, map.Height);
-                        WalkableTiles.Add(tileArea);
+                        if (floor)
+                        {
+                            Rectangle tileArea = new Rectangle((int)position.X, (int)position.Y, map.Width, map.Height);
+                            WalkableTiles.Add(tileArea);
+                        }
                     }
 
                     position.X += map.Width; // Step right by one tile space
@@ -138,39 +141,44 @@ namespace Logic.Game.Graphics
         /*
          * Create a list of rectangles containing the walkable map area.
          */
-        public List<Rectangle> WalkableMapArea()
+        public void WalkableMapArea()
         {
+            Rectangle block = WalkableTiles[0];
             List<Rectangle> walkableArea = [];
-            Rectangle block = new();
-            int yPrev = 0;
 
             foreach (Rectangle area in WalkableTiles)
             {
-                block.Y = area.Y; // Save the y position
-                block.Height = area.Height; // save the height
-
-                // If the previous y position is the same as the new one, and
-                // the right x pos of the block being created is not less than the new left x pos
-                if (yPrev == area.Y && block.X + block.Width + 1 !< area.X)
+                if (block.Bottom != area.Bottom)
                 {
-                    block.Width += area.Width; // add the new width to that of the block being created
+                    //block.Y -= (int)(block.Height * 1.25);
+                    walkableArea.Add(block);
+                    block = area;
                 }
-                else // otherwise
+                if (block.Bottom == area.Bottom)
                 {
-                    walkableArea.Add(block); // add this block to walkableArea array
-                    block.X = area.X; // save the x position
-                    block.Width = area.Width; // set the width to that of the new block width
+                    if (block.Y == area.Y)
+                    {
+                        if (block.Right == area.Left)
+                        {
+                            block.Width += area.Width;
+                        }
+                        else if (block != area)
+                        {
+                            if (block.Right < area.Left)
+                            {
+                                block = area;
+                            }
+                            else
+                            {
+                                //block.Y -= (int)(block.Height * 1.25);
+                                walkableArea.Add(block);
+                            }
+                        }
+                    }
                 }
-
-                yPrev = area.Y; // Save the previous y position
             }
 
-            /*
-             * for each area in walkable
-             * save 
-             */
-
-            return walkableArea;
+            WalkableTiles = walkableArea;
         }
 
         /*

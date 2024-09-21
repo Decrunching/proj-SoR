@@ -1,5 +1,4 @@
-﻿using Logic.Game.GameMap.TiledScenery;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
 using System.Collections.Generic;
