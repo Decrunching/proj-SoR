@@ -146,22 +146,29 @@ namespace Logic.Game.Graphics
 
             foreach (Rectangle area in WalkableTiles)
             {
-                block.Y = area.Y;
-                block.Height = area.Height;
+                block.Y = area.Y; // Save the y position
+                block.Height = area.Height; // save the height
 
+                // If the previous y position is the same as the new one, and
+                // the right x pos of the block being created is not less than the new left x pos
                 if (yPrev == area.Y && block.X + block.Width + 1 !< area.X)
                 {
-                    block.Width += area.Width;
+                    block.Width += area.Width; // add the new width to that of the block being created
                 }
-                else
+                else // otherwise
                 {
-                    walkableArea.Add(block);
-                    block.X = area.X;
-                    block.Width = area.Width;
+                    walkableArea.Add(block); // add this block to walkableArea array
+                    block.X = area.X; // save the x position
+                    block.Width = area.Width; // set the width to that of the new block width
                 }
 
-                yPrev = area.Y;
+                yPrev = area.Y; // Save the previous y position
             }
+
+            /*
+             * for each area in walkable
+             * save 
+             */
 
             return walkableArea;
         }
