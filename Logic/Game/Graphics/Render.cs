@@ -18,6 +18,7 @@ namespace Logic.Game.Graphics
     {
         private SpriteBatch spriteBatch;
         private SkeletonRenderer skeletonRenderer;
+        private List<Rectangle> walkableArea;
         public List<Rectangle> WalkableTiles { get; private set; }
 
         public Render(GraphicsDevice GraphicsDevice)
@@ -81,7 +82,8 @@ namespace Logic.Game.Graphics
             // Entity text
             spriteBatch.DrawString(
                 font,
-                "HP: " + entity.GetHitPoints(),
+                "HP: " + entity.GetHitPoints() +
+                "\nMinX: " + entity.GetHitbox().MinX + ", MaxX: " + entity.GetHitbox().MaxX,
                 new Vector2(entity.GetPosition().X - 30, entity.GetPosition().Y + 30),
                 Color.BlueViolet);
         }
@@ -144,41 +146,40 @@ namespace Logic.Game.Graphics
         public void WalkableMapArea()
         {
             Rectangle block = WalkableTiles[0];
-            List<Rectangle> walkableArea = [];
+            walkableArea = [];
 
             foreach (Rectangle area in WalkableTiles)
             {
                 if (block.Bottom != area.Bottom)
                 {
-                    //block.Y -= (int)(block.Height * 1.25);
-                    walkableArea.Add(block);
+                    AddBlock(block, walkableArea);
                     block = area;
                 }
-                if (block.Bottom == area.Bottom)
+                if (block.Bottom == area.Bottom && block.Y == area.Y)
                 {
-                    if (block.Y == area.Y)
+                    if (block.Right == area.Left)
                     {
-                        if (block.Right == area.Left)
-                        {
-                            block.Width += area.Width;
-                        }
-                        else if (block != area)
-                        {
-                            if (block.Right < area.Left)
-                            {
-                                block = area;
-                            }
-                            else
-                            {
-                                //block.Y -= (int)(block.Height * 1.25);
-                                walkableArea.Add(block);
-                            }
-                        }
+                        block.Width += area.Width;
+                    }
+                    else if (block != area)
+                    {
+                        AddBlock(block, walkableArea);
+                        block = area;
                     }
                 }
             }
+            AddBlock(block, walkableArea);
 
             WalkableTiles = walkableArea;
+        }
+
+        /*
+         * Add the current block to the list of walkable areas.
+         */
+        public void AddBlock(Rectangle block, List<Rectangle> walkableArea)
+        {
+            block.Y -= block.Height;
+            walkableArea.Add(block);
         }
 
         /*

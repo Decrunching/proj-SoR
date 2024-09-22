@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Spine;
 using SoR.Logic.Entities;
 using SoR;
+using SoR.Logic.Input;
 
 namespace Logic.Game.GameMap.Interactables
 {
@@ -44,6 +45,8 @@ namespace Logic.Game.GameMap.Interactables
 
             hitbox = new SkeletonBounds();
 
+            movement = new Movement(); // Environmental collision handling
+
             Height = 1;
         }
 
@@ -63,7 +66,7 @@ namespace Logic.Game.GameMap.Interactables
         public override void Collision(Entity entity, GameTime gameTime)
         {
             entity.TakeDamage(1);
-            entity.ThrownBack(gameTime, position.X, position.Y, 8);
+            movement.Repel(gameTime, position, 8, entity);
         }
     }
 }

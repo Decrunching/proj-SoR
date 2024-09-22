@@ -29,8 +29,6 @@ namespace SoR.Logic.Game
         private List<Vector2> positions;
         private SpriteFont font;
         private Render render;
-        private float relativePositionX;
-        private float relativePositionY;
 
         /*
          * Differentiate between entities.
@@ -91,10 +89,6 @@ namespace SoR.Logic.Game
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
 
-            // The centre of the screen
-            relativePositionX = graphics.PreferredBackBufferWidth / 2;
-            relativePositionY = graphics.PreferredBackBufferHeight / 2;
-
             // Map the tile drawing positions to their atlases
             mapWalls = render.CreateMap(map, map.MapWalls);
             mapFloor = render.CreateMap( map, map.MapFloor, true);
@@ -139,28 +133,28 @@ namespace SoR.Logic.Game
                     entities.Add("pheasant", new Pheasant(GraphicsDevice) { Name = "pheasant" });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
-                        pheasant.SetPosition(relativePositionX + 40, relativePositionY - 200);
+                        pheasant.SetPosition(270, 200);
                     }
                     break;
                 case EntityType.Chara:
                     entities.Add("chara", new Chara(GraphicsDevice) { Name = "chara" });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
-                        chara.SetPosition(relativePositionX + 420, relativePositionY + 350);
+                        chara.SetPosition(250, 250);
                     }
                     break;
                 case EntityType.Slime:
                     entities.Add("slime", new Slime(GraphicsDevice) { Name = "slime" });
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
-                        slime.SetPosition(relativePositionX - 300, relativePositionY + 250);
+                        slime.SetPosition(250, 130);
                     }
                     break;
                 case EntityType.Fishy:
                     entities.Add("fishy", new Fishy(GraphicsDevice) { Name = "fishy" });
                     if (entities.TryGetValue("fishy", out Entity fishy))
                     {
-                        fishy.SetPosition(relativePositionX + 340, relativePositionY + 100);
+                        fishy.SetPosition(280, 180);
                     }
                     break;
             }
@@ -213,8 +207,6 @@ namespace SoR.Logic.Game
 
                         if (entity != player & player.CollidesWith(entity))
                         {
-                            player.ChangeAnimation("collision");
-
                             entity.StopMoving();
 
                             player.Collision(entity, gameTime);

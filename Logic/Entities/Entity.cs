@@ -1,8 +1,6 @@
-﻿using Logic.Game.GameMap.TiledScenery;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using SoR.Logic.Input;
 using Spine;
-using System;
 using System.Collections.Generic;
 
 namespace SoR.Logic.Entities
@@ -48,19 +46,16 @@ namespace SoR.Logic.Entities
         protected SkeletonBounds hitbox;
         protected Slot slot;
         protected TrackEntry trackEntry;
-        protected Random random;
         protected Movement movement;
-        protected int countDistance;
         protected Vector2 position;
         protected Vector2 movementDirection;
-        protected Vector2 pushedDirection;
         protected Vector2 prevPosition;
+        protected Vector2 lastTraversable;
+        protected Vector2 direction;
         protected int hitpoints;
         protected string prevTrigger;
         protected string animOne;
         protected string animTwo;
-        protected float newDirectionTime;
-        protected float sinceLastChange;
         protected bool inMotion;
 
         public Rectangle rect; // debugging
@@ -91,7 +86,7 @@ namespace SoR.Logic.Entities
         public void StartMoving()
         {
             inMotion = true;
-            ChangeAnimation("move");
+            ChangeAnimation("run");
         }
 
         /*
@@ -100,7 +95,7 @@ namespace SoR.Logic.Entities
         public void StopMoving()
         {
             inMotion = false;
-            ChangeAnimation("collision");
+            ChangeAnimation("idle");
             position = prevPosition;
         }
 
@@ -110,7 +105,7 @@ namespace SoR.Logic.Entities
          */
         public void ChangeAnimation(string eventTrigger)
         {
-            string reaction = "none"; // Default to "none" if there will be no animation change
+            string reaction; // Null if there will be no animation change
 
             if (prevTrigger != eventTrigger)
             {
@@ -119,6 +114,7 @@ namespace SoR.Logic.Entities
                     if (eventTrigger == animation)
                     {
                         prevTrigger = animOne = reaction = animation;
+                        animTwo = "idle";
 
                         React(reaction, animations[animation]);
                     }
@@ -136,7 +132,7 @@ namespace SoR.Logic.Entities
          */
         public void React(string reaction, int animType)
         {
-            if (reaction != "none")
+            if (reaction != null)
             {
                 if (animType == 1)
                 {
@@ -151,85 +147,6 @@ namespace SoR.Logic.Entities
                 {
                     animState.AddAnimation(0, animOne, true, -trackEntry.TrackTime);
                 }
-            }
-        }
-
-        /*
-         * Choose a new direction to face.
-         */
-        public void NewDirection(int direction)
-        {
-            switch (direction)
-            {
-                case 1:
-                    movementDirection = new Vector2(-1, 0); // Left
-                    ChangeAnimation("turnleft");
-                    skeleton.ScaleX = 1;
-                    break;
-                case 2:
-                    movementDirection = new Vector2(1, 0); // Right
-                    ChangeAnimation("turnright");
-                    skeleton.ScaleX = -1;
-                    break;
-                case 3:
-                    movementDirection = new Vector2(0, -1); // Up
-                    break;
-                case 4:
-                    movementDirection = new Vector2(0, 1); // Down
-                    break;
-            }
-        }
-
-        /*
-         * If the entity is thrown back from something, move away from that thing.
-         */
-        public void ThrownBack(GameTime gameTime, float thrownFromX, float thrownFromY, int throwDistance)
-        {
-            hitbox = new SkeletonBounds();
-            hitbox.Update(skeleton, true);
-
-            countDistance = throwDistance;
-            while (countDistance < throwDistance)
-            {
-                countDistance++;
-            }
-
-            float newSpeed = (float)(Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (position.X > thrownFromX) // Right
-            {
-                pushedDirection.X += 1;
-            }
-            else if (position.X < thrownFromX) // Left
-            {
-                pushedDirection.X -= 1;
-            }
-            if (position.Y > thrownFromY) // Down
-            {
-                pushedDirection.Y += 1;
-            }
-            else if (position.Y < thrownFromY) // Up
-            {
-                pushedDirection.Y -= 1;
-            }
-        }
-
-        /*
-         * Get moved automatically.
-         */
-        public void GetMoved(GameTime gameTime)
-        {
-            if (countDistance > 0)
-            {
-                float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                position += pushedDirection * newSpeed;
-
-                if (countDistance == 1)
-                {
-                    pushedDirection = Vector2.Zero;
-                }
-
-                countDistance--;
             }
         }
 
@@ -258,7 +175,8 @@ namespace SoR.Logic.Entities
         public virtual void Collision(Entity entity, GameTime gameTime)
         {
             entity.TakeDamage(1);
-            entity.ThrownBack(gameTime, position.X, position.Y, 5);
+            entity.ChangeAnimation("hit");
+            movement.Repel(gameTime, position, 5, entity);
         }
 
         /*
@@ -266,26 +184,14 @@ namespace SoR.Logic.Entities
          */
         public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, List<Rectangle> WalkableArea)
         {
+            movement.NonPlayerMovement(gameTime, this);
+            movement.CheckIfTraversable(WalkableArea, this);
+            movement.GetMoved(gameTime, Speed);
+
+            // Set the new position
+            position = movement.UpdatePosition();
+
             prevPosition = position;
-
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            float newSpeed = Speed * deltaTime;
-            sinceLastChange += deltaTime;
-
-            if (IsMoving())
-            {
-                if (sinceLastChange >= newDirectionTime)
-                {
-                    int direction = random.Next(4);
-                    NewDirection(direction);
-                    newDirectionTime = (float)random.NextDouble() * 3f + 0.33f;
-                    sinceLastChange = 0;
-                }
-
-                position += movementDirection * newSpeed;
-            }
-
-            GetMoved(gameTime);
         }
 
         /*
@@ -319,6 +225,30 @@ namespace SoR.Logic.Entities
         public void SetPosition(float xAdjustment, float yAdjustment)
         {
             position = new Vector2(xAdjustment, yAdjustment);
+        }
+
+        /*
+         * Set the hitbox.
+         */
+        public void SetHitbox()
+        {
+            hitbox = new SkeletonBounds();
+        }
+
+        /*
+         * Update the direction of travel.
+         */
+        public void UpdateDirection(Vector2 newDirection)
+        {
+            direction = newDirection;
+        }
+
+        /*
+         * Get the direction of travel.
+         */
+        public Vector2 GetDirection()
+        {
+            return direction;
         }
 
         /*

@@ -1,6 +1,8 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
+using Spine;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -11,37 +13,50 @@ namespace SoR.Logic.Input
      */
     public class Movement
     {
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
-        private Vector2 newPosition;
         private Dictionary<Keys, InputKeys> inputKeys;
+        protected Random random;
+        private Vector2 newPosition;
+        private Vector2 prevPosition;
+        private Vector2 direction;
         private int deadZone;
-        private bool switchSkin;
         private bool idle;
         private string lastPressedKey;
         private int turnAround;
         private string animation;
+        private float sinceLastChange;
+        private float newDirectionTime;
         private bool traversable;
+        public int CountDistance { get; set; }
+        public KeyboardState KeyState { get; set; }
+        public KeyboardState LastKeyState { get; set; }
 
         public Movement()
         {
+            random = new Random();
+
             deadZone = 4096; // Set the joystick deadzone
             idle = true; // Player is currently idle
             lastPressedKey = ""; // Get the last key pressed
-            traversable = true; // Player is on walkable terrain
+
+            traversable = true; // Whether the entity is on walkable terrain
+
+            CountDistance = 0; // Count how far to automatically move the entity
+            direction = new Vector2(0, 0); // The direction of movement
+            sinceLastChange = 0; // Time since last NPC direction change
+            newDirectionTime = (float)random.NextDouble() * 1f + 0.25f; // After 0.25-1 seconds, NPC chooses a new movement direction
 
             // Dictionary to store the input keys, whether they are currently up or pressed, and which animation to apply
             // TO DO: Simplify to remove duplicated code
             inputKeys = new Dictionary<Keys, InputKeys>()
             {
-            { Keys.Up, new InputKeys(keyState.IsKeyDown(Keys.Up), "runup") },
-            { Keys.W, new InputKeys(keyState.IsKeyDown(Keys.W), "runup") },
-            { Keys.Down, new InputKeys(keyState.IsKeyDown(Keys.Down), "rundown") },
-            { Keys.S, new InputKeys(keyState.IsKeyDown(Keys.S), "rundown") },
-            { Keys.Left, new InputKeys(keyState.IsKeyDown(Keys.Left), "runleft") },
-            { Keys.A, new InputKeys(keyState.IsKeyDown(Keys.A), "runleft") },
-            { Keys.Right, new InputKeys(keyState.IsKeyDown(Keys.Right), "runright") },
-            { Keys.D, new InputKeys(keyState.IsKeyDown(Keys.D), "runright") }
+            { Keys.Up, new InputKeys(KeyState.IsKeyDown(Keys.Up), "runup") },
+            { Keys.W, new InputKeys(KeyState.IsKeyDown(Keys.W), "runup") },
+            { Keys.Down, new InputKeys(KeyState.IsKeyDown(Keys.Down), "rundown") },
+            { Keys.S, new InputKeys(KeyState.IsKeyDown(Keys.S), "rundown") },
+            { Keys.Left, new InputKeys(KeyState.IsKeyDown(Keys.Left), "runleft") },
+            { Keys.A, new InputKeys(KeyState.IsKeyDown(Keys.A), "runleft") },
+            { Keys.Right, new InputKeys(KeyState.IsKeyDown(Keys.Right), "runright") },
+            { Keys.D, new InputKeys(KeyState.IsKeyDown(Keys.D), "runright") }
             };
         }
 
@@ -60,12 +75,11 @@ namespace SoR.Logic.Input
             GameTime gameTime,
             float speed,
             Vector2 position,
-            List<Rectangle> WalkableArea,
-            Entity entity)
+            SkeletonBounds hitbox)
         {
             float newSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            keyState = Keyboard.GetState(); // Get the current keyboard state
+            KeyState = Keyboard.GetState(); // Get the current keyboard state
 
             newPosition = position;
 
@@ -78,42 +92,29 @@ namespace SoR.Logic.Input
                 }
             }
 
-            // Check the player is on walkable terrain
-            foreach (Rectangle area in WalkableArea)
-            {
-                if (area.Contains(position))
-                {
-                    traversable = true;
-                    break;
-                }
-                traversable = false;
-            }
-
             // Set player animation and position according to keyboard input
             foreach (var key in inputKeys.Keys)
             {
-                bool pressed = keyState.IsKeyDown(key);
-                bool previouslyPressed = lastKeyState.IsKeyDown(key);
+                bool pressed = KeyState.IsKeyDown(key);
+                bool previouslyPressed = LastKeyState.IsKeyDown(key);
                 inputKeys[key].Pressed = pressed;
 
                 if (pressed)
                 {
-                    if (inputKeys[key].NextAnimation == "runleft" && traversable)
+                    if (inputKeys[key].NextAnimation == "runleft")
                     {
                         newPosition.X -= newSpeed;
                     }
-
-                    if (inputKeys[key].NextAnimation == "runright" && traversable)
+                    else if (inputKeys[key].NextAnimation == "runright")
                     {
                         newPosition.X += newSpeed;
                     }
 
-                    if (inputKeys[key].NextAnimation == "runup" && traversable)
+                    if (inputKeys[key].NextAnimation == "runup")
                     {
                         newPosition.Y -= newSpeed;
                     }
-
-                    if (inputKeys[key].NextAnimation == "rundown" && traversable)
+                    else if (inputKeys[key].NextAnimation == "rundown")
                     {
                         newPosition.Y += newSpeed;
                     }
@@ -133,10 +134,182 @@ namespace SoR.Logic.Input
                     animation = lastPressedKey;
                 }
             }
+            prevPosition = position;
 
-            ChangeSkin(); // Check all non-directional user input
+            LastKeyState = KeyState; // Get the previous keyboard state
+        }
 
-            lastKeyState = keyState; // Get the previous keyboard state
+        /*
+         * Check the player is on walkable terrain.
+         */
+        public void CheckIfTraversable(List<Rectangle> WalkableArea, Entity entity)
+        {
+            foreach (Rectangle area in WalkableArea)
+            {
+                if (area.Contains(newPosition))
+                {
+                    traversable = true;
+                    break;
+                }
+                traversable = false;
+            }
+
+            if (!traversable)
+            {
+                direction = Vector2.Zero;
+                Redirected(prevPosition);
+                CountDistance++;
+            }
+        }
+
+        /*
+         * Repel an entity away.
+         */
+        public void Repel(GameTime gameTime, Vector2 location, int distance, Entity entity)
+        {
+            CountDistance = distance;
+            while (CountDistance < distance)
+            {
+                CountDistance++;
+            }
+
+            float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            entity.UpdateDirection(Vector2.Zero);
+
+            if (entity.GetPosition().X > location.X) // Right
+            {
+                direction.X += 1;
+            }
+            else if (entity.GetPosition().X < location.X) // Left
+            {
+                direction.X -= 1;
+            }
+            if (entity.GetPosition().Y > location.Y) // Down
+            {
+                direction.Y += 1;
+            }
+            else if (entity.GetPosition().Y < location.Y) // Up
+            {
+                direction.Y -= 1;
+            }
+
+            entity.UpdateDirection(direction);
+        }
+
+        /*
+         * Change direction to move away from something.
+         */
+        public void Redirected(Vector2 location)
+        {
+            if (newPosition.X > location.X) // Moving right
+            {
+                direction = new Vector2(-1, 0); // Shift left
+            }
+            else if (newPosition.X < location.X) // Moving left
+            {
+                direction = new Vector2(1, 0); // Shift right
+            }
+            if (newPosition.Y > location.Y) // Moving down
+            {
+                direction = new Vector2(0, -1); // Shift up
+            }
+            else if (newPosition.Y < location.Y) // Moving up
+            {
+                direction = new Vector2(0, 1); // Shift down
+            }
+        }
+
+        /*
+         * Choose a new direction to face.
+         */
+        public void NewDirection(Entity entity, int newDirection)
+        {
+            switch (newDirection)
+            {
+                case 1:
+                    direction = new Vector2(-1, 0); // Left
+                    entity.ChangeAnimation("turnleft");
+                    entity.GetSkeleton().ScaleX = 1;
+                    break;
+                case 2:
+                    direction = new Vector2(1, 0); // Right
+                    entity.ChangeAnimation("turnright");
+                    entity.GetSkeleton().ScaleX = -1;
+                    break;
+                case 3:
+                    direction = new Vector2(0, -1); // Up
+                    break;
+                case 4:
+                    direction = new Vector2(0, 1); // Down
+                    break;
+            }
+        }
+
+        /*
+         * Move the NPC in the direction they're facing, and periodically pick a random new direction.
+         */
+        public void NonPlayerMovement(GameTime gameTime, Entity entity)
+        {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float newSpeed = entity.Speed * deltaTime;
+            int newDirection = 0;
+            sinceLastChange += deltaTime;
+            newPosition = entity.GetPosition();
+
+            if (entity.IsMoving())
+            {
+                if (sinceLastChange >= newDirectionTime)
+                {
+                    newDirection = random.Next(4);
+                    NewDirection(entity, newDirection);
+                    newDirectionTime = (float)random.NextDouble() * 3f + 0.33f;
+                    sinceLastChange = 0;
+                }
+
+                newPosition += direction * newSpeed;
+
+                if (!traversable)
+                {
+                    switch(newDirection)
+                    {
+                        case 1:
+                            NewDirection(entity, 2);
+                            break;
+                        case 2:
+                            NewDirection(entity, 1);
+                            break;
+                        case 3:
+                            NewDirection(entity, 4);
+                            break;
+                        case 4:
+                            NewDirection(entity, 3);
+                            break;
+                    }
+
+                    newPosition += direction * newSpeed;
+                }
+            }
+            prevPosition = entity.GetPosition();
+        }
+
+        /*
+         * Get moved automatically.
+         */
+        public void GetMoved(GameTime gameTime, float speed)
+        {
+            if (CountDistance > 0)
+            {
+                float newSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                newPosition += direction * newSpeed;
+
+                if (CountDistance == 1)
+                {
+                    direction = Vector2.Zero;
+                }
+
+                CountDistance--;
+            }
         }
 
         /*
@@ -145,21 +318,6 @@ namespace SoR.Logic.Input
         public string AnimateMovement()
         {
             return animation;
-        }
-
-        /*
-         * All non-directional user input.
-         */
-        public void ChangeSkin()
-        {
-            keyState = Keyboard.GetState(); // Get the current keyboard state
-
-            switchSkin = false; // Space has not been pressed yet, the skin will not be switched
-
-            if (keyState.IsKeyDown(Keys.Space) & !lastKeyState.IsKeyDown(Keys.Space))
-            {
-                switchSkin = true; // Space was pressed, so switch skins
-            }
         }
 
         /*
@@ -202,19 +360,20 @@ namespace SoR.Logic.Input
         }
 
         /*
-         * Check whether the player is on traversable terrain.
+         * Set the direction to be moved in.
          */
-        public bool IsTraversable()
+        public void SetDirection(float x, float y)
         {
-            return traversable;
+            direction.X = x;
+            direction.Y = y;
         }
 
         /*
-         * Get the last keyboard state.
+         * Get the current movement direction.
          */
-        public KeyboardState GetLastKeyState()
+        public Vector2 GetDirection()
         {
-            return lastKeyState;
+            return direction;
         }
 
         /*
@@ -223,14 +382,6 @@ namespace SoR.Logic.Input
         public Vector2 UpdatePosition()
         {
             return newPosition;
-        }
-
-        /*
-         * Check whether space was pressed and the skin should change.
-         */
-        public bool SkinHasChanged()
-        {
-            return switchSkin;
         }
     }
 }

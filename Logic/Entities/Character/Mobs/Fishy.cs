@@ -54,12 +54,6 @@ namespace Logic.Entities.Character.Mobs
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
-            random = new Random();
-            movementDirection = new Vector2(0, 0); // The direction of movement
-            newDirectionTime = (float)random.NextDouble() * 1f + 0.25f; // After 0.25-1 seconds, choose a new movement direction
-            sinceLastChange = 0; // Time elapsed since last direction change
-            NewDirection(random.Next(4)); // Choose a random new direction to move in
-
             inMotion = true; // Move freely
 
             movement = new Movement(); // Environmental collision handling
@@ -67,8 +61,6 @@ namespace Logic.Entities.Character.Mobs
             Speed = 80f; // Set the entity's travel speed
 
             hitpoints = 100; // Set the starting number of hitpoints
-
-            countDistance = 0;
 
             Height = 1;
         }

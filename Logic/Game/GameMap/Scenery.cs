@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using SoR.Logic.Entities;
+using SoR.Logic.Input;
 using Spine;
 
 namespace Logic.Game.GameMap
@@ -46,6 +47,7 @@ namespace Logic.Game.GameMap
         protected SkeletonBounds hitbox;
         protected Slot slot;
         protected TrackEntry trackEntry;
+        protected Movement movement;
         protected Vector2 position;
         protected string prevTrigger;
         protected string animOne;
