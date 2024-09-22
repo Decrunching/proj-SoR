@@ -66,7 +66,7 @@ namespace Logic.Game.GameMap.Interactables
         public override void Collision(Entity entity, GameTime gameTime)
         {
             entity.TakeDamage(1);
-            movement.Repel(gameTime, position, 8, entity);
+            movement.Repel(position, 8, entity);
         }
     }
 }

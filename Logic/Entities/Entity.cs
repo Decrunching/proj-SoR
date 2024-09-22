@@ -51,7 +51,6 @@ namespace SoR.Logic.Entities
         protected Vector2 movementDirection;
         protected Vector2 prevPosition;
         protected Vector2 lastTraversable;
-        protected Vector2 direction;
         protected int hitpoints;
         protected string prevTrigger;
         protected string animOne;
@@ -176,7 +175,7 @@ namespace SoR.Logic.Entities
         {
             entity.TakeDamage(1);
             entity.ChangeAnimation("hit");
-            movement.Repel(gameTime, position, 5, entity);
+            movement.Repel(position, 5, entity);
         }
 
         /*
@@ -185,11 +184,23 @@ namespace SoR.Logic.Entities
         public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, List<Rectangle> WalkableArea)
         {
             movement.NonPlayerMovement(gameTime, this);
-            movement.CheckIfTraversable(WalkableArea, this);
-            movement.GetMoved(gameTime, Speed);
+            movement.CheckIfTraversable(gameTime, this, WalkableArea, 1);
 
             // Set the new position
             position = movement.UpdatePosition();
+
+            if (movement.CountDistance > 0)
+            {
+                float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position += movement.GetDirection() * newSpeed;
+
+                if (movement.CountDistance == 1)
+                {
+                    movement.SetDirection(0, 0);
+                }
+
+                movement.CountDistance--;
+            }
 
             prevPosition = position;
         }

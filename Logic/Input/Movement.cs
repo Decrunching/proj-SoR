@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
-using Spine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -74,8 +73,7 @@ namespace SoR.Logic.Input
         public void CheckMovement(
             GameTime gameTime,
             float speed,
-            Vector2 position,
-            SkeletonBounds hitbox)
+            Vector2 position)
         {
             float newSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
@@ -142,8 +140,14 @@ namespace SoR.Logic.Input
         /*
          * Check the player is on walkable terrain.
          */
-        public void CheckIfTraversable(List<Rectangle> WalkableArea, Entity entity)
+        public void CheckIfTraversable(
+            GameTime gameTime,
+            Entity entity,
+            List<Rectangle> WalkableArea,
+            int entityType)
         {
+            float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             foreach (Rectangle area in WalkableArea)
             {
                 if (area.Contains(newPosition))
@@ -157,66 +161,75 @@ namespace SoR.Logic.Input
             if (!traversable)
             {
                 direction = Vector2.Zero;
-                Redirected(prevPosition);
-                CountDistance++;
+                switch (entityType)
+                {
+                    case 0: // The player encounters non-traversable terrain
+                        Repel(prevPosition, 1, entity);
+                        break;
+                    case 1: // An NPC encounters non-traversable terrain
+                        RedirectNPC(prevPosition, entity);
+                        newPosition += direction * newSpeed;
+                        break;
+                    case 2:
+                        RedirectPlayer(); // The player is pushed into non-traversable terrain
+                        break;
+                }
             }
         }
 
         /*
-         * Repel an entity away.
+         * Decide which direction the player is pushed in depending on local environment.
          */
-        public void Repel(GameTime gameTime, Vector2 location, int distance, Entity entity)
+        public void RedirectPlayer()
         {
-            CountDistance = distance;
-            while (CountDistance < distance)
-            {
-                CountDistance++;
-            }
+            /*
+             * Shift the player's movement laterally if they hit a wall or other
+             * non-traversable object.
+             */
 
-            float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            entity.UpdateDirection(Vector2.Zero);
-
-            if (entity.GetPosition().X > location.X) // Right
-            {
-                direction.X += 1;
-            }
-            else if (entity.GetPosition().X < location.X) // Left
-            {
-                direction.X -= 1;
-            }
-            if (entity.GetPosition().Y > location.Y) // Down
-            {
-                direction.Y += 1;
-            }
-            else if (entity.GetPosition().Y < location.Y) // Up
-            {
-                direction.Y -= 1;
-            }
-
-            entity.UpdateDirection(direction);
         }
 
         /*
          * Change direction to move away from something.
          */
-        public void Redirected(Vector2 location)
+        public void RedirectNPC(Vector2 location, Entity entity)
         {
             if (newPosition.X > location.X) // Moving right
             {
-                direction = new Vector2(-1, 0); // Shift left
+                direction = new Vector2(-1, 0); // Redirect left
+                RedirectAnimation(1, entity);
             }
-            else if (newPosition.X < location.X) // Moving left
+            if (newPosition.X < location.X) // Moving left
             {
-                direction = new Vector2(1, 0); // Shift right
+                direction = new Vector2(1, 0); // Redirect right
+                RedirectAnimation(2, entity);
             }
             if (newPosition.Y > location.Y) // Moving down
             {
-                direction = new Vector2(0, -1); // Shift up
+                direction = new Vector2(0, -1); // Redirect up
             }
-            else if (newPosition.Y < location.Y) // Moving up
+            if (newPosition.Y < location.Y) // Moving up
             {
-                direction = new Vector2(0, 1); // Shift down
+                direction = new Vector2(0, 1); // Redirect down
+            }
+        }
+
+        /*
+         * Animate NPC redirection.
+         */
+        public void RedirectAnimation(int newDirection, Entity entity)
+        {
+            switch (newDirection)
+            {
+                case 1:
+                    entity.ChangeAnimation("turnleft");
+                    entity.GetSkeleton().ScaleX = 1;
+                    break;
+                case 2:
+                    entity.ChangeAnimation("turnright");
+                    entity.GetSkeleton().ScaleX = -1;
+                    break;
             }
         }
 
@@ -229,13 +242,11 @@ namespace SoR.Logic.Input
             {
                 case 1:
                     direction = new Vector2(-1, 0); // Left
-                    entity.ChangeAnimation("turnleft");
-                    entity.GetSkeleton().ScaleX = 1;
+                    RedirectAnimation(1, entity);
                     break;
                 case 2:
                     direction = new Vector2(1, 0); // Right
-                    entity.ChangeAnimation("turnright");
-                    entity.GetSkeleton().ScaleX = -1;
+                    RedirectAnimation(2, entity);
                     break;
                 case 3:
                     direction = new Vector2(0, -1); // Up
@@ -271,45 +282,43 @@ namespace SoR.Logic.Input
 
                 if (!traversable)
                 {
-                    switch(newDirection)
-                    {
-                        case 1:
-                            NewDirection(entity, 2);
-                            break;
-                        case 2:
-                            NewDirection(entity, 1);
-                            break;
-                        case 3:
-                            NewDirection(entity, 4);
-                            break;
-                        case 4:
-                            NewDirection(entity, 3);
-                            break;
-                    }
 
-                    newPosition += direction * newSpeed;
                 }
             }
             prevPosition = entity.GetPosition();
         }
 
         /*
-         * Get moved automatically.
+         * Repel an entity away.
          */
-        public void GetMoved(GameTime gameTime, float speed)
+        public void Repel(Vector2 location, int distance, Entity entity)
         {
-            if (CountDistance > 0)
+            CountDistance = distance;
+            while (CountDistance < distance)
             {
-                float newSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                newPosition += direction * newSpeed;
-
-                if (CountDistance == 1)
-                {
-                    direction = Vector2.Zero;
-                }
-
-                CountDistance--;
+                CountDistance++;
             }
+
+            direction = Vector2.Zero;
+
+            if (entity.GetPosition().X > location.X) // Push right
+            {
+                direction.X += 1;
+            }
+            else if (entity.GetPosition().X < location.X) // Push left
+            {
+                direction.X -= 1;
+            }
+            if (entity.GetPosition().Y > location.Y) // Push down
+            {
+                direction.Y += 1;
+            }
+            else if (entity.GetPosition().Y < location.Y) // Push up
+            {
+                direction.Y -= 1;
+            }
+
+            entity.UpdateDirection(direction);
         }
 
         /*

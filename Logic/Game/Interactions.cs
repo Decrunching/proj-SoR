@@ -133,14 +133,14 @@ namespace SoR.Logic.Game
                     entities.Add("pheasant", new Pheasant(GraphicsDevice) { Name = "pheasant" });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
-                        pheasant.SetPosition(270, 200);
+                        pheasant.SetPosition(280, 200);
                     }
                     break;
                 case EntityType.Chara:
                     entities.Add("chara", new Chara(GraphicsDevice) { Name = "chara" });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
-                        chara.SetPosition(250, 250);
+                        chara.SetPosition(250, 100);
                     }
                     break;
                 case EntityType.Slime:

@@ -137,12 +137,42 @@ namespace Logic.Entities.Character.Player
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, List<Rectangle> WalkableArea)
         {
             movement.ProcessJoypadInputs(gameTime, Speed);
-            movement.CheckMovement(gameTime, Speed, position, hitbox);
-            movement.CheckIfTraversable(WalkableArea, this);
-            movement.GetMoved(gameTime, Speed);
+            movement.CheckMovement(gameTime, Speed, position);
+            movement.CheckIfTraversable(gameTime, this, WalkableArea, 0);
 
             // Set the new position
             position = movement.UpdatePosition();
+
+            if (movement.CountDistance > 0)
+            {
+                float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position += movement.GetDirection() * newSpeed;
+
+                if (movement.CountDistance > 1)
+                {
+                    movement.CheckIfTraversable(gameTime, this, WalkableArea, 2);
+                }
+
+                if (movement.CountDistance == 1)
+                {
+                    movement.SetDirection(0, 0);
+                }
+
+                movement.CountDistance--;
+            }
+
+            if (movement.CountDistance > 0)
+            {
+                float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                position += movement.GetDirection() * newSpeed;
+
+                if (movement.CountDistance == 1)
+                {
+                    movement.SetDirection(0, 0);
+                }
+
+                movement.CountDistance--;
+            }
 
             prevPosition = position;
         }
