@@ -303,22 +303,20 @@ namespace SoR.Logic.Input
 
             if (entity.GetPosition().X > location.X) // Push right
             {
-                direction.X += 1;
+                direction.X -= 1;
             }
             else if (entity.GetPosition().X < location.X) // Push left
             {
-                direction.X -= 1;
+                direction.X += 1;
             }
             if (entity.GetPosition().Y > location.Y) // Push down
             {
-                direction.Y += 1;
+                direction.Y -= 1;
             }
             else if (entity.GetPosition().Y < location.Y) // Push up
             {
-                direction.Y -= 1;
+                direction.Y += 1;
             }
-
-            entity.UpdateDirection(direction);
         }
 
         /*

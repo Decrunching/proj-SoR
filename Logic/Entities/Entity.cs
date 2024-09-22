@@ -247,22 +247,6 @@ namespace SoR.Logic.Entities
         }
 
         /*
-         * Update the direction of travel.
-         */
-        public void UpdateDirection(Vector2 newDirection)
-        {
-            direction = newDirection;
-        }
-
-        /*
-         * Get the direction of travel.
-         */
-        public Vector2 GetDirection()
-        {
-            return direction;
-        }
-
-        /*
          * Get the skeleton.
          */
         public Skeleton GetSkeleton()
