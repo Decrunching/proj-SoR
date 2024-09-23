@@ -14,6 +14,8 @@ namespace Logic.Entities.Character.Player
      */
     public class Player : Entity
     {
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
         private string skin;
         private bool switchSkin;
 
@@ -98,12 +100,14 @@ namespace Logic.Entities.Character.Player
          */
         public void CheckForSkinChange()
         {
+            keyState = Keyboard.GetState(); // Get the current keyboard state
             switchSkin = false; // Space has not been pressed yet, the skin will not be switched
 
-            if (movement.KeyState.IsKeyDown(Keys.Space) & !movement.LastKeyState.IsKeyDown(Keys.Space))
+            if (keyState.IsKeyDown(Keys.Space) & !lastKeyState.IsKeyDown(Keys.Space))
             {
                 switchSkin = true; // Space was pressed, so switch skins
             }
+            lastKeyState = keyState;
         }
 
         /*
@@ -137,12 +141,21 @@ namespace Logic.Entities.Character.Player
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, List<Rectangle> WalkableArea)
         {
             movement.ProcessJoypadInputs(gameTime, Speed);
-            movement.CheckMovement(gameTime, Speed, position);
+            movement.CheckMovement(gameTime, this);
             movement.CheckIfTraversable(gameTime, this, WalkableArea, 0);
+            BeMoved(gameTime, WalkableArea);
 
-            // Set the new position
-            position = movement.UpdatePosition();
+            position = movement.UpdatePosition(gameTime, this);
 
+
+            prevPosition = position;
+        }
+
+        /*
+         * Be automatically moved.
+         */
+        public override void BeMoved(GameTime gameTime, List<Rectangle> WalkableArea)
+        {
             if (movement.CountDistance > 0)
             {
                 float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -160,21 +173,6 @@ namespace Logic.Entities.Character.Player
 
                 movement.CountDistance--;
             }
-
-            if (movement.CountDistance > 0)
-            {
-                float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                position += movement.GetDirection() * newSpeed;
-
-                if (movement.CountDistance == 1)
-                {
-                    movement.SetDirection(0, 0);
-                }
-
-                movement.CountDistance--;
-            }
-
-            prevPosition = position;
         }
 
         /*
@@ -182,9 +180,9 @@ namespace Logic.Entities.Character.Player
          */
         public override void UpdateAnimations(GameTime gameTime)
         {
-            ChangeAnimation(movement.AnimateMovement());
             CheckForSkinChange();
             UpdateSkin();
+            ChangeAnimation(movement.AnimateMovement());
 
             base.UpdateAnimations(gameTime);
         }

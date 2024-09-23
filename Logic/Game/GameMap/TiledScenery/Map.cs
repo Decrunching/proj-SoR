@@ -19,7 +19,8 @@ namespace Logic.Game.GameMap.TiledScenery
         public string FloorSpriteSheet { get; set; }
         public string WallSpriteSheet { get; set; }
         public int[,] MapFloor { get; set; }
-        public int[,] MapWalls { get; set; }
+        public int[,] MapLowerWalls { get; set; }
+        public int[,] MapUpperWalls { get; set; }
         public int Width {  get; set; }
         public int Height { get; set; }
 
@@ -59,21 +60,32 @@ namespace Logic.Game.GameMap.TiledScenery
             switch (mapNumber)
             {
                 case 0:
-                    MapWalls = new int[,]
+                    MapLowerWalls = new int[,]
                     {
-                        { -1,  6,  7,  7,  7,  7,  7,  7,  7,  8  },
-                        {  4,  0,  2,  2,  2,  3,  2,  2,  2,  9  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1,  2,  2,  2,  3,  2,  2,  2,  9  },
                         {  5,  1, -1, -1, -1, -1, -1, -1, -1,  23 },
                         {  5, -1, -1, -1, -1, -1, -1, -1, -1,  22 },
-                        {  5, -1, -1,  12, 11, 11, 13,-1, -1,  9  },
-                        {  10, 11, 11, 14, 16, 16, 15, 11, 11, 21 },
+                        {  5, -1, -1, -1, -1, -1, -1, -1, -1,  9  },
+                        {  10, -1, -1,  14, 16, 16, 15,-1, -1, 21 },
                         {  17, 19, 20, 18,-1, -1,  17, 19, 20, 18 }
+                    };
+
+                    MapUpperWalls = new int[,]
+                    {
+                        { -1,  6,  7,  7,  7,  7,  7,  7,  7,  8  },
+                        {  4,  0, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1,  12, 11, 11, 13,-1, -1, -1  },
+                        { -1,  11, 11,-1, -1, -1, -1,  11, 11,-1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  }
                     };
 
                     MapFloor = new int[,]
                     {
                         { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
+                        { -1, -1, -1, -1, -1,  0, -1, -1, -1, -1 },
                         { -1,  0,  2,  3,  0,  7,  0,  6,  5, -1 },
                         { -1,  0,  0,  0,  0,  0,  0,  0,  1, -1 },
                         { -1,  0,  0,  0,  0,  0,  0,  0,  0, -1 },

@@ -186,9 +186,18 @@ namespace SoR.Logic.Entities
             movement.NonPlayerMovement(gameTime, this);
             movement.CheckIfTraversable(gameTime, this, WalkableArea, 1);
 
-            // Set the new position
-            position = movement.UpdatePosition();
+            position = movement.UpdatePosition(gameTime, this);
 
+            BeMoved(gameTime, WalkableArea);
+
+            prevPosition = position;
+        }
+
+        /*
+         * Be automatically moved.
+         */
+        public virtual void BeMoved(GameTime gameTime, List<Rectangle> WalkableArea)
+        {
             if (movement.CountDistance > 0)
             {
                 float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
@@ -201,8 +210,6 @@ namespace SoR.Logic.Entities
 
                 movement.CountDistance--;
             }
-
-            prevPosition = position;
         }
 
         /*

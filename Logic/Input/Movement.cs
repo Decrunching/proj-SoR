@@ -61,25 +61,12 @@ namespace SoR.Logic.Input
 
         /* 
          * Move left or right, and adjust animation accordingly.
-         * 
-         * TO DO?:
-         * Adjust to retain current track number for incoming animations.
-         * JSON files have exact times for frame starts if hardcoding.
-         * AnimationState does return frame start times too, if puzzling out the API.
-         * Fix this - possibly switch to idle animation while two opposing direction keys are
-         * being held down with no other directional keys, and make player face the direction
-         * of travel if 3 buttons held down simultaneously.
          */
-        public void CheckMovement(
-            GameTime gameTime,
-            float speed,
-            Vector2 position)
+        public void CheckMovement(GameTime gameTime, Entity entity)
         {
-            float newSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
             KeyState = Keyboard.GetState(); // Get the current keyboard state
 
-            newPosition = position;
+            newPosition = entity.GetPosition();
 
             if (inputKeys.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
             {
@@ -97,29 +84,22 @@ namespace SoR.Logic.Input
                 bool previouslyPressed = LastKeyState.IsKeyDown(key);
                 inputKeys[key].Pressed = pressed;
 
-                if (pressed)
+                if (inputKeys[key].NextAnimation == "runleft")
                 {
-                    if (inputKeys[key].NextAnimation == "runleft")
-                    {
-                        newPosition.X -= newSpeed;
-                    }
-                    else if (inputKeys[key].NextAnimation == "runright")
-                    {
-                        newPosition.X += newSpeed;
-                    }
+                    PlayerDirection(key, pressed, previouslyPressed, -1);
+                }
+                else if (inputKeys[key].NextAnimation == "runright")
+                {
+                    PlayerDirection(key, pressed, previouslyPressed, 1);
+                }
 
-                    if (inputKeys[key].NextAnimation == "runup")
-                    {
-                        newPosition.Y -= newSpeed;
-                    }
-                    else if (inputKeys[key].NextAnimation == "rundown")
-                    {
-                        newPosition.Y += newSpeed;
-                    }
-
-                    idle = false; // Idle will no longer be playing
-
-                    lastPressedKey = inputKeys[key].NextAnimation;
+                if (inputKeys[key].NextAnimation == "runup")
+                {
+                    PlayerDirection(key, pressed, previouslyPressed, 0, -1);
+                }
+                else if (inputKeys[key].NextAnimation == "rundown")
+                {
+                    PlayerDirection(key, pressed, previouslyPressed, 0, 1);
                 }
 
                 if (pressed & !previouslyPressed)
@@ -130,11 +110,65 @@ namespace SoR.Logic.Input
                 if (!pressed & previouslyPressed)
                 {
                     animation = lastPressedKey;
+
+                    if (inputKeys[key].NextAnimation == "runleft" || inputKeys[key].NextAnimation == "runright")
+                    {
+                        direction.X = 0;
+                    }
                 }
             }
-            prevPosition = position;
+
+            prevPosition = entity.GetPosition();
 
             LastKeyState = KeyState; // Get the previous keyboard state
+        }
+
+        /*
+         * Change the player direction according to keyboard input.
+         */
+        public void PlayerDirection(Keys key, bool pressed, bool previouslyPressed, int changeDirectionX = 0, int changeDirectionY = 0)
+        {
+            if (changeDirectionX != 0)
+            {
+                if (pressed)
+                {
+                    direction.X = changeDirectionX;
+                    lastPressedKey = inputKeys[key].NextAnimation;
+                    idle = false;
+                }
+                if (!pressed & previouslyPressed)
+                {
+                    direction.X = 0;
+                }
+            }
+            if (changeDirectionY != 0)
+            {
+                if (pressed)
+                {
+                    direction.Y = changeDirectionY;
+                    lastPressedKey = inputKeys[key].NextAnimation;
+                    idle = false;
+                }
+                if (!pressed & previouslyPressed)
+                {
+                    direction.Y = 0;
+                }
+            }
+        }
+
+        /*
+         * Set the new position after moving, and halve the speed if moving diagonally.
+         */
+        public void AdjustPosition(GameTime gameTime, Entity entity)
+        {
+            float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (direction.X > 0 | direction.X < 0 && direction.Y > 0 | direction.Y < 0)
+            {
+                newSpeed = newSpeed / 1.5f;
+            }
+
+            newPosition += direction * newSpeed;
         }
 
         /*
@@ -143,35 +177,30 @@ namespace SoR.Logic.Input
         public void CheckIfTraversable(
             GameTime gameTime,
             Entity entity,
-            List<Rectangle> WalkableArea,
+            List<Rectangle> impassableArea,
             int entityType)
         {
-            float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            foreach (Rectangle area in WalkableArea)
+            foreach (Rectangle area in impassableArea)
             {
                 if (area.Contains(newPosition))
                 {
-                    traversable = true;
+                    traversable = false;
                     break;
                 }
-                traversable = false;
+                traversable = true;
             }
 
             if (!traversable)
             {
                 direction = Vector2.Zero;
+                newPosition = prevPosition;
                 switch (entityType)
                 {
                     case 0: // The player encounters non-traversable terrain
                         Repel(prevPosition, 1, entity);
                         break;
-                    case 1: // An NPC encounters non-traversable terrain
+                    case 1: // The NPC encounters non-traversable terrain
                         RedirectNPC(prevPosition, entity);
-                        newPosition += direction * newSpeed;
-                        break;
-                    case 2:
-                        RedirectPlayer(); // The player is pushed into non-traversable terrain
                         break;
                 }
             }
@@ -180,14 +209,29 @@ namespace SoR.Logic.Input
         /*
          * Decide which direction the player is pushed in depending on local environment.
          */
-        public void RedirectPlayer()
+        public void RedirectPlayer(Vector2 location)
         {
             /*
              * Shift the player's movement laterally if they hit a wall or other
              * non-traversable object.
              */
 
-
+            if (newPosition.X > location.X) // Moving right
+            {
+                direction = new Vector2(1, 0); // Redirect left
+            }
+            if (newPosition.X < location.X) // Moving left
+            {
+                direction = new Vector2(-1, 0); // Redirect right
+            }
+            if (newPosition.Y > location.Y) // Moving down
+            {
+                direction = new Vector2(0, 1); // Redirect up
+            }
+            if (newPosition.Y < location.Y) // Moving up
+            {
+                direction = new Vector2(0, -1); // Redirect down
+            }
         }
 
         /*
@@ -263,7 +307,6 @@ namespace SoR.Logic.Input
         public void NonPlayerMovement(GameTime gameTime, Entity entity)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            float newSpeed = entity.Speed * deltaTime;
             int newDirection = 0;
             sinceLastChange += deltaTime;
             newPosition = entity.GetPosition();
@@ -278,12 +321,6 @@ namespace SoR.Logic.Input
                     sinceLastChange = 0;
                 }
 
-                newPosition += direction * newSpeed;
-
-                if (!traversable)
-                {
-
-                }
             }
             prevPosition = entity.GetPosition();
         }
@@ -386,8 +423,9 @@ namespace SoR.Logic.Input
         /*
          * Get the new x-axis position.
          */
-        public Vector2 UpdatePosition()
+        public Vector2 UpdatePosition(GameTime gameTime, Entity entity)
         {
+            AdjustPosition(gameTime, entity);
             return newPosition;
         }
     }

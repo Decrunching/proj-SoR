@@ -18,8 +18,8 @@ namespace Logic.Game.Graphics
     {
         private SpriteBatch spriteBatch;
         private SkeletonRenderer skeletonRenderer;
-        private List<Rectangle> walkableArea;
-        public List<Rectangle> WalkableTiles { get; private set; }
+        private List<Rectangle> impassableArea;
+        public List<Rectangle> ImpassableTiles { get; private set; }
 
         public Render(GraphicsDevice GraphicsDevice)
         {
@@ -30,7 +30,7 @@ namespace Logic.Game.Graphics
                 PremultipliedAlpha = true
             };
 
-            WalkableTiles = [];
+            ImpassableTiles = [];
         }
 
         /*
@@ -82,8 +82,7 @@ namespace Logic.Game.Graphics
             // Entity text
             spriteBatch.DrawString(
                 font,
-                "HP: " + entity.GetHitPoints() +
-                "\nMinX: " + entity.GetHitbox().MinX + ", MaxX: " + entity.GetHitbox().MaxX,
+                "",
                 new Vector2(entity.GetPosition().X - 30, entity.GetPosition().Y + 30),
                 Color.BlueViolet);
         }
@@ -104,7 +103,7 @@ namespace Logic.Game.Graphics
         /*
          * Pair the atlas position of each tile with its world position.
          */
-        public Dictionary<string, Vector2> CreateMap(Map map, int[,] tileLocations, bool floor = false)
+        public Dictionary<string, Vector2> CreateMap(Map map, int[,] tileLocations, bool impassable = false)
         {
             Dictionary<string, Vector2> sortByYAxis = [];
             Vector2 position = new(0, 0);
@@ -124,10 +123,10 @@ namespace Logic.Game.Graphics
                         sortByYAxis.Add(tileName, position);
                         tileID++;
 
-                        if (floor)
+                        if (impassable)
                         {
                             Rectangle tileArea = new Rectangle((int)position.X, (int)position.Y, map.Width, map.Height);
-                            WalkableTiles.Add(tileArea);
+                            ImpassableTiles.Add(tileArea);
                         }
                     }
 
@@ -141,18 +140,18 @@ namespace Logic.Game.Graphics
         }
 
         /*
-         * Create a list of rectangles containing the walkable map area.
+         * Create a list of rectangles containing the impassable map areas.
          */
-        public void WalkableMapArea()
+        public void ImpassableMapArea()
         {
-            Rectangle block = WalkableTiles[0];
-            walkableArea = [];
+            Rectangle block = ImpassableTiles[0];
+            impassableArea = [];
 
-            foreach (Rectangle area in WalkableTiles)
+            foreach (Rectangle area in ImpassableTiles)
             {
                 if (block.Bottom != area.Bottom)
                 {
-                    AddBlock(block, walkableArea);
+                    AddBlock(block, impassableArea);
                     block = area;
                 }
                 if (block.Bottom == area.Bottom && block.Y == area.Y)
@@ -163,14 +162,14 @@ namespace Logic.Game.Graphics
                     }
                     else if (block != area)
                     {
-                        AddBlock(block, walkableArea);
+                        AddBlock(block, impassableArea);
                         block = area;
                     }
                 }
             }
-            AddBlock(block, walkableArea);
+            AddBlock(block, impassableArea);
 
-            WalkableTiles = walkableArea;
+            ImpassableTiles = impassableArea;
         }
 
         /*
@@ -188,7 +187,6 @@ namespace Logic.Game.Graphics
         public void DrawMap(Texture2DAtlas atlas, Map map, string tileName, Vector2 position, SpriteFont font)
         {
             string tile = tileName.Remove(0, 4);
-
             int tileNumber = Convert.ToInt32(tile);
 
             // Offset drawing position by tile height to draw in front of the components that use a different positioning reference

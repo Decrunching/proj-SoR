@@ -24,7 +24,8 @@ namespace SoR.Logic.Game
         private Map map;
         private Dictionary<string, Entity> entities;
         private Dictionary<string, Scenery> scenery;
-        private Dictionary<string, Vector2> mapWalls;
+        private Dictionary<string, Vector2> mapLowerWalls;
+        private Dictionary<string, Vector2> mapUpperWalls;
         private Dictionary<string, Vector2> mapFloor;
         private List<Vector2> positions;
         private SpriteFont font;
@@ -90,9 +91,10 @@ namespace SoR.Logic.Game
             font = game.Content.Load<SpriteFont>("Fonts/File");
 
             // Map the tile drawing positions to their atlases
-            mapWalls = render.CreateMap(map, map.MapWalls);
-            mapFloor = render.CreateMap( map, map.MapFloor, true);
-            render.WalkableMapArea();
+            mapLowerWalls = render.CreateMap(map, map.MapLowerWalls, true);
+            mapUpperWalls = render.CreateMap(map, map.MapUpperWalls);
+            mapFloor = render.CreateMap( map, map.MapFloor);
+            render.ImpassableMapArea();
 
             // Create entities
             entityType = EntityType.Player;
@@ -133,14 +135,14 @@ namespace SoR.Logic.Game
                     entities.Add("pheasant", new Pheasant(GraphicsDevice) { Name = "pheasant" });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
-                        pheasant.SetPosition(280, 200);
+                        pheasant.SetPosition(270, 200);
                     }
                     break;
                 case EntityType.Chara:
                     entities.Add("chara", new Chara(GraphicsDevice) { Name = "chara" });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
-                        chara.SetPosition(250, 100);
+                        chara.SetPosition(250, 250);
                     }
                     break;
                 case EntityType.Slime:
@@ -194,7 +196,7 @@ namespace SoR.Logic.Game
                 entity.UpdatePosition(
                 gameTime,
                 graphics,
-                render.WalkableTiles);
+                render.ImpassableTiles);
 
                 // Update animations
                 entity.UpdateAnimations(gameTime);
@@ -266,7 +268,7 @@ namespace SoR.Logic.Game
                     positions.Add(entity.GetPosition());
                 }
             }
-            foreach (var tile in mapWalls.Values)
+            foreach (var tile in mapLowerWalls.Values)
             {
                 positions.Add(tile);
             }
@@ -319,7 +321,7 @@ namespace SoR.Logic.Game
                 }
                 render.FinishDrawingSpriteBatch();
 
-                foreach (var tileName in mapWalls)
+                foreach (var tileName in mapLowerWalls)
                 {
                     if (tileName.Value.Y == position.Y && tileName.Value.X == position.X)
                     {
@@ -328,6 +330,13 @@ namespace SoR.Logic.Game
                         render.FinishDrawingSpriteBatch();
                     }
                 }
+            }
+
+            foreach (var tileName in mapUpperWalls)
+            {
+                render.StartDrawingSpriteBatch(camera.GetCamera());
+                render.DrawMap(map.GetWallAtlas(), map, tileName.Key, tileName.Value, font);
+                render.FinishDrawingSpriteBatch();
             }
         }
     }
