@@ -72,7 +72,7 @@ namespace SoR
          */
         protected override void LoadContent()
         {
-            gameLogic.LoadGameContent(graphics, GraphicsDevice, game);
+            gameLogic.LoadGameContent(GraphicsDevice, game);
         }
 
         /*

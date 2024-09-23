@@ -118,6 +118,11 @@ namespace SoR.Logic.Input
                 }
             }
 
+            if (traversable)
+            {
+                AdjustPosition(gameTime, entity);
+            }
+
             prevPosition = entity.GetPosition();
 
             LastKeyState = KeyState; // Get the previous keyboard state
@@ -157,84 +162,6 @@ namespace SoR.Logic.Input
         }
 
         /*
-         * Set the new position after moving, and halve the speed if moving diagonally.
-         */
-        public void AdjustPosition(GameTime gameTime, Entity entity)
-        {
-            float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (direction.X > 0 | direction.X < 0 && direction.Y > 0 | direction.Y < 0)
-            {
-                newSpeed = newSpeed / 1.5f;
-            }
-
-            newPosition += direction * newSpeed;
-        }
-
-        /*
-         * Check the player is on walkable terrain.
-         */
-        public void CheckIfTraversable(
-            GameTime gameTime,
-            Entity entity,
-            List<Rectangle> impassableArea,
-            int entityType)
-        {
-            foreach (Rectangle area in impassableArea)
-            {
-                if (area.Contains(newPosition))
-                {
-                    traversable = false;
-                    break;
-                }
-                traversable = true;
-            }
-
-            if (!traversable)
-            {
-                direction = Vector2.Zero;
-                newPosition = prevPosition;
-                switch (entityType)
-                {
-                    case 0: // The player encounters non-traversable terrain
-                        Repel(prevPosition, 1, entity);
-                        break;
-                    case 1: // The NPC encounters non-traversable terrain
-                        RedirectNPC(prevPosition, entity);
-                        break;
-                }
-            }
-        }
-
-        /*
-         * Decide which direction the player is pushed in depending on local environment.
-         */
-        public void RedirectPlayer(Vector2 location)
-        {
-            /*
-             * Shift the player's movement laterally if they hit a wall or other
-             * non-traversable object.
-             */
-
-            if (newPosition.X > location.X) // Moving right
-            {
-                direction = new Vector2(1, 0); // Redirect left
-            }
-            if (newPosition.X < location.X) // Moving left
-            {
-                direction = new Vector2(-1, 0); // Redirect right
-            }
-            if (newPosition.Y > location.Y) // Moving down
-            {
-                direction = new Vector2(0, 1); // Redirect up
-            }
-            if (newPosition.Y < location.Y) // Moving up
-            {
-                direction = new Vector2(0, -1); // Redirect down
-            }
-        }
-
-        /*
          * Change direction to move away from something.
          */
         public void RedirectNPC(Vector2 location, Entity entity)
@@ -244,36 +171,19 @@ namespace SoR.Logic.Input
                 direction = new Vector2(-1, 0); // Redirect left
                 RedirectAnimation(1, entity);
             }
-            if (newPosition.X < location.X) // Moving left
+            else if (newPosition.X < location.X) // Moving left
             {
                 direction = new Vector2(1, 0); // Redirect right
                 RedirectAnimation(2, entity);
             }
-            if (newPosition.Y > location.Y) // Moving down
+
+            else if (newPosition.Y > location.Y) // Moving down
             {
                 direction = new Vector2(0, -1); // Redirect up
             }
             if (newPosition.Y < location.Y) // Moving up
             {
                 direction = new Vector2(0, 1); // Redirect down
-            }
-        }
-
-        /*
-         * Animate NPC redirection.
-         */
-        public void RedirectAnimation(int newDirection, Entity entity)
-        {
-            switch (newDirection)
-            {
-                case 1:
-                    entity.ChangeAnimation("turnleft");
-                    entity.GetSkeleton().ScaleX = 1;
-                    break;
-                case 2:
-                    entity.ChangeAnimation("turnright");
-                    entity.GetSkeleton().ScaleX = -1;
-                    break;
             }
         }
 
@@ -302,6 +212,24 @@ namespace SoR.Logic.Input
         }
 
         /*
+         * Animate NPC redirection.
+         */
+        public void RedirectAnimation(int newDirection, Entity entity)
+        {
+            switch (newDirection)
+            {
+                case 1:
+                    entity.ChangeAnimation("turnleft");
+                    entity.GetSkeleton().ScaleX = 1;
+                    break;
+                case 2:
+                    entity.ChangeAnimation("turnright");
+                    entity.GetSkeleton().ScaleX = -1;
+                    break;
+            }
+        }
+
+        /*
          * Move the NPC in the direction they're facing, and periodically pick a random new direction.
          */
         public void NonPlayerMovement(GameTime gameTime, Entity entity)
@@ -320,8 +248,14 @@ namespace SoR.Logic.Input
                     newDirectionTime = (float)random.NextDouble() * 3f + 0.33f;
                     sinceLastChange = 0;
                 }
-
+                AdjustPosition(gameTime, entity);
             }
+
+            if (!traversable)
+            {
+                RedirectNPC(newPosition, entity);
+            }
+
             prevPosition = entity.GetPosition();
         }
 
@@ -357,22 +291,6 @@ namespace SoR.Logic.Input
         }
 
         /*
-         * Return the animation to play according to user input.
-         */
-        public string AnimateMovement()
-        {
-            return animation;
-        }
-
-        /*
-         * Return the current direction to face. 1 = left, 2 = right, 3 = up, 4 = down.
-         */
-        public int TurnAround()
-        {
-            return turnAround;
-        }
-
-        /*
          * Change the player's position on the screen according to joypad inputs
          */
         public void ProcessJoypadInputs(GameTime gameTime, float speed)
@@ -404,12 +322,83 @@ namespace SoR.Logic.Input
         }
 
         /*
+         * Check the player is on walkable terrain.
+         */
+        public void CheckIfTraversable(
+            GameTime gameTime,
+            Entity entity,
+            List<Rectangle> impassableArea,
+            int entityType)
+        {
+            foreach (Rectangle area in impassableArea)
+            {
+                if (area.Contains(newPosition))
+                {
+                    traversable = false;
+                    break;
+                }
+                traversable = true;
+            }
+
+            if (!traversable)
+            {
+                direction = Vector2.Zero;
+                switch (entityType)
+                {
+                    case 0: // The player encounters non-traversable terrain
+                        newPosition = prevPosition;
+                        break;
+                    case 1: // The NPC encounters non-traversable terrain
+                        RedirectNPC(prevPosition, entity);
+                        AdjustPosition(gameTime, entity);
+                        break;
+                }
+            }
+        }
+
+        /*
+         * Set the new position after moving, and halve the speed if moving diagonally.
+         */
+        public void AdjustPosition(GameTime gameTime, Entity entity)
+        {
+            float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (direction.X > 0 | direction.X < 0 && direction.Y > 0 | direction.Y < 0)
+            {
+                newSpeed /= 1.5f;
+            }
+
+            newPosition += direction * newSpeed;
+
+            if (!traversable)
+            {
+
+            }
+        }
+
+        /*
          * Set the direction to be moved in.
          */
         public void SetDirection(float x, float y)
         {
             direction.X = x;
             direction.Y = y;
+        }
+
+        /*
+         * Return the animation to play according to user input.
+         */
+        public string AnimateMovement()
+        {
+            return animation;
+        }
+
+        /*
+         * Return the current direction to face. 1 = left, 2 = right, 3 = up, 4 = down.
+         */
+        public int TurnAround()
+        {
+            return turnAround;
         }
 
         /*
@@ -423,9 +412,8 @@ namespace SoR.Logic.Input
         /*
          * Get the new x-axis position.
          */
-        public Vector2 UpdatePosition(GameTime gameTime, Entity entity)
+        public Vector2 UpdatePosition()
         {
-            AdjustPosition(gameTime, entity);
             return newPosition;
         }
     }

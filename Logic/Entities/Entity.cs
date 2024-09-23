@@ -48,20 +48,15 @@ namespace SoR.Logic.Entities
         protected TrackEntry trackEntry;
         protected Movement movement;
         protected Vector2 position;
-        protected Vector2 movementDirection;
         protected Vector2 prevPosition;
-        protected Vector2 lastTraversable;
         protected int hitpoints;
         protected string prevTrigger;
         protected string animOne;
         protected string animTwo;
         protected bool inMotion;
-
-        public Rectangle rect; // debugging
-
-        public int Height { get; protected set; }
         public string Name { get; set; }
         public float Speed { get; set; }
+        public List<Rectangle> ImpassableArea { get; protected set; }
 
         /*
          * Placeholder function for dealing damage.
@@ -181,14 +176,13 @@ namespace SoR.Logic.Entities
         /*
          * Update entity position.
          */
-        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, List<Rectangle> WalkableArea)
+        public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             movement.NonPlayerMovement(gameTime, this);
-            movement.CheckIfTraversable(gameTime, this, WalkableArea, 1);
+            movement.CheckIfTraversable(gameTime, this, ImpassableArea, 1);
+            BeMoved(gameTime);
 
-            position = movement.UpdatePosition(gameTime, this);
-
-            BeMoved(gameTime, WalkableArea);
+            position = movement.UpdatePosition();
 
             prevPosition = position;
         }
@@ -196,11 +190,18 @@ namespace SoR.Logic.Entities
         /*
          * Be automatically moved.
          */
-        public virtual void BeMoved(GameTime gameTime, List<Rectangle> WalkableArea)
+        public void BeMoved(GameTime gameTime)
         {
             if (movement.CountDistance > 0)
             {
                 float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (movement.GetDirection().X > 0 | movement.GetDirection().X < 0 &&
+                    movement.GetDirection().Y > 0 | movement.GetDirection().Y < 0)
+                {
+                    newSpeed /= 1.5f;
+                }
+
                 position += movement.GetDirection() * newSpeed;
 
                 if (movement.CountDistance == 1)

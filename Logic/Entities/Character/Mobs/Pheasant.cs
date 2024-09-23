@@ -4,7 +4,6 @@ using SoR;
 using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
-using System;
 using System.Collections.Generic;
 
 namespace Logic.Entities.Character.Mobs
@@ -14,7 +13,7 @@ namespace Logic.Entities.Character.Mobs
      */
     internal class Pheasant : Entity
     {
-        public Pheasant(GraphicsDevice GraphicsDevice)
+        public Pheasant(GraphicsDevice GraphicsDevice, List<Rectangle> impassableArea)
         {
             // The possible animations to play as a string and the method to use for playing them as an int
             animations = new Dictionary<string, int>()
@@ -64,7 +63,7 @@ namespace Logic.Entities.Character.Mobs
 
             hitpoints = 100; // Set the starting number of hitpoints
 
-            Height = 1;
+            ImpassableArea = impassableArea;
         }
     }
 }

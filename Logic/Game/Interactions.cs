@@ -28,6 +28,7 @@ namespace SoR.Logic.Game
         private Dictionary<string, Vector2> mapUpperWalls;
         private Dictionary<string, Vector2> mapFloor;
         private List<Vector2> positions;
+        private List<Rectangle> impassableArea;
         private SpriteFont font;
         private Render render;
 
@@ -52,16 +53,6 @@ namespace SoR.Logic.Game
         }
 
         /*
-         * The height of individual components in the game world.
-         */
-        enum Height
-        {
-            Small = 0,
-            Medium = 1,
-            Large = 2
-        }
-
-        /*
          * Constructor for initial game setup.
          */
         public Interactions(GraphicsDevice GraphicsDevice, GameWindow Window)
@@ -77,7 +68,7 @@ namespace SoR.Logic.Game
         /*
          * Load initial content into the game.
          */
-        public void LoadGameContent(GraphicsDeviceManager graphics, GraphicsDevice GraphicsDevice, MainGame game)
+        public void LoadGameContent(GraphicsDevice GraphicsDevice, MainGame game)
         {
             render = new Render(GraphicsDevice);
 
@@ -95,6 +86,7 @@ namespace SoR.Logic.Game
             mapUpperWalls = render.CreateMap(map, map.MapUpperWalls);
             mapFloor = render.CreateMap( map, map.MapFloor);
             render.ImpassableMapArea();
+            impassableArea = render.ImpassableTiles;
 
             // Create entities
             entityType = EntityType.Player;
@@ -125,35 +117,35 @@ namespace SoR.Logic.Game
             switch (entityType)
             {
                 case EntityType.Player:
-                    entities.Add("player", new Player(GraphicsDevice) { Name = "player" });
+                    entities.Add("player", new Player(GraphicsDevice, impassableArea) { Name = "player" });
                     if (entities.TryGetValue("player", out Entity player))
                     {
                         player.SetPosition(250, 200);
                     }
                     break;
                 case EntityType.Pheasant:
-                    entities.Add("pheasant", new Pheasant(GraphicsDevice) { Name = "pheasant" });
+                    entities.Add("pheasant", new Pheasant(GraphicsDevice, impassableArea) { Name = "pheasant" });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
                         pheasant.SetPosition(270, 200);
                     }
                     break;
                 case EntityType.Chara:
-                    entities.Add("chara", new Chara(GraphicsDevice) { Name = "chara" });
+                    entities.Add("chara", new Chara(GraphicsDevice, impassableArea) { Name = "chara" });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
                         chara.SetPosition(250, 250);
                     }
                     break;
                 case EntityType.Slime:
-                    entities.Add("slime", new Slime(GraphicsDevice) { Name = "slime" });
+                    entities.Add("slime", new Slime(GraphicsDevice, impassableArea) { Name = "slime" });
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
                         slime.SetPosition(250, 130);
                     }
                     break;
                 case EntityType.Fishy:
-                    entities.Add("fishy", new Fishy(GraphicsDevice) { Name = "fishy" });
+                    entities.Add("fishy", new Fishy(GraphicsDevice, impassableArea) { Name = "fishy" });
                     if (entities.TryGetValue("fishy", out Entity fishy))
                     {
                         fishy.SetPosition(280, 180);
@@ -193,10 +185,7 @@ namespace SoR.Logic.Game
             foreach (var entity in entities.Values)
             {
                 // Update position according to user input
-                entity.UpdatePosition(
-                gameTime,
-                graphics,
-                render.ImpassableTiles);
+                entity.UpdatePosition(gameTime, graphics);
 
                 // Update animations
                 entity.UpdateAnimations(gameTime);

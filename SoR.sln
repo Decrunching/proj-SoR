@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35122.118
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SoR", "SoR.csproj", "{1D717FBF-9F2F-48FB-835B-86615A408AD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SoR", "SoR.csproj", "{1D717FBF-9F2F-48FB-835B-86615A408AD3}"
 	ProjectSection(ProjectDependencies) = postProject
 		{CFB12B60-B44E-4F38-8CAA-B6B8B237978A} = {CFB12B60-B44E-4F38-8CAA-B6B8B237978A}
 	EndProjectSection

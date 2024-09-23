@@ -46,8 +46,6 @@ namespace Logic.Game.GameMap.Interactables
             hitbox = new SkeletonBounds();
 
             movement = new Movement(); // Environmental collision handling
-
-            Height = 1;
         }
 
         /*

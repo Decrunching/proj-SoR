@@ -19,7 +19,7 @@ namespace Logic.Entities.Character.Player
         private string skin;
         private bool switchSkin;
 
-        public Player(GraphicsDevice GraphicsDevice)
+        public Player(GraphicsDevice GraphicsDevice, List<Rectangle> impassableArea)
         {
             // The possible animations to play as a string and the method to use for playing them as an int
             animations = new Dictionary<string, int>()
@@ -68,7 +68,7 @@ namespace Logic.Entities.Character.Player
 
             hitpoints = 100; // Set the starting number of hitpoints
 
-            Height = 1;
+            ImpassableArea = impassableArea;
         }
 
         /*
@@ -138,41 +138,16 @@ namespace Logic.Entities.Character.Player
         /*
          * Update entity position.
          */
-        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics, List<Rectangle> WalkableArea)
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             movement.ProcessJoypadInputs(gameTime, Speed);
             movement.CheckMovement(gameTime, this);
-            movement.CheckIfTraversable(gameTime, this, WalkableArea, 0);
-            BeMoved(gameTime, WalkableArea);
+            movement.CheckIfTraversable(gameTime, this, ImpassableArea, 0);
+            BeMoved(gameTime);
 
-            position = movement.UpdatePosition(gameTime, this);
-
+            position = movement.UpdatePosition();
 
             prevPosition = position;
-        }
-
-        /*
-         * Be automatically moved.
-         */
-        public override void BeMoved(GameTime gameTime, List<Rectangle> WalkableArea)
-        {
-            if (movement.CountDistance > 0)
-            {
-                float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                position += movement.GetDirection() * newSpeed;
-
-                if (movement.CountDistance > 1)
-                {
-                    movement.CheckIfTraversable(gameTime, this, WalkableArea, 2);
-                }
-
-                if (movement.CountDistance == 1)
-                {
-                    movement.SetDirection(0, 0);
-                }
-
-                movement.CountDistance--;
-            }
         }
 
         /*
