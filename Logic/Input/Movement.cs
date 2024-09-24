@@ -15,10 +15,14 @@ namespace SoR.Logic.Input
     {
         private Dictionary<Keys, InputKeys> inputKeys;
         protected Random random;
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
+        private GamePadState gamePadState;
+        private GamePadState lastGamePadState;
+        private GamePadCapabilities gamePadCapabilities;
         private Vector2 newPosition;
         private Vector2 prevPosition;
         private Vector2 direction;
-        private int deadZone;
         private bool idle;
         private string lastPressedKey;
         private int turnAround;
@@ -29,16 +33,14 @@ namespace SoR.Logic.Input
         public bool DirectionReversed { get; set; }
         public int CountDistance { get; set; }
         public bool BeenPushed { get; set; }
-        public KeyboardState KeyState { get; set; }
-        public KeyboardState LastKeyState { get; set; }
 
         public Movement()
         {
             random = new Random();
 
-            deadZone = 4096; // Set the joystick deadzone
             idle = true; // Player is currently idle
             lastPressedKey = ""; // Get the last key pressed
+            gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
 
             Traversable = true; // Whether the entity is on walkable terrain
 
@@ -53,14 +55,14 @@ namespace SoR.Logic.Input
             // TO DO: Simplify to remove duplicated code
             inputKeys = new Dictionary<Keys, InputKeys>()
             {
-            { Keys.Up, new InputKeys(KeyState.IsKeyDown(Keys.Up), "runup") },
-            { Keys.W, new InputKeys(KeyState.IsKeyDown(Keys.W), "runup") },
-            { Keys.Down, new InputKeys(KeyState.IsKeyDown(Keys.Down), "rundown") },
-            { Keys.S, new InputKeys(KeyState.IsKeyDown(Keys.S), "rundown") },
-            { Keys.Left, new InputKeys(KeyState.IsKeyDown(Keys.Left), "runleft") },
-            { Keys.A, new InputKeys(KeyState.IsKeyDown(Keys.A), "runleft") },
-            { Keys.Right, new InputKeys(KeyState.IsKeyDown(Keys.Right), "runright") },
-            { Keys.D, new InputKeys(KeyState.IsKeyDown(Keys.D), "runright") }
+            { Keys.Up, new InputKeys(keyState.IsKeyDown(Keys.Up), "runup") },
+            { Keys.W, new InputKeys(keyState.IsKeyDown(Keys.W), "runup") },
+            { Keys.Down, new InputKeys(keyState.IsKeyDown(Keys.Down), "rundown") },
+            { Keys.S, new InputKeys(keyState.IsKeyDown(Keys.S), "rundown") },
+            { Keys.Left, new InputKeys(keyState.IsKeyDown(Keys.Left), "runleft") },
+            { Keys.A, new InputKeys(keyState.IsKeyDown(Keys.A), "runleft") },
+            { Keys.Right, new InputKeys(keyState.IsKeyDown(Keys.Right), "runright") },
+            { Keys.D, new InputKeys(keyState.IsKeyDown(Keys.D), "runright") }
             };
         }
 
@@ -69,7 +71,7 @@ namespace SoR.Logic.Input
          */
         public void CheckMovement(GameTime gameTime, Entity entity)
         {
-            KeyState = Keyboard.GetState(); // Get the current keyboard state
+            keyState = Keyboard.GetState(); // Get the current keyboard state
 
             newPosition = entity.GetPosition();
 
@@ -82,29 +84,60 @@ namespace SoR.Logic.Input
                 }
             }
 
+            if (gamePadCapabilities.IsConnected)
+            {
+                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
+
+                if (gamePadCapabilities.HasLeftXThumbStick)
+                {
+                    if (gamePadState.ThumbSticks.Left.X < -0.5f)
+                    {
+                        PlayerJoystickDirection(-1);
+                    }
+                    else if (gamePadState.ThumbSticks.Left.X > 0.5f)
+                    {
+                        PlayerJoystickDirection(1);
+                    }
+                }
+
+                if (gamePadCapabilities.HasLeftYThumbStick)
+                {
+                    if (gamePadState.ThumbSticks.Left.Y < -0.5f)
+                    {
+                        PlayerJoystickDirection(0, 1);
+                    }
+                    else if (gamePadState.ThumbSticks.Left.Y > 0.5f)
+                    {
+                        PlayerJoystickDirection(0, -1);
+                    }
+                }
+
+                lastGamePadState = gamePadState;
+            }
+
             // Set player animation and position according to keyboard input
             foreach (var key in inputKeys.Keys)
             {
-                bool pressed = KeyState.IsKeyDown(key);
-                bool previouslyPressed = LastKeyState.IsKeyDown(key);
+                bool pressed = keyState.IsKeyDown(key);
+                bool previouslyPressed = lastKeyState.IsKeyDown(key);
                 inputKeys[key].Pressed = pressed;
 
                 if (inputKeys[key].NextAnimation == "runleft")
                 {
-                    PlayerDirection(key, pressed, previouslyPressed, -1);
+                    PlayerKeyboardDirection(key, pressed, previouslyPressed, -1);
                 }
                 else if (inputKeys[key].NextAnimation == "runright")
                 {
-                    PlayerDirection(key, pressed, previouslyPressed, 1);
+                    PlayerKeyboardDirection(key, pressed, previouslyPressed, 1);
                 }
 
                 if (inputKeys[key].NextAnimation == "runup")
                 {
-                    PlayerDirection(key, pressed, previouslyPressed, 0, -1);
+                    PlayerKeyboardDirection(key, pressed, previouslyPressed, 0, -1);
                 }
                 else if (inputKeys[key].NextAnimation == "rundown")
                 {
-                    PlayerDirection(key, pressed, previouslyPressed, 0, 1);
+                    PlayerKeyboardDirection(key, pressed, previouslyPressed, 0, 1);
                 }
 
                 if (pressed & !previouslyPressed)
@@ -130,13 +163,39 @@ namespace SoR.Logic.Input
 
             prevPosition = entity.GetPosition();
 
-            LastKeyState = KeyState; // Get the previous keyboard state
+            lastKeyState = keyState; // Get the previous keyboard state
+        }
+
+        /*
+         * Change the player direction according to gamepad input.
+         */
+        public void PlayerJoystickDirection(float changeDirectionX = 0, float changeDirectionY = 0)
+        {
+            if (changeDirectionX != 0)
+            {
+                direction.X = changeDirectionX;
+                idle = false;
+            }
+            else if (changeDirectionX == 0)
+            {
+                direction.X = 0;
+            }
+
+            if (changeDirectionY != 0)
+            {
+                direction.Y = changeDirectionY;
+                idle = false;
+            }
+            else if (changeDirectionY == 0)
+            {
+                direction.Y = 0;
+            }
         }
 
         /*
          * Change the player direction according to keyboard input.
          */
-        public void PlayerDirection(Keys key, bool pressed, bool previouslyPressed, int changeDirectionX = 0, int changeDirectionY = 0)
+        public void PlayerKeyboardDirection(Keys key, bool pressed, bool previouslyPressed, int changeDirectionX = 0, int changeDirectionY = 0)
         {
             if (changeDirectionX != 0)
             {
@@ -151,6 +210,7 @@ namespace SoR.Logic.Input
                     direction.X = 0;
                 }
             }
+
             if (changeDirectionY != 0)
             {
                 if (pressed)
@@ -165,7 +225,7 @@ namespace SoR.Logic.Input
                 }
             }
         }
-        
+
         /*
          * Calculate the direction to be repelled in.
          */
@@ -340,37 +400,6 @@ namespace SoR.Logic.Input
             }
 
             prevPosition = entity.GetPosition();
-        }
-
-        /*
-         * Change the player's position on the screen according to joypad inputs
-         */
-        public void ProcessJoypadInputs(GameTime gameTime, float speed)
-        {
-            if (Joystick.LastConnectedIndex == 0)
-            {
-                JoystickState jstate = Joystick.GetState(0);
-
-                float newPlayerSpeed = speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                if (jstate.Axes[1] < -deadZone)
-                {
-                    newPosition.Y -= newPlayerSpeed;
-                }
-                else if (jstate.Axes[1] > deadZone)
-                {
-                    newPosition.Y += newPlayerSpeed;
-                }
-
-                if (jstate.Axes[0] < -deadZone)
-                {
-                    newPosition.X -= newPlayerSpeed;
-                }
-                else if (jstate.Axes[0] > deadZone)
-                {
-                    newPosition.X += newPlayerSpeed;
-                }
-            }
         }
 
         /*

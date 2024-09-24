@@ -149,7 +149,6 @@ namespace Logic.Entities.Character.Player
          */
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
-            movement.ProcessJoypadInputs(gameTime, Speed);
             movement.CheckMovement(gameTime, this);
             BeMoved(gameTime);
             movement.CheckIfTraversable(gameTime, this, ImpassableArea, 0);
