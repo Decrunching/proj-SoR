@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Game.GameMap;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using SoR.Logic.Entities;
 using System;
@@ -24,8 +25,10 @@ namespace SoR.Logic.Input
         private string animation;
         private float sinceLastChange;
         private float newDirectionTime;
-        private bool traversable;
+        public bool Traversable { get; private set; }
+        public bool DirectionReversed { get; set; }
         public int CountDistance { get; set; }
+        public bool BeenPushed { get; set; }
         public KeyboardState KeyState { get; set; }
         public KeyboardState LastKeyState { get; set; }
 
@@ -37,12 +40,14 @@ namespace SoR.Logic.Input
             idle = true; // Player is currently idle
             lastPressedKey = ""; // Get the last key pressed
 
-            traversable = true; // Whether the entity is on walkable terrain
+            Traversable = true; // Whether the entity is on walkable terrain
 
             CountDistance = 0; // Count how far to automatically move the entity
             direction = new Vector2(0, 0); // The direction of movement
             sinceLastChange = 0; // Time since last NPC direction change
             newDirectionTime = (float)random.NextDouble() * 1f + 0.25f; // After 0.25-1 seconds, NPC chooses a new movement direction
+            DirectionReversed = false;
+            BeenPushed = false;
 
             // Dictionary to store the input keys, whether they are currently up or pressed, and which animation to apply
             // TO DO: Simplify to remove duplicated code
@@ -118,7 +123,7 @@ namespace SoR.Logic.Input
                 }
             }
 
-            if (traversable)
+            if (Traversable)
             {
                 AdjustPosition(gameTime, entity);
             }
@@ -160,6 +165,85 @@ namespace SoR.Logic.Input
                 }
             }
         }
+        
+        /*
+         * Calculate the direction to be repelled in.
+         */
+        public float RepelDirection(float direction, bool positive)
+        {
+            if (positive)
+            {
+                direction += 1;
+                if (direction > 1)
+                {
+                    direction = 1;
+                }
+            }
+            else
+            {
+                direction -= 1;
+                if (direction < -1)
+                {
+                    direction = -1;
+                }
+            }
+
+            return direction;
+        }
+
+        /*
+         * Be repelled away from an entity.
+         */
+        public void RepelledFromEntity(Vector2 location, int distance, Entity entity)
+        {
+            CountDistance = distance;
+
+            direction = Vector2.Zero;
+
+            if (entity.GetPosition().X > location.X) // Push right
+            {
+                direction.X = RepelDirection(direction.X, false);
+            }
+            else if (entity.GetPosition().X < location.X) // Push left
+            {
+                direction.X = RepelDirection(direction.X, true);
+            }
+            if (entity.GetPosition().Y > location.Y) // Push down
+            {
+                direction.Y = RepelDirection(direction.Y, false);
+            }
+            else if (entity.GetPosition().Y < location.Y) // Push up
+            {
+                direction.Y = RepelDirection(direction.Y, true);
+            }
+        }
+
+        /*
+         * Be repelled away from scenery.
+         */
+        public void RepelledFromScenery(Vector2 location, int distance, Scenery scenery)
+        {
+            CountDistance = distance;
+
+            direction = Vector2.Zero;
+
+            if (scenery.GetPosition().X > location.X) // Push right
+            {
+                direction.X = RepelDirection(direction.X, false);
+            }
+            else if (scenery.GetPosition().X < location.X) // Push left
+            {
+                direction.X = RepelDirection(direction.X, true);
+            }
+            if (scenery.GetPosition().Y > location.Y) // Push down
+            {
+                direction.Y = RepelDirection(direction.Y, false);
+            }
+            else if (scenery.GetPosition().Y < location.Y) // Push up
+            {
+                direction.Y = RepelDirection(direction.Y, true);
+            }
+        }
 
         /*
          * Change direction to move away from something.
@@ -168,22 +252,20 @@ namespace SoR.Logic.Input
         {
             if (newPosition.X > location.X) // Moving right
             {
-                direction = new Vector2(-1, 0); // Redirect left
-                RedirectAnimation(1, entity);
+                NewDirection(entity, 1); // Redirect left
             }
             else if (newPosition.X < location.X) // Moving left
             {
-                direction = new Vector2(1, 0); // Redirect right
-                RedirectAnimation(2, entity);
+                NewDirection(entity, 2); // Redirect right
             }
 
-            else if (newPosition.Y > location.Y) // Moving down
+            if (newPosition.Y > location.Y) // Moving down
             {
-                direction = new Vector2(0, -1); // Redirect up
+                NewDirection(entity, 3); // Reverse the Y-axis direction
             }
-            if (newPosition.Y < location.Y) // Moving up
+            else if (newPosition.Y < location.Y)
             {
-                direction = new Vector2(0, 1); // Redirect down
+                NewDirection(entity, 4);
             }
         }
 
@@ -241,53 +323,23 @@ namespace SoR.Logic.Input
 
             if (entity.IsMoving())
             {
-                if (sinceLastChange >= newDirectionTime)
+                if (sinceLastChange >= newDirectionTime || BeenPushed)
                 {
                     newDirection = random.Next(4);
                     NewDirection(entity, newDirection);
                     newDirectionTime = (float)random.NextDouble() * 3f + 0.33f;
                     sinceLastChange = 0;
+                    BeenPushed = false;
                 }
                 AdjustPosition(gameTime, entity);
             }
 
-            if (!traversable)
+            if (!Traversable)
             {
                 RedirectNPC(newPosition, entity);
             }
 
             prevPosition = entity.GetPosition();
-        }
-
-        /*
-         * Repel an entity away.
-         */
-        public void Repel(Vector2 location, int distance, Entity entity)
-        {
-            CountDistance = distance;
-            while (CountDistance < distance)
-            {
-                CountDistance++;
-            }
-
-            direction = Vector2.Zero;
-
-            if (entity.GetPosition().X > location.X) // Push right
-            {
-                direction.X -= 1;
-            }
-            else if (entity.GetPosition().X < location.X) // Push left
-            {
-                direction.X += 1;
-            }
-            if (entity.GetPosition().Y > location.Y) // Push down
-            {
-                direction.Y -= 1;
-            }
-            else if (entity.GetPosition().Y < location.Y) // Push up
-            {
-                direction.Y += 1;
-            }
         }
 
         /*
@@ -334,13 +386,13 @@ namespace SoR.Logic.Input
             {
                 if (area.Contains(newPosition))
                 {
-                    traversable = false;
+                    Traversable = false;
                     break;
                 }
-                traversable = true;
+                Traversable = true;
             }
 
-            if (!traversable)
+            if (!Traversable)
             {
                 direction = Vector2.Zero;
                 switch (entityType)
@@ -370,10 +422,30 @@ namespace SoR.Logic.Input
 
             newPosition += direction * newSpeed;
 
-            if (!traversable)
+            if (!Traversable && newPosition.X > prevPosition.X | newPosition.X < prevPosition.X)
             {
-
+                ReverseDirection(direction.X);
             }
+            if (!Traversable && newPosition.Y > prevPosition.Y | newPosition.Y < prevPosition.Y)
+            {
+                ReverseDirection(direction.Y);
+            }
+        }
+
+        /*
+         * Reverse the direction of travel.
+         */
+        public int ReverseDirection(float direction)
+        {
+            if (direction > 0)
+            {
+                return -1;
+            }
+            else if (direction < 0)
+            {
+                return 1;
+            }
+            else return 0;
         }
 
         /*

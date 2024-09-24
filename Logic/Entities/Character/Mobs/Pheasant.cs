@@ -60,7 +60,6 @@ namespace Logic.Entities.Character.Mobs
             movement = new Movement(); // Environmental collision handling
 
             Speed = 80f; // Set the entity's travel speed
-
             hitpoints = 100; // Set the starting number of hitpoints
 
             ImpassableArea = impassableArea;

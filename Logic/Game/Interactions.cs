@@ -200,8 +200,8 @@ namespace SoR.Logic.Game
                         {
                             entity.StopMoving();
 
-                            player.Collision(entity, gameTime);
-                            entity.Collision(player, gameTime);
+                            player.EntityCollision(entity, gameTime);
+                            entity.EntityCollision(player, gameTime);
                         }
                         else if (!entity.IsMoving())
                         {
@@ -212,10 +212,13 @@ namespace SoR.Logic.Game
                         {
                             if (scenery.CollidesWith(entity))
                             {
-                                scenery.UpdateHitbox(new SkeletonBounds());
-                                scenery.GetHitbox().Update(scenery.GetSkeleton(), true);
+                                entity.StopMoving();
 
                                 scenery.Collision(entity, gameTime);
+                            }
+                            else if (!entity.IsMoving())
+                            {
+                                entity.StartMoving();
                             }
                         }
                     }

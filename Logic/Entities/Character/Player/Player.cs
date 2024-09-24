@@ -65,7 +65,6 @@ namespace Logic.Entities.Character.Player
             movement = new Movement(); // Environmental collision handling
 
             Speed = 200f; // Set the entity's travel speed
-
             hitpoints = 100; // Set the starting number of hitpoints
 
             ImpassableArea = impassableArea;
@@ -136,18 +135,29 @@ namespace Logic.Entities.Character.Player
         }
 
         /*
+         * Define what happens on collision with an entity.
+         */
+        public override void EntityCollision(Entity entity, GameTime gameTime)
+        {
+            entity.TakeDamage(1);
+            entity.ChangeAnimation("hit");
+            movement.RepelledFromEntity(position, 4, entity);
+        }
+
+        /*
          * Update entity position.
          */
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             movement.ProcessJoypadInputs(gameTime, Speed);
             movement.CheckMovement(gameTime, this);
-            movement.CheckIfTraversable(gameTime, this, ImpassableArea, 0);
             BeMoved(gameTime);
+            movement.CheckIfTraversable(gameTime, this, ImpassableArea, 0);
 
             position = movement.UpdatePosition();
 
             prevPosition = position;
+            movement.DirectionReversed = false;
         }
 
         /*

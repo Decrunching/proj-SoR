@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Game.GameMap;
+using Microsoft.Xna.Framework;
 using SoR.Logic.Input;
 using Spine;
 using System.Collections.Generic;
@@ -164,13 +165,55 @@ namespace SoR.Logic.Entities
         }
 
         /*
+         * Be automatically moved.
+         */
+        public void BeMoved(GameTime gameTime)
+        {
+            if (movement.CountDistance > 0)
+            {
+                float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+                if (!movement.Traversable)
+                {
+                    if (!movement.DirectionReversed)
+                    {
+                        movement.ReverseDirection(movement.GetDirection().X);
+                        movement.ReverseDirection(movement.GetDirection().Y);
+
+                        movement.DirectionReversed = true;
+                    }
+                }
+
+                if (movement.CountDistance == 1)
+                {
+                    movement.SetDirection(0, 0);
+                    movement.BeenPushed = true;
+                }
+
+                movement.AdjustPosition(gameTime, this);
+
+                movement.CountDistance--;
+            }
+        }
+
+        /*
          * Define what happens on collision with an entity.
          */
-        public virtual void Collision(Entity entity, GameTime gameTime)
+        public virtual void EntityCollision(Entity entity, GameTime gameTime)
         {
             entity.TakeDamage(1);
             entity.ChangeAnimation("hit");
-            movement.Repel(position, 5, entity);
+            movement.RepelledFromEntity(position, 10, entity);
+        }
+
+        /*
+         * Define what happens on collision with an entity.
+         */
+        public virtual void SceneryCollision(Scenery scenery, GameTime gameTime)
+        {
+            TakeDamage(1);
+            ChangeAnimation("hit");
+            movement.RepelledFromScenery(position, 5, scenery);
         }
 
         /*
@@ -181,36 +224,12 @@ namespace SoR.Logic.Entities
             movement.NonPlayerMovement(gameTime, this);
             movement.CheckIfTraversable(gameTime, this, ImpassableArea, 1);
             BeMoved(gameTime);
+            movement.CheckIfTraversable(gameTime, this, ImpassableArea, 1);
 
             position = movement.UpdatePosition();
 
             prevPosition = position;
-        }
-
-        /*
-         * Be automatically moved.
-         */
-        public void BeMoved(GameTime gameTime)
-        {
-            if (movement.CountDistance > 0)
-            {
-                float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                if (movement.GetDirection().X > 0 | movement.GetDirection().X < 0 &&
-                    movement.GetDirection().Y > 0 | movement.GetDirection().Y < 0)
-                {
-                    newSpeed /= 1.5f;
-                }
-
-                position += movement.GetDirection() * newSpeed;
-
-                if (movement.CountDistance == 1)
-                {
-                    movement.SetDirection(0, 0);
-                }
-
-                movement.CountDistance--;
-            }
+            movement.DirectionReversed = false;
         }
 
         /*
