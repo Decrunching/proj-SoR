@@ -190,7 +190,7 @@ namespace SoR.Logic.Entities
                     movement.BeenPushed = true;
                 }
 
-                movement.AdjustPosition(gameTime, this);
+                movement.AdjustPosition(gameTime, this, ImpassableArea, 1);
 
                 movement.CountDistance--;
             }
@@ -222,9 +222,8 @@ namespace SoR.Logic.Entities
         public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             movement.NonPlayerMovement(gameTime, this);
-            movement.CheckIfTraversable(gameTime, this, ImpassableArea, 1);
             BeMoved(gameTime);
-            movement.CheckIfTraversable(gameTime, this, ImpassableArea, 1);
+            movement.AdjustPosition(gameTime, this, ImpassableArea, 1);
 
             position = movement.UpdatePosition();
 

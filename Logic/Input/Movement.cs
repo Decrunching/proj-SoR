@@ -156,11 +156,6 @@ namespace SoR.Logic.Input
                 }
             }
 
-            if (Traversable)
-            {
-                AdjustPosition(gameTime, entity);
-            }
-
             prevPosition = entity.GetPosition();
 
             lastKeyState = keyState; // Get the previous keyboard state
@@ -391,33 +386,56 @@ namespace SoR.Logic.Input
                     sinceLastChange = 0;
                     BeenPushed = false;
                 }
-                AdjustPosition(gameTime, entity);
-            }
-
-            if (!Traversable)
-            {
-                RedirectNPC(newPosition, entity);
             }
 
             prevPosition = entity.GetPosition();
         }
 
         /*
-         * Check the player is on walkable terrain.
+         * Set the new position after moving, and halve the speed if moving diagonally.
          */
-        public void CheckIfTraversable(
-            GameTime gameTime,
-            Entity entity,
-            List<Rectangle> impassableArea,
-            int entityType)
+        public void AdjustPosition(GameTime gameTime, Entity entity, List<Rectangle> impassableArea, int entityType)
         {
+            float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (direction.X > 0 | direction.X < 0 && direction.Y > 0 | direction.Y < 0)
+            {
+                newSpeed /= 1.5f;
+            }
+
+            newPosition += direction * newSpeed;
+
             foreach (Rectangle area in impassableArea)
             {
                 if (area.Contains(newPosition))
                 {
+                    do
+                    {
+                        if (newPosition.X < area.Center.X)
+                        {
+                            newPosition.X -= newSpeed;
+                        }
+                        else if (newPosition.X > area.Center.X)
+                        {
+                            newPosition.X += newSpeed;
+                        }
+
+                        if (newPosition.Y < area.Center.Y)
+                        {
+                            newPosition.Y -= newSpeed;
+                        }
+                        else if (newPosition.Y > area.Center.Y)
+                        {
+                            newPosition.Y += newSpeed;
+                        }
+                    }
+                    while (area.Contains(newPosition));
+
                     Traversable = false;
+
                     break;
                 }
+
                 Traversable = true;
             }
 
@@ -431,33 +449,8 @@ namespace SoR.Logic.Input
                         break;
                     case 1: // The NPC encounters non-traversable terrain
                         RedirectNPC(prevPosition, entity);
-                        AdjustPosition(gameTime, entity);
                         break;
                 }
-            }
-        }
-
-        /*
-         * Set the new position after moving, and halve the speed if moving diagonally.
-         */
-        public void AdjustPosition(GameTime gameTime, Entity entity)
-        {
-            float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-            if (direction.X > 0 | direction.X < 0 && direction.Y > 0 | direction.Y < 0)
-            {
-                newSpeed /= 1.5f;
-            }
-
-            newPosition += direction * newSpeed;
-
-            if (!Traversable && newPosition.X > prevPosition.X | newPosition.X < prevPosition.X)
-            {
-                ReverseDirection(direction.X);
-            }
-            if (!Traversable && newPosition.Y > prevPosition.Y | newPosition.Y < prevPosition.Y)
-            {
-                ReverseDirection(direction.Y);
             }
         }
 

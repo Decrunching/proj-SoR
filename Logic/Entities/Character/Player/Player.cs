@@ -151,7 +151,7 @@ namespace Logic.Entities.Character.Player
         {
             movement.CheckMovement(gameTime, this);
             BeMoved(gameTime);
-            movement.CheckIfTraversable(gameTime, this, ImpassableArea, 0);
+            movement.AdjustPosition(gameTime, this, ImpassableArea, 0);
 
             position = movement.UpdatePosition();
 
