@@ -151,7 +151,7 @@ namespace Logic.Entities.Character.Player
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             BeMoved(gameTime);
-            movement.CheckMovement(gameTime, position);
+            movement.CheckMovement(position);
 
             movement.AdjustPosition(gameTime, this, ImpassableArea);
             position = movement.UpdatePosition();

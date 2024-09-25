@@ -69,7 +69,7 @@ namespace SoR.Logic.Input
         /* 
          * Move left or right, and adjust animation accordingly.
          */
-        public void CheckMovement(GameTime gameTime, Vector2 position)
+        public void CheckMovement(Vector2 position)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
