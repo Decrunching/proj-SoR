@@ -89,34 +89,40 @@ namespace SoR.Logic.Input
             {
                 gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
 
-                if (gamePadCapabilities.HasLeftXThumbStick)
+                if (gamePadState.ThumbSticks.Left.X < -0.5f)
                 {
-                    if (gamePadState.ThumbSticks.Left.X < -0.5f)
-                    {
-                        PlayerJoystickDirection(-1);
-                        animation = "runleft";
-                    }
-                    else if (gamePadState.ThumbSticks.Left.X > 0.5f)
-                    {
-                        PlayerJoystickDirection(1);
-                        animation = "runright";
-                    }
-                    else direction.X = 0; // TO DO: Fix - currently reduces the player movement back to 0 whenever no input is given
+                    PlayerJoystickDirection(-1);
+                    animation = "runleft";
+                }
+                else if (gamePadState.ThumbSticks.Left.X > 0.5f)
+                {
+                    PlayerJoystickDirection(1);
+                    animation = "runright";
+                }
+                else if (gamePadState.ThumbSticks.Left.X > -0.5f &&
+                    gamePadState.ThumbSticks.Left.X < 0.5f &&
+                    lastGamePadState.ThumbSticks.Left.X < -0.5f ||
+                    lastGamePadState.ThumbSticks.Left.X > 0.5f)
+                {
+                    direction.X = 0;
                 }
 
-                if (gamePadCapabilities.HasLeftYThumbStick)
+                if (gamePadState.ThumbSticks.Left.Y < -0.5f)
                 {
-                    if (gamePadState.ThumbSticks.Left.Y < -0.5f)
-                    {
-                        PlayerJoystickDirection(0, 1);
-                        animation = "rundown";
-                    }
-                    else if (gamePadState.ThumbSticks.Left.Y > 0.5f)
-                    {
-                        PlayerJoystickDirection(0, -1);
-                        animation = "runup";
-                    }
-                    else direction.Y = 0;
+                    PlayerJoystickDirection(0, 1);
+                    animation = "rundown";
+                }
+                else if (gamePadState.ThumbSticks.Left.Y > 0.5f)
+                {
+                    PlayerJoystickDirection(0, -1);
+                    animation = "runup";
+                }
+                else if (gamePadState.ThumbSticks.Left.Y > -0.5f &&
+                    gamePadState.ThumbSticks.Left.Y < 0.5f &&
+                    lastGamePadState.ThumbSticks.Left.Y < -0.5f ||
+                    lastGamePadState.ThumbSticks.Left.Y > 0.5f)
+                {
+                    direction.Y = 0;
                 }
 
                 lastGamePadState = gamePadState;
@@ -398,7 +404,7 @@ namespace SoR.Logic.Input
         {
             float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (direction.X > 0 || direction.X < 0 && direction.Y > 0 || direction.Y < 0) // If moving diagonally
+            if (direction.X > 0 | direction.X < 0 && direction.Y > 0 | direction.Y < 0) // If moving diagonally
             {
                 newSpeed /= 1.5f; // Reduce the speed by 25%
             }
