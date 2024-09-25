@@ -69,11 +69,11 @@ namespace SoR.Logic.Input
         /* 
          * Move left or right, and adjust animation accordingly.
          */
-        public void CheckMovement(GameTime gameTime, Entity entity)
+        public void CheckMovement(GameTime gameTime, Vector2 position)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            newPosition = entity.GetPosition();
+            newPosition = position;
 
             if (inputKeys.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
             {
@@ -84,7 +84,8 @@ namespace SoR.Logic.Input
                 }
             }
 
-            if (gamePadCapabilities.IsConnected)
+            // Set player animation and position according to gamepad input
+            if (gamePadCapabilities.IsConnected) // If the gamepad is connected
             {
                 gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
 
@@ -93,11 +94,14 @@ namespace SoR.Logic.Input
                     if (gamePadState.ThumbSticks.Left.X < -0.5f)
                     {
                         PlayerJoystickDirection(-1);
+                        animation = "runleft";
                     }
                     else if (gamePadState.ThumbSticks.Left.X > 0.5f)
                     {
                         PlayerJoystickDirection(1);
+                        animation = "runright";
                     }
+                    else direction.X = 0; // TO DO: Fix - currently reduces the player movement back to 0 whenever no input is given
                 }
 
                 if (gamePadCapabilities.HasLeftYThumbStick)
@@ -105,11 +109,14 @@ namespace SoR.Logic.Input
                     if (gamePadState.ThumbSticks.Left.Y < -0.5f)
                     {
                         PlayerJoystickDirection(0, 1);
+                        animation = "rundown";
                     }
                     else if (gamePadState.ThumbSticks.Left.Y > 0.5f)
                     {
                         PlayerJoystickDirection(0, -1);
+                        animation = "runup";
                     }
+                    else direction.Y = 0;
                 }
 
                 lastGamePadState = gamePadState;
@@ -149,6 +156,7 @@ namespace SoR.Logic.Input
                 {
                     animation = lastPressedKey;
 
+                    // ??? Remove once joypad fixed
                     if (inputKeys[key].NextAnimation == "runleft" || inputKeys[key].NextAnimation == "runright")
                     {
                         direction.X = 0;
@@ -156,7 +164,7 @@ namespace SoR.Logic.Input
                 }
             }
 
-            prevPosition = entity.GetPosition();
+            prevPosition = position;
 
             lastKeyState = keyState; // Get the previous keyboard state
         }
@@ -171,19 +179,11 @@ namespace SoR.Logic.Input
                 direction.X = changeDirectionX;
                 idle = false;
             }
-            else if (changeDirectionX == 0)
-            {
-                direction.X = 0;
-            }
 
             if (changeDirectionY != 0)
             {
                 direction.Y = changeDirectionY;
                 idle = false;
-            }
-            else if (changeDirectionY == 0)
-            {
-                direction.Y = 0;
             }
         }
 
@@ -222,7 +222,7 @@ namespace SoR.Logic.Input
         }
 
         /*
-         * Calculate the direction to be repelled in.
+         * Calculate the direction to be repelled in. Positive to move right or down, negative to move up or left.
          */
         public float RepelDirection(float direction, bool positive)
         {
@@ -303,24 +303,24 @@ namespace SoR.Logic.Input
         /*
          * Change direction to move away from something.
          */
-        public void RedirectNPC(Vector2 location, Entity entity)
+        public void RedirectNPC(Vector2 prevPosition, Entity entity)
         {
-            if (newPosition.X > location.X) // Moving right
+            if (newPosition.X > prevPosition.X)
             {
                 NewDirection(entity, 1); // Redirect left
             }
-            else if (newPosition.X < location.X) // Moving left
+            else if (newPosition.X < prevPosition.X)
             {
                 NewDirection(entity, 2); // Redirect right
             }
 
-            if (newPosition.Y > location.Y) // Moving down
+            if (newPosition.Y > prevPosition.Y)
             {
-                NewDirection(entity, 3); // Reverse the Y-axis direction
+                NewDirection(entity, 3); // Redirect up
             }
-            else if (newPosition.Y < location.Y)
+            else if (newPosition.Y < prevPosition.Y)
             {
-                NewDirection(entity, 4);
+                NewDirection(entity, 4); // Redirect down
             }
         }
 
@@ -394,63 +394,67 @@ namespace SoR.Logic.Input
         /*
          * Set the new position after moving, and halve the speed if moving diagonally.
          */
-        public void AdjustPosition(GameTime gameTime, Entity entity, List<Rectangle> impassableArea, int entityType)
+        public void AdjustPosition(GameTime gameTime, Entity entity, List<Rectangle> impassableArea)
         {
             float newSpeed = (float)(entity.Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            if (direction.X > 0 | direction.X < 0 && direction.Y > 0 | direction.Y < 0)
+            if (direction.X > 0 || direction.X < 0 && direction.Y > 0 || direction.Y < 0) // If moving diagonally
             {
-                newSpeed /= 1.5f;
+                newSpeed /= 1.5f; // Reduce the speed by 25%
             }
 
             newPosition += direction * newSpeed;
 
             foreach (Rectangle area in impassableArea)
             {
-                if (area.Contains(newPosition))
+                if (area.Contains(newPosition) && !area.Contains(prevPosition))
                 {
-                    do
-                    {
-                        if (newPosition.X < area.Center.X)
-                        {
-                            newPosition.X -= newSpeed;
-                        }
-                        else if (newPosition.X > area.Center.X)
-                        {
-                            newPosition.X += newSpeed;
-                        }
+                    direction = Vector2.Zero;
 
-                        if (newPosition.Y < area.Center.Y)
+                    if (!entity.Player) // If entity is not the player
+                    {
+                        if (!DirectionReversed) // If the direction has not already been reversed
                         {
-                            newPosition.Y -= newSpeed;
-                        }
-                        else if (newPosition.Y > area.Center.Y)
-                        {
-                            newPosition.Y += newSpeed;
+                            RedirectNPC(prevPosition, entity); // Move in the opposite direction
+                            DirectionReversed = true;
                         }
                     }
-                    while (area.Contains(newPosition));
 
                     Traversable = false;
+                    newPosition = prevPosition;
 
                     break;
                 }
-
-                Traversable = true;
-            }
-
-            if (!Traversable)
-            {
-                direction = Vector2.Zero;
-                switch (entityType)
+                if (area.Contains(newPosition) && area.Contains(prevPosition)) // If entity is stuck inside the wall
                 {
-                    case 0: // The player encounters non-traversable terrain
-                        newPosition = prevPosition;
-                        break;
-                    case 1: // The NPC encounters non-traversable terrain
-                        RedirectNPC(prevPosition, entity);
-                        break;
+                    bool left = prevPosition.X < area.Center.X;
+                    bool right = prevPosition.X > area.Center.X;
+                    bool top = prevPosition.Y < area.Center.Y;
+                    bool bottom = prevPosition.Y > area.Center.Y;
+
+                    if (left) // If it is in the left half of the wall
+                    {
+                        newPosition.X -= newSpeed; // Move the entity left
+                    }
+                    else if (right)
+                    {
+                        newPosition.X += newSpeed;
+                    }
+
+                    if (top)
+                    {
+                        newPosition.Y -= newSpeed;
+                    }
+                    else if (bottom)
+                    {
+                        newPosition.Y += newSpeed;
+                    }
                 }
+                else
+                {
+                    Traversable = true;
+                }
+
             }
         }
 

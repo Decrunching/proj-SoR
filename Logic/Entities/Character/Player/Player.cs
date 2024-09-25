@@ -63,6 +63,7 @@ namespace Logic.Entities.Character.Player
             hitbox.Update(skeleton, true);
 
             movement = new Movement(); // Environmental collision handling
+            Player = true;
 
             Speed = 200f; // Set the entity's travel speed
             hitpoints = 100; // Set the starting number of hitpoints
@@ -149,14 +150,13 @@ namespace Logic.Entities.Character.Player
          */
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
-            movement.CheckMovement(gameTime, this);
             BeMoved(gameTime);
-            movement.AdjustPosition(gameTime, this, ImpassableArea, 0);
+            movement.CheckMovement(gameTime, position);
 
+            movement.AdjustPosition(gameTime, this, ImpassableArea);
             position = movement.UpdatePosition();
 
             prevPosition = position;
-            movement.DirectionReversed = false;
         }
 
         /*

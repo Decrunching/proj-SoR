@@ -62,6 +62,7 @@ namespace Logic.Entities.Character.Mobs
             hitbox.Update(skeleton, true);
 
             inMotion = true; // Move freely
+            Player = false;
 
             movement = new Movement(); // Environmental collision handling
 

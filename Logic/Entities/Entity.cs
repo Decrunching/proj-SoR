@@ -55,9 +55,10 @@ namespace SoR.Logic.Entities
         protected string animOne;
         protected string animTwo;
         protected bool inMotion;
+        public List<Rectangle> ImpassableArea { get; protected set; }
+        public bool Player { get; set; }
         public string Name { get; set; }
         public float Speed { get; set; }
-        public List<Rectangle> ImpassableArea { get; protected set; }
 
         /*
          * Placeholder function for dealing damage.
@@ -171,26 +172,13 @@ namespace SoR.Logic.Entities
         {
             if (movement.CountDistance > 0)
             {
-                float newSpeed = Speed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-
-                if (!movement.Traversable)
-                {
-                    if (!movement.DirectionReversed)
-                    {
-                        movement.ReverseDirection(movement.GetDirection().X);
-                        movement.ReverseDirection(movement.GetDirection().Y);
-
-                        movement.DirectionReversed = true;
-                    }
-                }
-
                 if (movement.CountDistance == 1)
                 {
                     movement.SetDirection(0, 0);
                     movement.BeenPushed = true;
                 }
 
-                movement.AdjustPosition(gameTime, this, ImpassableArea, 1);
+                movement.AdjustPosition(gameTime, this, ImpassableArea);
 
                 movement.CountDistance--;
             }
@@ -221,10 +209,10 @@ namespace SoR.Logic.Entities
          */
         public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
-            movement.NonPlayerMovement(gameTime, this);
             BeMoved(gameTime);
-            movement.AdjustPosition(gameTime, this, ImpassableArea, 1);
+            movement.NonPlayerMovement(gameTime, this);
 
+            movement.AdjustPosition(gameTime, this, ImpassableArea);
             position = movement.UpdatePosition();
 
             prevPosition = position;
