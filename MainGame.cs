@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using Logic.Game.Graphics;
 using SoR.Logic.Game;
+using Logic.Game.Screens;
 
 namespace SoR
 {
@@ -38,6 +39,7 @@ namespace SoR
     public class MainGame : Game
     {
         private GraphicsDeviceManager graphics;
+        private Stage stage;
         private Interactions gameLogic;
         private MainGame game;
         private GraphicsSettings graphicsSettings;
@@ -62,6 +64,7 @@ namespace SoR
 
             graphicsSettings = new GraphicsSettings(game, graphics, Window);
 
+            stage = new Stage();
             gameLogic = new Interactions(GraphicsDevice, Window);
 
             base.Initialize();

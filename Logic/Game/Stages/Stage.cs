@@ -1,54 +1,66 @@
 ﻿using Logic.Game.GameMap.TiledScenery;
-using Logic.Game.GameMap;
-using System.Collections.Generic;
+using Microsoft.Xna.Framework.Graphics;
+using SoR.Logic.Game;
+using Microsoft.Xna.Framework;
 
 namespace Logic.Game.Screens
 {
+    /*
+     * Placeholder class for game stages. Should decide which map tiles and layout
+     * to use, which mobs/NPCs to load and where, and should adjust according to
+     * game progression within a single function for the area of the game being
+     * loaded that takes input from elsewhere about the current state of the game.
+     */
     internal class Stage
     {
-        /*
-         * Placeholder class for game stages. Should decide which map tiles and layout
-         * to use, which mobs/NPCs to load and where, and should adjust according to
-         * game progression within a single function for the area of the game being
-         * loaded that takes input from elsewhere about the current state of the game.
-         */
-
-        private EntityType entityType;
-        private SceneryType sceneryType;
         private Map map;
-        private Dictionary<string, Entity> entities;
-        private Dictionary<string, Scenery> scenery;
-        private Dictionary<string, Vector2> mapLowerWalls;
-        private Dictionary<string, Vector2> mapUpperWalls;
-        private Dictionary<string, Vector2> mapFloor;
-        private List<Vector2> positions;
-        private List<Rectangle> impassableArea;
+        private Interactions interactions;
 
-        /*
-         * Differentiate between entities.
-         */
-        enum EntityType
+        public Stage (GraphicsDevice GraphicsDevice, GameWindow Window)
         {
-            Player,
-            Pheasant,
-            Chara,
-            Slime,
-            Fishy
+            interactions = new Interactions(GraphicsDevice, Window);
         }
 
         /*
-         * Differentiate between environmental ojects.
+         * 
          */
-        enum SceneryType
+        public void Village(GraphicsDevice GraphicsDevice)
         {
-            Campfire
+            // Get the map to be used
+            map = new Map(1);
+
+            // Create entities
+            entityType = EntityType.Player;
+            interactions.CreateEntity(GraphicsDevice);
+
+            entityType = EntityType.Chara;
+            interactions.CreateEntity(GraphicsDevice);
+
+            entityType = EntityType.Pheasant;
+            interactions.CreateEntity(GraphicsDevice);
         }
 
-        public Stage ()
+        /*
+         * 
+         */
+        public void Temple(GraphicsDevice GraphicsDevice)
         {
-            // Create dictionaries for game components
-            entities = new Dictionary<string, Entity>();
-            scenery = new Dictionary<string, Scenery>();
+            // Get the map to be used
+            map = new Map(0);
+
+            // Create entities
+            entityType = EntityType.Player;
+            interactions.CreateEntity(GraphicsDevice);
+
+            entityType = EntityType.Fishy;
+            interactions.CreateEntity(GraphicsDevice);
+
+            entityType = EntityType.Slime;
+            interactions.CreateEntity(GraphicsDevice);
+
+            // Create scenery
+            sceneryType = SceneryType.Campfire;
+            interactions.CreateObject(GraphicsDevice);
         }
     }
 }

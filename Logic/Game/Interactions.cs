@@ -59,9 +59,9 @@ namespace SoR.Logic.Game
             // Set up the camera
             camera = new Camera (Window, GraphicsDevice, 800, 600);
 
-            // Create dictionaries for game components
-            entities = new Dictionary<string, Entity>();
-            scenery = new Dictionary<string, Scenery>();
+            // Create dictionaries for interactable game components
+            entities = [];
+            scenery = [];
         }
 
         /*
@@ -86,26 +86,6 @@ namespace SoR.Logic.Game
             mapFloor = render.CreateMap( map, map.Floor);
             render.ImpassableMapArea();
             impassableArea = render.ImpassableTiles;
-
-            // Create entities
-            entityType = EntityType.Player;
-            CreateEntity(GraphicsDevice);
-
-            entityType = EntityType.Slime;
-            CreateEntity(GraphicsDevice);
-
-            entityType = EntityType.Chara;
-            CreateEntity(GraphicsDevice);
-
-            entityType = EntityType.Pheasant;
-            CreateEntity(GraphicsDevice);
-
-            entityType = EntityType.Fishy;
-            CreateEntity(GraphicsDevice);
-
-            // Create scenery
-            sceneryType = SceneryType.Campfire;
-            CreateObject(GraphicsDevice);
         }
 
         /*
