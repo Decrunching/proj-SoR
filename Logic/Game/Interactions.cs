@@ -81,9 +81,9 @@ namespace SoR.Logic.Game
             font = game.Content.Load<SpriteFont>("Fonts/File");
 
             // Map the tile drawing positions to their atlases
-            mapLowerWalls = render.CreateMap(map, map.MapLowerWalls, true);
-            mapUpperWalls = render.CreateMap(map, map.MapUpperWalls);
-            mapFloor = render.CreateMap( map, map.MapFloor);
+            mapLowerWalls = render.CreateMap(map, map.LowerWalls, true);
+            mapUpperWalls = render.CreateMap(map, map.UpperWalls);
+            mapFloor = render.CreateMap( map, map.Floor);
             render.ImpassableMapArea();
             impassableArea = render.ImpassableTiles;
 

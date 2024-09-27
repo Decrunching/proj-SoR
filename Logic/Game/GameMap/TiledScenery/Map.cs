@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
+using System;
 
 namespace Logic.Game.GameMap.TiledScenery
 {
@@ -16,11 +17,14 @@ namespace Logic.Game.GameMap.TiledScenery
         private string floorTiles;
         private string wallTiles;
         private int mapNumber;
+        private Random random;
         public string FloorSpriteSheet { get; set; }
+        public string FloorDecorSpriteSheet { get; set; }
         public string WallSpriteSheet { get; set; }
-        public int[,] MapFloor { get; set; }
-        public int[,] MapLowerWalls { get; set; }
-        public int[,] MapUpperWalls { get; set; }
+        public int[,] Floor { get; set; }
+        public int[,] FloorDecor { get; set; }
+        public int[,] LowerWalls { get; set; }
+        public int[,] UpperWalls { get; set; }
         public int Width {  get; set; }
         public int Height { get; set; }
 
@@ -28,6 +32,7 @@ namespace Logic.Game.GameMap.TiledScenery
         {
             this.mapNumber = mapNumber;
             GetMapLayout();
+            random = new Random();
         }
 
         /*
@@ -41,13 +46,6 @@ namespace Logic.Game.GameMap.TiledScenery
             floorTexture = Content.Load<Texture2D>(floorTiles);
             wallTexture = Content.Load<Texture2D>(wallTiles);
 
-            int totalFloorTiles = floorTexture.Width / Width * floorTexture.Height / Height;
-            int totalWallTiles = wallTexture.Width / Width * wallTexture.Height / Height;
-            int floorRows = floorTexture.Width / Width;
-            int floorColumns = floorTexture.Height / Height;
-            int wallRows = wallTexture.Width / Width;
-            int wallColumns = wallTexture.Height / Height;
-
             floorAtlas = Texture2DAtlas.Create("background", floorTexture, Width, Height);
             wallAtlas = Texture2DAtlas.Create("foreground", wallTexture, Width, Height);
         }
@@ -60,18 +58,18 @@ namespace Logic.Game.GameMap.TiledScenery
             switch (mapNumber)
             {
                 case 0:
-                    MapLowerWalls = new int[,]
+                    LowerWalls = new int[,]
                     {
                         { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
                         { -1,  0,  2,  2,  2,  3,  2,  2,  2,  9  },
                         {  5,  1, -1, -1, -1, -1, -1, -1, -1,  23 },
                         {  5, -1, -1, -1, -1, -1, -1, -1, -1,  22 },
                         {  5, -1, -1, -1, -1, -1, -1, -1, -1,  9  },
-                        {  10, -1, -1,  14, 16, 16, 15,-1, -1, 21 },
+                        {  10,-1, -1,  14, 16, 16, 15,-1, -1,  21 },
                         {  17, 19, 20, 18,-1, -1,  17, 19, 20, 18 }
                     };
 
-                    MapUpperWalls = new int[,]
+                    UpperWalls = new int[,]
                     {
                         { -1,  6,  7,  7,  7,  7,  7,  7,  7,  8  },
                         {  4,  0, -1, -1, -1, -1, -1, -1, -1, -1  },
@@ -82,7 +80,7 @@ namespace Logic.Game.GameMap.TiledScenery
                         { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  }
                     };
 
-                    MapFloor = new int[,]
+                    Floor = new int[,]
                     {
                         { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 },
                         { -1, -1, -1, -1, -1,  0, -1, -1, -1, -1 },
@@ -100,6 +98,71 @@ namespace Logic.Game.GameMap.TiledScenery
                     WallSpriteSheet = "SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet";
 
                     break;
+
+                case 1:
+                    int tileFloorRand = random.Next(-1, 16);
+                    int tileDecorRand = random.Next(-1, 16);
+
+                    LowerWalls = new int[,]
+                    {
+                        { -1, -1, -1, -1, -1, -1, -1,  0,  1,  2  },
+                        { -1, -1, -1, -1, -1, -1, -1,  3,  4,  5  },
+                        { -1, -1, -1,  0,  1,  2, -1,  6,  7,  8  },
+                        { -1, -1, -1,  3,  4,  5, -1, -1, -1, -1  },
+                        { -1, -1, -1,  6,  7,  8, -1, -1, -1, -1  },
+                        {  0,  1,  2, -1, -1, -1, -1, -1, -1, -1  },
+                        {  3,  4,  5, -1, -1, -1, -1, -1, -1, -1  },
+                        {  6,  7,  8, -1, -1, -1, -1,  0,  1,  2  },
+                        { -1, -1, -1, -1, -1, -1, -1,  3,  4,  5  },
+                        { -1, -1, -1, -1, -1, -1, -1,  6,  7,  8  },
+                        { -1,  0,  1,  2, -1, -1, -1, -1, -1, -1  },
+                        { -1,  3,  4,  5, -1, -1, -1, -1, -1, -1  },
+                        { -1,  6,  7,  8, -1, -1, -1, -1, -1, -1  }
+                    };
+
+                    Floor = new int[,]
+                    {
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
+                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand }
+                    };
+
+                    FloorDecor = new int[,]
+                    {
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
+                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand }
+                    };
+
+                    Width = 64;
+                    Height = 64;
+
+                    FloorSpriteSheet = "SoR Resources/Locations/TiledScenery/Grass/spritesheet.png";
+                    FloorDecorSpriteSheet = "SoR Resources/Locations/TiledScenery/Flowers/spritesheet.png";
+                    WallSpriteSheet = "SoR Resources/Locations/Interactables/House/House.png";
+
+                    break;
+
             }
         }
 
