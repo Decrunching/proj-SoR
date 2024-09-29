@@ -79,8 +79,9 @@ namespace Logic.Game.Screens
                 hasUpperWalls = false;
 
                 // Create the map
+                map.LoadMap(game.Content, map.FloorSpriteSheet, map.WallSpriteSheet, map.FloorDecorSpriteSheet);
                 mapLowerWalls = render.CreateMap(map, map.LowerWalls, true);
-                mapUpperWalls = new Dictionary<string, Vector2>();
+                mapUpperWalls = [];
                 mapFloor = render.CreateMap(map, map.Floor);
                 mapFloorDecor = render.CreateMap(map, map.FloorDecor);
                 render.ImpassableMapArea();
@@ -115,17 +116,18 @@ namespace Logic.Game.Screens
                 hasFloorDecor = false;
                 hasUpperWalls = true;
 
-                // Re-initialise the entity and scenery arrays
-                Entities = [];
-                Scenery = [];
-
                 // Create the map
+                map.LoadMap(game.Content, map.FloorSpriteSheet, map.WallSpriteSheet);
                 mapLowerWalls = render.CreateMap(map, map.LowerWalls, true);
                 mapUpperWalls = render.CreateMap(map, map.UpperWalls);
                 mapFloor = render.CreateMap(map, map.Floor);
-                mapFloorDecor = new Dictionary<string, Vector2>();
+                mapFloorDecor = [];
                 render.ImpassableMapArea();
                 impassableArea = render.ImpassableTiles;
+
+                // Re-initialise the entity and scenery arrays
+                Entities = [];
+                Scenery = [];
 
                 // Create entities
                 entityType = EntityType.Player;
@@ -148,9 +150,6 @@ namespace Logic.Game.Screens
         public void LoadGameContent(GraphicsDevice GraphicsDevice, MainGame game)
         {
             render = new Render(GraphicsDevice);
-
-            // Load map content
-            map.LoadMap(game.Content, map.FloorSpriteSheet, map.WallSpriteSheet);
 
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
@@ -331,7 +330,7 @@ namespace Logic.Game.Screens
                 foreach (var tileName in mapFloorDecor)
                 {
                     render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.DrawMap(map.GetFloorAtlas(), map, tileName.Key, tileName.Value);
+                    render.DrawMap(map.GetFloorDecorAtlas(), map, tileName.Key, tileName.Value);
                     render.FinishDrawingSpriteBatch();
                 }
             }

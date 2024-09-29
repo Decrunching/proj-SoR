@@ -13,8 +13,10 @@ namespace Logic.Game.GameMap.TiledScenery
     public class Map
     {
         private Texture2DAtlas floorAtlas;
+        private Texture2DAtlas floorDecorAtlas;
         private Texture2DAtlas wallAtlas;
         private Texture2D floorTexture;
+        private Texture2D floorDecorTexture;
         private Texture2D wallTexture;
         private string floorTiles;
         private string wallTiles;
@@ -38,10 +40,16 @@ namespace Logic.Game.GameMap.TiledScenery
         /*
          * Load map content.
          */
-        public void LoadMap(ContentManager Content, string floorTileset, string wallTileset)
+        public void LoadMap(ContentManager Content, string floorTileset, string wallTileset, string floorDecorTileset = null)
         {
             floorTexture = Content.Load<Texture2D>(floorTileset);
             wallTexture = Content.Load<Texture2D>(wallTileset);
+
+            if (floorDecorTileset != null)
+            {
+                floorDecorTexture = Content.Load<Texture2D>(floorDecorTileset);
+                floorDecorAtlas = Texture2DAtlas.Create("background decor", floorDecorTexture, Width, Height);
+            }
 
             floorAtlas = Texture2DAtlas.Create("background", floorTexture, Width, Height);
             wallAtlas = Texture2DAtlas.Create("foreground", wallTexture, Width, Height);
@@ -116,36 +124,36 @@ namespace Logic.Game.GameMap.TiledScenery
 
                     Floor = new int[,]
                     {
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) }
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) }
                     };
 
                     FloorDecor = new int[,]
                     {
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
-                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) }
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) },
+                        { new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15), new Random().Next(15) }
                     };
 
                     Width = 64;
@@ -166,6 +174,14 @@ namespace Logic.Game.GameMap.TiledScenery
         public Texture2DAtlas GetFloorAtlas()
         {
             return floorAtlas;
+        }
+
+        /*
+         * Get the floor atlas.
+         */
+        public Texture2DAtlas GetFloorDecorAtlas()
+        {
+            return floorDecorAtlas;
         }
 
         /*
