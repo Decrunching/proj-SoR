@@ -82,7 +82,7 @@ namespace Logic.Game.Graphics
             // Entity text
             spriteBatch.DrawString(
                 font,
-                "",
+                "HP: " + entity.GetHitPoints(),
                 new Vector2(entity.GetPosition().X - 30, entity.GetPosition().Y + 30),
                 Color.BlueViolet);
         }
@@ -184,7 +184,7 @@ namespace Logic.Game.Graphics
         /*
          * Draw the map to the screen.
          */
-        public void DrawMap(Texture2DAtlas atlas, Map map, string tileName, Vector2 position, SpriteFont font)
+        public void DrawMap(Texture2DAtlas atlas, Map map, string tileName, Vector2 position)
         {
             string tile = tileName.Remove(0, 4);
             int tileNumber = Convert.ToInt32(tile);

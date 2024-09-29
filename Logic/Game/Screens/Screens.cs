@@ -1,5 +1,4 @@
 ﻿using Logic.Entities.Character;
-using Logic.Entities.Character.Player;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SoR;
@@ -12,16 +11,6 @@ namespace Logic.Game.Screens
     public partial class Screens
     {
         private GameLogic gameLogic;
-        private Location location;
-
-        /*
-         * Differentiate between environmental ojects.
-         */
-        enum Location
-        {
-            Village,
-            Temple
-        }
 
         public Screens(GraphicsDevice GraphicsDevice, GameWindow Window)
         {
@@ -29,30 +18,21 @@ namespace Logic.Game.Screens
         }
 
         /*
-         * Currently the same every time the game is started, but will be updated later when file saving implemented.
+         * Update the state of the game.
          */
-        public void LoadGameState(MainGame game, GraphicsDevice GraphicsDevice)
+        public void UpdateGameState(GameTime gameTime, MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            gameLogic.Village(game, GraphicsDevice, true);
+            gameLogic.UpdateWorld(gameTime, graphics);
 
-            switch (location)
+            foreach (var entity in gameLogic.Entities.Values)
             {
-                case Location.Village:
-                    foreach (var entity in gameLogic.Entities.Values)
+                if (gameLogic.Entities.TryGetValue("chara", out Entity chara))
+                {
+                    if (chara.GetHitPoints() <= 98)
                     {
-                        if (gameLogic.Entities.TryGetValue("player", out Entity pheasantChar))
-                        {
-                            if (pheasantChar is Player pheasant)
-                            {
-                                if (pheasant.GetHitPoints() <= 0)
-                                {
-                                    gameLogic.Village(game, GraphicsDevice, false);
-                                    gameLogic.Temple(game, GraphicsDevice, true);
-                                }
-                            }
-                        }
+                        gameLogic.Temple(game, GraphicsDevice, true);
                     }
-                    break;
+                }
             }
         }
     }

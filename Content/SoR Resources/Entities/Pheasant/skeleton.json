@@ -1,16 +1,16 @@
 {
 "skeleton": {
-	"hash": "E/vP2Bh+UeY",
+	"hash": "dTwlDEJOyms",
 	"spine": "4.2.35",
-	"x": -90.14,
-	"y": -36.91,
-	"width": 204.19,
-	"height": 191.42,
+	"x": -72.11,
+	"y": -29.53,
+	"width": 163.35,
+	"height": 153.14,
 	"images": "./pheasant/",
 	"audio": ""
 },
 "bones": [
-	{ "name": "root", "scaleX": 0.25, "scaleY": 0.25 },
+	{ "name": "root", "scaleX": 0.2, "scaleY": 0.2 },
 	{ "name": "middle", "parent": "root", "x": -12.82, "y": 16.02 },
 	{ "name": "hip", "parent": "middle", "x": 15.23, "y": 95.84 },
 	{ "name": "torso", "parent": "hip", "length": 85.72, "rotation": -138.86, "x": -0.57, "y": -10.58 },
@@ -161,7 +161,7 @@
 			"tailpath": {
 				"tailpath": {
 					"type": "path",
-					"lengths": [ 69.38, 138.77 ],
+					"lengths": [ 55.51, 111.01 ],
 					"vertexCount": 6,
 					"vertices": [ 33.05, 10.28, -48.86, -4.67, -130.76, -19.63, -239.97, -39.57, -321.88, -54.53, -403.78, -69.49 ]
 				}

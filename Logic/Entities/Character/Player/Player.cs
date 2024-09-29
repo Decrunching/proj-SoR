@@ -64,7 +64,7 @@ namespace Logic.Entities.Character.Player
             movement = new Movement(); // Environmental collision handling
             Player = true;
 
-            Speed = 200f; // Set the entity's travel speed
+            Speed = 100f; // Set the entity's travel speed
             hitpoints = 100; // Set the starting number of hitpoints
 
             ImpassableArea = impassableArea;

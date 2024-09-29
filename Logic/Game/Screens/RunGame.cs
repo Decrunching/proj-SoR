@@ -1,16 +1,17 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
+using SoR;
 
 namespace Logic.Game.Screens
 {
     public partial class Screens
     {
         /*
-         * Update the state of the game.
+         * Currently the same every time the game is started, but will be updated later when file saving implemented.
          */
-        public void UpdateGameState(GameTime gameTime, GraphicsDeviceManager graphics)
+        public void LoadGameState(MainGame game, GraphicsDevice GraphicsDevice)
         {
-            gameLogic.UpdateWorld(gameTime, graphics);
+            gameLogic.Village(game, GraphicsDevice, true);
         }
 
         /*

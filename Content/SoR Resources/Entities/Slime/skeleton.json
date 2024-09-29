@@ -1,16 +1,16 @@
 {
 "skeleton": {
-	"hash": "saNf2Bo7RC4",
+	"hash": "Hue5EkHH3FE",
 	"spine": "4.2.35",
-	"x": -54.09,
-	"y": -35.97,
-	"width": 108.27,
-	"height": 104.28,
+	"x": -27.05,
+	"y": -17.99,
+	"width": 54.14,
+	"height": 52.14,
 	"images": "../working/char animation/",
 	"audio": ""
 },
 "bones": [
-	{ "name": "root", "rotation": -0.15, "scaleX": 2, "scaleY": 2 },
+	{ "name": "root", "rotation": -0.15 },
 	{ "name": "middle", "parent": "root", "y": 1.2 }
 ],
 "slots": [

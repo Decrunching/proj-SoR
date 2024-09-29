@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
 using System;
+using System.Collections.Generic;
+using System.Windows.Documents;
 
 namespace Logic.Game.GameMap.TiledScenery
 {
@@ -17,7 +19,6 @@ namespace Logic.Game.GameMap.TiledScenery
         private string floorTiles;
         private string wallTiles;
         private int mapNumber;
-        private Random random;
         public string FloorSpriteSheet { get; set; }
         public string FloorDecorSpriteSheet { get; set; }
         public string WallSpriteSheet { get; set; }
@@ -96,17 +97,13 @@ namespace Logic.Game.GameMap.TiledScenery
                     break;
 
                 case 1:
-                    random = new Random();
-                    int tileFloorRand = random.Next(-1, 16);
-                    int tileDecorRand = random.Next(-1, 16);
-
                     LowerWalls = new int[,]
                     {
                         { -1, -1, -1, -1, -1, -1, -1,  0,  1,  2  },
                         { -1, -1, -1, -1, -1, -1, -1,  3,  4,  5  },
-                        { -1, -1, -1,  0,  1,  2, -1,  6,  7,  8  },
-                        { -1, -1, -1,  3,  4,  5, -1, -1, -1, -1  },
-                        { -1, -1, -1,  6,  7,  8, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1,  0,  1,  2,  6,  7,  8  },
+                        { -1, -1, -1, -1,  3,  4,  5, -1, -1, -1  },
+                        { -1, -1, -1, -1,  6,  7,  8, -1, -1, -1  },
                         {  0,  1,  2, -1, -1, -1, -1, -1, -1, -1  },
                         {  3,  4,  5, -1, -1, -1, -1, -1, -1, -1  },
                         {  6,  7,  8, -1, -1, -1, -1,  0,  1,  2  },
@@ -117,55 +114,38 @@ namespace Logic.Game.GameMap.TiledScenery
                         { -1,  6,  7,  8, -1, -1, -1, -1, -1, -1  }
                     };
 
-                    UpperWalls = new int[,]
-                    {
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
-                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  }
-                    };
-
                     Floor = new int[,]
                     {
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
-                        { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand }
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) }
                     };
 
                     FloorDecor = new int[,]
                     {
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand },
-                        { tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand, tileDecorRand }
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) },
+                        { new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15), new Random().Next(-1, 15) }
                     };
 
                     Width = 64;

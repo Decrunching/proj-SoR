@@ -28,8 +28,11 @@ namespace Logic.Game.Screens
         private Dictionary<string, Vector2> mapLowerWalls;
         private Dictionary<string, Vector2> mapUpperWalls;
         private Dictionary<string, Vector2> mapFloor;
+        private Dictionary<string, Vector2> mapFloorDecor;
         private List<Vector2> positions;
         private List<Rectangle> impassableArea;
+        private bool hasUpperWalls;
+        private bool hasFloorDecor;
         public Dictionary<string, Entity> Entities { get; set; }
         public Dictionary<string, Scenery> Scenery { get; set; }
 
@@ -60,10 +63,6 @@ namespace Logic.Game.Screens
         {
             // Set up the camera
             camera = new Camera(Window, GraphicsDevice, 800, 600);
-
-            // Create dictionaries for interactable game components
-            Entities = [];
-            Scenery = [];
         }
 
         /*
@@ -76,29 +75,30 @@ namespace Logic.Game.Screens
                 // Get the map to be used
                 map = new Map(1);
                 LoadGameContent(GraphicsDevice, game);
+                hasFloorDecor = true;
+                hasUpperWalls = false;
+
+                // Create the map
+                mapLowerWalls = render.CreateMap(map, map.LowerWalls, true);
+                mapUpperWalls = new Dictionary<string, Vector2>();
+                mapFloor = render.CreateMap(map, map.Floor);
+                mapFloorDecor = render.CreateMap(map, map.FloorDecor);
+                render.ImpassableMapArea();
+                impassableArea = render.ImpassableTiles;
+
+                // Re-initialise the entity and scenery arrays
+                Entities = [];
+                Scenery = [];
 
                 // Create entities
                 entityType = EntityType.Player;
                 CreateEntity(GraphicsDevice, 250, 200);
 
                 entityType = EntityType.Chara;
-                CreateEntity(GraphicsDevice, 270, 200);
+                CreateEntity(GraphicsDevice, 200, 250);
 
                 entityType = EntityType.Pheasant;
                 CreateEntity(GraphicsDevice, 250, 250);
-            }
-            else
-            {
-                // Dispose of entities
-                foreach (var entity in Entities)
-                {
-                    if (entity.Value.Name == "player" ||
-                        entity.Value.Name == "chara" ||
-                        entity.Value.Name == "pheasant")
-                    {
-                        Entities.Remove(entity.Key);
-                    }
-                }
             }
         }
 
@@ -112,10 +112,24 @@ namespace Logic.Game.Screens
                 // Get the map to be used
                 map = new Map(0);
                 LoadGameContent(GraphicsDevice, game);
+                hasFloorDecor = false;
+                hasUpperWalls = true;
+
+                // Re-initialise the entity and scenery arrays
+                Entities = [];
+                Scenery = [];
+
+                // Create the map
+                mapLowerWalls = render.CreateMap(map, map.LowerWalls, true);
+                mapUpperWalls = render.CreateMap(map, map.UpperWalls);
+                mapFloor = render.CreateMap(map, map.Floor);
+                mapFloorDecor = new Dictionary<string, Vector2>();
+                render.ImpassableMapArea();
+                impassableArea = render.ImpassableTiles;
 
                 // Create entities
                 entityType = EntityType.Player;
-                CreateEntity(GraphicsDevice, 250, 130);
+                CreateEntity(GraphicsDevice, 220, 100);
 
                 entityType = EntityType.Fishy;
                 CreateEntity(GraphicsDevice, 280, 180);
@@ -126,26 +140,6 @@ namespace Logic.Game.Screens
                 // Create scenery
                 sceneryType = SceneryType.Campfire;
                 CreateObject(GraphicsDevice, 224, 160);
-            }
-            else
-            {
-                // Dispose of entities
-                foreach (var entity in Entities)
-                {
-                    if (entity.Value.Name == "player" ||
-                        entity.Value.Name == "fishy" ||
-                        entity.Value.Name == "slime")
-                    {
-                        Entities.Remove(entity.Key);
-                    }
-                }
-                foreach (var item in Scenery)
-                {
-                    if (item.Value.Name == "campfire")
-                    {
-                        Scenery.Remove(item.Key);
-                    }
-                }
             }
         }
         /*
@@ -160,13 +154,6 @@ namespace Logic.Game.Screens
 
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
-
-            // Map the tile drawing positions to their atlases
-            mapLowerWalls = render.CreateMap(map, map.LowerWalls, true);
-            mapUpperWalls = render.CreateMap(map, map.UpperWalls);
-            mapFloor = render.CreateMap(map, map.Floor);
-            render.ImpassableMapArea();
-            impassableArea = render.ImpassableTiles;
         }
 
         /*
@@ -336,8 +323,17 @@ namespace Logic.Game.Screens
             foreach (var tileName in mapFloor)
             {
                 render.StartDrawingSpriteBatch(camera.GetCamera());
-                render.DrawMap(map.GetFloorAtlas(), map, tileName.Key, tileName.Value, font);
+                render.DrawMap(map.GetFloorAtlas(), map, tileName.Key, tileName.Value);
                 render.FinishDrawingSpriteBatch();
+            }
+            if (hasFloorDecor)
+            {
+                foreach (var tileName in mapFloorDecor)
+                {
+                    render.StartDrawingSpriteBatch(camera.GetCamera());
+                    render.DrawMap(map.GetFloorAtlas(), map, tileName.Key, tileName.Value);
+                    render.FinishDrawingSpriteBatch();
+                }
             }
 
             RefreshPositions();
@@ -378,17 +374,20 @@ namespace Logic.Game.Screens
                     if (tileName.Value.Y == position.Y && tileName.Value.X == position.X)
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.DrawMap(map.GetWallAtlas(), map, tileName.Key, position, font);
+                        render.DrawMap(map.GetWallAtlas(), map, tileName.Key, position);
                         render.FinishDrawingSpriteBatch();
                     }
                 }
             }
 
-            foreach (var tileName in mapUpperWalls)
+            if (hasUpperWalls)
             {
-                render.StartDrawingSpriteBatch(camera.GetCamera());
-                render.DrawMap(map.GetWallAtlas(), map, tileName.Key, tileName.Value, font);
-                render.FinishDrawingSpriteBatch();
+                foreach (var tileName in mapUpperWalls)
+                {
+                    render.StartDrawingSpriteBatch(camera.GetCamera());
+                    render.DrawMap(map.GetWallAtlas(), map, tileName.Key, tileName.Value);
+                    render.FinishDrawingSpriteBatch();
+                }
             }
         }
     }

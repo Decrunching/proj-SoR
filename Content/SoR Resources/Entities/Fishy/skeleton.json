@@ -1,16 +1,16 @@
 {
 "skeleton": {
-	"hash": "zsJyP88BPrs",
+	"hash": "AV9DTGMbOmE",
 	"spine": "4.2.35",
-	"x": -64,
-	"y": -45.08,
-	"width": 128,
-	"height": 128,
+	"x": -48,
+	"y": -33.81,
+	"width": 96,
+	"height": 96,
 	"images": "../../char sprites/fishy/",
 	"audio": "./audio"
 },
 "bones": [
-	{ "name": "root", "scaleX": 4, "scaleY": 4 },
+	{ "name": "root", "scaleX": 3, "scaleY": 3 },
 	{ "name": "middle", "parent": "root", "y": -0.58, "scaleX": -1 }
 ],
 "slots": [
