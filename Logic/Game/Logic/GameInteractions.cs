@@ -1,19 +1,19 @@
-﻿using SoR.Logic.Entities;
-using Logic.Entities.Character.Player;
+﻿using Logic.Entities.Character.Player;
 using Logic.Entities.Character.Mobs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Linq;
-using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
 using SoR;
+using Logic.Entities.Character;
+using Logic.Entities.Interactables;
 
 namespace Logic.Game.Screens
 {
     /*
-     * Part of the Stage class. Handles game component interactions.
+     * Part of the GameLogic class. Handles game component interactions. This part creates the map, entities and interactables, renders them to the
+     * screen, and handles the interaction and rendering order.
      */
     public partial class GameLogic
     {

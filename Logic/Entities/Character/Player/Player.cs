@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR;
-using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
 using System.Collections.Generic;

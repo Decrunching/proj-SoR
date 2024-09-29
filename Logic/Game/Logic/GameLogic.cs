@@ -1,18 +1,16 @@
-﻿using Logic.Game.GameMap;
+﻿using Logic.Entities.Character;
+using Logic.Game.GameMap;
 using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.Graphics;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SoR.Logic.Entities;
 using System.Collections.Generic;
 
 namespace Logic.Game.Screens
 {
     /*
-     * Placeholder class for game stages. Should decide which map tiles and layout
-     * to use, which mobs/NPCs to load and where, and should adjust according to
-     * game progression within a single function for the area of the game being
-     * loaded that takes input from elsewhere about the current state of the game.
+     * Game logic. Manages interactions between game components. This part of the partial class sets which entities and interactables will appear in
+     * each game location and positions them on the map.
      */
     public partial class GameLogic
     {

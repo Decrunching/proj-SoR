@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Entities.Character;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
-using SoR.Logic.Entities;
 using SoR.Logic.Input;
 using Spine;
 

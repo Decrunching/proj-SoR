@@ -4,7 +4,7 @@ using SoR.Logic.Input;
 using Spine;
 using System.Collections.Generic;
 
-namespace SoR.Logic.Entities
+namespace Logic.Entities.Character
 {
     /*
      * Spine Runtimes License

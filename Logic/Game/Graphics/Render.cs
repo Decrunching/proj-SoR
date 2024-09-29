@@ -1,10 +1,10 @@
-﻿using Logic.Game.GameMap;
+﻿using Logic.Entities.Character;
+using Logic.Game.GameMap;
 using Logic.Game.GameMap.TiledScenery;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Graphics;
-using SoR.Logic.Entities;
 using Spine;
 using System;
 using System.Collections.Generic;

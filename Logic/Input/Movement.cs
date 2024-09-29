@@ -1,7 +1,7 @@
-﻿using Logic.Game.GameMap;
+﻿using Logic.Entities.Character;
+using Logic.Game.GameMap;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using SoR.Logic.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
