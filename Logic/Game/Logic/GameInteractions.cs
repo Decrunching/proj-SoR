@@ -5,64 +5,18 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using Logic.Game.GameMap.TiledScenery;
 using Logic.Game.GameMap.Interactables;
 using Logic.Game.GameMap;
 using Logic.Game.Graphics;
+using SoR;
 
-namespace SoR.Logic.Game
+namespace Logic.Game.Screens
 {
     /*
-     * Placeholder class for handling game progression.
+     * Part of the Stage class. Handles game component interactions.
      */
-    public class Interactions
+    public partial class GameLogic
     {
-        private EntityType entityType;
-        private SceneryType sceneryType;
-        private Camera camera;
-        private Map map;
-        private Dictionary<string, Entity> entities;
-        private Dictionary<string, Scenery> scenery;
-        private Dictionary<string, Vector2> mapLowerWalls;
-        private Dictionary<string, Vector2> mapUpperWalls;
-        private Dictionary<string, Vector2> mapFloor;
-        private List<Vector2> positions;
-        private List<Rectangle> impassableArea;
-        private SpriteFont font;
-        private Render render;
-
-        /*
-         * Differentiate between entities.
-         */
-        enum EntityType
-        {
-            Player,
-            Pheasant,
-            Chara,
-            Slime,
-            Fishy
-        }
-
-        /*
-         * Differentiate between environmental ojects.
-         */
-        enum SceneryType
-        {
-            Campfire
-        }
-
-        /*
-         * Constructor for initial game setup.
-         */
-        public Interactions(GraphicsDevice GraphicsDevice, GameWindow Window)
-        {
-            // Set up the camera
-            camera = new Camera (Window, GraphicsDevice, 800, 600);
-
-            // Create dictionaries for interactable game components
-            entities = [];
-            scenery = [];
-        }
 
         /*
          * Load initial content into the game.
@@ -70,9 +24,6 @@ namespace SoR.Logic.Game
         public void LoadGameContent(GraphicsDevice GraphicsDevice, MainGame game)
         {
             render = new Render(GraphicsDevice);
-
-            // Get the map to be used
-            map = new Map(0);
 
             // Load map content
             map.LoadMap(game.Content, map.FloorSpriteSheet, map.WallSpriteSheet);
@@ -86,12 +37,16 @@ namespace SoR.Logic.Game
             mapFloor = render.CreateMap( map, map.Floor);
             render.ImpassableMapArea();
             impassableArea = render.ImpassableTiles;
+
+            Village(GraphicsDevice);
+
+
         }
 
         /*
          * Choose entity to create.
          */
-        public void CreateEntity(GraphicsDevice GraphicsDevice)
+        public void CreateEntity(GraphicsDevice GraphicsDevice, float positionX, float positionY)
         {
             switch (entityType)
             {
@@ -99,35 +54,35 @@ namespace SoR.Logic.Game
                     entities.Add("player", new Player(GraphicsDevice, impassableArea) { Name = "player" });
                     if (entities.TryGetValue("player", out Entity player))
                     {
-                        player.SetPosition(250, 200);
+                        player.SetPosition(positionX, positionY);
                     }
                     break;
                 case EntityType.Pheasant:
                     entities.Add("pheasant", new Pheasant(GraphicsDevice, impassableArea) { Name = "pheasant" });
                     if (entities.TryGetValue("pheasant", out Entity pheasant))
                     {
-                        pheasant.SetPosition(270, 200);
+                        pheasant.SetPosition(positionX, positionY);
                     }
                     break;
                 case EntityType.Chara:
                     entities.Add("chara", new Chara(GraphicsDevice, impassableArea) { Name = "chara" });
                     if (entities.TryGetValue("chara", out Entity chara))
                     {
-                        chara.SetPosition(250, 250);
+                        chara.SetPosition(positionX, positionY);
                     }
                     break;
                 case EntityType.Slime:
                     entities.Add("slime", new Slime(GraphicsDevice, impassableArea) { Name = "slime" });
                     if (entities.TryGetValue("slime", out Entity slime))
                     {
-                        slime.SetPosition(250, 130);
+                        slime.SetPosition(positionX, positionY);
                     }
                     break;
                 case EntityType.Fishy:
                     entities.Add("fishy", new Fishy(GraphicsDevice, impassableArea) { Name = "fishy" });
                     if (entities.TryGetValue("fishy", out Entity fishy))
                     {
-                        fishy.SetPosition(280, 180);
+                        fishy.SetPosition(positionX, positionY);
                     }
                     break;
             }
@@ -136,7 +91,7 @@ namespace SoR.Logic.Game
         /*
          * Choose interactable object to create.
          */
-        public void CreateObject(GraphicsDevice GraphicsDevice)
+        public void CreateObject(GraphicsDevice GraphicsDevice, float positionX, float positionY)
         {
             switch (sceneryType)
             {
@@ -144,7 +99,7 @@ namespace SoR.Logic.Game
                     scenery.Add("campfire", new Campfire(GraphicsDevice) { Name = "campfire" });
                     if (scenery.TryGetValue("campfire", out Scenery campfire))
                     {
-                        campfire.SetPosition(224, 160);
+                        campfire.SetPosition(positionX, positionY);
                     }
                     break;
             }

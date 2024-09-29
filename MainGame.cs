@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Logic.Game.Graphics;
-using SoR.Logic.Game;
 using Logic.Game.Screens;
 
 namespace SoR
@@ -39,8 +38,7 @@ namespace SoR
     public class MainGame : Game
     {
         private GraphicsDeviceManager graphics;
-        private Stage stage;
-        private Interactions gameLogic;
+        private GameLogic stage;
         private MainGame game;
         private GraphicsSettings graphicsSettings;
         private int screenWidth;
@@ -64,8 +62,7 @@ namespace SoR
 
             graphicsSettings = new GraphicsSettings(game, graphics, Window);
 
-            stage = new Stage();
-            gameLogic = new Interactions(GraphicsDevice, Window);
+            stage = new GameLogic(GraphicsDevice, Window);
 
             base.Initialize();
         }
@@ -75,7 +72,7 @@ namespace SoR
          */
         protected override void LoadContent()
         {
-            gameLogic.LoadGameContent(GraphicsDevice, game);
+            stage.LoadGameContent(GraphicsDevice, game);
         }
 
         /*
@@ -89,19 +86,9 @@ namespace SoR
 
             UpdateResolution(graphicsSettings.CheckIfBorderlessToggled(graphics, Window));
 
-            gameLogic.UpdateWorld(gameTime, graphics);
+            stage.UpdateWorld(gameTime, graphics);
 
             base.Update(gameTime);
-        }
-
-        /*
-         * Draw game components to the screen.
-         */
-        protected override void Draw(GameTime gameTime)
-        {
-            gameLogic.Render(GraphicsDevice);
-
-            base.Draw(gameTime);
         }
 
         /*
@@ -115,10 +102,20 @@ namespace SoR
                 screenWidth = (int)resolution.X;
                 screenHeight = (int)resolution.Y;
 
-                gameLogic.UpdateViewportGraphics(Window, screenWidth, screenHeight);
+                stage.UpdateViewportGraphics(Window, screenWidth, screenHeight);
 
                 graphics.ApplyChanges();
             }
+        }
+
+        /*
+         * Draw game components to the screen.
+         */
+        protected override void Draw(GameTime gameTime)
+        {
+            stage.Render(GraphicsDevice);
+
+            base.Draw(gameTime);
         }
     }
 }
