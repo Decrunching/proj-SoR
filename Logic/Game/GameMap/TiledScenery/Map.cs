@@ -32,7 +32,6 @@ namespace Logic.Game.GameMap.TiledScenery
         {
             this.mapNumber = mapNumber;
             GetMapLayout();
-            random = new Random();
         }
 
         /*
@@ -100,6 +99,7 @@ namespace Logic.Game.GameMap.TiledScenery
                     break;
 
                 case 1:
+                    random = new Random();
                     int tileFloorRand = random.Next(-1, 16);
                     int tileDecorRand = random.Next(-1, 16);
 

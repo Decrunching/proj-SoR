@@ -38,9 +38,9 @@ namespace SoR
     public class MainGame : Game
     {
         private GraphicsDeviceManager graphics;
-        private GameLogic stage;
-        private MainGame game;
         private GraphicsSettings graphicsSettings;
+        private MainGame game;
+        private Screens screens;
         private int screenWidth;
         private int screenHeight;
 
@@ -62,7 +62,7 @@ namespace SoR
 
             graphicsSettings = new GraphicsSettings(game, graphics, Window);
 
-            stage = new GameLogic(GraphicsDevice, Window);
+            screens = new Screens(GraphicsDevice, Window);
 
             base.Initialize();
         }
@@ -72,7 +72,7 @@ namespace SoR
          */
         protected override void LoadContent()
         {
-            stage.LoadGameContent(GraphicsDevice, game);
+            screens.LoadGameState(game, GraphicsDevice);
         }
 
         /*
@@ -86,7 +86,7 @@ namespace SoR
 
             UpdateResolution(graphicsSettings.CheckIfBorderlessToggled(graphics, Window));
 
-            stage.UpdateWorld(gameTime, graphics);
+            screens.UpdateGameState(gameTime, graphics);
 
             base.Update(gameTime);
         }
@@ -102,7 +102,7 @@ namespace SoR
                 screenWidth = (int)resolution.X;
                 screenHeight = (int)resolution.Y;
 
-                stage.UpdateViewportGraphics(Window, screenWidth, screenHeight);
+                screens.UpdateResolution(Window, screenWidth, screenHeight);
 
                 graphics.ApplyChanges();
             }
@@ -113,7 +113,7 @@ namespace SoR
          */
         protected override void Draw(GameTime gameTime)
         {
-            stage.Render(GraphicsDevice);
+            screens.DrawGameState(GraphicsDevice);
 
             base.Draw(gameTime);
         }
