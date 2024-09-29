@@ -39,11 +39,8 @@ namespace Logic.Game.GameMap.TiledScenery
          */
         public void LoadMap(ContentManager Content, string floorTileset, string wallTileset)
         {
-            floorTiles = floorTileset;
-            wallTiles = wallTileset;
-
-            floorTexture = Content.Load<Texture2D>(floorTiles);
-            wallTexture = Content.Load<Texture2D>(wallTiles);
+            floorTexture = Content.Load<Texture2D>(floorTileset);
+            wallTexture = Content.Load<Texture2D>(wallTileset);
 
             floorAtlas = Texture2DAtlas.Create("background", floorTexture, Width, Height);
             wallAtlas = Texture2DAtlas.Create("foreground", wallTexture, Width, Height);
@@ -120,6 +117,23 @@ namespace Logic.Game.GameMap.TiledScenery
                         { -1,  6,  7,  8, -1, -1, -1, -1, -1, -1  }
                     };
 
+                    UpperWalls = new int[,]
+                    {
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  },
+                        { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1  }
+                    };
+
                     Floor = new int[,]
                     {
                         { tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand, tileFloorRand },
@@ -157,9 +171,9 @@ namespace Logic.Game.GameMap.TiledScenery
                     Width = 64;
                     Height = 64;
 
-                    FloorSpriteSheet = "SoR Resources/Locations/TiledScenery/Grass/spritesheet.png";
-                    FloorDecorSpriteSheet = "SoR Resources/Locations/TiledScenery/Flowers/spritesheet.png";
-                    WallSpriteSheet = "SoR Resources/Locations/Interactables/House/House.png";
+                    FloorSpriteSheet = "SoR Resources/Locations/TiledScenery/Grass/spritesheet";
+                    FloorDecorSpriteSheet = "SoR Resources/Locations/TiledScenery/Flowers/spritesheet";
+                    WallSpriteSheet = "SoR Resources/Locations/Interactables/House/House";
 
                     break;
 

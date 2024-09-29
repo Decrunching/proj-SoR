@@ -29,7 +29,6 @@
     <File>D:/ProjSoR/proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/14.png</File>
     <File>D:/ProjSoR/proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/15.png</File>
     <File>D:/ProjSoR/proj-SoR/Content/SoR Resources/Locations/TiledScenery/Flowers/spritesheet.png</File>
-    <File>D:/ProjSoR/proj-SoR/Content/SoR Resources/Locations/TiledScenery/Grass/grasstiles.png</File>
     <File>D:/ProjSoR/proj-SoR/Content/SoR Resources/Locations/TiledScenery/Grass/spritesheet.png</File>
     <File>D:/ProjSoR/proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/0.png</File>
     <File>D:/ProjSoR/proj-SoR/Content/SoR Resources/Locations/TiledScenery/Lake/1.png</File>
@@ -72,7 +71,6 @@
     <File>D:/ProjSoR/proj-SoR/Content/SoR Resources/Locations/TiledScenery/Temple/wallSpritesheet.png</File>
   </SourceFiles>
   <DestFiles>
-    <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
     <File xsi:nil="true" />
