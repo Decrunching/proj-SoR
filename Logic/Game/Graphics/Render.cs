@@ -12,15 +12,17 @@ using System.Collections.Generic;
 namespace Logic.Game.Graphics
 {
     /*
-     * Draw graphics to the screen.
+     * Draw graphics to the screen, collect the impassable sections of the map, and convert map arrays into atlas positions for drawing tiles.
      */
     internal partial class Render
     {
         private SpriteBatch spriteBatch;
         private SkeletonRenderer skeletonRenderer;
-        private List<Rectangle> impassableArea;
         public List<Rectangle> ImpassableTiles { get; private set; }
 
+        /*
+         * Initialise the SpriteBatch, SkeletonRenderer and ImpassableTiles collection.
+         */
         public Render(GraphicsDevice GraphicsDevice)
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -117,16 +119,16 @@ namespace Logic.Game.Graphics
                 {
                     int tile = tileLocations[x, y]; // Get the value of the current tile
 
-                    if (tile > -1)
+                    if (tile > -1) // If it's a renderable tile
                     {
-                        string tileName = string.Concat(tileID + tile.ToString());
-                        sortByYAxis.Add(tileName, position);
-                        tileID++;
+                        string tileName = string.Concat(tileID + tile.ToString()); // Give it a unique ID
+                        sortByYAxis.Add(tileName, position); // And add it to the collection
+                        tileID++; // Iterate the ID by 1
 
-                        if (impassable)
+                        if (impassable) // If it's an impassable tile
                         {
-                            Rectangle tileArea = new Rectangle((int)position.X, (int)position.Y, map.Width, map.Height);
-                            ImpassableTiles.Add(tileArea);
+                            Rectangle tileArea = new Rectangle((int)position.X, (int)position.Y, map.Width, map.Height); // Get the area of the map it occupies
+                            ImpassableTiles.Add(tileArea); // And add it to the collection of impassable tile spaces
                         }
                     }
 
@@ -140,45 +142,45 @@ namespace Logic.Game.Graphics
         }
 
         /*
-         * Create a list of rectangles containing the impassable map areas.
+         * Group impassable tile spaces into a collection of rows containing the impassable map areas.
          */
         public void ImpassableMapArea()
         {
-            Rectangle block = ImpassableTiles[0];
-            impassableArea = [];
+            Rectangle block = ImpassableTiles[0]; // Take the first impassable tile space in the collection as the first block to compare
+            List<Rectangle> impassableArea = []; // Ready a temporary empty collection to store the grouped impassable map areas
 
-            foreach (Rectangle area in ImpassableTiles)
+            foreach (Rectangle area in ImpassableTiles) // For each impassable tile space in the collection created on map generation
             {
-                if (block.Bottom != area.Bottom)
+                if (block.Bottom != area.Bottom) // If the block being compared against is not in the same row as, or is taller than, this tile space
                 {
-                    AddBlock(block, impassableArea);
-                    block = area;
+                    AddBlock(block, impassableArea); // Add it to the new collection
+                    block = area; // Take the current impassable tile space as the next block to compare
                 }
-                if (block.Bottom == area.Bottom && block.Y == area.Y)
+                if (block.Bottom == area.Bottom && block.Y == area.Y) // If this block is in the same row as this space and is the same height
                 {
-                    if (block.Right == area.Left)
+                    if (block.Right == area.Left) // If its x-axis end point is the same as this area's start point
                     {
-                        block.Width += area.Width;
+                        block.Width += area.Width; // Combine their widths so the block encompasses both spaces
                     }
-                    else if (block != area)
+                    else if (block != area) // Otherwise, provided they do not represent the same tile space
                     {
-                        AddBlock(block, impassableArea);
-                        block = area;
+                        AddBlock(block, impassableArea); // Add this block to the collection of impassable map spaces
+                        block = area; // Take the current impassable tile space as the next block to compare
                     }
                 }
             }
-            AddBlock(block, impassableArea);
+            AddBlock(block, impassableArea); // Add the final block to the collection of impassable map areas once there are no more tile spaces to compare against
 
-            ImpassableTiles = impassableArea;
+            ImpassableTiles = impassableArea; // Update the original collection with the new collection
         }
 
         /*
          * Add the current block to the list of walkable areas.
          */
-        public void AddBlock(Rectangle block, List<Rectangle> walkableArea)
+        public void AddBlock(Rectangle block, List<Rectangle> impassableArea)
         {
             block.Y -= block.Height;
-            walkableArea.Add(block);
+            impassableArea.Add(block);
         }
 
         /*
@@ -186,13 +188,13 @@ namespace Logic.Game.Graphics
          */
         public void DrawMap(Texture2DAtlas atlas, Map map, string tileName, Vector2 position)
         {
-            string tile = tileName.Remove(0, 4);
+            string tile = tileName.Remove(0, 4); // Remove the unique ID to get the atlas position
             int tileNumber = Convert.ToInt32(tile);
 
-            // Offset drawing position by tile height to draw in front of the components that use a different positioning reference
+            // Offset drawing position by tile height to draw in front of any components using a different positioning reference
             position.Y -= (float)(map.Height * 1.25);
 
-            spriteBatch.Draw(atlas[tileNumber], position, Color.White);
+            spriteBatch.Draw(atlas[tileNumber], position, Color.White); // Draw the tile to the screen
         }
 
         /*

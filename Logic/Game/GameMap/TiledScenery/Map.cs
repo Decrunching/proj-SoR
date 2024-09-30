@@ -2,8 +2,6 @@
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
 using System;
-using System.Collections.Generic;
-using System.Windows.Documents;
 
 namespace Logic.Game.GameMap.TiledScenery
 {
