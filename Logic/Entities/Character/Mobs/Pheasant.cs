@@ -24,13 +24,11 @@ namespace Logic.Entities.Character.Mobs
 
             // Load texture atlas and attachment loader
             atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Entities\\Pheasant\\savedthepheasant.atlas"), new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Pheasant\\savedthepheasant.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
             skeletonData = json.ReadSkeletonData(Globals.GetPath("Content\\SoR Resources\\Entities\\Pheasant\\skeleton.json"));
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Pheasant\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin

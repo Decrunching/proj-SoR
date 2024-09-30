@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using SoR.Logic.Input;
 using Spine;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Logic.Entities.Character
 {
@@ -51,6 +52,7 @@ namespace Logic.Entities.Character
         protected Vector2 position;
         protected Vector2 prevPosition;
         protected int hitpoints;
+        protected string skin;
         protected string prevTrigger;
         protected string animOne;
         protected string animTwo;

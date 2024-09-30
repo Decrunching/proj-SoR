@@ -22,17 +22,31 @@ namespace Logic.Game.Screens
          */
         public void UpdateGameState(GameTime gameTime, MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            gameLogic.UpdateWorld(gameTime, graphics);
-
-            foreach (var entity in gameLogic.Entities.Values)
+            gameLogic.SaveLoadGameData();
+            switch (gameLogic.CurrentMapString)
             {
-                if (gameLogic.Entities.TryGetValue("chara", out Entity chara))
-                {
-                    if (chara.GetHitPoints() <= 98)
+                case "none":
+                    gameLogic.UpdateWorld(gameTime, graphics);
+
+                    foreach (var entity in gameLogic.Entities.Values)
                     {
-                        gameLogic.Temple(game, GraphicsDevice, true);
+                        if (gameLogic.Entities.TryGetValue("chara", out Entity chara))
+                        {
+                            if (chara.GetHitPoints() <= 98)
+                            {
+                                gameLogic.Temple(game, GraphicsDevice, true);
+                            }
+                        }
                     }
-                }
+                    break;
+                case "village":
+                    gameLogic.Village(game, GraphicsDevice, true);
+                    gameLogic.CurrentMapString = "none";
+                    break;
+                case "temple":
+                    gameLogic.Temple(game, GraphicsDevice, true);
+                    gameLogic.CurrentMapString = "none";
+                    break;
             }
         }
     }

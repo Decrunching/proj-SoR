@@ -10,6 +10,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework.Input;
 
 namespace Logic.Game.Screens
 {
@@ -21,6 +22,7 @@ namespace Logic.Game.Screens
     {
         private EntityType entityType;
         private SceneryType sceneryType;
+        private CurrentMap currentMapEnum;
         private Map map;
         private Render render;
         private Camera camera;
@@ -31,10 +33,16 @@ namespace Logic.Game.Screens
         private Dictionary<string, Vector2> mapFloorDecor;
         private List<Vector2> positions;
         private List<Rectangle> impassableArea;
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
+        private GamePadState gamePadState;
+        private GamePadState lastGamePadState;
+        private GamePadCapabilities gamePadCapabilities;
         private bool hasUpperWalls;
         private bool hasFloorDecor;
         public Dictionary<string, Entity> Entities { get; set; }
         public Dictionary<string, Scenery> Scenery { get; set; }
+        public string CurrentMapString { get; set; }
 
         /*
          * Differentiate between entities.
@@ -57,12 +65,34 @@ namespace Logic.Game.Screens
         }
 
         /*
+         * The game map currently in use.
+         */
+        enum CurrentMap
+        {
+            Village,
+            Temple
+        }
+
+        /*
          * Constructor for initial game setup.
          */
         public GameLogic(GraphicsDevice GraphicsDevice, GameWindow Window)
         {
-            // Set up the camera
             camera = new Camera(Window, GraphicsDevice, 800, 600);
+            gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
+
+            CurrentMapString = "none";
+            hasFloorDecor = false;
+            hasUpperWalls = false;
+
+            Entities = [];
+            Scenery = [];
+            mapLowerWalls = [];
+            mapUpperWalls = [];
+            mapFloor = [];
+            mapFloorDecor = [];
+            positions = [];
+            impassableArea = [];
         }
 
         /*
@@ -74,6 +104,7 @@ namespace Logic.Game.Screens
             {
                 // Get the map to be used
                 map = new Map(1);
+                currentMapEnum = CurrentMap.Village;
                 LoadGameContent(GraphicsDevice, game);
                 hasFloorDecor = true;
                 hasUpperWalls = false;
@@ -112,6 +143,7 @@ namespace Logic.Game.Screens
             {
                 // Get the map to be used
                 map = new Map(0);
+                currentMapEnum = CurrentMap.Temple;
                 LoadGameContent(GraphicsDevice, game);
                 hasFloorDecor = false;
                 hasUpperWalls = true;
@@ -144,6 +176,76 @@ namespace Logic.Game.Screens
                 CreateObject(GraphicsDevice, 224, 160);
             }
         }
+
+        /*
+         * Save or load game data according to player input.
+         */
+        public void SaveLoadGameData()
+        {
+            keyState = Keyboard.GetState(); // Get the current keyboard state
+
+            if (gamePadCapabilities.IsConnected) // If the gamepad is connected
+            {
+                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
+
+                if (gamePadState.Buttons.B == ButtonState.Pressed && lastGamePadState.Buttons.B != ButtonState.Pressed)
+                {
+                    foreach (var entity in Entities.Values)
+                    {
+                        if (Entities.TryGetValue("player", out Entity player))
+                        {
+                            switch (currentMapEnum)
+                            {
+                                case CurrentMap.Village:
+                                    CurrentMapString = "village";
+                                    break;
+                                case CurrentMap.Temple:
+                                    CurrentMapString = "temple";
+                                    break;
+                            }
+                            GameState.SaveFile(player, player.Name, CurrentMapString);
+                            CurrentMapString = "none";
+                            break;
+                        }
+                    }
+                }
+                if (gamePadState.Buttons.A == ButtonState.Pressed && lastGamePadState.Buttons.A != ButtonState.Pressed)
+                {
+                    GameState.LoadFile();
+                }
+
+                lastGamePadState = gamePadState;
+            }
+
+            if (keyState.IsKeyDown(Keys.F8) && !lastKeyState.IsKeyDown(Keys.F8))
+            {
+                foreach (var entity in Entities.Values)
+                {
+                    if (Entities.TryGetValue("player", out Entity player))
+                    {
+                        switch (currentMapEnum)
+                        {
+                            case CurrentMap.Village:
+                                CurrentMapString = "village";
+                                break;
+                            case CurrentMap.Temple:
+                                CurrentMapString = "temple";
+                                break;
+                        }
+                        GameState.SaveFile(player, player.Name, CurrentMapString);
+                        CurrentMapString = "none";
+                        break;
+                    }
+                }
+            }
+            if (keyState.IsKeyDown(Keys.F9) && !lastKeyState.IsKeyDown(Keys.F9))
+            {
+                GameState.LoadFile();
+            }
+
+            lastKeyState = keyState;
+        }
+
         /*
          * Load initial content into the game.
          */

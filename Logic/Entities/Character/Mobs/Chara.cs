@@ -26,13 +26,11 @@ namespace Logic.Entities.Character.Mobs
 
             // Load texture atlas and attachment loader
             atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Entities\\Chara\\savedit.atlas"), new XnaTextureLoader(GraphicsDevice));
-            //atlas = new Atlas("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Chara\\savedit.atlas", new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
             skeletonData = json.ReadSkeletonData(Globals.GetPath("Content\\SoR Resources\\Entities\\Chara\\skeleton.json"));
-            //skeletonData = json.ReadSkeletonData("D:\\GitHub projects\\Proj-SoR\\Content\\Entities\\Chara\\skeleton.json");
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin

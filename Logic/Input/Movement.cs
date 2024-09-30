@@ -25,7 +25,6 @@ namespace SoR.Logic.Input
         private Vector2 direction;
         private bool idle;
         private string lastPressedKey;
-        private int turnAround;
         private string animation;
         private float sinceLastChange;
         private float newDirectionTime;
@@ -52,7 +51,6 @@ namespace SoR.Logic.Input
             BeenPushed = false;
 
             // Dictionary to store the input keys, whether they are currently up or pressed, and which animation to apply
-            // TO DO: Simplify to remove duplicated code
             inputKeys = new Dictionary<Keys, InputKeys>()
             {
             { Keys.Up, new InputKeys(keyState.IsKeyDown(Keys.Up), "runup") },
@@ -129,7 +127,7 @@ namespace SoR.Logic.Input
             }
 
             // Set player animation and position according to keyboard input
-            foreach (var key in inputKeys.Keys)
+            foreach (var key in inputKeys.Keys) // Check the state of the movement input keys
             {
                 bool pressed = keyState.IsKeyDown(key);
                 bool previouslyPressed = lastKeyState.IsKeyDown(key);
@@ -495,14 +493,6 @@ namespace SoR.Logic.Input
         public string AnimateMovement()
         {
             return animation;
-        }
-
-        /*
-         * Return the current direction to face. 1 = left, 2 = right, 3 = up, 4 = down.
-         */
-        public int TurnAround()
-        {
-            return turnAround;
         }
 
         /*

@@ -15,7 +15,6 @@ namespace Logic.Entities.Character.Player
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
-        private string skin;
         private bool switchSkin;
 
         public Player(GraphicsDevice GraphicsDevice, List<Rectangle> impassableArea)
