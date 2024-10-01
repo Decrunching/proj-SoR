@@ -22,7 +22,6 @@ namespace Logic.Game.Screens
          */
         public void UpdateGameState(GameTime gameTime, MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            gameLogic.SaveLoadGameData();
             switch (gameLogic.CurrentMapString)
             {
                 case "none":
@@ -48,6 +47,7 @@ namespace Logic.Game.Screens
                     gameLogic.CurrentMapString = "none";
                     break;
             }
+            gameLogic.SaveLoadGameData(game, GraphicsDevice);
         }
     }
 }

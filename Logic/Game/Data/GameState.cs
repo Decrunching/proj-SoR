@@ -1,43 +1,45 @@
 ﻿using System;
 using System.IO;
-using System.Collections.Generic;
 using Newtonsoft.Json;
-using Microsoft.Xna.Framework;
-using Logic.Game.GameMap;
 using Logic.Entities.Character;
+using Microsoft.Xna.Framework;
 
-namespace Logic.Game
+namespace Logic.Game.Data
 {
     /*
      * Save game data using JSON serialisation.
      */
     public class GameState
     {
-        public Entity Player { get; set; }
-        public string PlayerName { get; set; }
-        public string SceneryName { get; set; }
+        public Vector2 Position { get; set; }
+        public int HitPoints { get; set; }
+        public string Skin { get; set; }
         public string CurrentMap { get; set; }
 
         /*
          * Save the current game state to a JSON file.
          */
-        public static void SaveFile(Entity player, string playerName, string currentMap)
+        public static void SaveFile(Entity player, string currentMap)
         {
-            GameState save = new GameState
+            GameState save = new()
             {
-                Player = player,
-                PlayerName = playerName,
+                Position = player.Position,
+                HitPoints = player.HitPoints,
+                Skin = player.Skin,
                 CurrentMap = currentMap
             };
 
             var jsonSettings = new JsonSerializerSettings
             {
-                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+                TypeNameHandling = TypeNameHandling.Auto
             };
 
-            string jsonData = JsonConvert.SerializeObject(save, jsonSettings);
+            string jsonData = JsonConvert.SerializeObject(save, Formatting.Indented, jsonSettings);
 
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "saveFile.json");
+            Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SoR"));
+
+            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SoR\\saveFile.json");
 
             File.WriteAllText(filePath, jsonData);
         }
@@ -47,7 +49,7 @@ namespace Logic.Game
          */
         public static GameState LoadFile()
         {
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "saveFile.json");
+            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SoR\\saveFile.json");
 
             if (File.Exists(filePath))
             {

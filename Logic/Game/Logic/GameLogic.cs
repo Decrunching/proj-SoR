@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
+using Logic.Game.Data;
 
 namespace Logic.Game.Screens
 {
@@ -180,7 +181,7 @@ namespace Logic.Game.Screens
         /*
          * Save or load game data according to player input.
          */
-        public void SaveLoadGameData()
+        public void SaveLoadGameData(MainGame game, GraphicsDevice GraphicsDevice)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
@@ -203,7 +204,7 @@ namespace Logic.Game.Screens
                                     CurrentMapString = "temple";
                                     break;
                             }
-                            GameState.SaveFile(player, player.Name, CurrentMapString);
+                            GameState.SaveFile(player, CurrentMapString);
                             CurrentMapString = "none";
                             break;
                         }
@@ -211,7 +212,27 @@ namespace Logic.Game.Screens
                 }
                 if (gamePadState.Buttons.A == ButtonState.Pressed && lastGamePadState.Buttons.A != ButtonState.Pressed)
                 {
-                    GameState.LoadFile();
+                    GameState gameState = GameState.LoadFile();
+
+                    switch (gameState.CurrentMap)
+                    {
+                        case "village":
+                            Village(game, GraphicsDevice, true);
+                            break;
+                        case "temple":
+                            Temple(game, GraphicsDevice, true);
+                            break;
+                    }
+
+                    foreach (var entity in Entities.Values)
+                    {
+                        if (Entities.TryGetValue("player", out Entity player))
+                        {
+                            player.Position = gameState.Position;
+                            player.HitPoints = gameState.HitPoints;
+                            player.Skin = gameState.Skin;
+                        }
+                    }
                 }
 
                 lastGamePadState = gamePadState;
@@ -232,7 +253,7 @@ namespace Logic.Game.Screens
                                 CurrentMapString = "temple";
                                 break;
                         }
-                        GameState.SaveFile(player, player.Name, CurrentMapString);
+                        GameState.SaveFile(player, CurrentMapString);
                         CurrentMapString = "none";
                         break;
                     }
@@ -240,7 +261,27 @@ namespace Logic.Game.Screens
             }
             if (keyState.IsKeyDown(Keys.F9) && !lastKeyState.IsKeyDown(Keys.F9))
             {
-                GameState.LoadFile();
+                GameState gameState = GameState.LoadFile();
+
+                switch (gameState.CurrentMap)
+                {
+                    case "village":
+                        Village(game, GraphicsDevice, true);
+                        break;
+                    case "temple":
+                        Temple(game, GraphicsDevice, true);
+                        break;
+                }
+
+                foreach (var entity in Entities.Values)
+                {
+                    if (Entities.TryGetValue("player", out Entity player))
+                    {
+                        player.Position = gameState.Position;
+                        player.HitPoints = gameState.HitPoints;
+                        player.Skin = gameState.Skin;
+                    }
+                }
             }
 
             lastKeyState = keyState;
@@ -265,35 +306,35 @@ namespace Logic.Game.Screens
             switch (entityType)
             {
                 case EntityType.Player:
-                    Entities.Add("player", new Player(GraphicsDevice, impassableArea) { Name = "player" });
+                    Entities.Add("player", new Player(GraphicsDevice, impassableArea) { Type = "player" });
                     if (Entities.TryGetValue("player", out Entity player))
                     {
                         player.SetPosition(positionX, positionY);
                     }
                     break;
                 case EntityType.Pheasant:
-                    Entities.Add("pheasant", new Pheasant(GraphicsDevice, impassableArea) { Name = "pheasant" });
+                    Entities.Add("pheasant", new Pheasant(GraphicsDevice, impassableArea) { Type = "pheasant" });
                     if (Entities.TryGetValue("pheasant", out Entity pheasant))
                     {
                         pheasant.SetPosition(positionX, positionY);
                     }
                     break;
                 case EntityType.Chara:
-                    Entities.Add("chara", new Chara(GraphicsDevice, impassableArea) { Name = "chara" });
+                    Entities.Add("chara", new Chara(GraphicsDevice, impassableArea) { Type = "chara" });
                     if (Entities.TryGetValue("chara", out Entity chara))
                     {
                         chara.SetPosition(positionX, positionY);
                     }
                     break;
                 case EntityType.Slime:
-                    Entities.Add("slime", new Slime(GraphicsDevice, impassableArea) { Name = "slime" });
+                    Entities.Add("slime", new Slime(GraphicsDevice, impassableArea) { Type = "slime" });
                     if (Entities.TryGetValue("slime", out Entity slime))
                     {
                         slime.SetPosition(positionX, positionY);
                     }
                     break;
                 case EntityType.Fishy:
-                    Entities.Add("fishy", new Fishy(GraphicsDevice, impassableArea) { Name = "fishy" });
+                    Entities.Add("fishy", new Fishy(GraphicsDevice, impassableArea) { Type = "fishy" });
                     if (Entities.TryGetValue("fishy", out Entity fishy))
                     {
                         fishy.SetPosition(positionX, positionY);
@@ -393,7 +434,7 @@ namespace Logic.Game.Screens
          */
         public void RefreshPositions()
         {
-            positions = new List<Vector2>();
+            positions = [];
             foreach (var scenery in Scenery.Values)
             {
                 if (!positions.Contains(scenery.GetPosition()))

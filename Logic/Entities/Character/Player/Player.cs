@@ -5,6 +5,7 @@ using SoR;
 using SoR.Logic.Input;
 using Spine;
 using System.Collections.Generic;
+using Newtonsoft.Json;
 
 namespace Logic.Entities.Character.Player
 {
@@ -17,6 +18,7 @@ namespace Logic.Entities.Character.Player
         private KeyboardState lastKeyState;
         private bool switchSkin;
 
+        [JsonConstructor]
         public Player(GraphicsDevice GraphicsDevice, List<Rectangle> impassableArea)
         {
             // The possible animations to play as a string and the method to use for playing them as an int
@@ -40,7 +42,7 @@ namespace Logic.Entities.Character.Player
 
             // Set the skin
             skeleton.SetSkin(skeletonData.FindSkin("solarknight-0"));
-            skin = "solarknight-0";
+            Skin = "solarknight-0";
 
             // Setup animation
             animStateData = new AnimationStateData(skeleton.Data);
@@ -64,7 +66,7 @@ namespace Logic.Entities.Character.Player
             Player = true;
 
             Speed = 100f; // Set the entity's travel speed
-            hitpoints = 100; // Set the starting number of hitpoints
+            HitPoints = 100; // Set the starting number of hitpoints
 
             ImpassableArea = impassableArea;
         }
@@ -115,19 +117,19 @@ namespace Logic.Entities.Character.Player
         {
             if (switchSkin)
             {
-                switch (skin)
+                switch (Skin)
                 {
                     case "solarknight-0":
                         skeleton.SetSkin(skeletonData.FindSkin("lunarknight-0"));
-                        skin = "lunarknight-0";
+                        Skin = "lunarknight-0";
                         break;
                     case "lunarknight-0":
                         skeleton.SetSkin(skeletonData.FindSkin("knight-0"));
-                        skin = "knight-0";
+                        Skin = "knight-0";
                         break;
                     case "knight-0":
                         skeleton.SetSkin(skeletonData.FindSkin("solarknight-0"));
-                        skin = "solarknight-0";
+                        Skin = "solarknight-0";
                         break;
                 }
             }
@@ -140,7 +142,7 @@ namespace Logic.Entities.Character.Player
         {
             entity.TakeDamage(1);
             entity.ChangeAnimation("hit");
-            movement.RepelledFromEntity(position, 4, entity);
+            movement.RepelledFromEntity(Position, 4, entity);
         }
 
         /*
@@ -149,12 +151,12 @@ namespace Logic.Entities.Character.Player
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             BeMoved(gameTime);
-            movement.CheckMovement(position);
+            movement.CheckMovement(Position);
 
             movement.AdjustPosition(gameTime, this, ImpassableArea);
-            position = movement.UpdatePosition();
+            Position = movement.UpdatePosition();
 
-            prevPosition = position;
+            prevPosition = Position;
         }
 
         /*

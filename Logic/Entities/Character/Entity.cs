@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using SoR.Logic.Input;
 using Spine;
 using System.Collections.Generic;
-using Newtonsoft.Json;
 
 namespace Logic.Entities.Character
 {
@@ -33,7 +32,7 @@ namespace Logic.Entities.Character
     /*
      * Common functions and fields for player and non-player characters.
      */
-    public abstract class Entity
+    public class Entity
     {
         protected Dictionary<string, int> animations;
         protected Atlas atlas;
@@ -49,25 +48,25 @@ namespace Logic.Entities.Character
         protected Slot slot;
         protected TrackEntry trackEntry;
         protected Movement movement;
-        protected Vector2 position;
         protected Vector2 prevPosition;
-        protected int hitpoints;
-        protected string skin;
         protected string prevTrigger;
         protected string animOne;
         protected string animTwo;
         protected bool inMotion;
         public List<Rectangle> ImpassableArea { get; protected set; }
+        public Vector2 Position { get; set; }
         public bool Player { get; set; }
-        public string Name { get; set; }
+        public string Type { get; set; }
+        public int HitPoints { get; set; }
         public float Speed { get; set; }
+        public string Skin { get; set; }
 
         /*
          * Placeholder function for dealing damage.
          */
         public void TakeDamage(int damage)
         {
-            hitpoints -= damage;
+            HitPoints -= damage;
         }
 
         /*
@@ -94,7 +93,7 @@ namespace Logic.Entities.Character
         {
             inMotion = false;
             ChangeAnimation("idle");
-            position = prevPosition;
+            Position = prevPosition;
         }
 
         /*
@@ -193,7 +192,7 @@ namespace Logic.Entities.Character
         {
             entity.TakeDamage(1);
             entity.ChangeAnimation("hit");
-            movement.RepelledFromEntity(position, 10, entity);
+            movement.RepelledFromEntity(Position, 10, entity);
         }
 
         /*
@@ -203,7 +202,7 @@ namespace Logic.Entities.Character
         {
             TakeDamage(1);
             ChangeAnimation("hit");
-            movement.RepelledFromScenery(position, 5, scenery);
+            movement.RepelledFromScenery(Position, 5, scenery);
         }
 
         /*
@@ -215,9 +214,9 @@ namespace Logic.Entities.Character
             movement.NonPlayerMovement(gameTime, this);
 
             movement.AdjustPosition(gameTime, this, ImpassableArea);
-            position = movement.UpdatePosition();
+            Position = movement.UpdatePosition();
 
-            prevPosition = position;
+            prevPosition = Position;
             movement.DirectionReversed = false;
         }
 
@@ -234,8 +233,8 @@ namespace Logic.Entities.Character
          */
         public virtual void UpdateAnimations(GameTime gameTime)
         {
-            skeleton.X = position.X;
-            skeleton.Y = position.Y;
+            skeleton.X = Position.X;
+            skeleton.Y = Position.Y;
 
             hitbox.Update(skeleton, true);
             animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -251,7 +250,7 @@ namespace Logic.Entities.Character
          */
         public void SetPosition(float xAdjustment, float yAdjustment)
         {
-            position = new Vector2(xAdjustment, yAdjustment);
+            Position = new Vector2(xAdjustment, yAdjustment);
         }
 
         /*
@@ -283,7 +282,7 @@ namespace Logic.Entities.Character
          */
         public Vector2 GetPosition()
         {
-            return position;
+            return Position;
         }
 
         /*
@@ -291,7 +290,15 @@ namespace Logic.Entities.Character
          */
         public int GetHitPoints()
         {
-            return hitpoints;
+            return HitPoints;
+        }
+
+        /*
+         * Get the current skin.
+         */
+        public string GetSkin()
+        {
+            return Skin;
         }
     }
 }
