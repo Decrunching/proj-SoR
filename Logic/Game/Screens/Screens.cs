@@ -12,7 +12,7 @@ namespace Logic.Game.Screens
     {
         private GameLogic gameLogic;
 
-        public Screens(GraphicsDevice GraphicsDevice, GameWindow Window)
+        public Screens(GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics, GameWindow Window)
         {
             gameLogic = new GameLogic(GraphicsDevice, Window);
         }
@@ -24,6 +24,10 @@ namespace Logic.Game.Screens
         {
             switch (gameLogic.CurrentMapString)
             {
+                case "mainMenu":
+                    gameLogic.GameMainMenu(game, GraphicsDevice, graphics);
+                    gameLogic.CurrentMapString = "none";
+                    break;
                 case "none":
                     gameLogic.UpdateWorld(gameTime, graphics);
 
@@ -33,17 +37,17 @@ namespace Logic.Game.Screens
                         {
                             if (chara.GetHitPoints() <= 98)
                             {
-                                gameLogic.Temple(game, GraphicsDevice, true);
+                                gameLogic.Temple(game, GraphicsDevice);
                             }
                         }
                     }
                     break;
                 case "village":
-                    gameLogic.Village(game, GraphicsDevice, true);
+                    gameLogic.Village(game, GraphicsDevice);
                     gameLogic.CurrentMapString = "none";
                     break;
                 case "temple":
-                    gameLogic.Temple(game, GraphicsDevice, true);
+                    gameLogic.Temple(game, GraphicsDevice);
                     gameLogic.CurrentMapString = "none";
                     break;
             }

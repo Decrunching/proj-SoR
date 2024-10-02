@@ -90,6 +90,24 @@ namespace Logic.Game.Graphics
         }
 
         /*
+         * Draw the text for the main menu.
+         */
+        public void MainMenuText(string menuItem, Vector2 position, SpriteFont font, Color colour, float scale)
+        {
+            // Entity text
+            spriteBatch.DrawString(
+            font,
+                menuItem,
+                new Vector2(position.X, position.Y),
+                colour,
+                0,
+                new Vector2(0, 0),
+                scale,
+                SpriteEffects.None,
+                0);
+        }
+
+        /*
          * Draw SpriteBatch for scenery.
          */
         public void DrawScenerySpriteBatch( Scenery scenery, SpriteFont font)

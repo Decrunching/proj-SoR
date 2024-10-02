@@ -62,7 +62,7 @@ namespace SoR
 
             graphicsSettings = new GraphicsSettings(game, graphics, Window);
 
-            screens = new Screens(GraphicsDevice, Window);
+            screens = new Screens(GraphicsDevice, graphics, Window);
 
             base.Initialize();
         }
@@ -72,7 +72,7 @@ namespace SoR
          */
         protected override void LoadContent()
         {
-            screens.LoadGameState(game, GraphicsDevice);
+            screens.LoadGameState(game, GraphicsDevice, graphics);
         }
 
         /*

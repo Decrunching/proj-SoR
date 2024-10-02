@@ -9,9 +9,11 @@ using Logic.Entities.Character.Mobs;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.Xna.Framework.Input;
 using Logic.Game.Data;
+using System.Linq;
+using Logic.Game.UI;
+using System.Windows.Controls;
 
 namespace Logic.Game.Screens
 {
@@ -24,6 +26,7 @@ namespace Logic.Game.Screens
         private EntityType entityType;
         private SceneryType sceneryType;
         private CurrentMap currentMapEnum;
+        private MainMenu mainMenu;
         private Map map;
         private Render render;
         private Camera camera;
@@ -66,15 +69,6 @@ namespace Logic.Game.Screens
         }
 
         /*
-         * The game map currently in use.
-         */
-        enum CurrentMap
-        {
-            Village,
-            Temple
-        }
-
-        /*
          * Constructor for initial game setup.
          */
         public GameLogic(GraphicsDevice GraphicsDevice, GameWindow Window)
@@ -94,88 +88,6 @@ namespace Logic.Game.Screens
             mapFloorDecor = [];
             positions = [];
             impassableArea = [];
-        }
-
-        /*
-         * Create or dismantle the Village scene.
-         */
-        public void Village(MainGame game, GraphicsDevice GraphicsDevice, bool create)
-        {
-            if (create)
-            {
-                // Get the map to be used
-                map = new Map(1);
-                currentMapEnum = CurrentMap.Village;
-                LoadGameContent(GraphicsDevice, game);
-                hasFloorDecor = true;
-                hasUpperWalls = false;
-
-                // Create the map
-                map.LoadMap(game.Content, map.FloorSpriteSheet, map.WallSpriteSheet, map.FloorDecorSpriteSheet);
-                mapLowerWalls = render.CreateMap(map, map.LowerWalls, true);
-                mapUpperWalls = [];
-                mapFloor = render.CreateMap(map, map.Floor);
-                mapFloorDecor = render.CreateMap(map, map.FloorDecor);
-                render.ImpassableMapArea();
-                impassableArea = render.ImpassableTiles;
-
-                // Re-initialise the entity and scenery arrays
-                Entities = [];
-                Scenery = [];
-
-                // Create entities
-                entityType = EntityType.Player;
-                CreateEntity(GraphicsDevice, 250, 200);
-
-                entityType = EntityType.Chara;
-                CreateEntity(GraphicsDevice, 200, 250);
-
-                entityType = EntityType.Pheasant;
-                CreateEntity(GraphicsDevice, 250, 250);
-            }
-        }
-
-        /*
-         * Create or dismantle the Temple scene.
-         */
-        public void Temple(MainGame game, GraphicsDevice GraphicsDevice, bool create)
-        {
-            if (create)
-            {
-                // Get the map to be used
-                map = new Map(0);
-                currentMapEnum = CurrentMap.Temple;
-                LoadGameContent(GraphicsDevice, game);
-                hasFloorDecor = false;
-                hasUpperWalls = true;
-
-                // Create the map
-                map.LoadMap(game.Content, map.FloorSpriteSheet, map.WallSpriteSheet);
-                mapLowerWalls = render.CreateMap(map, map.LowerWalls, true);
-                mapUpperWalls = render.CreateMap(map, map.UpperWalls);
-                mapFloor = render.CreateMap(map, map.Floor);
-                mapFloorDecor = [];
-                render.ImpassableMapArea();
-                impassableArea = render.ImpassableTiles;
-
-                // Re-initialise the entity and scenery arrays
-                Entities = [];
-                Scenery = [];
-
-                // Create entities
-                entityType = EntityType.Player;
-                CreateEntity(GraphicsDevice, 220, 100);
-
-                entityType = EntityType.Fishy;
-                CreateEntity(GraphicsDevice, 280, 180);
-
-                entityType = EntityType.Slime;
-                CreateEntity(GraphicsDevice, 250, 200);
-
-                // Create scenery
-                sceneryType = SceneryType.Campfire;
-                CreateObject(GraphicsDevice, 224, 160);
-            }
         }
 
         /*
@@ -217,10 +129,10 @@ namespace Logic.Game.Screens
                     switch (gameState.CurrentMap)
                     {
                         case "village":
-                            Village(game, GraphicsDevice, true);
+                            Village(game, GraphicsDevice);
                             break;
                         case "temple":
-                            Temple(game, GraphicsDevice, true);
+                            Temple(game, GraphicsDevice);
                             break;
                     }
 
@@ -266,10 +178,10 @@ namespace Logic.Game.Screens
                 switch (gameState.CurrentMap)
                 {
                     case "village":
-                        Village(game, GraphicsDevice, true);
+                        Village(game, GraphicsDevice);
                         break;
                     case "temple":
-                        Temple(game, GraphicsDevice, true);
+                        Temple(game, GraphicsDevice);
                         break;
                 }
 
@@ -296,6 +208,8 @@ namespace Logic.Game.Screens
 
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
+
+            currentMapEnum = CurrentMap.MainMenu;
         }
 
         /*
@@ -430,7 +344,7 @@ namespace Logic.Game.Screens
         }
 
         /*
-         * Get the positions of game components before rendering.
+         * Get the positions of game elements before rendering.
          */
         public void RefreshPositions()
         {
@@ -456,80 +370,114 @@ namespace Logic.Game.Screens
         }
 
         /*
-         * Render game components in order of y-axis position.
+         * Render game elements in order of y-axis position.
          */
         public void Render(GraphicsDevice GraphicsDevice)
         {
-            GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour to "dark sea green"
-
-            foreach (var tileName in mapFloor)
+            switch (currentMapEnum)
             {
-                render.StartDrawingSpriteBatch(camera.GetCamera());
-                render.DrawMap(map.GetFloorAtlas(), map, tileName.Key, tileName.Value);
-                render.FinishDrawingSpriteBatch();
-            }
-            if (hasFloorDecor)
-            {
-                foreach (var tileName in mapFloorDecor)
-                {
+                case CurrentMap.MainMenu:
+                    GraphicsDevice.Clear(Color.Black); // Clear the graphics buffer and set the window background colour
                     render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.DrawMap(map.GetFloorDecorAtlas(), map, tileName.Key, tileName.Value);
+                    render.MainMenuText(mainMenu.MenuOptions[0], mainMenu.TitlePosition, font, Color.GhostWhite, 2.5f);
+                    render.MainMenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.Gray, 1);
+                    render.MainMenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.Gray, 1);
+                    render.MainMenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.Gray, 1);
+                    render.MainMenuText(mainMenu.MenuOptions[4], mainMenu.GameSettingsPosition, font, Color.Gray, 1);
+
+                    switch (mainMenu.NavigateMenu())
+                    {
+                        case 0:
+                            render.MainMenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.GhostWhite, 1);
+                            break;
+                        case 1:
+                            render.MainMenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.GhostWhite, 1);
+                            break;
+                        case 2:
+                            render.MainMenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.GhostWhite, 1);
+                            break;
+                        case 3:
+                            render.MainMenuText(mainMenu.MenuOptions[4], mainMenu.GameSettingsPosition, font, Color.GhostWhite, 1);
+                            break;
+                    }
+
                     render.FinishDrawingSpriteBatch();
-                }
-            }
+                    break;
 
-            RefreshPositions();
-            var sortPositionsByYAxis = positions.OrderBy(position => position.Y);
+                default:
+                    GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour
 
-            // Draw components to the screen in order of y-axis position
-            foreach (var position in sortPositionsByYAxis)
-            {
-                render.StartDrawingSpriteBatch(camera.GetCamera());
-                foreach (var entity in Entities.Values)
-                {
-                    if (entity.GetPosition().Y == position.Y)
-                    {
-                        // Draw skeletons
-                        render.StartDrawingSkeleton(GraphicsDevice, camera);
-                        render.DrawEntitySkeleton(entity);
-                        render.FinishDrawingSkeleton();
-
-                        render.DrawEntitySpriteBatch(entity, font);
-                    }
-                }
-                foreach (var scenery in Scenery.Values)
-                {
-                    if (scenery.GetPosition().Y == position.Y)
-                    {
-                        // Draw skeletons
-                        render.StartDrawingSkeleton(GraphicsDevice, camera);
-                        render.DrawScenerySkeleton(scenery);
-                        render.FinishDrawingSkeleton();
-
-                        render.DrawScenerySpriteBatch(scenery, font);
-                    }
-                }
-                render.FinishDrawingSpriteBatch();
-
-                foreach (var tileName in mapLowerWalls)
-                {
-                    if (tileName.Value.Y == position.Y && tileName.Value.X == position.X)
+                    foreach (var tileName in mapFloor)
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.DrawMap(map.GetWallAtlas(), map, tileName.Key, position);
+                        render.DrawMap(map.GetFloorAtlas(), map, tileName.Key, tileName.Value);
                         render.FinishDrawingSpriteBatch();
                     }
-                }
-            }
+                    if (hasFloorDecor)
+                    {
+                        foreach (var tileName in mapFloorDecor)
+                        {
+                            render.StartDrawingSpriteBatch(camera.GetCamera());
+                            render.DrawMap(map.GetFloorDecorAtlas(), map, tileName.Key, tileName.Value);
+                            render.FinishDrawingSpriteBatch();
+                        }
+                    }
 
-            if (hasUpperWalls)
-            {
-                foreach (var tileName in mapUpperWalls)
-                {
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.DrawMap(map.GetWallAtlas(), map, tileName.Key, tileName.Value);
-                    render.FinishDrawingSpriteBatch();
-                }
+                    RefreshPositions();
+                    var sortPositionsByYAxis = positions.OrderBy(position => position.Y);
+
+                    // Draw elements to the screen in order of y-axis position
+                    foreach (var position in sortPositionsByYAxis)
+                    {
+                        render.StartDrawingSpriteBatch(camera.GetCamera());
+                        foreach (var entity in Entities.Values)
+                        {
+                            if (entity.GetPosition().Y == position.Y)
+                            {
+                                // Draw skeletons
+                                render.StartDrawingSkeleton(GraphicsDevice, camera);
+                                render.DrawEntitySkeleton(entity);
+                                render.FinishDrawingSkeleton();
+
+                                render.DrawEntitySpriteBatch(entity, font);
+                            }
+                        }
+                        foreach (var scenery in Scenery.Values)
+                        {
+                            if (scenery.GetPosition().Y == position.Y)
+                            {
+                                // Draw skeletons
+                                render.StartDrawingSkeleton(GraphicsDevice, camera);
+                                render.DrawScenerySkeleton(scenery);
+                                render.FinishDrawingSkeleton();
+
+                                render.DrawScenerySpriteBatch(scenery, font);
+                            }
+                        }
+                        render.FinishDrawingSpriteBatch();
+
+                        foreach (var tileName in mapLowerWalls)
+                        {
+                            if (tileName.Value.Y == position.Y && tileName.Value.X == position.X)
+                            {
+                                render.StartDrawingSpriteBatch(camera.GetCamera());
+                                render.DrawMap(map.GetWallAtlas(), map, tileName.Key, position);
+                                render.FinishDrawingSpriteBatch();
+                            }
+                        }
+                    }
+
+                    if (hasUpperWalls)
+                    {
+                        foreach (var tileName in mapUpperWalls)
+                        {
+                            render.StartDrawingSpriteBatch(camera.GetCamera());
+                            render.DrawMap(map.GetWallAtlas(), map, tileName.Key, tileName.Value);
+                            render.FinishDrawingSpriteBatch();
+                        }
+                    }
+                    break;
+
             }
         }
     }

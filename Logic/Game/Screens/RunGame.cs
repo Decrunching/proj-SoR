@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using SoR;
+using System.Drawing;
 
 namespace Logic.Game.Screens
 {
@@ -9,9 +10,9 @@ namespace Logic.Game.Screens
         /*
          * Currently the same every time the game is started, but will be updated later when file saving implemented.
          */
-        public void LoadGameState(MainGame game, GraphicsDevice GraphicsDevice)
+        public void LoadGameState(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            gameLogic.Village(game, GraphicsDevice, true);
+            gameLogic.GameMainMenu(game, GraphicsDevice, graphics);
         }
 
         /*
