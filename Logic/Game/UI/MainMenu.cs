@@ -1,5 +1,8 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Game.Input;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Input.InputListeners;
+using Spine;
 using System.Collections.Generic;
 
 namespace Logic.Game.UI
@@ -9,6 +12,7 @@ namespace Logic.Game.UI
      */
     public class MainMenu
     {
+        private GamePadInput gamePadInput;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
         private GamePadState gamePadState;
@@ -24,6 +28,9 @@ namespace Logic.Game.UI
 
         public MainMenu(GraphicsDeviceManager graphics)
         {
+            gamePadInput = new GamePadInput();
+            gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
+
             select = 0;
 
             MenuOptions = ["Game Title", "Start new game", "Continue", "Load game", "Settings"];
@@ -55,6 +62,15 @@ namespace Logic.Game.UI
                 if (gamePadState.DPad.Up == ButtonState.Pressed &&
                     lastGamePadState.DPad.Up != ButtonState.Pressed &&
                     select > 0)
+                {
+                    select--;
+                }
+
+                if (gamePadState.ThumbSticks.Left.Y < -0.5f && select < 3)
+                {
+                    select++;
+                }
+                else if (gamePadState.ThumbSticks.Left.Y > 0.5f && select > 0)
                 {
                     select--;
                 }

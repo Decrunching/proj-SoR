@@ -18,6 +18,9 @@ namespace Logic.Game.Graphics
         private int screenHeight;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
+        private GamePadState gamePadState;
+        private GamePadState lastGamePadState;
+        private GamePadCapabilities gamePadCapabilities;
         private Vector2 resolution;
 
         public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window)
@@ -34,6 +37,8 @@ namespace Logic.Game.Graphics
             Window.AllowUserResizing = false;
             game.IsMouseVisible = true;
 
+            gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
+
             RestoreWindow(graphics, Window);
         }
 
@@ -43,6 +48,18 @@ namespace Logic.Game.Graphics
         public Vector2 CheckIfBorderlessToggled(GraphicsDeviceManager graphics, GameWindow Window)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
+
+            if (gamePadCapabilities.IsConnected)
+            {
+                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
+
+                if (gamePadState.Buttons.Start == ButtonState.Pressed && lastGamePadState.Buttons.Start != ButtonState.Pressed)
+                {
+                    ToggleBorderlessMode(graphics, Window);
+                    resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+                }
+                lastGamePadState = gamePadState;
+            }
 
             if (keyState.IsKeyDown(Keys.F4) & !lastKeyState.IsKeyDown(Keys.F4))
             {

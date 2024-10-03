@@ -13,7 +13,6 @@ using Microsoft.Xna.Framework.Input;
 using Logic.Game.Data;
 using System.Linq;
 using Logic.Game.UI;
-using System.Windows.Controls;
 
 namespace Logic.Game.Screens
 {

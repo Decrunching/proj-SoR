@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
 using System;
@@ -74,7 +73,7 @@ namespace Logic.Game.Graphics
         /*
          * Trigger if the window resolution changes to update the graphics device, camera and viewport.
          */
-        void OnClientSizeChanged(object sender, EventArgs e)
+        public void OnClientSizeChanged(object sender, EventArgs e)
         {
             if (resolutionChanging)
             {
