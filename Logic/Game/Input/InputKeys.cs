@@ -1,9 +1,9 @@
-﻿namespace SoR.Logic.Input
+﻿namespace Logic.Game.Input
 {
     /*
      * Manage key functions.
      */
-    internal class InputKeys
+    public class InputKeys
     {
         public bool Pressed { get; set; }
         public string NextAnimation { get; set; }

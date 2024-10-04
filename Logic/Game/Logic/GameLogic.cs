@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Input;
 using Logic.Game.Data;
 using System.Linq;
 using Logic.Game.UI;
+using Logic.Game.Input;
 
 namespace Logic.Game.Screens
 {
@@ -30,6 +31,7 @@ namespace Logic.Game.Screens
         private Render render;
         private Camera camera;
         private SpriteFont font;
+        private GamePadInput gamePadInput;
         private Dictionary<string, Vector2> mapLowerWalls;
         private Dictionary<string, Vector2> mapUpperWalls;
         private Dictionary<string, Vector2> mapFloor;
@@ -38,9 +40,6 @@ namespace Logic.Game.Screens
         private List<Rectangle> impassableArea;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
-        private GamePadState gamePadState;
-        private GamePadState lastGamePadState;
-        private GamePadCapabilities gamePadCapabilities;
         private bool hasUpperWalls;
         private bool hasFloorDecor;
         public Dictionary<string, Entity> Entities { get; set; }
@@ -73,7 +72,7 @@ namespace Logic.Game.Screens
         public GameLogic(GraphicsDevice GraphicsDevice, GameWindow Window)
         {
             camera = new Camera(Window, GraphicsDevice, 800, 600);
-            gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
+            gamePadInput = new GamePadInput();
 
             CurrentMapString = "none";
             hasFloorDecor = false;
@@ -90,109 +89,82 @@ namespace Logic.Game.Screens
         }
 
         /*
+         * Save the game to a file.
+         */
+        public void SaveGame()
+        {
+            foreach (var entity in Entities.Values)
+            {
+                if (Entities.TryGetValue("player", out Entity player))
+                {
+                    switch (currentMapEnum)
+                    {
+                        case CurrentMap.Village:
+                            CurrentMapString = "village";
+                            break;
+                        case CurrentMap.Temple:
+                            CurrentMapString = "temple";
+                            break;
+                    }
+                    GameState.SaveFile(player, CurrentMapString);
+                    CurrentMapString = "none";
+                    break;
+                }
+            }
+        }
+
+        /*
+         * Load the game from a file.
+         */
+        public void LoadGame(MainGame game, GraphicsDevice GraphicsDevice)
+        {
+            GameState gameState = GameState.LoadFile();
+
+            switch (gameState.CurrentMap)
+            {
+                case "village":
+                    Village(game, GraphicsDevice);
+                    break;
+                case "temple":
+                    Temple(game, GraphicsDevice);
+                    break;
+            }
+
+            foreach (var entity in Entities.Values)
+            {
+                if (Entities.TryGetValue("player", out Entity player))
+                {
+                    player.Position = gameState.Position;
+                    player.HitPoints = gameState.HitPoints;
+                    player.Skin = gameState.Skin;
+                }
+            }
+        }
+
+        /*
          * Save or load game data according to player input.
          */
-        public void SaveLoadGameData(MainGame game, GraphicsDevice GraphicsDevice)
+        public void SaveLoadInput(MainGame game, GraphicsDevice GraphicsDevice)
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            if (gamePadCapabilities.IsConnected) // If the gamepad is connected
+            switch (gamePadInput.CheckButtonInput())
             {
-                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
-
-                if (gamePadState.Buttons.B == ButtonState.Pressed && lastGamePadState.Buttons.B != ButtonState.Pressed)
-                {
-                    foreach (var entity in Entities.Values)
-                    {
-                        if (Entities.TryGetValue("player", out Entity player))
-                        {
-                            switch (currentMapEnum)
-                            {
-                                case CurrentMap.Village:
-                                    CurrentMapString = "village";
-                                    break;
-                                case CurrentMap.Temple:
-                                    CurrentMapString = "temple";
-                                    break;
-                            }
-                            GameState.SaveFile(player, CurrentMapString);
-                            CurrentMapString = "none";
-                            break;
-                        }
-                    }
-                }
-                if (gamePadState.Buttons.A == ButtonState.Pressed && lastGamePadState.Buttons.A != ButtonState.Pressed)
-                {
-                    GameState gameState = GameState.LoadFile();
-
-                    switch (gameState.CurrentMap)
-                    {
-                        case "village":
-                            Village(game, GraphicsDevice);
-                            break;
-                        case "temple":
-                            Temple(game, GraphicsDevice);
-                            break;
-                    }
-
-                    foreach (var entity in Entities.Values)
-                    {
-                        if (Entities.TryGetValue("player", out Entity player))
-                        {
-                            player.Position = gameState.Position;
-                            player.HitPoints = gameState.HitPoints;
-                            player.Skin = gameState.Skin;
-                        }
-                    }
-                }
-
-                lastGamePadState = gamePadState;
+                case "B":
+                    SaveGame();
+                        break;
+                case "A":
+                    LoadGame(game, GraphicsDevice);
+                    break;
             }
 
             if (keyState.IsKeyDown(Keys.F8) && !lastKeyState.IsKeyDown(Keys.F8))
             {
-                foreach (var entity in Entities.Values)
-                {
-                    if (Entities.TryGetValue("player", out Entity player))
-                    {
-                        switch (currentMapEnum)
-                        {
-                            case CurrentMap.Village:
-                                CurrentMapString = "village";
-                                break;
-                            case CurrentMap.Temple:
-                                CurrentMapString = "temple";
-                                break;
-                        }
-                        GameState.SaveFile(player, CurrentMapString);
-                        CurrentMapString = "none";
-                        break;
-                    }
-                }
+                SaveGame();
             }
             if (keyState.IsKeyDown(Keys.F9) && !lastKeyState.IsKeyDown(Keys.F9))
             {
-                GameState gameState = GameState.LoadFile();
-
-                switch (gameState.CurrentMap)
-                {
-                    case "village":
-                        Village(game, GraphicsDevice);
-                        break;
-                    case "temple":
-                        Temple(game, GraphicsDevice);
-                        break;
-                }
-
-                foreach (var entity in Entities.Values)
-                {
-                    if (Entities.TryGetValue("player", out Entity player))
-                    {
-                        player.Position = gameState.Position;
-                        player.HitPoints = gameState.HitPoints;
-                        player.Skin = gameState.Skin;
-                    }
-                }
+                LoadGame(game, GraphicsDevice);
             }
 
             lastKeyState = keyState;

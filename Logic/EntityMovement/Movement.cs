@@ -1,5 +1,6 @@
 ﻿using Logic.Entities.Character;
 using Logic.Game.GameMap;
+using Logic.Game.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -14,12 +15,11 @@ namespace SoR.Logic.Input
     public class Movement
     {
         private Dictionary<Keys, InputKeys> inputKeys;
-        protected Random random;
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
-        private GamePadState gamePadState;
-        private GamePadState lastGamePadState;
-        private GamePadCapabilities gamePadCapabilities;
+        private Random random;
+        private GamePadInput gamePadInput;
+        private KeyboardInput keyboardInput;
+        /*private KeyboardState keyState;
+        private KeyboardState lastKeyState;*/
         private Vector2 newPosition;
         private Vector2 prevPosition;
         private Vector2 direction;
@@ -36,10 +36,11 @@ namespace SoR.Logic.Input
         public Movement()
         {
             random = new Random();
+            gamePadInput = new GamePadInput();
+            keyboardInput = new KeyboardInput();
 
             idle = true; // Player is currently idle
             lastPressedKey = ""; // Get the last key pressed
-            gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
 
             Traversable = true; // Whether the entity is on walkable terrain
 
@@ -50,18 +51,6 @@ namespace SoR.Logic.Input
             DirectionReversed = false;
             BeenPushed = false;
 
-            // Dictionary to store the input keys, whether they are currently up or pressed, and which animation to apply
-            inputKeys = new Dictionary<Keys, InputKeys>()
-            {
-            { Keys.Up, new InputKeys(keyState.IsKeyDown(Keys.Up), "runup") },
-            { Keys.W, new InputKeys(keyState.IsKeyDown(Keys.W), "runup") },
-            { Keys.Down, new InputKeys(keyState.IsKeyDown(Keys.Down), "rundown") },
-            { Keys.S, new InputKeys(keyState.IsKeyDown(Keys.S), "rundown") },
-            { Keys.Left, new InputKeys(keyState.IsKeyDown(Keys.Left), "runleft") },
-            { Keys.A, new InputKeys(keyState.IsKeyDown(Keys.A), "runleft") },
-            { Keys.Right, new InputKeys(keyState.IsKeyDown(Keys.Right), "runright") },
-            { Keys.D, new InputKeys(keyState.IsKeyDown(Keys.D), "runright") }
-            };
         }
 
         /* 
@@ -82,49 +71,8 @@ namespace SoR.Logic.Input
                 }
             }
 
-            // Set player animation and position according to gamepad input
-            if (gamePadCapabilities.IsConnected) // If the gamepad is connected
-            {
-                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
-
-                if (gamePadState.ThumbSticks.Left.X < -0.5f)
-                {
-                    PlayerJoystickDirection(-1);
-                    animation = "runleft";
-                }
-                else if (gamePadState.ThumbSticks.Left.X > 0.5f)
-                {
-                    PlayerJoystickDirection(1);
-                    animation = "runright";
-                }
-                else if (gamePadState.ThumbSticks.Left.X > -0.5f &&
-                    gamePadState.ThumbSticks.Left.X < 0.5f &&
-                    lastGamePadState.ThumbSticks.Left.X < -0.5f ||
-                    lastGamePadState.ThumbSticks.Left.X > 0.5f)
-                {
-                    direction.X = 0;
-                }
-
-                if (gamePadState.ThumbSticks.Left.Y < -0.5f)
-                {
-                    PlayerJoystickDirection(0, 1);
-                    animation = "rundown";
-                }
-                else if (gamePadState.ThumbSticks.Left.Y > 0.5f)
-                {
-                    PlayerJoystickDirection(0, -1);
-                    animation = "runup";
-                }
-                else if (gamePadState.ThumbSticks.Left.Y > -0.5f &&
-                    gamePadState.ThumbSticks.Left.Y < 0.5f &&
-                    lastGamePadState.ThumbSticks.Left.Y < -0.5f ||
-                    lastGamePadState.ThumbSticks.Left.Y > 0.5f)
-                {
-                    direction.Y = 0;
-                }
-
-                lastGamePadState = gamePadState;
-            }
+            animation = gamePadInput.CheckThumbstickInput();
+            idle = gamePadInput.CheckIdle();
 
             // Set player animation and position according to keyboard input
             foreach (var key in inputKeys.Keys) // Check the state of the movement input keys
@@ -171,24 +119,6 @@ namespace SoR.Logic.Input
             prevPosition = position;
 
             lastKeyState = keyState; // Get the previous keyboard state
-        }
-
-        /*
-         * Change the player direction according to gamepad input.
-         */
-        public void PlayerJoystickDirection(float changeDirectionX = 0, float changeDirectionY = 0)
-        {
-            if (changeDirectionX != 0)
-            {
-                direction.X = changeDirectionX;
-                idle = false;
-            }
-
-            if (changeDirectionY != 0)
-            {
-                direction.Y = changeDirectionY;
-                idle = false;
-            }
         }
 
         /*

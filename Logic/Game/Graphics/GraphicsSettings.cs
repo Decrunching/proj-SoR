@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Logic.Game.Input;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using SoR;
@@ -16,11 +17,9 @@ namespace Logic.Game.Graphics
         private bool isBorderless;
         private int screenWidth;
         private int screenHeight;
+        private GamePadInput gamePadInput;
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
-        private GamePadState gamePadState;
-        private GamePadState lastGamePadState;
-        private GamePadCapabilities gamePadCapabilities;
         private Vector2 resolution;
 
         public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window)
@@ -37,7 +36,7 @@ namespace Logic.Game.Graphics
             Window.AllowUserResizing = false;
             game.IsMouseVisible = true;
 
-            gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
+            gamePadInput = new GamePadInput();
 
             RestoreWindow(graphics, Window);
         }
@@ -49,16 +48,12 @@ namespace Logic.Game.Graphics
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            if (gamePadCapabilities.IsConnected)
+            switch (gamePadInput.CheckButtonInput())
             {
-                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
-
-                if (gamePadState.Buttons.Start == ButtonState.Pressed && lastGamePadState.Buttons.Start != ButtonState.Pressed)
-                {
+                case "Start":
                     ToggleBorderlessMode(graphics, Window);
                     resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-                }
-                lastGamePadState = gamePadState;
+                    break;
             }
 
             if (keyState.IsKeyDown(Keys.F4) & !lastKeyState.IsKeyDown(Keys.F4))

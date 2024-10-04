@@ -73,6 +73,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Hardware\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
