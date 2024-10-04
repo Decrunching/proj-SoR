@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Logic.Game.Input
 {
@@ -26,6 +27,25 @@ namespace Logic.Game.Input
             { Keys.Right, new InputKeys(keyState.IsKeyDown(Keys.Right), "runright") },
             { Keys.D, new InputKeys(keyState.IsKeyDown(Keys.D), "runright") }
             };
+        }
+
+        /*
+         * 
+         */
+        public string CheckKeyInput()
+        {
+            string animation = "none";
+
+            keyState = Keyboard.GetState(); // Get the current keyboard state
+
+            if (InputCollection.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
+            {
+                animation = "idlebattle";
+            }
+
+            lastKeyState = keyState; // Get the previous keyboard state
+
+            return animation;
         }
     }
 }

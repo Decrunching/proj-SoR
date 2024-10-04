@@ -14,7 +14,7 @@ namespace SoR.Logic.Input
      */
     public class Movement
     {
-        private Dictionary<Keys, InputKeys> inputKeys;
+        //private Dictionary<Keys, InputKeys> inputKeys;
         private Random random;
         private GamePadInput gamePadInput;
         private KeyboardInput keyboardInput;
@@ -53,26 +53,46 @@ namespace SoR.Logic.Input
 
         }
 
+        /*
+         * Set idle animation if player character idle.
+         */
+        public void SetIdle()
+        {
+            if (!idle) // If idle animation is not currently playing
+            {
+                idle = true; // Idle is now playing
+                animation = "idlebattle"; // Set idle animation
+            }
+        }
+
         /* 
          * Move left or right, and adjust animation accordingly.
          */
         public void CheckMovement(Vector2 position)
         {
-            keyState = Keyboard.GetState(); // Get the current keyboard state
+            /*keyState = Keyboard.GetState(); // Get the current keyboard state*/
 
             newPosition = position;
 
-            if (inputKeys.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
+            /*if (inputKeys.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
             {
                 if (!idle) // If idle animation is not currently playing
                 {
                     idle = true; // Idle is now playing
                     animation = "idlebattle"; // Set idle animation
                 }
-            }
+            }*/
 
             animation = gamePadInput.CheckThumbstickInput();
             idle = gamePadInput.CheckIdle();
+
+            switch (keyboardInput.CheckKeyInput())
+            {
+                case "idlebattle":
+                    SetIdle();
+                    break;
+
+            }
 
             // Set player animation and position according to keyboard input
             foreach (var key in inputKeys.Keys) // Check the state of the movement input keys
