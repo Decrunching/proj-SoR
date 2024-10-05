@@ -11,8 +11,7 @@ namespace Logic.Game.UI
     public class MainMenu
     {
         private GamePadInput gamePadInput;
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
+        private KeyboardInput keyboardInput;
         private int select;
         public List<string> MenuOptions { get; set; }
         public Vector2 TitlePosition { get; set; }
@@ -24,6 +23,7 @@ namespace Logic.Game.UI
         public MainMenu(GraphicsDeviceManager graphics)
         {
             gamePadInput = new GamePadInput();
+            keyboardInput = new KeyboardInput();
 
             select = 0;
 
@@ -40,8 +40,6 @@ namespace Logic.Game.UI
          */
         public int NavigateMenu()
         {
-            keyState = Keyboard.GetState(); // Get the current keyboard state
-
             switch (gamePadInput.CheckButtonInput())
             {
                 case "Up":
@@ -58,17 +56,21 @@ namespace Logic.Game.UI
                     break;
             }
 
-            if (keyState.IsKeyDown(Keys.Down) && !lastKeyState.IsKeyDown(Keys.Down) && select < 3)
+            switch (keyboardInput.CheckOtherInput())
             {
-                select++;
+                case "Up":
+                    if (select > 0)
+                    {
+                        select--;
+                    }
+                    break;
+                case "Down":
+                    if (select < 3)
+                    {
+                        select++;
+                    }
+                    break;
             }
-
-            if (keyState.IsKeyDown(Keys.Up) && !lastKeyState.IsKeyDown(Keys.Up) && select > 0)
-            {
-                select--;
-            }
-
-            lastKeyState = keyState;
 
             return select;
         }

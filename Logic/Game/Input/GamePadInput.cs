@@ -134,11 +134,11 @@ namespace Logic.Game.Input
         }
 
         /*
-         * Check whether the player is now idle.
+         * Get the current direction of travel.
          */
-        public bool CheckIdle()
+        public Vector2 GetDirection()
         {
-            return Idle;
+            return direction;
         }
     }
 }

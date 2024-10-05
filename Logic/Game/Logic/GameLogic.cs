@@ -32,14 +32,13 @@ namespace Logic.Game.Screens
         private Camera camera;
         private SpriteFont font;
         private GamePadInput gamePadInput;
+        private KeyboardInput keyboardInput;
         private Dictionary<string, Vector2> mapLowerWalls;
         private Dictionary<string, Vector2> mapUpperWalls;
         private Dictionary<string, Vector2> mapFloor;
         private Dictionary<string, Vector2> mapFloorDecor;
         private List<Vector2> positions;
         private List<Rectangle> impassableArea;
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
         private bool hasUpperWalls;
         private bool hasFloorDecor;
         public Dictionary<string, Entity> Entities { get; set; }
@@ -73,6 +72,7 @@ namespace Logic.Game.Screens
         {
             camera = new Camera(Window, GraphicsDevice, 800, 600);
             gamePadInput = new GamePadInput();
+            keyboardInput = new KeyboardInput();
 
             CurrentMapString = "none";
             hasFloorDecor = false;
@@ -146,8 +146,6 @@ namespace Logic.Game.Screens
          */
         public void SaveLoadInput(MainGame game, GraphicsDevice GraphicsDevice)
         {
-            keyState = Keyboard.GetState(); // Get the current keyboard state
-
             switch (gamePadInput.CheckButtonInput())
             {
                 case "B":
@@ -158,16 +156,15 @@ namespace Logic.Game.Screens
                     break;
             }
 
-            if (keyState.IsKeyDown(Keys.F8) && !lastKeyState.IsKeyDown(Keys.F8))
+            switch (keyboardInput.CheckOtherInput())
             {
-                SaveGame();
+                case "F8":
+                    SaveGame();
+                    break;
+                case "F9":
+                    LoadGame(game, GraphicsDevice);
+                    break;
             }
-            if (keyState.IsKeyDown(Keys.F9) && !lastKeyState.IsKeyDown(Keys.F9))
-            {
-                LoadGame(game, GraphicsDevice);
-            }
-
-            lastKeyState = keyState;
         }
 
         /*

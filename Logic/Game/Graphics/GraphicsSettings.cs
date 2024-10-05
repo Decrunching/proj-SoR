@@ -18,8 +18,9 @@ namespace Logic.Game.Graphics
         private int screenWidth;
         private int screenHeight;
         private GamePadInput gamePadInput;
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
+        private KeyboardInput keyboardInput;
+        /*private KeyboardState keyState;
+        private KeyboardState lastKeyState;*/
         private Vector2 resolution;
 
         public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window)
@@ -37,6 +38,7 @@ namespace Logic.Game.Graphics
             game.IsMouseVisible = true;
 
             gamePadInput = new GamePadInput();
+            keyboardInput = new KeyboardInput();
 
             RestoreWindow(graphics, Window);
         }
@@ -46,23 +48,21 @@ namespace Logic.Game.Graphics
          */
         public Vector2 CheckIfBorderlessToggled(GraphicsDeviceManager graphics, GameWindow Window)
         {
-            keyState = Keyboard.GetState(); // Get the current keyboard state
+            //keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            switch (gamePadInput.CheckButtonInput())
-            {
-                case "Start":
-                    ToggleBorderlessMode(graphics, Window);
-                    resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-                    break;
-            }
-
-            if (keyState.IsKeyDown(Keys.F4) & !lastKeyState.IsKeyDown(Keys.F4))
+            if (gamePadInput.CheckButtonInput() == "Start" || keyboardInput.CheckOtherInput() == "F4")
             {
                 ToggleBorderlessMode(graphics, Window);
                 resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             }
 
-            lastKeyState = keyState; // Get the previous keyboard state
+            /*if (keyState.IsKeyDown(Keys.F4) & !lastKeyState.IsKeyDown(Keys.F4))
+            {
+                ToggleBorderlessMode(graphics, Window);
+                resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
+            }
+
+            lastKeyState = keyState;*/ // Get the previous keyboard state
 
             return resolution;
         }

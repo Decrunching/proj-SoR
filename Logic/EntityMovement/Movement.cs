@@ -14,12 +14,9 @@ namespace SoR.Logic.Input
      */
     public class Movement
     {
-        //private Dictionary<Keys, InputKeys> inputKeys;
         private Random random;
         private GamePadInput gamePadInput;
         private KeyboardInput keyboardInput;
-        /*private KeyboardState keyState;
-        private KeyboardState lastKeyState;*/
         private Vector2 newPosition;
         private Vector2 prevPosition;
         private Vector2 direction;
@@ -70,23 +67,9 @@ namespace SoR.Logic.Input
          */
         public void CheckMovement(Vector2 position)
         {
-            /*keyState = Keyboard.GetState(); // Get the current keyboard state*/
-
             newPosition = position;
 
-            /*if (inputKeys.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
-            {
-                if (!idle) // If idle animation is not currently playing
-                {
-                    idle = true; // Idle is now playing
-                    animation = "idlebattle"; // Set idle animation
-                }
-            }*/
-
-            animation = gamePadInput.CheckThumbstickInput();
-            idle = gamePadInput.CheckIdle();
-
-            switch (keyboardInput.CheckKeyInput())
+            switch (keyboardInput.CheckMoveInput())
             {
                 case "idlebattle":
                     SetIdle();
@@ -94,85 +77,15 @@ namespace SoR.Logic.Input
 
             }
 
-            // Set player animation and position according to keyboard input
-            foreach (var key in inputKeys.Keys) // Check the state of the movement input keys
-            {
-                bool pressed = keyState.IsKeyDown(key);
-                bool previouslyPressed = lastKeyState.IsKeyDown(key);
-                inputKeys[key].Pressed = pressed;
+            animation = gamePadInput.CheckThumbstickInput();
+            direction = gamePadInput.GetDirection();
+            animation = keyboardInput.CheckMoveInput();
+            direction = keyboardInput.GetDirection();
 
-                if (inputKeys[key].NextAnimation == "runleft")
-                {
-                    PlayerKeyboardDirection(key, pressed, previouslyPressed, -1);
-                }
-                else if (inputKeys[key].NextAnimation == "runright")
-                {
-                    PlayerKeyboardDirection(key, pressed, previouslyPressed, 1);
-                }
-
-                if (inputKeys[key].NextAnimation == "runup")
-                {
-                    PlayerKeyboardDirection(key, pressed, previouslyPressed, 0, -1);
-                }
-                else if (inputKeys[key].NextAnimation == "rundown")
-                {
-                    PlayerKeyboardDirection(key, pressed, previouslyPressed, 0, 1);
-                }
-
-                if (pressed & !previouslyPressed)
-                {
-                    animation = inputKeys[key].NextAnimation;
-                }
-
-                if (!pressed & previouslyPressed)
-                {
-                    animation = lastPressedKey;
-
-                    // ??? Remove once joypad fixed
-                    if (inputKeys[key].NextAnimation == "runleft" || inputKeys[key].NextAnimation == "runright")
-                    {
-                        direction.X = 0;
-                    }
-                }
-            }
+            idle = gamePadInput.Idle;
+            idle = keyboardInput.Idle;
 
             prevPosition = position;
-
-            lastKeyState = keyState; // Get the previous keyboard state
-        }
-
-        /*
-         * Change the player direction according to keyboard input.
-         */
-        public void PlayerKeyboardDirection(Keys key, bool pressed, bool previouslyPressed, int changeDirectionX = 0, int changeDirectionY = 0)
-        {
-            if (changeDirectionX != 0)
-            {
-                if (pressed)
-                {
-                    direction.X = changeDirectionX;
-                    lastPressedKey = inputKeys[key].NextAnimation;
-                    idle = false;
-                }
-                if (!pressed & previouslyPressed)
-                {
-                    direction.X = 0;
-                }
-            }
-
-            if (changeDirectionY != 0)
-            {
-                if (pressed)
-                {
-                    direction.Y = changeDirectionY;
-                    lastPressedKey = inputKeys[key].NextAnimation;
-                    idle = false;
-                }
-                if (!pressed & previouslyPressed)
-                {
-                    direction.Y = 0;
-                }
-            }
         }
 
         /*
