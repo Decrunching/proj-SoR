@@ -84,9 +84,6 @@ namespace Logic.Entities.Character.EntityMovement
 
             CheckIdle();
 
-            gamePadInput.CheckXMoveInput();
-            gamePadInput.CheckYMoveInput();
-
             if (gamePadInput.CurrentInputDevice)
             {
                 keyboardInput.CurrentInputDevice = false;

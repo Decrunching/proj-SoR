@@ -41,18 +41,11 @@ namespace Hardware.Input
                     CurrentInputDevice = true;
                     xAxisInput = 2;
                 }
-                else if (gamePadState.ThumbSticks.Left.X > -0.5f &&
-                    gamePadState.ThumbSticks.Left.X < 0.5f &&
-                    lastGamePadState.ThumbSticks.Left.X < -0.5f ||
-                    lastGamePadState.ThumbSticks.Left.X > 0.5f)
-                {
-                    xAxisInput = 0;
-                }
 
                 if (gamePadState.ThumbSticks.Left.X !< -0.5f &&
                     gamePadState.ThumbSticks.Left.X !> 0.5f)
                 {
-                    xAxisInput = 4;
+                    xAxisInput = 0;
                 }
 
                 lastGamePadState = gamePadState;
@@ -82,18 +75,11 @@ namespace Hardware.Input
                     CurrentInputDevice = true;
                     yAxisInput = 1;
                 }
-                else if (gamePadState.ThumbSticks.Left.Y > -0.5f &&
-                    gamePadState.ThumbSticks.Left.Y < 0.5f &&
-                    lastGamePadState.ThumbSticks.Left.Y < -0.5f ||
-                    lastGamePadState.ThumbSticks.Left.Y > 0.5f)
+
+                if (gamePadState.ThumbSticks.Left.Y !< -0.5f &&
+                    gamePadState.ThumbSticks.Left.Y !> 0.5f)
                 {
                     yAxisInput = 0;
-                }
-
-                if (gamePadState.ThumbSticks.Left.Y! < -0.5f &&
-                    gamePadState.ThumbSticks.Left.Y! > 0.5f)
-                {
-                    yAxisInput = 4;
                 }
 
                 lastGamePadState = gamePadState;
