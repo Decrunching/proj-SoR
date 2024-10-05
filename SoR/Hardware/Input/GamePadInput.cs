@@ -10,15 +10,11 @@ namespace Hardware.Input
         private GamePadState gamePadState;
         private GamePadState lastGamePadState;
         private GamePadCapabilities gamePadCapabilities;
-        public int XAxisInput { get; private set; }
-        public int YAxisInput { get; private set; }
         public bool CurrentInputDevice { get; set; }
 
         public GamePadInput()
         {
             CurrentInputDevice = false;
-            XAxisInput = 0;
-            YAxisInput = 0;
 
             gamePadListener = new GamePadListener();
             gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
@@ -27,8 +23,10 @@ namespace Hardware.Input
         /*
          * Check for and process gamepad input.
          */
-        public void CheckThumbstickInput()
+        public int CheckXMoveInput()
         {
+            int xAxisInput = 0;
+
             if (gamePadCapabilities.IsConnected) // If the gamepad is connected
             {
                 gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
@@ -36,49 +34,72 @@ namespace Hardware.Input
                 if (gamePadState.ThumbSticks.Left.X < -0.5f)
                 {
                     CurrentInputDevice = true;
-                    XAxisInput = 1;
+                    xAxisInput = 1;
                 }
                 else if (gamePadState.ThumbSticks.Left.X > 0.5f)
                 {
                     CurrentInputDevice = true;
-                    XAxisInput = 2;
+                    xAxisInput = 2;
                 }
                 else if (gamePadState.ThumbSticks.Left.X > -0.5f &&
                     gamePadState.ThumbSticks.Left.X < 0.5f &&
                     lastGamePadState.ThumbSticks.Left.X < -0.5f ||
                     lastGamePadState.ThumbSticks.Left.X > 0.5f)
                 {
-                    XAxisInput = 0;
+                    xAxisInput = 0;
                 }
+
+                if (gamePadState.ThumbSticks.Left.X !< -0.5f &&
+                    gamePadState.ThumbSticks.Left.X !> 0.5f)
+                {
+                    xAxisInput = 4;
+                }
+
+                lastGamePadState = gamePadState;
+            }
+
+            return xAxisInput;
+        }
+
+        /*
+         * Check for and process gamepad input.
+         */
+        public int CheckYMoveInput()
+        {
+            int yAxisInput = 0;
+
+            if (gamePadCapabilities.IsConnected) // If the gamepad is connected
+            {
+                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
 
                 if (gamePadState.ThumbSticks.Left.Y < -0.5f)
                 {
                     CurrentInputDevice = true;
-                    YAxisInput = 2;
+                    yAxisInput = 2;
                 }
                 else if (gamePadState.ThumbSticks.Left.Y > 0.5f)
                 {
                     CurrentInputDevice = true;
-                    YAxisInput = 1;
+                    yAxisInput = 1;
                 }
                 else if (gamePadState.ThumbSticks.Left.Y > -0.5f &&
                     gamePadState.ThumbSticks.Left.Y < 0.5f &&
                     lastGamePadState.ThumbSticks.Left.Y < -0.5f ||
                     lastGamePadState.ThumbSticks.Left.Y > 0.5f)
                 {
-                    YAxisInput = 0;
+                    yAxisInput = 0;
                 }
 
-                if (gamePadState.ThumbSticks.Left.X !< -0.5f &&
-                    gamePadState.ThumbSticks.Left.X !> 0.5f &&
-                    gamePadState.ThumbSticks.Left.Y !< -0.5f &&
-                    gamePadState.ThumbSticks.Left.Y !> 0.5f)
+                if (gamePadState.ThumbSticks.Left.Y! < -0.5f &&
+                    gamePadState.ThumbSticks.Left.Y! > 0.5f)
                 {
-                    XAxisInput = 4;
+                    yAxisInput = 4;
                 }
 
                 lastGamePadState = gamePadState;
             }
+
+            return yAxisInput;
         }
 
         /*

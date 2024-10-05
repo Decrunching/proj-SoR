@@ -3,7 +3,6 @@ using Logic.GameMap;
 using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
-using System.Windows.Input;
 
 namespace Logic.Entities.Character.EntityMovement
 {
@@ -49,6 +48,22 @@ namespace Logic.Entities.Character.EntityMovement
         }
 
         /*
+         * Check whether player is idle.
+         */
+        public void CheckIdle()
+        {
+            if (keyboardInput.CheckXMoveInput() == 0 && keyboardInput.CheckYMoveInput() == 0 |
+                gamePadInput.CheckXMoveInput() == 0 && gamePadInput.CheckYMoveInput() == 0)
+            {
+                SetIdle();
+                if (CountDistance == 0)
+                {
+                    direction = Vector2.Zero;
+                }
+            }
+        }
+
+        /*
          * Set idle animation if player character idle.
          */
         public void SetIdle()
@@ -65,98 +80,117 @@ namespace Logic.Entities.Character.EntityMovement
          */
         public void CheckMovement(Vector2 position)
         {
-            newPosition = position;
+            newPosition = prevPosition = position;
 
-            gamePadInput.CheckThumbstickInput();
-            keyboardInput.CheckMoveInput();
+            CheckIdle();
+
+            gamePadInput.CheckXMoveInput();
+            gamePadInput.CheckYMoveInput();
 
             if (gamePadInput.CurrentInputDevice)
             {
                 keyboardInput.CurrentInputDevice = false;
-                ProcessMovementInput(gamePadInput.XAxisInput, gamePadInput.YAxisInput);
+                ProcessXMovementInput(gamePadInput.CheckXMoveInput());
+                ProcessYMovementInput(gamePadInput.CheckYMoveInput());
             }
 
             if (keyboardInput.CurrentInputDevice)
             {
                 gamePadInput.CurrentInputDevice = false;
-                ProcessMovementInput(keyboardInput.XAxisInput, keyboardInput.YAxisInput);
-            }
-
-            prevPosition = position;
-        }
-
-        /*
-         * Process movement keyboard and gamepad inputs.
-         */
-        public void ProcessMovementInput( int x, int y)
-        {
-            if (x == 0 && y == 0)
-            {
-                SetIdle();
-                direction = Vector2.Zero;
-            }
-
-            switch (x)
-            {
-                case 0:
-                    direction.X = 0;
-                    break;
-                case 1:
-                    MovementDirection(-1, 0);
-                    break;
-                case 2:
-                    MovementDirection(1, 0);
-                    break;
-                case 3:
-                    idle = false;
-                    animation = "runleft";
-                    break;
-                case 4:
-                    idle = false;
-                    animation = "runright";
-                    break;
-                case 5:
-                    animation = lastAnimation;
-                    break;
-            }
-
-            switch (y)
-            {
-                case 0:
-                    direction.Y = 0;
-                    break;
-                case 1:
-                    MovementDirection(0, -1);
-                    break;
-                case 2:
-                    MovementDirection(0, 1);
-                    break;
-                case 3:
-                    animation = "runup";
-                    idle = false;
-                    break;
-                case 4:
-                    animation = "rundown";
-                    idle = false;
-                    break;
+                ProcessXMovementInput(keyboardInput.CheckXMoveInput());
+                ProcessYMovementInput(keyboardInput.CheckYMoveInput());
             }
 
             lastAnimation = animation;
         }
 
         /*
-         * Change the player direction according to keyboard input.
+         * Process keyboard and gamepad x-axis movement inputs.
          */
-        public void MovementDirection(int changeDirectionX = 0, int changeDirectionY = 0)
+        public void ProcessXMovementInput( int x)
         {
-            if (changeDirectionX != 0)
+            switch (x)
             {
-                direction.X = changeDirectionX;
+                case 0:
+                    if (CountDistance == 0)
+                    {
+                        direction.X = 0;
+                    }
+                    break;
+                case 1:
+                    MovementDirectionX(-1);
+                    idle = false;
+                    animation = "runleft";
+                    break;
+                case 2:
+                    MovementDirectionX(1);
+                    idle = false;
+                    animation = "runright";
+                    break;
+                case 3:
+                    direction.X = 0;
+                    animation = lastAnimation;
+                    break;
+                case 4:
+                    direction.X = 0;
+                    animation = "idlebattle";
+                    break;
             }
+        }
 
-            if (changeDirectionY != 0)
+        /*
+         * Process keyboard and gamepad y-axis movement inputs.
+         */
+        public void ProcessYMovementInput(int y)
+        {
+            switch (y)
             {
-                direction.Y = changeDirectionY;
+                case 0:
+                    if (CountDistance == 0)
+                    {
+                        direction.Y = 0;
+                    }
+                    break;
+                case 1:
+                    MovementDirectionY(-1);
+                    animation = "runup";
+                    idle = false;
+                    break;
+                case 2:
+                    MovementDirectionY(1);
+                    animation = "rundown";
+                    idle = false;
+                    break;
+                case 3:
+                    direction.Y = 0;
+                    animation = lastAnimation;
+                    break;
+                case 4:
+                    direction.Y = 0;
+                    animation = "idlebattle";
+                    break;
+            }
+        }
+
+        /*
+         * Change the player x-axis direction according to keyboard input.
+         */
+        public void MovementDirectionX(int changeDirection)
+        {
+            if (changeDirection != 0)
+            {
+                direction.X = changeDirection;
+            }
+        }
+
+        /*
+         * Change the player y-axis direction according to keyboard input.
+         */
+        public void MovementDirectionY(int changeDirection)
+        {
+            if (changeDirection != 0)
+            {
+                direction.Y = changeDirection;
             }
         }
 

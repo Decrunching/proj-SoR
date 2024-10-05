@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Input;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Hardware.Input
 {
@@ -12,107 +11,135 @@ namespace Hardware.Input
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
         public Dictionary<Keys, InputKeys> InputCollection { get; set; }
-        public int XAxisInput { get; private set; }
-        public int YAxisInput { get; private set; }
         public bool CurrentInputDevice { get; set; }
 
         public KeyboardInput()
         {
             CurrentInputDevice = false;
-            XAxisInput = 0;
-            YAxisInput = 0;
-
-            // Dictionary to store the input keys, whether they are currently up or pressed, and which animation to apply
-            InputCollection = new Dictionary<Keys, InputKeys>()
-            {
-            { Keys.Up, new InputKeys(keyState.IsKeyDown(Keys.Up), "runup") },
-            { Keys.W, new InputKeys(keyState.IsKeyDown(Keys.W), "runup") },
-            { Keys.Down, new InputKeys(keyState.IsKeyDown(Keys.Down), "rundown") },
-            { Keys.S, new InputKeys(keyState.IsKeyDown(Keys.S), "rundown") },
-            { Keys.Left, new InputKeys(keyState.IsKeyDown(Keys.Left), "runleft") },
-            { Keys.A, new InputKeys(keyState.IsKeyDown(Keys.A), "runleft") },
-            { Keys.Right, new InputKeys(keyState.IsKeyDown(Keys.Right), "runright") },
-            { Keys.D, new InputKeys(keyState.IsKeyDown(Keys.D), "runright") }
-            };
         }
 
         /*
          * Check for and process keyboard movement inputs.
          */
-        public void CheckMoveInput()
+        public int CheckXMoveInput()
         {
             keyState = Keyboard.GetState(); // Get the current keyboard state
 
-            if (InputCollection.Values.All(inputKeys => !inputKeys.Pressed)) // If no keys are being pressed
+            int xAxisInput = 0;
+
+            if (keyState.IsKeyDown(Keys.Left) ||
+                keyState.IsKeyDown(Keys.A))
             {
-                XAxisInput = 0;
-                YAxisInput = 0;
+                CurrentInputDevice = true;
+
+                if (!lastKeyState.IsKeyDown(Keys.Left) ||
+                    !lastKeyState.IsKeyDown(Keys.A))
+                {
+                    xAxisInput = 1;
+                }
+            }
+            else if (keyState.IsKeyDown(Keys.Right) ||
+                keyState.IsKeyDown(Keys.D))
+            {
+                CurrentInputDevice = true;
+
+                if (!lastKeyState.IsKeyDown(Keys.Right) ||
+                !lastKeyState.IsKeyDown(Keys.D))
+                {
+                    xAxisInput = 2;
+                }
             }
 
-            foreach (var key in InputCollection.Keys) // Check the state of the movement input keys
+            if ((keyState.IsKeyDown(Keys.Left) ||
+            keyState.IsKeyDown(Keys.A)) &&
+            (keyState.IsKeyDown(Keys.Right) ||
+            keyState.IsKeyDown(Keys.D)))
             {
-                bool pressed = keyState.IsKeyDown(key);
-                bool previouslyPressed = lastKeyState.IsKeyDown(key);
-                InputCollection[key].Pressed = pressed;
+                xAxisInput = 4;
+            }
 
-                if (InputCollection[key].NextAnimation == "runleft" && pressed)
-                {
-                    CurrentInputDevice = true;
-                    XAxisInput = 1;
-                    if (!previouslyPressed)
-                    {
-                        XAxisInput = 3;
-                    }
-                }
-                else if (InputCollection[key].NextAnimation == "runright" && pressed)
-                {
-                    CurrentInputDevice = true;
-                    XAxisInput = 2;
-                    if (!previouslyPressed)
-                    {
-                        XAxisInput = 4;
-                    }
-                }
-                else
-                {
-                    XAxisInput = 0;
-                }
+            bool unpressedLeft =
+                (!keyState.IsKeyDown(Keys.Left) &&
+                lastKeyState.IsKeyDown(Keys.Left)) ||
+                (!keyState.IsKeyDown(Keys.A) &&
+                lastKeyState.IsKeyDown(Keys.A));
 
-                if (InputCollection[key].NextAnimation == "runup" && pressed)
-                {
-                    CurrentInputDevice = true;
-                    YAxisInput = 1;
-                    if (!previouslyPressed)
-                    {
-                        XAxisInput = 3;
-                    }
-                }
-                else if (InputCollection[key].NextAnimation == "rundown" && pressed)
-                {
-                    CurrentInputDevice = true;
-                    YAxisInput = 2;
-                    if (!previouslyPressed)
-                    {
-                        XAxisInput = 4;
-                    }
-                }
-                else
-                {
-                    YAxisInput = 0;
-                }
+            bool unpressedRight =
+                (!keyState.IsKeyDown(Keys.Right) &&
+                lastKeyState.IsKeyDown(Keys.Right)) ||
+                (!keyState.IsKeyDown(Keys.D) &&
+                lastKeyState.IsKeyDown(Keys.D));
 
-                if (!pressed & previouslyPressed)
-                {
-                    XAxisInput = 5;
-
-                    if (InputCollection[key].NextAnimation == "runleft" || InputCollection[key].NextAnimation == "runright")
-                    {
-                        XAxisInput = 0;
-                    }
-                }
+            if (unpressedLeft || unpressedRight)
+            {
+                xAxisInput = 3;
             }
 
             lastKeyState = keyState; // Get the previous keyboard state
+
+            return xAxisInput;
+        }
+
+        /*
+         * Check for and process keyboard movement inputs.
+         */
+        public int CheckYMoveInput()
+        {
+            keyState = Keyboard.GetState(); // Get the current keyboard state
+
+            int yAxisInput = 0;
+
+            if (keyState.IsKeyDown(Keys.Up) ||
+                keyState.IsKeyDown(Keys.W))
+            {
+                CurrentInputDevice = true;
+
+                if (!lastKeyState.IsKeyDown(Keys.Up) ||
+                !lastKeyState.IsKeyDown(Keys.W))
+                {
+                    yAxisInput = 1;
+                }
+            }
+            else if (keyState.IsKeyDown(Keys.Down) ||
+                keyState.IsKeyDown(Keys.S))
+            {
+                CurrentInputDevice = true;
+
+                if (!lastKeyState.IsKeyDown(Keys.Down) ||
+                !lastKeyState.IsKeyDown(Keys.S))
+                {
+                    yAxisInput = 2;
+                }
+            }
+
+            if ((keyState.IsKeyDown(Keys.Up) ||
+            keyState.IsKeyDown(Keys.W)) &&
+            (keyState.IsKeyDown(Keys.Down) ||
+            keyState.IsKeyDown(Keys.S)))
+            {
+                yAxisInput = 4;
+            }
+
+            bool unpressedUp =
+                (!keyState.IsKeyDown(Keys.Up) &&
+                lastKeyState.IsKeyDown(Keys.Up)) ||
+                (!keyState.IsKeyDown(Keys.W) &&
+                lastKeyState.IsKeyDown(Keys.W));
+
+            bool unpressedDown =
+                (!keyState.IsKeyDown(Keys.Down) &&
+                lastKeyState.IsKeyDown(Keys.Down)) ||
+                (!keyState.IsKeyDown(Keys.S) &&
+                lastKeyState.IsKeyDown(Keys.S));
+
+            if (unpressedUp || unpressedDown)
+            {
+                yAxisInput = 3;
+            }
+
+            lastKeyState = keyState; // Get the previous keyboard state
+
+            return yAxisInput;
         }
 
         /*
