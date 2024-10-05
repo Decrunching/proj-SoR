@@ -19,7 +19,7 @@ namespace Hardware.Input
         }
 
         /*
-         * Check for and process keyboard movement inputs.
+         * Check for and process keyboard x-axis movement inputs.
          */
         public int CheckXMoveInput()
         {
@@ -81,7 +81,7 @@ namespace Hardware.Input
         }
 
         /*
-         * Check for and process keyboard movement inputs.
+         * Check for and process keyboard y-axis movement inputs.
          */
         public int CheckYMoveInput()
         {
@@ -164,11 +164,13 @@ namespace Hardware.Input
             {
                 key = "F9";
             }
-            if (keyState.IsKeyDown(Keys.Down) && !lastKeyState.IsKeyDown(Keys.Down))
+            if (keyState.IsKeyDown(Keys.Down) && !lastKeyState.IsKeyDown(Keys.Down) ||
+                keyState.IsKeyDown(Keys.S) && !lastKeyState.IsKeyDown(Keys.S))
             {
                 key = "Down";
             }
-            if (keyState.IsKeyDown(Keys.Up) && !lastKeyState.IsKeyDown(Keys.Up))
+            if (keyState.IsKeyDown(Keys.Up) && !lastKeyState.IsKeyDown(Keys.Up) ||
+                keyState.IsKeyDown(Keys.W) && !lastKeyState.IsKeyDown(Keys.W))
             {
                 key = "Up";
             }
