@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Hardware.Graphics;
+using Logic.Screens;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using Logic.Game.Graphics;
-using Logic.Game.Screens;
 
 namespace SoR
 {
@@ -115,7 +115,7 @@ namespace SoR
          */
         protected override void Draw(GameTime gameTime)
         {
-            screens.DrawGameState(GraphicsDevice);
+            screens.DrawGameState(game, GraphicsDevice);
 
             base.Draw(gameTime);
         }

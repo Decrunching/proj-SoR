@@ -28,8 +28,8 @@
     <Page Remove="Content\Entities\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Logic\Game\Graphics\GraphicsSettingsTemp.cs" />
-    <Compile Remove="Logic\Game\Graphics\Settings.cs" />
+    <Compile Remove="SoR\Hardware\Graphics\GraphicsSettingsTemp.cs" />
+    <Compile Remove="SoR\Hardware\Graphics\Settings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Content\haltija.atlas" />
@@ -73,7 +73,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Hardware\" />
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
