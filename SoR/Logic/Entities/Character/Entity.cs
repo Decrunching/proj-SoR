@@ -1,5 +1,4 @@
-﻿using Logic.Entities.Character.EntityMovement;
-using Logic.GameMap;
+﻿using Logic.GameMap;
 using Microsoft.Xna.Framework;
 using Spine;
 using System.Collections.Generic;
@@ -32,7 +31,7 @@ namespace Logic.Entities.Character
     /*
      * Common functions and fields for player and non-player characters.
      */
-    public class Entity
+    public partial class Entity
     {
         protected Dictionary<string, int> animations;
         protected Atlas atlas;
@@ -47,7 +46,6 @@ namespace Logic.Entities.Character
         protected SkeletonBounds hitbox;
         protected Slot slot;
         protected TrackEntry trackEntry;
-        protected Movement movement;
         protected Vector2 prevPosition;
         protected string prevTrigger;
         protected string animOne;
@@ -171,17 +169,17 @@ namespace Logic.Entities.Character
          */
         public void BeMoved(GameTime gameTime)
         {
-            if (movement.CountDistance > 0)
+            if (CountDistance > 0)
             {
-                if (movement.CountDistance == 1)
+                if (CountDistance == 1)
                 {
-                    movement.SetDirection(0, 0);
-                    movement.BeenPushed = true;
+                    direction = Vector2.Zero;
+                    BeenPushed = true;
                 }
 
-                movement.AdjustPosition(gameTime, this, ImpassableArea);
+                AdjustPosition(gameTime, ImpassableArea);
 
-                movement.CountDistance--;
+                CountDistance--;
             }
         }
 
@@ -192,7 +190,7 @@ namespace Logic.Entities.Character
         {
             entity.TakeDamage(1);
             entity.ChangeAnimation("hit");
-            movement.RepelledFromEntity(Position, 10, entity);
+            RepelledFromEntity(10, entity);
         }
 
         /*
@@ -202,7 +200,7 @@ namespace Logic.Entities.Character
         {
             TakeDamage(1);
             ChangeAnimation("hit");
-            movement.RepelledFromScenery(Position, 5, scenery);
+            RepelledFromScenery(5, scenery);
         }
 
         /*
@@ -211,13 +209,11 @@ namespace Logic.Entities.Character
         public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             BeMoved(gameTime);
-            movement.NonPlayerMovement(gameTime, this);
+            NonPlayerMovement(gameTime);
 
-            movement.AdjustPosition(gameTime, this, ImpassableArea);
-            Position = movement.UpdatePosition();
+            AdjustPosition(gameTime, ImpassableArea);
 
-            prevPosition = Position;
-            movement.DirectionReversed = false;
+            DirectionReversed = false;
         }
 
         /*
@@ -254,14 +250,6 @@ namespace Logic.Entities.Character
         }
 
         /*
-         * Set the hitbox.
-         */
-        public void SetHitbox()
-        {
-            hitbox = new SkeletonBounds();
-        }
-
-        /*
          * Get the skeleton.
          */
         public Skeleton GetSkeleton()
@@ -278,27 +266,11 @@ namespace Logic.Entities.Character
         }
 
         /*
-         * Get the entity position.
-         */
-        public Vector2 GetPosition()
-        {
-            return Position;
-        }
-
-        /*
          * Get the current hitpoints.
          */
         public int GetHitPoints()
         {
             return HitPoints;
-        }
-
-        /*
-         * Get the current skin.
-         */
-        public string GetSkin()
-        {
-            return Skin;
         }
     }
 }

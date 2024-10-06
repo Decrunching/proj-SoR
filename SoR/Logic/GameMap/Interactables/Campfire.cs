@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework;
 using Spine;
 using SoR;
 using Logic.Entities.Character;
-using Logic.Entities.Character.EntityMovement;
 
 namespace Logic.GameMap.Interactables
 {
@@ -42,8 +41,6 @@ namespace Logic.GameMap.Interactables
             skeleton.SetAttachment("hitbox", "hitbox");
 
             hitbox = new SkeletonBounds();
-
-            movement = new Movement(); // Environmental collision handling
         }
 
         /*

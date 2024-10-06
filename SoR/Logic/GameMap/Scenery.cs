@@ -1,5 +1,4 @@
 ﻿using Logic.Entities.Character;
-using Logic.Entities.Character.EntityMovement;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
@@ -47,7 +46,6 @@ namespace Logic.GameMap
         protected SkeletonBounds hitbox;
         protected Slot slot;
         protected TrackEntry trackEntry;
-        protected Movement movement;
         protected Vector2 position;
         protected string prevTrigger;
         protected string animOne;

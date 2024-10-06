@@ -32,6 +32,7 @@ namespace Logic
         private SpriteFont font;
         private GamePadInput gamePadInput;
         private KeyboardInput keyboardInput;
+        private Entity player;
         private Dictionary<string, Vector2> mapLowerWalls;
         private Dictionary<string, Vector2> mapUpperWalls;
         private Dictionary<string, Vector2> mapFloor;
@@ -94,24 +95,17 @@ namespace Logic
          */
         public void SaveGame()
         {
-            foreach (var entity in Entities.Values)
+            switch (currentMapEnum)
             {
-                if (Entities.TryGetValue("player", out Entity player))
-                {
-                    switch (currentMapEnum)
-                    {
-                        case CurrentMap.Village:
-                            CurrentMapString = "village";
-                            break;
-                        case CurrentMap.Temple:
-                            CurrentMapString = "temple";
-                            break;
-                    }
-                    GameState.SaveFile(player, CurrentMapString);
-                    CurrentMapString = "none";
+                case CurrentMap.Village:
+                    CurrentMapString = "village";
                     break;
-                }
+                case CurrentMap.Temple:
+                    CurrentMapString = "temple";
+                    break;
             }
+            GameState.SaveFile(player, CurrentMapString);
+            CurrentMapString = "none";
         }
 
         /*
@@ -131,15 +125,9 @@ namespace Logic
                     break;
             }
 
-            foreach (var entity in Entities.Values)
-            {
-                if (Entities.TryGetValue("player", out Entity player))
-                {
-                    player.Position = gameState.Position;
-                    player.HitPoints = gameState.HitPoints;
-                    player.Skin = gameState.Skin;
-                }
-            }
+            player.Position = gameState.Position;
+            player.HitPoints = gameState.HitPoints;
+            player.Skin = gameState.Skin;
         }
 
         /*
@@ -194,6 +182,7 @@ namespace Logic
                     if (Entities.TryGetValue("player", out Entity player))
                     {
                         player.SetPosition(positionX, positionY);
+                        this.player = player;
                     }
                     break;
                 case EntityType.Pheasant:
@@ -263,42 +252,31 @@ namespace Logic
                 // Update animations
                 entity.UpdateAnimations(gameTime);
 
-                if (Entities.TryGetValue("player", out Entity playerChar))
+                camera.FollowPlayer(player.Position);
+
+                if (entity != player & player.CollidesWith(entity))
                 {
-                    if (playerChar is Player player)
+                    entity.StopMoving();
+
+                    player.EntityCollision(entity, gameTime);
+                    entity.EntityCollision(player, gameTime);
+                }
+                else if (!entity.IsMoving())
+                {
+                    entity.StartMoving();
+                }
+
+                foreach (var scenery in Scenery.Values)
+                {
+                    if (scenery.CollidesWith(entity))
                     {
-                        camera.FollowPlayer(player.GetPosition());
+                        entity.StopMoving();
 
-                        if (entity != player & player.CollidesWith(entity))
-                        {
-                            entity.StopMoving();
-
-                            player.EntityCollision(entity, gameTime);
-                            entity.EntityCollision(player, gameTime);
-                        }
-                        else if (!entity.IsMoving())
-                        {
-                            entity.StartMoving();
-                        }
-
-                        foreach (var scenery in Scenery.Values)
-                        {
-                            if (scenery.CollidesWith(entity))
-                            {
-                                entity.StopMoving();
-
-                                scenery.Collision(entity, gameTime);
-                            }
-                            else if (!entity.IsMoving())
-                            {
-                                entity.StartMoving();
-                            }
-                        }
+                        scenery.Collision(entity, gameTime);
                     }
-                    else
+                    else if (!entity.IsMoving())
                     {
-                        // Throw exception if playerChar is somehow not of the type Player
-                        throw new System.InvalidOperationException("playerChar is not of type Player");
+                        entity.StartMoving();
                     }
                 }
             }
@@ -328,9 +306,9 @@ namespace Logic
             }
             foreach (var entity in Entities.Values)
             {
-                if (!positions.Contains(entity.GetPosition()))
+                if (!positions.Contains(entity.Position))
                 {
-                    positions.Add(entity.GetPosition());
+                    positions.Add(entity.Position);
                 }
             }
             foreach (var tile in mapLowerWalls.Values)
@@ -391,7 +369,7 @@ namespace Logic
                             render.FinishDrawingSpriteBatch();
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
-
+                                // TBD
                             }
                             break;
                     }
@@ -425,7 +403,7 @@ namespace Logic
                         render.StartDrawingSpriteBatch(camera.GetCamera());
                         foreach (var entity in Entities.Values)
                         {
-                            if (entity.GetPosition().Y == position.Y)
+                            if (entity.Position.Y == position.Y)
                             {
                                 // Draw skeletons
                                 render.StartDrawingSkeleton(GraphicsDevice, camera);

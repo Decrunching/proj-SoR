@@ -1,9 +1,10 @@
-﻿using Microsoft.Xna.Framework;
+﻿using Hardware.Input;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using SoR;
 using Spine;
+using System;
 using System.Collections.Generic;
-using Logic.Entities.Character.EntityMovement;
 
 namespace Logic.Entities.Character.Mobs
 {
@@ -53,7 +54,21 @@ namespace Logic.Entities.Character.Mobs
             inMotion = true; // Move freely
             Player = false;
 
-            movement = new Movement(); // Environmental collision handling
+            random = new Random();
+            gamePadInput = new GamePadInput();
+            keyboardInput = new KeyboardInput();
+
+            idle = true; // Player is currently idle
+            lastAnimation = ""; // Get the last key pressed
+
+            Traversable = true; // Whether the entity is on walkable terrain
+
+            CountDistance = 0; // Count how far to automatically move the entity
+            direction = new Vector2(0, 0); // The direction of movement
+            sinceLastChange = 0; // Time since last NPC direction change
+            newDirectionTime = (float)random.NextDouble() * 1f + 0.25f; // After 0.25-1 seconds, NPC chooses a new movement direction
+            DirectionReversed = false;
+            BeenPushed = false;
 
             Speed = 50f; // Set the entity's travel speed
             HitPoints = 100; // Set the starting number of hitpoints

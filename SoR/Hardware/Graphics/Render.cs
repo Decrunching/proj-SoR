@@ -85,7 +85,7 @@ namespace Hardware.Graphics
             spriteBatch.DrawString(
                 font,
                 "HP: " + entity.GetHitPoints(),
-                new Vector2(entity.GetPosition().X - 30, entity.GetPosition().Y + 30),
+                new Vector2(entity.Position.X - 30, entity.Position.Y + 30),
                 Color.BlueViolet);
         }
 

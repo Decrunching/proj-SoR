@@ -5,14 +5,15 @@ using SoR;
 using Spine;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Logic.Entities.Character.EntityMovement;
+using Hardware.Input;
+using System;
 
 namespace Logic.Entities.Character.Player
 {
     /*
      * Stores information unique to Player.
      */
-    public class Player : Entity
+    internal class Player : Entity
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
@@ -62,7 +63,22 @@ namespace Logic.Entities.Character.Player
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
-            movement = new Movement(); // Environmental collision handling
+            random = new Random();
+            gamePadInput = new GamePadInput();
+            keyboardInput = new KeyboardInput();
+
+            idle = true; // Player is currently idle
+            lastAnimation = ""; // Get the last key pressed
+
+            Traversable = true; // Whether the entity is on walkable terrain
+
+            CountDistance = 0; // Count how far to automatically move the entity
+            direction = new Vector2(0, 0); // The direction of movement
+            sinceLastChange = 0; // Time since last NPC direction change
+            newDirectionTime = (float)random.NextDouble() * 1f + 0.25f; // After 0.25-1 seconds, NPC chooses a new movement direction
+            DirectionReversed = false;
+            BeenPushed = false;
+
             Player = true;
 
             Speed = 100f; // Set the entity's travel speed
@@ -142,7 +158,7 @@ namespace Logic.Entities.Character.Player
         {
             entity.TakeDamage(1);
             entity.ChangeAnimation("hit");
-            movement.RepelledFromEntity(Position, 4, entity);
+            RepelledFromEntity(4, entity);
         }
 
         /*
@@ -151,12 +167,25 @@ namespace Logic.Entities.Character.Player
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
             BeMoved(gameTime);
-            movement.CheckMovement(Position);
+            CheckIdle();
 
-            movement.AdjustPosition(gameTime, this, ImpassableArea);
-            Position = movement.UpdatePosition();
+            if (gamePadInput.CurrentInputDevice)
+            {
+                keyboardInput.CurrentInputDevice = false;
+                ProcessXMovementInput(gamePadInput.CheckXMoveInput());
+                ProcessYMovementInput(gamePadInput.CheckYMoveInput());
+            }
 
-            prevPosition = Position;
+            if (keyboardInput.CurrentInputDevice)
+            {
+                gamePadInput.CurrentInputDevice = false;
+                ProcessXMovementInput(keyboardInput.CheckXMoveInput());
+                ProcessYMovementInput(keyboardInput.CheckYMoveInput());
+            }
+
+            lastAnimation = movementAnimation;
+
+            AdjustPosition(gameTime, ImpassableArea);
         }
 
         /*
@@ -166,7 +195,7 @@ namespace Logic.Entities.Character.Player
         {
             CheckForSkinChange();
             UpdateSkin();
-            ChangeAnimation(movement.AnimateMovement());
+            ChangeAnimation(movementAnimation);
 
             base.UpdateAnimations(gameTime);
         }
