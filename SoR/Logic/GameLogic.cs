@@ -131,6 +131,14 @@ namespace Logic
         }
 
         /*
+         * 
+         */
+        public void LoadScreenTransition()
+        {
+
+        }
+
+        /*
          * Save or load game data according to player input.
          */
         public void SaveLoadInput(MainGame game, GraphicsDevice GraphicsDevice)
@@ -183,6 +191,7 @@ namespace Logic
                     {
                         player.SetPosition(positionX, positionY);
                         this.player = player;
+                        player.Frozen = true;
                     }
                     break;
                 case EntityType.Pheasant:
@@ -190,6 +199,7 @@ namespace Logic
                     if (Entities.TryGetValue("pheasant", out Entity pheasant))
                     {
                         pheasant.SetPosition(positionX, positionY);
+                        pheasant.Frozen = true;
                     }
                     break;
                 case EntityType.Chara:
@@ -197,6 +207,7 @@ namespace Logic
                     if (Entities.TryGetValue("chara", out Entity chara))
                     {
                         chara.SetPosition(positionX, positionY);
+                        chara.Frozen = true;
                     }
                     break;
                 case EntityType.Slime:
@@ -204,6 +215,7 @@ namespace Logic
                     if (Entities.TryGetValue("slime", out Entity slime))
                     {
                         slime.SetPosition(positionX, positionY);
+                        slime.Frozen = true;
                     }
                     break;
                 case EntityType.Fishy:
@@ -211,6 +223,7 @@ namespace Logic
                     if (Entities.TryGetValue("fishy", out Entity fishy))
                     {
                         fishy.SetPosition(positionX, positionY);
+                        fishy.Frozen = true;
                     }
                     break;
             }

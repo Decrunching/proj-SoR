@@ -1,6 +1,7 @@
 ﻿using Hardware.Input;
 using Logic.GameMap;
 using Microsoft.Xna.Framework;
+using MonoGame.Extended.Timers;
 using System;
 using System.Collections.Generic;
 
@@ -21,6 +22,8 @@ namespace Logic.Entities.Character
         protected string movementAnimation;
         protected float sinceLastChange;
         protected float newDirectionTime;
+        protected float sinceFreeze;
+        public bool Frozen { get; set; }
         public bool Traversable { get; set; }
         public bool DirectionReversed { get; set; }
         public int CountDistance { get; set; }
@@ -282,12 +285,27 @@ namespace Logic.Entities.Character
         }
 
         /*
+         * Freeze entity movement for a short while after spawning.
+         */
+        public void FrozenTimer(GameTime gameTime)
+        {
+            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float freezeTime = 1;
+            sinceFreeze += deltaTime;
+
+            if (sinceFreeze >= freezeTime)
+            {
+                Frozen = false;
+            }
+        }
+
+        /*
          * Move the NPC in the direction they're facing, and periodically pick a random new direction.
          */
         public void NonPlayerMovement(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            int newDirection = 0;
+            int newDirection;
             sinceLastChange += deltaTime;
             newPosition = Position;
 
@@ -311,14 +329,14 @@ namespace Logic.Entities.Character
          */
         public void AdjustPosition(GameTime gameTime, List<Rectangle> impassableArea)
         {
-            newPosition = Position;
-
             float newSpeed = (float)(Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (direction.X > 0 | direction.X < 0 && direction.Y > 0 | direction.Y < 0) // If moving diagonally
             {
                 newSpeed /= 1.5f; // Reduce the speed by 25%
             }
+
+            newPosition = Position;
 
             newPosition += direction * newSpeed;
 
@@ -372,10 +390,9 @@ namespace Logic.Entities.Character
                     Traversable = true;
                 }
 
+                Position = newPosition;
+                prevPosition = Position;
             }
-
-            Position = newPosition;
-            prevPosition = Position;
         }
     }
 }

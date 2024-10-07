@@ -47,10 +47,10 @@ namespace Logic.Entities.Character
         protected Slot slot;
         protected TrackEntry trackEntry;
         protected Vector2 prevPosition;
+        protected bool inMotion;
         protected string prevTrigger;
         protected string animOne;
         protected string animTwo;
-        protected bool inMotion;
         public List<Rectangle> ImpassableArea { get; protected set; }
         public Vector2 Position { get; set; }
         public bool Player { get; set; }
@@ -98,7 +98,7 @@ namespace Logic.Entities.Character
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          */
-        public void ChangeAnimation(string eventTrigger)
+        public virtual void ChangeAnimation(string eventTrigger)
         {
             string reaction; // Null if there will be no animation change
 
@@ -129,18 +129,18 @@ namespace Logic.Entities.Character
         {
             if (reaction != null)
             {
-                if (animType == 1)
+                switch (animType)
                 {
-                    animState.AddAnimation(0, animOne, true, -trackEntry.TrackComplete);
-                }
-                if (animType == 2)
-                {
-                    animState.SetAnimation(0, animOne, false);
-                    trackEntry = animState.AddAnimation(0, animTwo, true, 0);
-                }
-                if (animType == 3)
-                {
-                    animState.AddAnimation(0, animOne, true, -trackEntry.TrackTime);
+                    case 1:
+                        animState.AddAnimation(0, animOne, true, -trackEntry.TrackComplete);
+                        break;
+                    case 2:
+                        animState.SetAnimation(0, animOne, false);
+                        trackEntry = animState.AddAnimation(0, animTwo, true, 0);
+                        break;
+                    case 3:
+                        animState.AddAnimation(0, animOne, true, -trackEntry.TrackTime);
+                        break;
                 }
             }
         }
@@ -200,7 +200,7 @@ namespace Logic.Entities.Character
         {
             TakeDamage(1);
             ChangeAnimation("hit");
-            RepelledFromScenery(5, scenery);
+            RepelledFromScenery(8, scenery);
         }
 
         /*
@@ -208,12 +208,17 @@ namespace Logic.Entities.Character
          */
         public virtual void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
-            BeMoved(gameTime);
-            NonPlayerMovement(gameTime);
+            FrozenTimer(gameTime);
 
-            AdjustPosition(gameTime, ImpassableArea);
+            if (!Frozen)
+            {
+                BeMoved(gameTime);
+                NonPlayerMovement(gameTime);
 
-            DirectionReversed = false;
+                AdjustPosition(gameTime, ImpassableArea);
+
+                DirectionReversed = false;
+            }
         }
 
         /*

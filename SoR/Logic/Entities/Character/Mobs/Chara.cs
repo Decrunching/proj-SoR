@@ -63,8 +63,6 @@ namespace Logic.Entities.Character.Mobs
             Player = false;
 
             random = new Random();
-            gamePadInput = new GamePadInput();
-            keyboardInput = new KeyboardInput();
 
             idle = true; // Player is currently idle
             lastAnimation = ""; // Get the last key pressed
@@ -77,6 +75,7 @@ namespace Logic.Entities.Character.Mobs
             newDirectionTime = (float)random.NextDouble() * 1f + 0.25f; // After 0.25-1 seconds, NPC chooses a new movement direction
             DirectionReversed = false;
             BeenPushed = false;
+            sinceFreeze = 0; // Time since entity movement was frozen
 
             Speed = 50f; // Set the entity's travel speed
             HitPoints = 100; // Set the starting number of hitpoints

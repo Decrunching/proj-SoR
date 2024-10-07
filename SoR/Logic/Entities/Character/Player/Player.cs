@@ -63,7 +63,6 @@ namespace Logic.Entities.Character.Player
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);
 
-            random = new Random();
             gamePadInput = new GamePadInput();
             keyboardInput = new KeyboardInput();
 
@@ -74,10 +73,8 @@ namespace Logic.Entities.Character.Player
 
             CountDistance = 0; // Count how far to automatically move the entity
             direction = new Vector2(0, 0); // The direction of movement
-            sinceLastChange = 0; // Time since last NPC direction change
-            newDirectionTime = (float)random.NextDouble() * 1f + 0.25f; // After 0.25-1 seconds, NPC chooses a new movement direction
-            DirectionReversed = false;
             BeenPushed = false;
+            sinceFreeze = 0; // Time since entity movement was frozen
 
             Player = true;
 
@@ -93,21 +90,10 @@ namespace Logic.Entities.Character.Player
         public void Battle(Entity entity)
         {
             /*
-            if (entities.TryGetValue("player", out Entity playerChar))
-            {
-                if (playerChar is Player player)
-                {
                     If (entity.CollidesWith(player))
                     {
                         player.Battle(entity);
                     }
-                }
-                else
-                {
-                    // Throw exception if playerChar is somehow not of the type Player
-                    throw new System.InvalidOperationException("playerChar is not of type Player");
-                }
-            }
              */
         }
 
@@ -152,6 +138,29 @@ namespace Logic.Entities.Character.Player
         }
 
         /*
+         * If something changes to trigger a new animation, apply the animation.
+         * If the animation is already applied, do nothing.
+         */
+        public override void ChangeAnimation(string eventTrigger)
+        {
+            string reaction; // Null if there will be no animation change
+
+            if (prevTrigger != eventTrigger)
+            {
+                foreach (string animation in animations.Keys)
+                {
+                    if (eventTrigger == animation)
+                    {
+                        prevTrigger = animOne = reaction = animation;
+                        animTwo = "idlebattle";
+
+                        React(reaction, animations[animation]);
+                    }
+                }
+            }
+        }
+
+        /*
          * Define what happens on collision with an entity.
          */
         public override void EntityCollision(Entity entity, GameTime gameTime)
@@ -166,26 +175,32 @@ namespace Logic.Entities.Character.Player
          */
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
         {
-            BeMoved(gameTime);
-            CheckIdle();
+            FrozenTimer(gameTime);
 
-            if (gamePadInput.CurrentInputDevice)
+            if (!Frozen)
             {
-                keyboardInput.CurrentInputDevice = false;
-                ProcessXMovementInput(gamePadInput.CheckXMoveInput());
-                ProcessYMovementInput(gamePadInput.CheckYMoveInput());
+                CheckIdle();
+
+                if (gamePadInput.CurrentInputDevice)
+                {
+                    keyboardInput.CurrentInputDevice = false;
+                    ProcessXMovementInput(gamePadInput.CheckXMoveInput());
+                    ProcessYMovementInput(gamePadInput.CheckYMoveInput());
+                }
+
+                if (keyboardInput.CurrentInputDevice)
+                {
+                    gamePadInput.CurrentInputDevice = false;
+                    ProcessXMovementInput(keyboardInput.CheckXMoveInput());
+                    ProcessYMovementInput(keyboardInput.CheckYMoveInput());
+                }
+
+                BeMoved(gameTime);
+
+                AdjustPosition(gameTime, ImpassableArea);
+
+                lastAnimation = movementAnimation;
             }
-
-            if (keyboardInput.CurrentInputDevice)
-            {
-                gamePadInput.CurrentInputDevice = false;
-                ProcessXMovementInput(keyboardInput.CheckXMoveInput());
-                ProcessYMovementInput(keyboardInput.CheckYMoveInput());
-            }
-
-            lastAnimation = movementAnimation;
-
-            AdjustPosition(gameTime, ImpassableArea);
         }
 
         /*
