@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Graphics;
+using MonoGame.Extended.Particles;
 using Spine;
 using System;
 using System.Collections.Generic;
@@ -33,6 +34,27 @@ namespace Hardware.Graphics
             };
 
             ImpassableTiles = [];
+        }
+
+        /*
+         * Draw the MainMenu background and curtain for fading between scenes.
+         */
+        public void MainMenuBackground(GraphicsDevice GraphicsDevice, Texture2D Curtain, float fadeAlpha = 1f)
+        {
+            Rectangle destRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+
+            spriteBatch.Draw(
+                Curtain,
+                Vector2.Zero,
+                destRect,
+                Color.White * fadeAlpha,
+                0f,
+                Vector2.Zero,
+                new Vector2(
+                    GraphicsDevice.Viewport.Width,
+                    GraphicsDevice.Viewport.Height),
+                SpriteEffects.None,
+                0f);
         }
 
         /*

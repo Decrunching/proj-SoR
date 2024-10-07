@@ -329,14 +329,14 @@ namespace Logic.Entities.Character
          */
         public void AdjustPosition(GameTime gameTime, List<Rectangle> impassableArea)
         {
+            newPosition = Position;
+
             float newSpeed = (float)(Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             if (direction.X > 0 | direction.X < 0 && direction.Y > 0 | direction.Y < 0) // If moving diagonally
             {
                 newSpeed /= 1.5f; // Reduce the speed by 25%
             }
-
-            newPosition = Position;
 
             newPosition += direction * newSpeed;
 
@@ -389,10 +389,10 @@ namespace Logic.Entities.Character
                 {
                     Traversable = true;
                 }
-
-                Position = newPosition;
-                prevPosition = Position;
             }
+
+            Position = newPosition;
+            prevPosition = Position;
         }
     }
 }

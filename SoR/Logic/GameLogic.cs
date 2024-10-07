@@ -41,6 +41,10 @@ namespace Logic
         private List<Rectangle> impassableArea;
         private bool hasUpperWalls;
         private bool hasFloorDecor;
+        private bool fadingIn;
+        private bool fadingOut;
+        private float fadeAlpha;
+        private float fadingTime;
         public Dictionary<string, Entity> Entities { get; set; }
         public Dictionary<string, Scenery> Scenery { get; set; }
         public string CurrentInputScreen { get; set; }
@@ -80,6 +84,11 @@ namespace Logic
             hasFloorDecor = false;
             hasUpperWalls = false;
 
+            fadingIn = false;
+            fadingOut = false;
+            fadeAlpha = 0f;
+            fadingTime = 0f;
+
             Entities = [];
             Scenery = [];
             mapLowerWalls = [];
@@ -113,6 +122,8 @@ namespace Logic
          */
         public void LoadGame(MainGame game, GraphicsDevice GraphicsDevice)
         {
+            fadingIn = true;
+
             GameState gameState = GameState.LoadFile();
 
             switch (gameState.CurrentMap)
@@ -131,17 +142,87 @@ namespace Logic
         }
 
         /*
-         * 
+         * Fade in the curtain.
          */
-        public void LoadScreenTransition()
+        public void ScreenFadeIn(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
+            if (fadingIn)
+            {
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                float fadeInTime = 0.3f;
+                fadingTime += deltaTime;
+                fadeAlpha += deltaTime * 3.33f;
 
+                if (fadingTime < fadeInTime)
+                {
+                    fadingTime += deltaTime;
+
+                    if (fadeAlpha > 1f)
+                    {
+                        fadeAlpha = 1f;
+                    }
+
+                    render.StartDrawingSpriteBatch(camera.GetCamera());
+                    render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
+                    render.FinishDrawingSpriteBatch();
+                }
+
+                if (fadingTime >= fadeInTime)
+                {
+                    render.StartDrawingSpriteBatch(camera.GetCamera());
+                    render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain);
+                    render.FinishDrawingSpriteBatch();
+
+                    LoadGame(game, GraphicsDevice);
+
+                    fadeAlpha = 1f;
+                    fadingTime = 0f;
+                    fadingIn = false;
+                    fadingOut = true;
+                }
+            }
+        }
+
+        /*
+         * Fade out the curtain.
+         */
+        public void ScreenFadeOut(GameTime gameTime, GraphicsDevice GraphicsDevice)
+        {
+            if (fadingOut)
+            {
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                float fadeOutTime = 1f;
+                fadingTime += deltaTime;
+                fadeAlpha -= deltaTime;
+
+                if (fadingTime < fadeOutTime)
+                {
+                    if (fadeAlpha < 0f)
+                    {
+                        fadeAlpha = 0f;
+                    }
+                    render.StartDrawingSpriteBatch(camera.GetCamera());
+                    render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
+                    render.FinishDrawingSpriteBatch();
+                }
+
+                if (fadingTime >= fadeOutTime)
+                {
+                    render.StartDrawingSpriteBatch(camera.GetCamera());
+                    render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain, 0f);
+                    render.FinishDrawingSpriteBatch();
+
+                    fadeAlpha = 0f;
+                    fadingTime = 0f;
+                    fadingOut = false;
+                }
+            }
         }
 
         /*
          * Save or load game data according to player input.
          */
-        public void SaveLoadInput(MainGame game, GraphicsDevice GraphicsDevice)
+        public void SaveLoadInput(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
             if (CurrentInputScreen == "game")
             {
@@ -151,7 +232,8 @@ namespace Logic
                         SaveGame();
                         break;
                     case "Down":
-                        LoadGame(game, GraphicsDevice);
+                        fadingIn = true;
+                        ScreenFadeIn(game, gameTime, GraphicsDevice);
                         break;
                 }
 
@@ -161,7 +243,8 @@ namespace Logic
                         SaveGame();
                         break;
                     case "F9":
-                        LoadGame(game, GraphicsDevice);
+                        fadingIn = true;
+                        ScreenFadeIn(game, gameTime, GraphicsDevice);
                         break;
                 }
             }
@@ -333,13 +416,14 @@ namespace Logic
         /*
          * Render game elements in order of y-axis position.
          */
-        public void Render(MainGame game, GraphicsDevice GraphicsDevice)
+        public void Render(MainGame game, GameTime gametime, GraphicsDevice GraphicsDevice)
         {
             switch (currentMapEnum)
             {
                 case CurrentMap.MainMenu:
                     GraphicsDevice.Clear(Color.Black); // Clear the graphics buffer and set the window background colour
                     render.StartDrawingSpriteBatch(camera.GetCamera());
+                    render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain);
                     render.MainMenuText(mainMenu.MenuOptions[0], mainMenu.TitlePosition, font, Color.GhostWhite, 2.5f);
                     render.MainMenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.Gray, 1);
                     render.MainMenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.Gray, 1);
@@ -364,7 +448,8 @@ namespace Logic
                             render.FinishDrawingSpriteBatch();
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
-                                LoadGame(game, GraphicsDevice);
+                                fadingIn = true;
+                                ScreenFadeIn(game, gametime, GraphicsDevice);
                             }
                             break;
                         case 2:
@@ -373,7 +458,8 @@ namespace Logic
                             render.FinishDrawingSpriteBatch();
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
-                                LoadGame(game, GraphicsDevice);
+                                fadingIn = true;
+                                ScreenFadeIn(game, gametime, GraphicsDevice);
                             }
                             break;
                         case 3:
@@ -460,6 +546,9 @@ namespace Logic
                             render.FinishDrawingSpriteBatch();
                         }
                     }
+
+                    ScreenFadeIn(game, gametime, GraphicsDevice);
+                    ScreenFadeOut(gametime, GraphicsDevice);
                     break;
 
             }

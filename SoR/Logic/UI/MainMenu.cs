@@ -1,5 +1,7 @@
 ﻿using Hardware.Input;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using SoR;
 using System.Collections.Generic;
 
 namespace Logic.UI
@@ -12,6 +14,7 @@ namespace Logic.UI
         private GamePadInput gamePadInput;
         private KeyboardInput keyboardInput;
         private int select;
+        public Texture2D Curtain { get; set; }
         public List<string> MenuOptions { get; set; }
         public Vector2 TitlePosition { get; set; }
         public Vector2 NewGamePosition { get; set; }
@@ -19,12 +22,13 @@ namespace Logic.UI
         public Vector2 LoadGamePosition { get; set; }
         public Vector2 GameSettingsPosition { get; set; }
 
-        public MainMenu(GraphicsDeviceManager graphics)
+        public MainMenu(MainGame game, GraphicsDeviceManager graphics)
         {
             gamePadInput = new GamePadInput();
             keyboardInput = new KeyboardInput();
 
             select = 0;
+            Curtain = game.Content.Load<Texture2D>(Globals.GetPath("Content\\SoR Resources\\Screens\\Screen Transitions\\curtain"));
 
             MenuOptions = ["Game Title", "Start new game", "Continue", "Load game", "Settings"];
             TitlePosition = new Vector2(graphics.PreferredBackBufferWidth / 2 - 125, 100);

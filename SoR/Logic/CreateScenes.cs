@@ -28,7 +28,7 @@ namespace Logic
         {
             CurrentInputScreen = "menu";
             currentMapEnum = CurrentMap.MainMenu;
-            mainMenu = new MainMenu(graphics);
+            mainMenu = new MainMenu(game, graphics);
             LoadGameContent(GraphicsDevice, game);
         }
 

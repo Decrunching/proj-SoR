@@ -25,9 +25,9 @@ namespace Logic.Screens
         /*
          * Draw the current state of the game to the screen.
          */
-        public void DrawGameState(MainGame game, GraphicsDevice GraphicsDevice)
+        public void DrawGameState(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
-            gameLogic.Render(game, GraphicsDevice);
+            gameLogic.Render(game, gameTime, GraphicsDevice);
         }
     }
 }

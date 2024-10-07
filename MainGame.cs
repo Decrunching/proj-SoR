@@ -115,7 +115,7 @@ namespace SoR
          */
         protected override void Draw(GameTime gameTime)
         {
-            screens.DrawGameState(game, GraphicsDevice);
+            screens.DrawGameState(game, gameTime, GraphicsDevice);
 
             base.Draw(gameTime);
         }
