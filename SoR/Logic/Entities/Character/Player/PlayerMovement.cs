@@ -95,6 +95,9 @@ namespace Logic.Entities.Character.Player
                     direction.Y = 0;
                     movementAnimation = "idlebattle";
                     break;
+                case 5:
+                    direction.Y = 0;
+                    break;
             }
         }
 

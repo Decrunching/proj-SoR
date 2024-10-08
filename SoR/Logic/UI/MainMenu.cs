@@ -22,11 +22,11 @@ namespace Logic.UI
         public Vector2 LoadGamePosition { get; set; }
         public Vector2 GameSettingsPosition { get; set; }
 
-        public MainMenu(MainGame game, GraphicsDeviceManager graphics, GameWindow Window)
+        public MainMenu(MainGame game, GraphicsDeviceManager graphics)
         {
             gamePadInput = new GamePadInput();
             keyboardInput = new KeyboardInput();
-            keyboardInput.KeyboardInitialise(game, Window);
+            keyboardInput.KeyboardInitialise(game, game.Window);
 
             select = 0;
             Curtain = game.Content.Load<Texture2D>(Globals.GetPath("Content\\SoR Resources\\Screens\\Screen Transitions\\curtain"));

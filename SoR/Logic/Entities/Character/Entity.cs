@@ -1,6 +1,5 @@
 ﻿using Logic.GameMap;
 using Microsoft.Xna.Framework;
-using SoR;
 using Spine;
 using System.Collections.Generic;
 

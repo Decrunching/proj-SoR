@@ -14,6 +14,10 @@ namespace Hardware.Input
         private KeyboardStateExtended keyState;
         private KeyboardStateExtended lastKeyState;
         private readonly KeyboardListener keyboardListener;
+        private bool up;
+        private bool down;
+        private bool left;
+        private bool right;
         public bool CurrentInputDevice { get; set; }
 
         public KeyboardInput()
@@ -21,6 +25,10 @@ namespace Hardware.Input
             keyboardListener = new KeyboardListener();
 
             CurrentInputDevice = false;
+            up = false;
+            down = false;
+            left = false;
+            right = false;
         }
 
         /*
@@ -39,7 +47,6 @@ namespace Hardware.Input
         public void KeyboardUpdate(GameTime gameTime)
         {
             keyboardListener.Update(gameTime);
-            keyState = KeyboardExtended.GetState(); // Get the current keyboard state
         }
 
         /*
@@ -47,44 +54,64 @@ namespace Hardware.Input
          */
         public int CheckXMoveInput()
         {
+            keyState = KeyboardExtended.GetState(); // Get the current keyboard state
+
             int xAxisInput = 0;
 
-            if (keyState.WasKeyPressed(Keys.Left) ||
-                keyState.WasKeyPressed(Keys.A))
+            if (keyState.IsKeyDown(Keys.Left) ||
+                keyState.IsKeyDown(Keys.A))
             {
                 CurrentInputDevice = true;
-                xAxisInput = 1;
+                left = true;
+
+                if (!lastKeyState.IsKeyDown(Keys.Left) ||
+                    !lastKeyState.IsKeyDown(Keys.A))
+                {
+                    xAxisInput = 1;
+                }
             }
-            else if (keyState.WasKeyPressed(Keys.Right) ||
-                keyState.WasKeyPressed(Keys.D))
+            else if (keyState.IsKeyDown(Keys.Right) ||
+                keyState.IsKeyDown(Keys.D))
             {
                 CurrentInputDevice = true;
-                xAxisInput = 2;
+                right = true;
+
+                if (!lastKeyState.IsKeyDown(Keys.Right) ||
+                !lastKeyState.IsKeyDown(Keys.D))
+                {
+                    xAxisInput = 2;
+                }
             }
 
-            if ((keyState.WasKeyPressed(Keys.Left) ||
-            keyState.WasKeyPressed(Keys.A)) &&
-            (keyState.WasKeyPressed(Keys.Right) ||
-            keyState.WasKeyPressed(Keys.D)))
+            if ((keyState.IsKeyDown(Keys.Left) ||
+            keyState.IsKeyDown(Keys.A)) &&
+            (keyState.IsKeyDown(Keys.Right) ||
+            keyState.IsKeyDown(Keys.D)))
             {
                 xAxisInput = 4;
+                left = true;
+                right = true;
             }
 
             bool unpressedLeft =
-                (!keyState.IsKeyDown(Keys.Left) &&
-                lastKeyState.IsKeyDown(Keys.Left)) ||
-                (!keyState.IsKeyDown(Keys.A) &&
-                lastKeyState.IsKeyDown(Keys.A));
+                keyState.WasKeyReleased(Keys.Left) ||
+                keyState.WasKeyReleased(Keys.A);
 
             bool unpressedRight =
-                (!keyState.IsKeyDown(Keys.Right) &&
-                lastKeyState.IsKeyDown(Keys.Right)) ||
-                (!keyState.IsKeyDown(Keys.D) &&
-                lastKeyState.IsKeyDown(Keys.D));
+                keyState.WasKeyReleased(Keys.Right) ||
+                keyState.WasKeyReleased(Keys.D);
 
             if (unpressedLeft || unpressedRight)
             {
                 xAxisInput = 3;
+            }
+            if (unpressedLeft)
+            {
+                left = false;
+            }
+            if (unpressedRight)
+            {
+                right = false;
             }
 
             lastKeyState = keyState; // Get the previous keyboard state
@@ -97,12 +124,15 @@ namespace Hardware.Input
          */
         public int CheckYMoveInput()
         {
+            keyState = KeyboardExtended.GetState(); // Get the current keyboard state
+
             int yAxisInput = 0;
 
             if (keyState.IsKeyDown(Keys.Up) ||
                 keyState.IsKeyDown(Keys.W))
             {
                 CurrentInputDevice = true;
+                up = true;
 
                 if (!lastKeyState.IsKeyDown(Keys.Up) ||
                 !lastKeyState.IsKeyDown(Keys.W))
@@ -114,6 +144,7 @@ namespace Hardware.Input
                 keyState.IsKeyDown(Keys.S))
             {
                 CurrentInputDevice = true;
+                down = true;
 
                 if (!lastKeyState.IsKeyDown(Keys.Down) ||
                 !lastKeyState.IsKeyDown(Keys.S))
@@ -127,24 +158,38 @@ namespace Hardware.Input
             (keyState.IsKeyDown(Keys.Down) ||
             keyState.IsKeyDown(Keys.S)))
             {
-                yAxisInput = 4;
+                up = true;
+                down = true;
+
+                if (left || right)
+                {
+                    yAxisInput = 5;
+                }
+                else
+                {
+                    yAxisInput = 4;
+                }
             }
 
             bool unpressedUp =
-                (!keyState.IsKeyDown(Keys.Up) &&
-                lastKeyState.IsKeyDown(Keys.Up)) ||
-                (!keyState.IsKeyDown(Keys.W) &&
-                lastKeyState.IsKeyDown(Keys.W));
+                keyState.WasKeyReleased(Keys.Up) ||
+                keyState.WasKeyReleased(Keys.W);
 
             bool unpressedDown =
-                (!keyState.IsKeyDown(Keys.Down) &&
-                lastKeyState.IsKeyDown(Keys.Down)) ||
-                (!keyState.IsKeyDown(Keys.S) &&
-                lastKeyState.IsKeyDown(Keys.S));
+                keyState.WasKeyReleased(Keys.Down) ||
+                keyState.WasKeyReleased(Keys.S);
 
             if (unpressedUp || unpressedDown)
             {
                 yAxisInput = 3;
+            }
+            if (unpressedUp)
+            {
+                up = false;
+            }
+            if (unpressedDown)
+            {
+                down = false;
             }
 
             lastKeyState = keyState; // Get the previous keyboard state
@@ -159,6 +204,8 @@ namespace Hardware.Input
         public string CheckKeyInput()
         {
             string key = "none";
+
+            keyState = KeyboardExtended.GetState(); // Get the current keyboard state
 
             if (keyState.IsKeyDown(Keys.F4) && !lastKeyState.IsKeyDown(Keys.F4))
             {
