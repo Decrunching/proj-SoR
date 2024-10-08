@@ -459,7 +459,7 @@ namespace Logic
                     render.MainMenuText(mainMenu.MenuOptions[4], mainMenu.GameSettingsPosition, font, Color.Gray, 1);
                     render.FinishDrawingSpriteBatch();
 
-                    switch (mainMenu.NavigateMenu())
+                    switch (mainMenu.NavigateMenu(gameTime))
                     {
                         case 0:
                             render.StartDrawingSpriteBatch(camera.GetCamera());

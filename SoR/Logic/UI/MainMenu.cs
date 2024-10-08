@@ -22,10 +22,11 @@ namespace Logic.UI
         public Vector2 LoadGamePosition { get; set; }
         public Vector2 GameSettingsPosition { get; set; }
 
-        public MainMenu(MainGame game, GraphicsDeviceManager graphics)
+        public MainMenu(MainGame game, GraphicsDeviceManager graphics, GameWindow Window)
         {
             gamePadInput = new GamePadInput();
             keyboardInput = new KeyboardInput();
+            keyboardInput.KeyboardInitialise(game, Window);
 
             select = 0;
             Curtain = game.Content.Load<Texture2D>(Globals.GetPath("Content\\SoR Resources\\Screens\\Screen Transitions\\curtain"));
@@ -41,8 +42,10 @@ namespace Logic.UI
         /*
          * Navigate the menu.
          */
-        public int NavigateMenu()
+        public int NavigateMenu(GameTime gameTime)
         {
+            keyboardInput.KeyboardUpdate(gameTime);
+
             switch (gamePadInput.CheckButtonInput())
             {
                 case "Up":

@@ -64,9 +64,6 @@ namespace Logic.Entities.Character.Mobs
 
             random = new Random();
 
-            idle = true; // Player is currently idle
-            lastAnimation = ""; // Get the last key pressed
-
             Traversable = true; // Whether the entity is on walkable terrain
 
             CountDistance = 0; // Count how far to automatically move the entity

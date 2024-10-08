@@ -1,5 +1,8 @@
-﻿using Microsoft.Xna.Framework.Input;
-using System.Collections.Generic;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Input;
+using MonoGame.Extended.Input.InputListeners;
+using SoR;
 
 namespace Hardware.Input
 {
@@ -8,14 +11,35 @@ namespace Hardware.Input
      */
     public class KeyboardInput
     {
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
-        public Dictionary<Keys, InputKeys> InputCollection { get; set; }
+        private KeyboardStateExtended keyState;
+        private KeyboardStateExtended lastKeyState;
+        private readonly KeyboardListener keyboardListener;
         public bool CurrentInputDevice { get; set; }
 
         public KeyboardInput()
         {
+            keyboardListener = new KeyboardListener();
+
             CurrentInputDevice = false;
+        }
+
+        /*
+         * 
+         */
+        public void KeyboardInitialise(MainGame game, GameWindow Window)
+        {
+            keyboardListener.KeyPressed += (sender, args) => { Window.Title = $"Key {args.Key} Pressed"; };
+
+            game.Components.Add(new InputListenerComponent(game, keyboardListener));
+        }
+
+        /*
+         * Update keyboard input.
+         */
+        public void KeyboardUpdate(GameTime gameTime)
+        {
+            keyboardListener.Update(gameTime);
+            keyState = KeyboardExtended.GetState(); // Get the current keyboard state
         }
 
         /*
@@ -23,37 +47,25 @@ namespace Hardware.Input
          */
         public int CheckXMoveInput()
         {
-            keyState = Keyboard.GetState(); // Get the current keyboard state
-
             int xAxisInput = 0;
 
-            if (keyState.IsKeyDown(Keys.Left) ||
-                keyState.IsKeyDown(Keys.A))
+            if (keyState.WasKeyPressed(Keys.Left) ||
+                keyState.WasKeyPressed(Keys.A))
             {
                 CurrentInputDevice = true;
-
-                if (!lastKeyState.IsKeyDown(Keys.Left) ||
-                    !lastKeyState.IsKeyDown(Keys.A))
-                {
-                    xAxisInput = 1;
-                }
+                xAxisInput = 1;
             }
-            else if (keyState.IsKeyDown(Keys.Right) ||
-                keyState.IsKeyDown(Keys.D))
+            else if (keyState.WasKeyPressed(Keys.Right) ||
+                keyState.WasKeyPressed(Keys.D))
             {
                 CurrentInputDevice = true;
-
-                if (!lastKeyState.IsKeyDown(Keys.Right) ||
-                !lastKeyState.IsKeyDown(Keys.D))
-                {
-                    xAxisInput = 2;
-                }
+                xAxisInput = 2;
             }
 
-            if ((keyState.IsKeyDown(Keys.Left) ||
-            keyState.IsKeyDown(Keys.A)) &&
-            (keyState.IsKeyDown(Keys.Right) ||
-            keyState.IsKeyDown(Keys.D)))
+            if ((keyState.WasKeyPressed(Keys.Left) ||
+            keyState.WasKeyPressed(Keys.A)) &&
+            (keyState.WasKeyPressed(Keys.Right) ||
+            keyState.WasKeyPressed(Keys.D)))
             {
                 xAxisInput = 4;
             }
@@ -85,8 +97,6 @@ namespace Hardware.Input
          */
         public int CheckYMoveInput()
         {
-            keyState = Keyboard.GetState(); // Get the current keyboard state
-
             int yAxisInput = 0;
 
             if (keyState.IsKeyDown(Keys.Up) ||
@@ -149,8 +159,6 @@ namespace Hardware.Input
         public string CheckKeyInput()
         {
             string key = "none";
-
-            keyState = Keyboard.GetState(); // Get the current keyboard state
 
             if (keyState.IsKeyDown(Keys.F4) && !lastKeyState.IsKeyDown(Keys.F4))
             {

@@ -18,8 +18,6 @@ namespace Hardware.Graphics
         private int screenHeight;
         private GamePadInput gamePadInput;
         private KeyboardInput keyboardInput;
-        /*private KeyboardState keyState;
-        private KeyboardState lastKeyState;*/
         private Vector2 resolution;
 
         public GraphicsSettings(MainGame game, GraphicsDeviceManager graphics, GameWindow Window)
@@ -34,7 +32,7 @@ namespace Hardware.Graphics
             isBorderless = false;
             Window.AllowAltF4 = true;
             Window.AllowUserResizing = false;
-            game.IsMouseVisible = true;
+            game.IsMouseVisible = false;
 
             gamePadInput = new GamePadInput();
             keyboardInput = new KeyboardInput();
@@ -47,21 +45,11 @@ namespace Hardware.Graphics
          */
         public Vector2 CheckIfBorderlessToggled(GraphicsDeviceManager graphics, GameWindow Window)
         {
-            //keyState = Keyboard.GetState(); // Get the current keyboard state
-
             if (gamePadInput.CheckButtonInput() == "Start" || keyboardInput.CheckKeyInput() == "F4")
             {
                 ToggleBorderlessMode(graphics, Window);
                 resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
             }
-
-            /*if (keyState.IsKeyDown(Keys.F4) & !lastKeyState.IsKeyDown(Keys.F4))
-            {
-                ToggleBorderlessMode(graphics, Window);
-                resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
-            }
-
-            lastKeyState = keyState;*/ // Get the previous keyboard state
 
             return resolution;
         }

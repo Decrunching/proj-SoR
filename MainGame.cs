@@ -2,6 +2,8 @@
 using Logic.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using MonoGame.Extended.Input;
+using MonoGame.Extended.Input.InputListeners;
 
 namespace SoR
 {
@@ -84,6 +86,7 @@ namespace SoR
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
 
+            KeyboardExtended.Update();
             UpdateResolution(graphicsSettings.CheckIfBorderlessToggled(graphics, Window));
 
             screens.UpdateGameState(gameTime, game, GraphicsDevice, graphics);

@@ -6,14 +6,13 @@ using Spine;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using Hardware.Input;
-using System;
 
 namespace Logic.Entities.Character.Player
 {
     /*
      * Stores information unique to Player.
      */
-    internal class Player : Entity
+    internal partial class Player : Entity
     {
         private KeyboardState keyState;
         private KeyboardState lastKeyState;
