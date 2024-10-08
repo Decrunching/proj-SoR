@@ -41,7 +41,14 @@ namespace Hardware.Graphics
          */
         public void MainMenuBackground(GraphicsDevice GraphicsDevice, Texture2D Curtain, float fadeAlpha = 1f)
         {
-            Rectangle destRect = new Rectangle(0, 0, GraphicsDevice.Viewport.Width, GraphicsDevice.Viewport.Height);
+            int screenWidth = GraphicsDevice.Viewport.Width;
+            int screenHeight = GraphicsDevice.Viewport.Height;
+            int positionX = screenWidth / 2;
+            int positionY = screenHeight / 2;
+            Rectangle destRect = new Rectangle(positionX, positionY, screenWidth, screenHeight);
+            Vector2 origin = new Vector2(screenWidth / 2, screenHeight / 2);
+            Vector2 scale = new Vector2(screenWidth, screenHeight);
+            Vector2 position = new Vector2(screenWidth / 2, screenHeight / 2);
 
             spriteBatch.Draw(
                 Curtain,
@@ -49,10 +56,8 @@ namespace Hardware.Graphics
                 destRect,
                 Color.White * fadeAlpha,
                 0f,
-                Vector2.Zero,
-                new Vector2(
-                    GraphicsDevice.Viewport.Width,
-                    GraphicsDevice.Viewport.Height),
+                origin,
+                scale,
                 SpriteEffects.None,
                 0f);
         }

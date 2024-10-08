@@ -54,7 +54,7 @@ namespace Logic.Screens
                     gameLogic.CurrentMapString = "none";
                     break;
             }
-            gameLogic.SaveLoadInput(game, GraphicsDevice);
+            gameLogic.SaveLoadInput(game, gameTime, GraphicsDevice);
         }
     }
 }

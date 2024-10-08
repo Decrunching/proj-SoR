@@ -33,6 +33,7 @@ namespace Logic
         private GamePadInput gamePadInput;
         private KeyboardInput keyboardInput;
         private Entity player;
+        private Color backgroundColour;
         private Dictionary<string, Vector2> mapLowerWalls;
         private Dictionary<string, Vector2> mapUpperWalls;
         private Dictionary<string, Vector2> mapFloor;
@@ -42,9 +43,10 @@ namespace Logic
         private bool hasUpperWalls;
         private bool hasFloorDecor;
         private bool fadingIn;
+        private bool curtainUp;
         private bool fadingOut;
         private float fadeAlpha;
-        private float fadingTime;
+        private float timer;
         public Dictionary<string, Entity> Entities { get; set; }
         public Dictionary<string, Scenery> Scenery { get; set; }
         public string CurrentInputScreen { get; set; }
@@ -85,9 +87,11 @@ namespace Logic
             hasUpperWalls = false;
 
             fadingIn = false;
+            curtainUp = false;
             fadingOut = false;
             fadeAlpha = 0f;
-            fadingTime = 0f;
+            timer = 0f;
+            backgroundColour = new Color(0, 11, 8);
 
             Entities = [];
             Scenery = [];
@@ -150,12 +154,12 @@ namespace Logic
             {
                 float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 float fadeInTime = 0.3f;
-                fadingTime += deltaTime;
+                timer += deltaTime;
                 fadeAlpha += deltaTime * 3.33f;
 
-                if (fadingTime < fadeInTime)
+                if (timer < fadeInTime)
                 {
-                    fadingTime += deltaTime;
+                    timer += deltaTime;
 
                     if (fadeAlpha > 1f)
                     {
@@ -167,7 +171,7 @@ namespace Logic
                     render.FinishDrawingSpriteBatch();
                 }
 
-                if (fadingTime >= fadeInTime)
+                if (timer >= fadeInTime)
                 {
                     render.StartDrawingSpriteBatch(camera.GetCamera());
                     render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain);
@@ -176,8 +180,32 @@ namespace Logic
                     LoadGame(game, GraphicsDevice);
 
                     fadeAlpha = 1f;
-                    fadingTime = 0f;
+                    timer = 0f;
                     fadingIn = false;
+                    curtainUp = true;
+                }
+            }
+        }
+
+        /*
+         * Hold the curtain in place.
+         */
+        public void ScreenCurtainHold(GameTime gameTime, GraphicsDevice GraphicsDevice)
+        {
+            if (curtainUp)
+            {
+                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+                float curtainTime = 0.5f;
+                timer += deltaTime;
+
+                render.StartDrawingSpriteBatch(camera.GetCamera());
+                render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain);
+                render.FinishDrawingSpriteBatch();
+
+                if (timer >= curtainTime)
+                {
+                    timer = 0f;
+                    curtainUp = false;
                     fadingOut = true;
                 }
             }
@@ -192,10 +220,10 @@ namespace Logic
             {
                 float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 float fadeOutTime = 1f;
-                fadingTime += deltaTime;
+                timer += deltaTime;
                 fadeAlpha -= deltaTime;
 
-                if (fadingTime < fadeOutTime)
+                if (timer < fadeOutTime)
                 {
                     if (fadeAlpha < 0f)
                     {
@@ -206,14 +234,14 @@ namespace Logic
                     render.FinishDrawingSpriteBatch();
                 }
 
-                if (fadingTime >= fadeOutTime)
+                if (timer >= fadeOutTime)
                 {
                     render.StartDrawingSpriteBatch(camera.GetCamera());
                     render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain, 0f);
                     render.FinishDrawingSpriteBatch();
 
                     fadeAlpha = 0f;
-                    fadingTime = 0f;
+                    timer = 0f;
                     fadingOut = false;
                 }
             }
@@ -416,12 +444,12 @@ namespace Logic
         /*
          * Render game elements in order of y-axis position.
          */
-        public void Render(MainGame game, GameTime gametime, GraphicsDevice GraphicsDevice)
+        public void Render(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
             switch (currentMapEnum)
             {
                 case CurrentMap.MainMenu:
-                    GraphicsDevice.Clear(Color.Black); // Clear the graphics buffer and set the window background colour
+                    GraphicsDevice.Clear(backgroundColour); // Clear the graphics buffer and set the window background colour
                     render.StartDrawingSpriteBatch(camera.GetCamera());
                     render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain);
                     render.MainMenuText(mainMenu.MenuOptions[0], mainMenu.TitlePosition, font, Color.GhostWhite, 2.5f);
@@ -449,7 +477,7 @@ namespace Logic
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
                                 fadingIn = true;
-                                ScreenFadeIn(game, gametime, GraphicsDevice);
+                                ScreenFadeIn(game, gameTime, GraphicsDevice);
                             }
                             break;
                         case 2:
@@ -459,7 +487,7 @@ namespace Logic
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
                                 fadingIn = true;
-                                ScreenFadeIn(game, gametime, GraphicsDevice);
+                                ScreenFadeIn(game, gameTime, GraphicsDevice);
                             }
                             break;
                         case 3:
@@ -475,7 +503,7 @@ namespace Logic
                     break;
 
                 default:
-                    GraphicsDevice.Clear(Color.DarkSeaGreen); // Clear the graphics buffer and set the window background colour
+                    GraphicsDevice.Clear(backgroundColour); // Clear the graphics buffer and set the window background colour
 
                     foreach (var tileName in mapFloor)
                     {
@@ -547,8 +575,9 @@ namespace Logic
                         }
                     }
 
-                    ScreenFadeIn(game, gametime, GraphicsDevice);
-                    ScreenFadeOut(gametime, GraphicsDevice);
+                    ScreenFadeIn(game, gameTime, GraphicsDevice);
+                    ScreenCurtainHold(gameTime, GraphicsDevice);
+                    ScreenFadeOut(gameTime, GraphicsDevice);
                     break;
 
             }

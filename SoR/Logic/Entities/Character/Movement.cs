@@ -1,7 +1,6 @@
 ﻿using Hardware.Input;
 using Logic.GameMap;
 using Microsoft.Xna.Framework;
-using MonoGame.Extended.Timers;
 using System;
 using System.Collections.Generic;
 
@@ -290,7 +289,7 @@ namespace Logic.Entities.Character
         public void FrozenTimer(GameTime gameTime)
         {
             float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            float freezeTime = 1;
+            float freezeTime = 1f;
             sinceFreeze += deltaTime;
 
             if (sinceFreeze >= freezeTime)
