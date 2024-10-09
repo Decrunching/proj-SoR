@@ -13,6 +13,7 @@ namespace SoR.Logic.UI
     public class MainMenu
     {
         private GamePadInput gamePadInput;
+        private GamePadListener gamePadListener;
         private KeyboardInput keyboardInput;
         private KeyboardListener keyboardListener;
         private int select;
@@ -23,6 +24,7 @@ namespace SoR.Logic.UI
         public Vector2 ContinueGamePosition { get; set; }
         public Vector2 LoadGamePosition { get; set; }
         public Vector2 GameSettingsPosition { get; set; }
+        public bool MainMenuScreen { get; set; }
 
         public MainMenu(MainGame game, GraphicsDeviceManager graphics)
         {
@@ -36,11 +38,19 @@ namespace SoR.Logic.UI
                 RepeatDelayMilliseconds = 100
             };
 
+            var gamePadListenerSettings = new GamePadListenerSettings
+            {
+                RepeatInitialDelay = 250,
+                RepeatDelay = 100
+            };
+
             keyboardListener = new KeyboardListener(keyboardListenerSettings);
+            gamePadListener = new GamePadListener(gamePadListenerSettings);
 
             // Debugging - shows the pressed key is being registered
             keyboardListener.KeyPressed += (sender, args) => {game.Window.Title = $"Key {args.Key} Pressed"; };
             keyboardListener.KeyPressed += OnKeyPressed;
+            gamePadListener.ButtonRepeated += OnButtonPressed;
 
             select = 0;
             Curtain = game.Content.Load<Texture2D>(Globals.GetPath("Content\\SoR Resources\\Screens\\Screen Transitions\\curtain"));
@@ -51,6 +61,8 @@ namespace SoR.Logic.UI
             ContinueGamePosition = new Vector2(100, 320);
             LoadGamePosition = new Vector2(100, 340);
             GameSettingsPosition = new Vector2(100, 360);
+
+            MainMenuScreen = true;
         }
 
         /*
@@ -66,14 +78,37 @@ namespace SoR.Logic.UI
          */
         private void OnKeyPressed(object sender, KeyboardEventArgs e)
         {
-            if (e.Key == Keys.Down)
+            if (e.Key == Keys.Down ||
+                e.Key == Keys.S)
             {
                 if (select < 3)
                 {
                     select++;
                 }
             }
-            else if (e.Key == Keys.Up)
+            else if (e.Key == Keys.Up ||
+                e.Key == Keys.W)
+            {
+                if (select > 0)
+                {
+                    select--;
+                }
+            }
+        }
+
+        /*
+         * 
+         */
+        private void OnButtonPressed(object sender, GamePadEventArgs e)
+        {
+            if (e.Button == Buttons.DPadDown)
+            {
+                if (select < 3)
+                {
+                    select++;
+                }
+            }
+            else if (e.Button == Buttons.DPadUp)
             {
                 if (select > 0)
                 {
@@ -87,7 +122,6 @@ namespace SoR.Logic.UI
          */
         public int NavigateMenu(GameTime gameTime)
         {
-            KeyboardUpdate(gameTime);
 
             switch (gamePadInput.CheckButtonInput())
             {

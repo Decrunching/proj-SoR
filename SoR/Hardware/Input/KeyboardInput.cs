@@ -53,8 +53,8 @@ namespace SoR.Hardware.Input
             {
                 key = "Down";
             }
-            if (keyState.WasKeyPressed(Keys.Up) && !lastKeyState.IsKeyDown(Keys.Up) ||
-                keyState.WasKeyPressed(Keys.W) && !lastKeyState.IsKeyDown(Keys.W))
+            if (keyState.IsKeyDown(Keys.Up) && !lastKeyState.IsKeyDown(Keys.Up) ||
+                keyState.IsKeyDown(Keys.W) && !lastKeyState.IsKeyDown(Keys.W))
             {
                 key = "Up";
             }
@@ -120,10 +120,6 @@ namespace SoR.Hardware.Input
                 keyState.WasKeyReleased(Keys.Right) ||
                 keyState.WasKeyReleased(Keys.D);
 
-            if (unpressedLeft || unpressedRight)
-            {
-                xAxisInput = 3;
-            }
             if (unpressedLeft)
             {
                 left = false;
@@ -131,6 +127,10 @@ namespace SoR.Hardware.Input
             if (unpressedRight)
             {
                 right = false;
+            }
+            if (unpressedLeft || unpressedRight)
+            {
+                xAxisInput = 3;
             }
 
             lastKeyState = keyState; // Get the previous keyboard state
@@ -198,10 +198,6 @@ namespace SoR.Hardware.Input
                 keyState.WasKeyReleased(Keys.Down) ||
                 keyState.WasKeyReleased(Keys.S);
 
-            if (unpressedUp || unpressedDown)
-            {
-                yAxisInput = 3;
-            }
             if (unpressedUp)
             {
                 up = false;
@@ -209,6 +205,14 @@ namespace SoR.Hardware.Input
             if (unpressedDown)
             {
                 down = false;
+            }
+            if (unpressedUp || unpressedDown)
+            {
+                yAxisInput = 3;
+            }
+            if (!up && !down && !left && !right)
+            {
+                yAxisInput = 4;
             }
 
             lastKeyState = keyState; // Get the previous keyboard state

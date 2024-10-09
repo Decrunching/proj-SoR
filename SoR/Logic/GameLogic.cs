@@ -39,13 +39,14 @@ namespace SoR.Logic
         private Dictionary<string, Vector2> mapFloorDecor;
         private List<Vector2> positions;
         private List<Rectangle> impassableArea;
+        private bool loadingGame;
         private bool hasUpperWalls;
         private bool hasFloorDecor;
         private bool fadingIn;
         private bool curtainUp;
         private bool fadingOut;
         private float fadeAlpha;
-        private float timer;
+        private float curtainTimer;
         public Dictionary<string, Entity> Entities { get; set; }
         public Dictionary<string, Scenery> Scenery { get; set; }
         public string CurrentInputScreen { get; set; }
@@ -85,11 +86,12 @@ namespace SoR.Logic
             hasFloorDecor = false;
             hasUpperWalls = false;
 
+            loadingGame = false;
             fadingIn = false;
             curtainUp = false;
             fadingOut = false;
             fadeAlpha = 0f;
-            timer = 0f;
+            curtainTimer = 0f;
             backgroundColour = new Color(0, 11, 8);
 
             Entities = [];
@@ -121,9 +123,9 @@ namespace SoR.Logic
         }
 
         /*
-         * Load the game from a file.
+         * Load the game from a file once the curtain is fully opaque.
          */
-        public void LoadGame(MainGame game, GraphicsDevice GraphicsDevice)
+        public void LoadGame(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
             GameState gameState = GameState.LoadFile();
 
@@ -140,42 +142,44 @@ namespace SoR.Logic
             player.Position = gameState.Position;
             player.HitPoints = gameState.HitPoints;
             player.Skin = gameState.Skin;
+            loadingGame = false;
         }
 
         /*
          * Fade in the curtain.
          */
-        public void ScreenFadeIn(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
+        public void ScreenFadeIn(GameTime gameTime, MainGame game, GraphicsDevice GraphicsDevice)
         {
             if (fadingIn)
             {
                 float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 float fadeInTime = 0.3f;
-                timer += deltaTime;
+                curtainTimer += deltaTime;
                 fadeAlpha += deltaTime * 3.33f;
 
-                if (timer < fadeInTime)
+                if (curtainTimer < fadeInTime)
                 {
-                    timer += deltaTime;
+                    curtainTimer += deltaTime;
 
                     if (fadeAlpha > 1f)
                     {
                         fadeAlpha = 1f;
                     }
 
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
-                    render.FinishDrawingSpriteBatch();
+                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
                 }
 
-                if (timer >= fadeInTime)
+                if (curtainTimer >= fadeInTime)
                 {
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain);
-                    render.FinishDrawingSpriteBatch();
+                    DrawCurtain(GraphicsDevice, mainMenu.Curtain);
+
+                    if (loadingGame && fadingIn)
+                    {
+                        LoadGame(game, gameTime, GraphicsDevice);
+                    }
 
                     fadeAlpha = 1f;
-                    timer = 0f;
+                    curtainTimer = 0f;
                     fadingIn = false;
                     curtainUp = true;
                 }
@@ -191,15 +195,13 @@ namespace SoR.Logic
             {
                 float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 float curtainTime = 0.5f;
-                timer += deltaTime;
+                curtainTimer += deltaTime;
 
-                render.StartDrawingSpriteBatch(camera.GetCamera());
-                render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain);
-                render.FinishDrawingSpriteBatch();
+                DrawCurtain(GraphicsDevice, mainMenu.Curtain);
 
-                if (timer >= curtainTime)
+                if (curtainTimer >= curtainTime)
                 {
-                    timer = 0f;
+                    curtainTimer = 0f;
                     curtainUp = false;
                     fadingOut = true;
                 }
@@ -215,28 +217,25 @@ namespace SoR.Logic
             {
                 float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 float fadeOutTime = 1f;
-                timer += deltaTime;
+                curtainTimer += deltaTime;
                 fadeAlpha -= deltaTime;
 
-                if (timer < fadeOutTime)
+                if (curtainTimer < fadeOutTime)
                 {
                     if (fadeAlpha < 0f)
                     {
                         fadeAlpha = 0f;
                     }
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
-                    render.FinishDrawingSpriteBatch();
+
+                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
                 }
 
-                if (timer >= fadeOutTime)
+                if (curtainTimer >= fadeOutTime)
                 {
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain, 0f);
-                    render.FinishDrawingSpriteBatch();
+                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, 0f);
 
                     fadeAlpha = 0f;
-                    timer = 0f;
+                    curtainTimer = 0f;
                     fadingOut = false;
                 }
             }
@@ -255,12 +254,9 @@ namespace SoR.Logic
                         SaveGame();
                         break;
                     case "Down":
+                        loadingGame = true;
                         fadingIn = true;
-
-                        ScreenFadeIn(game, gameTime, GraphicsDevice);
-                        LoadGame(game, GraphicsDevice);
-
-                        CurrentInputScreen = "game";
+                        ScreenFadeIn(gameTime, game, GraphicsDevice);
                         break;
                 }
 
@@ -270,12 +266,9 @@ namespace SoR.Logic
                         SaveGame();
                         break;
                     case "F9":
+                        loadingGame = true;
                         fadingIn = true;
-
-                        ScreenFadeIn(game, gameTime, GraphicsDevice);
-                        LoadGame(game, GraphicsDevice);
-
-                        CurrentInputScreen = "game";
+                        ScreenFadeIn(gameTime, game, GraphicsDevice);
                         break;
                 }
             }
@@ -365,6 +358,8 @@ namespace SoR.Logic
          */
         public void UpdateWorld(GameTime gameTime, GraphicsDeviceManager graphics)
         {
+            mainMenu.KeyboardUpdate(gameTime);
+
             foreach (var scenery in Scenery.Values)
             {
                 // Update animations
@@ -445,6 +440,16 @@ namespace SoR.Logic
         }
 
         /*
+         * Draw the curtain.
+         */
+        public void DrawCurtain(GraphicsDevice GraphicsDevice, Texture2D Curtain, float fadeAlpha = 1f)
+        {
+            render.StartDrawingSpriteBatch(camera.GetCamera());
+            render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
+            render.FinishDrawingSpriteBatch();
+        }
+
+        /*
          * Render game elements in order of y-axis position.
          */
         public void Render(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
@@ -480,11 +485,7 @@ namespace SoR.Logic
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
                                 fadingIn = true;
-
-                                ScreenFadeIn(game, gameTime, GraphicsDevice);
-                                LoadGame(game, GraphicsDevice);
-
-                                CurrentInputScreen = "game";
+                                ScreenFadeIn(gameTime, game, GraphicsDevice);
                             }
                             break;
                         case 2:
@@ -494,11 +495,7 @@ namespace SoR.Logic
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
                                 fadingIn = true;
-
-                                ScreenFadeIn(game, gameTime, GraphicsDevice);
-                                LoadGame(game, GraphicsDevice);
-
-                                CurrentInputScreen = "game";
+                                ScreenFadeIn(gameTime, game, GraphicsDevice);
                             }
                             break;
                         case 3:
@@ -511,6 +508,13 @@ namespace SoR.Logic
                             }
                             break;
                     }
+
+                    ScreenFadeIn(gameTime, game, GraphicsDevice);
+                    if (curtainUp)
+                    {
+                        LoadGame(game, gameTime, GraphicsDevice);
+                    }
+
                     break;
 
                 default:
@@ -586,7 +590,7 @@ namespace SoR.Logic
                         }
                     }
 
-                    ScreenFadeIn(game, gameTime, GraphicsDevice);
+                    ScreenFadeIn(gameTime, game, GraphicsDevice);
                     ScreenCurtainHold(gameTime, GraphicsDevice);
                     ScreenFadeOut(gameTime, GraphicsDevice);
                     break;

@@ -36,6 +36,7 @@ namespace SoR.Logic
          */
         public void Village(MainGame game, GraphicsDevice GraphicsDevice)
         {
+            mainMenu.MainMenuScreen = false;
             CurrentInputScreen = "game";
 
             // Get the map to be used
@@ -74,6 +75,7 @@ namespace SoR.Logic
          */
         public void Temple(MainGame game, GraphicsDevice GraphicsDevice)
         {
+            mainMenu.MainMenuScreen = false;
             CurrentInputScreen = "game";
 
             // Get the map to be used
