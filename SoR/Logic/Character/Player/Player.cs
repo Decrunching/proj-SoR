@@ -128,7 +128,19 @@ namespace SoR.Logic.Character.Player
          */
         public override void UpdateAnimations(GameTime gameTime)
         {
-            SwitchSkin();
+            gamePadInput.CheckButtonInput();
+            keyboardInput.CheckKeyInput();
+            if (gamePadInput.CurrentInputDevice)
+            {
+                keyboardInput.CurrentInputDevice = false;
+                SwitchSkin(gamePadInput.CheckButtonInput());
+            }
+            if (keyboardInput.CurrentInputDevice)
+            {
+                gamePadInput.CurrentInputDevice = false;
+                SwitchSkin(keyboardInput.CheckKeyInput());
+            }
+
             ChangeAnimation(movementAnimation);
 
             base.UpdateAnimations(gameTime); // Call the parent UpdateAnimations function

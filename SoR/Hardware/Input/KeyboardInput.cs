@@ -35,6 +35,7 @@ namespace SoR.Hardware.Input
             key = "none";
 
             keyState = KeyboardExtended.GetState(); // Get the current keyboard state
+
             if (keyState.WasAnyKeyJustDown())
             {
                 CurrentInputDevice = true;
