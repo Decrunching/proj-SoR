@@ -54,6 +54,14 @@ namespace SoR.Logic.UI
         }
 
         /*
+         * Update keyboard input.
+         */
+        public void KeyboardUpdate(GameTime gameTime)
+        {
+            keyboardListener.Update(gameTime);
+        }
+
+        /*
          * On key press, move up and down menu items with a slight delay whilst the key is being held down.
          */
         private void OnKeyPressed(object sender, KeyboardEventArgs e)
@@ -72,14 +80,6 @@ namespace SoR.Logic.UI
                     select--;
                 }
             }
-        }
-
-        /*
-         * Update keyboard input.
-         */
-        public void KeyboardUpdate(GameTime gameTime)
-        {
-            keyboardListener.Update(gameTime);
         }
 
         /*

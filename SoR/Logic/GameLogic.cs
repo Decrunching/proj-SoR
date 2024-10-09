@@ -125,8 +125,6 @@ namespace SoR.Logic
          */
         public void LoadGame(MainGame game, GraphicsDevice GraphicsDevice)
         {
-            fadingIn = true;
-
             GameState gameState = GameState.LoadFile();
 
             switch (gameState.CurrentMap)
@@ -175,8 +173,6 @@ namespace SoR.Logic
                     render.StartDrawingSpriteBatch(camera.GetCamera());
                     render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain);
                     render.FinishDrawingSpriteBatch();
-
-                    LoadGame(game, GraphicsDevice);
 
                     fadeAlpha = 1f;
                     timer = 0f;
@@ -260,7 +256,11 @@ namespace SoR.Logic
                         break;
                     case "Down":
                         fadingIn = true;
+
                         ScreenFadeIn(game, gameTime, GraphicsDevice);
+                        LoadGame(game, GraphicsDevice);
+
+                        CurrentInputScreen = "game";
                         break;
                 }
 
@@ -271,7 +271,11 @@ namespace SoR.Logic
                         break;
                     case "F9":
                         fadingIn = true;
+
                         ScreenFadeIn(game, gameTime, GraphicsDevice);
+                        LoadGame(game, GraphicsDevice);
+
+                        CurrentInputScreen = "game";
                         break;
                 }
             }
@@ -476,7 +480,11 @@ namespace SoR.Logic
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
                                 fadingIn = true;
+
                                 ScreenFadeIn(game, gameTime, GraphicsDevice);
+                                LoadGame(game, GraphicsDevice);
+
+                                CurrentInputScreen = "game";
                             }
                             break;
                         case 2:
@@ -486,7 +494,11 @@ namespace SoR.Logic
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
                                 fadingIn = true;
+
                                 ScreenFadeIn(game, gameTime, GraphicsDevice);
+                                LoadGame(game, GraphicsDevice);
+
+                                CurrentInputScreen = "game";
                             }
                             break;
                         case 3:

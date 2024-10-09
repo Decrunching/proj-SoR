@@ -23,10 +23,6 @@ namespace SoR.Logic.Screens
         {
             switch (gameLogic.CurrentMapString)
             {
-                case "mainMenu":
-                    gameLogic.GameMainMenu(game, GraphicsDevice, graphics);
-                    gameLogic.CurrentMapString = "none";
-                    break;
                 case "none":
                     if (gameLogic.CurrentInputScreen == "game")
                     {
@@ -43,6 +39,10 @@ namespace SoR.Logic.Screens
                             }
                         }
                     }
+                    break;
+                case "mainMenu":
+                    gameLogic.GameMainMenu(game, GraphicsDevice, graphics);
+                    gameLogic.CurrentMapString = "none";
                     break;
                 case "village":
                     gameLogic.Village(game, GraphicsDevice);
