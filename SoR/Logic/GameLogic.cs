@@ -16,8 +16,8 @@ using SoR.Logic.GameMap;
 namespace SoR.Logic
 {
     /*
-     * Game logic. Manages interactions between game components. This part of the partial class sets which entities and interactables will appear in
-     * each game location and positions them on the map.
+     * Game logic. Manages how game elements are created, destroyed, rendered and positioned,
+     * as well as handling how, when and why various elements will interact.
      */
     public partial class GameLogic
     {
@@ -40,10 +40,9 @@ namespace SoR.Logic
         private List<Vector2> positions;
         private List<Rectangle> impassableArea;
         private bool loadingGame;
+        private bool newGame;
         private bool hasUpperWalls;
         private bool hasFloorDecor;
-        private bool fadingIn;
-        private bool curtainUp;
         private bool fadingOut;
         private float fadeAlpha;
         private float curtainTimer;
@@ -51,6 +50,8 @@ namespace SoR.Logic
         public Dictionary<string, Scenery> Scenery { get; set; }
         public string CurrentInputScreen { get; set; }
         public string CurrentMapString { get; set; }
+        public bool FadingIn { get; set; }
+        public bool CurtainUp { get; set; }
 
         /*
          * Differentiate between entities.
@@ -87,8 +88,8 @@ namespace SoR.Logic
             hasUpperWalls = false;
 
             loadingGame = false;
-            fadingIn = false;
-            curtainUp = false;
+            FadingIn = false;
+            CurtainUp = false;
             fadingOut = false;
             fadeAlpha = 0f;
             curtainTimer = 0f;
@@ -146,102 +147,6 @@ namespace SoR.Logic
         }
 
         /*
-         * Fade in the curtain.
-         */
-        public void ScreenFadeIn(GameTime gameTime, MainGame game, GraphicsDevice GraphicsDevice)
-        {
-            if (fadingIn)
-            {
-                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                float fadeInTime = 0.3f;
-                curtainTimer += deltaTime;
-                fadeAlpha += deltaTime * 3.33f;
-
-                if (curtainTimer < fadeInTime)
-                {
-                    curtainTimer += deltaTime;
-
-                    if (fadeAlpha > 1f)
-                    {
-                        fadeAlpha = 1f;
-                    }
-
-                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
-                }
-
-                if (curtainTimer >= fadeInTime)
-                {
-                    DrawCurtain(GraphicsDevice, mainMenu.Curtain);
-
-                    if (loadingGame && fadingIn)
-                    {
-                        LoadGame(game, gameTime, GraphicsDevice);
-                    }
-
-                    fadeAlpha = 1f;
-                    curtainTimer = 0f;
-                    fadingIn = false;
-                    curtainUp = true;
-                }
-            }
-        }
-
-        /*
-         * Hold the curtain in place.
-         */
-        public void ScreenCurtainHold(GameTime gameTime, GraphicsDevice GraphicsDevice)
-        {
-            if (curtainUp)
-            {
-                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                float curtainTime = 0.5f;
-                curtainTimer += deltaTime;
-
-                DrawCurtain(GraphicsDevice, mainMenu.Curtain);
-
-                if (curtainTimer >= curtainTime)
-                {
-                    curtainTimer = 0f;
-                    curtainUp = false;
-                    fadingOut = true;
-                }
-            }
-        }
-
-        /*
-         * Fade out the curtain.
-         */
-        public void ScreenFadeOut(GameTime gameTime, GraphicsDevice GraphicsDevice)
-        {
-            if (fadingOut)
-            {
-                float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                float fadeOutTime = 1f;
-                curtainTimer += deltaTime;
-                fadeAlpha -= deltaTime;
-
-                if (curtainTimer < fadeOutTime)
-                {
-                    if (fadeAlpha < 0f)
-                    {
-                        fadeAlpha = 0f;
-                    }
-
-                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
-                }
-
-                if (curtainTimer >= fadeOutTime)
-                {
-                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, 0f);
-
-                    fadeAlpha = 0f;
-                    curtainTimer = 0f;
-                    fadingOut = false;
-                }
-            }
-        }
-
-        /*
          * Save or load game data according to player input.
          */
         public void SaveLoadInput(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
@@ -255,7 +160,7 @@ namespace SoR.Logic
                         break;
                     case "Down":
                         loadingGame = true;
-                        fadingIn = true;
+                        FadingIn = true;
                         ScreenFadeIn(gameTime, game, GraphicsDevice);
                         break;
                 }
@@ -267,7 +172,7 @@ namespace SoR.Logic
                         break;
                     case "F9":
                         loadingGame = true;
-                        fadingIn = true;
+                        FadingIn = true;
                         ScreenFadeIn(gameTime, game, GraphicsDevice);
                         break;
                 }
@@ -358,8 +263,6 @@ namespace SoR.Logic
          */
         public void UpdateWorld(GameTime gameTime, GraphicsDeviceManager graphics)
         {
-            mainMenu.KeyboardUpdate(gameTime);
-
             foreach (var scenery in Scenery.Values)
             {
                 // Update animations
@@ -402,6 +305,14 @@ namespace SoR.Logic
                     }
                 }
             }
+        }
+
+        /*
+         * Get the current game time.
+         */
+        public float GetTime(GameTime gameTime)
+        {
+            return (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
 
         /*
@@ -475,7 +386,9 @@ namespace SoR.Logic
                             render.FinishDrawingSpriteBatch();
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
-                                Village(game, GraphicsDevice);
+                                FadingIn = true;
+                                newGame = true;
+                                ScreenFadeIn(gameTime, game, GraphicsDevice);
                             }
                             break;
                         case 1:
@@ -484,7 +397,8 @@ namespace SoR.Logic
                             render.FinishDrawingSpriteBatch();
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
-                                fadingIn = true;
+                                FadingIn = true;
+                                loadingGame = true;
                                 ScreenFadeIn(gameTime, game, GraphicsDevice);
                             }
                             break;
@@ -494,7 +408,8 @@ namespace SoR.Logic
                             render.FinishDrawingSpriteBatch();
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
-                                fadingIn = true;
+                                FadingIn = true;
+                                loadingGame = true;
                                 ScreenFadeIn(gameTime, game, GraphicsDevice);
                             }
                             break;
@@ -510,10 +425,6 @@ namespace SoR.Logic
                     }
 
                     ScreenFadeIn(gameTime, game, GraphicsDevice);
-                    if (curtainUp)
-                    {
-                        LoadGame(game, gameTime, GraphicsDevice);
-                    }
 
                     break;
 

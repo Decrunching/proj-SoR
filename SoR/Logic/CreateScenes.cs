@@ -21,11 +21,111 @@ namespace SoR.Logic
         }
 
         /*
-         * Create the main game menu.
+         * Fade in the curtain.
+         */
+        public void ScreenFadeIn(GameTime gameTime, MainGame game, GraphicsDevice GraphicsDevice)
+        {
+            if (FadingIn)
+            {
+                float deltaTime = GetTime(gameTime);
+                float fadeInTime = 0.3f;
+                curtainTimer += deltaTime;
+                fadeAlpha += deltaTime * 3.33f;
+
+                if (curtainTimer < fadeInTime)
+                {
+                    curtainTimer += deltaTime;
+
+                    if (fadeAlpha > 1f)
+                    {
+                        fadeAlpha = 1f;
+                    }
+
+                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
+                }
+
+                if (curtainTimer >= fadeInTime)
+                {
+                    DrawCurtain(GraphicsDevice, mainMenu.Curtain);
+
+                    if (newGame && FadingIn)
+                    {
+                        Village(game, GraphicsDevice);
+                    }
+                    if (loadingGame && FadingIn)
+                    {
+                        LoadGame(game, gameTime, GraphicsDevice);
+                    }
+
+                    fadeAlpha = 1f;
+                    curtainTimer = 0f;
+                    FadingIn = false;
+                    CurtainUp = true;
+                }
+            }
+        }
+
+        /*
+         * Hold the curtain in place.
+         */
+        public void ScreenCurtainHold(GameTime gameTime, GraphicsDevice GraphicsDevice)
+        {
+            if (CurtainUp)
+            {
+                float deltaTime = GetTime(gameTime);
+                float curtainTime = 0.5f;
+                curtainTimer += deltaTime;
+
+                DrawCurtain(GraphicsDevice, mainMenu.Curtain);
+
+                if (curtainTimer >= curtainTime)
+                {
+                    curtainTimer = 0f;
+                    CurtainUp = false;
+                    fadingOut = true;
+                }
+            }
+        }
+
+        /*
+         * Fade out the curtain.
+         */
+        public void ScreenFadeOut(GameTime gameTime, GraphicsDevice GraphicsDevice)
+        {
+            if (fadingOut)
+            {
+                float deltaTime = GetTime(gameTime);
+                float fadeOutTime = 1f;
+                curtainTimer += deltaTime;
+                fadeAlpha -= deltaTime;
+
+                if (curtainTimer < fadeOutTime)
+                {
+                    if (fadeAlpha < 0f)
+                    {
+                        fadeAlpha = 0f;
+                    }
+
+                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
+                }
+
+                if (curtainTimer >= fadeOutTime)
+                {
+                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, 0f);
+
+                    fadeAlpha = 0f;
+                    curtainTimer = 0f;
+                    fadingOut = false;
+                }
+            }
+        }
+
+        /*
+         * Set up the main game menu.
          */
         public void GameMainMenu(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            CurrentInputScreen = "menu";
+            CurrentInputScreen = "none";
             currentMapEnum = CurrentMap.MainMenu;
             mainMenu = new MainMenu(game, graphics);
             LoadGameContent(GraphicsDevice, game);
@@ -37,6 +137,7 @@ namespace SoR.Logic
         public void Village(MainGame game, GraphicsDevice GraphicsDevice)
         {
             mainMenu.MainMenuScreen = false;
+            newGame = false;
             CurrentInputScreen = "game";
 
             // Get the map to be used

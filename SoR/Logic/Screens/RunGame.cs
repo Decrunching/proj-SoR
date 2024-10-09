@@ -1,9 +1,10 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using SoR;
 
 namespace SoR.Logic.Screens
-{
+{ /*
+   * Load, update and draw screens.
+   */
     public partial class Screens
     {
         /*

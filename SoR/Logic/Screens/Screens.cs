@@ -5,7 +5,8 @@ using SoR.Logic.Character;
 namespace SoR.Logic.Screens
 {
     /*
-     * Placeholder class for game stages. Take components from GameLogic to set the initial state of the game, then manage progression.
+     * Tell GameLogic which aspects of the game it should currently be rendering and/or utilising
+     * depending on the current game state.
      */
     public partial class Screens
     {
@@ -34,7 +35,11 @@ namespace SoR.Logic.Screens
                             {
                                 if (chara.GetHitPoints() <= 98)
                                 {
-                                    gameLogic.Temple(game, GraphicsDevice);
+                                    gameLogic.FadingIn = true;
+                                    if (gameLogic.CurtainUp)
+                                    {
+                                        gameLogic.Temple(game, GraphicsDevice);
+                                    }
                                 }
                             }
                         }
@@ -42,14 +47,6 @@ namespace SoR.Logic.Screens
                     break;
                 case "mainMenu":
                     gameLogic.GameMainMenu(game, GraphicsDevice, graphics);
-                    gameLogic.CurrentMapString = "none";
-                    break;
-                case "village":
-                    gameLogic.Village(game, GraphicsDevice);
-                    gameLogic.CurrentMapString = "none";
-                    break;
-                case "temple":
-                    gameLogic.Temple(game, GraphicsDevice);
                     gameLogic.CurrentMapString = "none";
                     break;
             }

@@ -68,9 +68,10 @@ namespace SoR.Logic.UI
         /*
          * Update keyboard input.
          */
-        public void KeyboardUpdate(GameTime gameTime)
+        public void InputUpdate(GameTime gameTime)
         {
             keyboardListener.Update(gameTime);
+            gamePadListener.Update(gameTime);
         }
 
         /*
@@ -122,22 +123,7 @@ namespace SoR.Logic.UI
          */
         public int NavigateMenu(GameTime gameTime)
         {
-
-            switch (gamePadInput.CheckButtonInput())
-            {
-                case "Up":
-                    if (select > 0)
-                    {
-                        select--;
-                    }
-                    break;
-                case "Down":
-                    if (select < 3)
-                    {
-                        select++;
-                    }
-                    break;
-            }
+            InputUpdate(gameTime);
 
             return select;
         }
