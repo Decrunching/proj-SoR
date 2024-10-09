@@ -1,9 +1,8 @@
-﻿using Logic.Entities.Character;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SoR;
+using SoR.Logic.Character;
 
-namespace Logic.Screens
+namespace SoR.Logic.Screens
 {
     /*
      * Placeholder class for game stages. Take components from GameLogic to set the initial state of the game, then manage progression.
@@ -12,9 +11,9 @@ namespace Logic.Screens
     {
         private GameLogic gameLogic;
 
-        public Screens(GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics, GameWindow Window)
+        public Screens(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            gameLogic = new GameLogic(GraphicsDevice, Window);
+            gameLogic = new GameLogic(game, GraphicsDevice);
         }
 
         /*

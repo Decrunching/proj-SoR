@@ -1,16 +1,16 @@
-﻿using Logic.Entities.Character;
-using Logic.GameMap;
-using Logic.GameMap.TiledScenery;
+﻿using SoR.Logic.GameMap;
+using SoR.Logic.GameMap.TiledScenery;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
 using MonoGame.Extended.Graphics;
 using MonoGame.Extended.Particles;
+using SoR.Logic.Character;
 using Spine;
 using System;
 using System.Collections.Generic;
 
-namespace Hardware.Graphics
+namespace SoR.Hardware.Graphics
 {
     /*
      * Draw graphics to the screen, collect the impassable sections of the map, and convert map arrays into atlas positions for drawing tiles.

@@ -3,7 +3,7 @@ using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended.Graphics;
 using System;
 
-namespace Logic.GameMap.TiledScenery
+namespace SoR.Logic.GameMap.TiledScenery
 {
     /*
      * Create a map using a specified tileset and layout.

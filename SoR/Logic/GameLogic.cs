@@ -1,20 +1,19 @@
-﻿using SoR;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System.Collections.Generic;
 using System.Linq;
-using Hardware.Data;
-using Hardware.Graphics;
-using Hardware.Input;
-using Logic.GameMap;
-using Logic.UI;
-using Logic.Entities.Character;
-using Logic.GameMap.TiledScenery;
-using Logic.Entities.Character.Player;
-using Logic.Entities.Character.Mobs;
-using Logic.GameMap.Interactables;
+using SoR.Hardware.Data;
+using SoR.Hardware.Graphics;
+using SoR.Hardware.Input;
+using SoR.Logic.GameMap.TiledScenery;
+using SoR.Logic.GameMap.Interactables;
+using SoR.Logic.Character;
+using SoR.Logic.Character.Player;
+using SoR.Logic.Character.Mobs;
+using SoR.Logic.UI;
+using SoR.Logic.GameMap;
 
-namespace Logic
+namespace SoR.Logic
 {
     /*
      * Game logic. Manages interactions between game components. This part of the partial class sets which entities and interactables will appear in
@@ -75,9 +74,9 @@ namespace Logic
         /*
          * Constructor for initial game setup.
          */
-        public GameLogic(GraphicsDevice GraphicsDevice, GameWindow Window)
+        public GameLogic(MainGame game, GraphicsDevice GraphicsDevice)
         {
-            camera = new Camera(Window, GraphicsDevice, 800, 600);
+            camera = new Camera(game.Window, GraphicsDevice, 800, 600);
             gamePadInput = new GamePadInput();
             keyboardInput = new KeyboardInput();
 

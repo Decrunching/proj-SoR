@@ -1,9 +1,8 @@
-﻿using Hardware.Graphics;
-using Logic.Screens;
+﻿using SoR.Hardware.Graphics;
+using SoR.Logic.Screens;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
-using MonoGame.Extended.Input.InputListeners;
 
 namespace SoR
 {
@@ -64,7 +63,7 @@ namespace SoR
 
             graphicsSettings = new GraphicsSettings(game, graphics, Window);
 
-            screens = new Screens(GraphicsDevice, graphics, Window);
+            screens = new Screens(game, GraphicsDevice, graphics);
 
             base.Initialize();
         }

@@ -1,35 +1,35 @@
-﻿using Hardware.Input;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SoR;
 using Spine;
 using System;
 using System.Collections.Generic;
 
-namespace Logic.Entities.Character.Mobs
+namespace SoR.Logic.Character.Mobs
 {
     /*
-     * Stores information unique to Pheasant.
+     * Stores information unique to Chara.
      */
-    internal class Pheasant : Entity
+    internal class Chara : Entity
     {
-        public Pheasant(GraphicsDevice GraphicsDevice, List<Rectangle> impassableArea)
+        public Chara(GraphicsDevice GraphicsDevice, List<Rectangle> impassableArea)
         {
             // The possible animations to play as a string and the method to use for playing them as an int
             animations = new Dictionary<string, int>()
             {
                 { "idle", 1 },
                 { "hit", 2 },
-                { "run", 1 }
+                { "attack", 2 },
+                { "run", 1 },
+                { "jump", 2 }
             };
 
             // Load texture atlas and attachment loader
-            atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Entities\\Pheasant\\savedthepheasant.atlas"), new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Entities\\Chara\\savedit.atlas"), new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData(Globals.GetPath("Content\\SoR Resources\\Entities\\Pheasant\\skeleton.json"));
+            skeletonData = json.ReadSkeletonData(Globals.GetPath("Content\\SoR Resources\\Entities\\Chara\\skeleton.json"));
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -49,6 +49,10 @@ namespace Logic.Entities.Character.Mobs
             hitboxAttachment = skeleton.GetAttachment("hitbox", "hitbox");
             slot.Attachment = hitboxAttachment;
             skeleton.SetAttachment("hitbox", "hitbox");
+
+            // Initialise skeleton renderer with premultiplied alpha
+            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
+            skeletonRenderer.PremultipliedAlpha = true;
 
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);

@@ -2,9 +2,9 @@
 using System.IO;
 using Newtonsoft.Json;
 using Microsoft.Xna.Framework;
-using Logic.Entities.Character;
+using SoR.Logic.Character;
 
-namespace Hardware.Data
+namespace SoR.Hardware.Data
 {
     /*
      * Save game data using JSON serialisation.

@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework;
 using SoR;
 
-namespace Logic.Screens
+namespace SoR.Logic.Screens
 {
     public partial class Screens
     {

@@ -1,9 +1,9 @@
-﻿using Hardware.Input;
+﻿using SoR.Hardware.Input;
 using Microsoft.Xna.Framework;
 
-namespace Logic.Entities.Character.Player
+namespace SoR.Logic.Character.Player
 {
-    internal partial class Player
+    internal partial class Player : Entity
     {
         protected GamePadInput gamePadInput;
         protected KeyboardInput keyboardInput;

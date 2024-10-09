@@ -4,7 +4,7 @@ using MonoGame.Extended;
 using MonoGame.Extended.ViewportAdapters;
 using System;
 
-namespace Hardware.Graphics
+namespace SoR.Hardware.Graphics
 {
     /*
      * The game camera, which follows the player.

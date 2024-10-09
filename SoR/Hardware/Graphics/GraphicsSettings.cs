@@ -1,9 +1,8 @@
-﻿using Hardware.Input;
+﻿using SoR.Hardware.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SoR;
 
-namespace Hardware.Graphics
+namespace SoR.Hardware.Graphics
 {
     /*
      * Switch between windowed and borderless.

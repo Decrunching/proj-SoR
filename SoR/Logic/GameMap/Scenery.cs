@@ -1,10 +1,10 @@
-﻿using Logic.Entities.Character;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using MonoGame.Extended;
+using SoR.Logic.Character;
 using Spine;
 
-namespace Logic.GameMap
+namespace SoR.Logic.GameMap
 {
     /*
      * Spine Runtimes License

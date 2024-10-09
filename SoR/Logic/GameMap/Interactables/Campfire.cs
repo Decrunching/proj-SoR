@@ -1,10 +1,9 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
 using Spine;
-using SoR;
-using Logic.Entities.Character;
+using SoR.Logic.Character;
 
-namespace Logic.GameMap.Interactables
+namespace SoR.Logic.GameMap.Interactables
 {
     /*
      * Stores information unique to Campfire.

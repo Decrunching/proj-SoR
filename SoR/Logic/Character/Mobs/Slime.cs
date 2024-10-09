@@ -1,12 +1,10 @@
-﻿using Hardware.Input;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SoR;
 using Spine;
 using System;
 using System.Collections.Generic;
 
-namespace Logic.Entities.Character.Mobs
+namespace SoR.Logic.Character.Mobs
 {
     /*
      * Stores information unique to Slime.

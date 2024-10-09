@@ -2,9 +2,8 @@
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
 using MonoGame.Extended.Input.InputListeners;
-using SoR;
 
-namespace Hardware.Input
+namespace SoR.Hardware.Input
 {
     /*
      * Handle keyboard input.
@@ -13,7 +12,7 @@ namespace Hardware.Input
     {
         private KeyboardStateExtended keyState;
         private KeyboardStateExtended lastKeyState;
-        private readonly KeyboardListener keyboardListener;
+        private string key;
         private bool up;
         private bool down;
         private bool left;
@@ -22,8 +21,6 @@ namespace Hardware.Input
 
         public KeyboardInput()
         {
-            keyboardListener = new KeyboardListener();
-
             CurrentInputDevice = false;
             up = false;
             down = false;
@@ -32,21 +29,45 @@ namespace Hardware.Input
         }
 
         /*
-         * 
+         * Check keyboard input.
+         * F4 = toggle fullscreen. F8 = save. F9 = load. Esc = exit.
          */
-        public void KeyboardInitialise(MainGame game, GameWindow Window)
+            public string CheckKeyInput()
         {
-            keyboardListener.KeyPressed += (sender, args) => { Window.Title = $"Key {args.Key} Pressed"; };
+            key = "none";
 
-            game.Components.Add(new InputListenerComponent(game, keyboardListener));
-        }
+            keyState = KeyboardExtended.GetState(); // Get the current keyboard state
 
-        /*
-         * Update keyboard input.
-         */
-        public void KeyboardUpdate(GameTime gameTime)
-        {
-            keyboardListener.Update(gameTime);
+            if (keyState.IsKeyDown(Keys.F4) && !lastKeyState.IsKeyDown(Keys.F4))
+            {
+                key = "F4";
+            }
+            if (keyState.IsKeyDown(Keys.F8) && !lastKeyState.IsKeyDown(Keys.F8))
+            {
+                key = "F8";
+            }
+            if (keyState.IsKeyDown(Keys.F9) && !lastKeyState.IsKeyDown(Keys.F9))
+            {
+                key = "F9";
+            }
+            if (keyState.IsKeyDown(Keys.Down) && !lastKeyState.IsKeyDown(Keys.Down) ||
+                keyState.IsKeyDown(Keys.S) && !lastKeyState.IsKeyDown(Keys.S))
+            {
+                key = "Down";
+            }
+            if (keyState.WasKeyPressed(Keys.Up) && !lastKeyState.IsKeyDown(Keys.Up) ||
+                keyState.WasKeyPressed(Keys.W) && !lastKeyState.IsKeyDown(Keys.W))
+            {
+                key = "Up";
+            }
+            if (keyState.IsKeyDown(Keys.Enter) && !lastKeyState.IsKeyDown(Keys.Enter))
+            {
+                key = "Enter";
+            }
+
+            lastKeyState = keyState; // Get the previous keyboard state
+
+            return key;
         }
 
         /*
@@ -195,48 +216,6 @@ namespace Hardware.Input
             lastKeyState = keyState; // Get the previous keyboard state
 
             return yAxisInput;
-        }
-
-        /*
-         * Check keyboard input.
-         * F4 = toggle fullscreen. F8 = save. F9 = load. Esc = exit.
-         */
-        public string CheckKeyInput()
-        {
-            string key = "none";
-
-            keyState = KeyboardExtended.GetState(); // Get the current keyboard state
-
-            if (keyState.IsKeyDown(Keys.F4) && !lastKeyState.IsKeyDown(Keys.F4))
-            {
-                key = "F4";
-            }
-            if (keyState.IsKeyDown(Keys.F8) && !lastKeyState.IsKeyDown(Keys.F8))
-            {
-                key = "F8";
-            }
-            if (keyState.IsKeyDown(Keys.F9) && !lastKeyState.IsKeyDown(Keys.F9))
-            {
-                key = "F9";
-            }
-            if (keyState.IsKeyDown(Keys.Down) && !lastKeyState.IsKeyDown(Keys.Down) ||
-                keyState.IsKeyDown(Keys.S) && !lastKeyState.IsKeyDown(Keys.S))
-            {
-                key = "Down";
-            }
-            if (keyState.IsKeyDown(Keys.Up) && !lastKeyState.IsKeyDown(Keys.Up) ||
-                keyState.IsKeyDown(Keys.W) && !lastKeyState.IsKeyDown(Keys.W))
-            {
-                key = "Up";
-            }
-            if (keyState.IsKeyDown(Keys.Enter) && !lastKeyState.IsKeyDown(Keys.Enter))
-            {
-                key = "Enter";
-            }
-
-            lastKeyState = keyState; // Get the previous keyboard state
-
-            return key;
         }
     }
 }

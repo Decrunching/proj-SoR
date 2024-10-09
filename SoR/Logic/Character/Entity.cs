@@ -1,9 +1,9 @@
-﻿using Logic.GameMap;
+﻿using SoR.Logic.GameMap;
 using Microsoft.Xna.Framework;
 using Spine;
 using System.Collections.Generic;
 
-namespace Logic.Entities.Character
+namespace SoR.Logic.Character
 {
     /*
      * Spine Runtimes License

@@ -1,13 +1,12 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
-using SoR;
 using Spine;
 using System.Collections.Generic;
 using Newtonsoft.Json;
-using Hardware.Input;
+using SoR.Hardware.Input;
 
-namespace Logic.Entities.Character.Player
+namespace SoR.Logic.Character.Player
 {
     /*
      * Stores information unique to Player.

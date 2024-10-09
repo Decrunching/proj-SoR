@@ -1,37 +1,31 @@
-﻿using Hardware.Input;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using SoR;
 using Spine;
 using System;
 using System.Collections.Generic;
 
-namespace Logic.Entities.Character.Mobs
+namespace SoR.Logic.Character.Mobs
 {
     /*
      * Stores information unique to Chara.
      */
-    internal class Chara : Entity
+    internal class Fishy : Entity
     {
-        public Chara(GraphicsDevice GraphicsDevice, List<Rectangle> impassableArea)
+        public Fishy(GraphicsDevice GraphicsDevice, List<Rectangle> impassableArea)
         {
             // The possible animations to play as a string and the method to use for playing them as an int
             animations = new Dictionary<string, int>()
             {
-                { "idle", 1 },
-                { "hit", 2 },
-                { "attack", 2 },
-                { "run", 1 },
-                { "jump", 2 }
+                { "idle", 1 }
             };
 
             // Load texture atlas and attachment loader
-            atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Entities\\Chara\\savedit.atlas"), new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas(Globals.GetPath("Content\\SoR Resources\\Entities\\Fishy\\Fishy.atlas"), new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
             // Initialise skeleton json
-            skeletonData = json.ReadSkeletonData(Globals.GetPath("Content\\SoR Resources\\Entities\\Chara\\skeleton.json"));
+            skeletonData = json.ReadSkeletonData(Globals.GetPath("Content\\SoR Resources\\Entities\\Fishy\\skeleton.json"));
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
@@ -44,17 +38,13 @@ namespace Logic.Entities.Character.Mobs
             animStateData.DefaultMix = 0.1f;
 
             // Set the "fidle" animation on track 1 and leave it looping forever
-            trackEntry = animState.SetAnimation(0, "run", true);
+            trackEntry = animState.SetAnimation(0, "idle", true);
 
             // Create hitbox
             slot = skeleton.FindSlot("hitbox");
             hitboxAttachment = skeleton.GetAttachment("hitbox", "hitbox");
             slot.Attachment = hitboxAttachment;
             skeleton.SetAttachment("hitbox", "hitbox");
-
-            // Initialise skeleton renderer with premultiplied alpha
-            skeletonRenderer = new SkeletonRenderer(GraphicsDevice);
-            skeletonRenderer.PremultipliedAlpha = true;
 
             hitbox = new SkeletonBounds();
             hitbox.Update(skeleton, true);

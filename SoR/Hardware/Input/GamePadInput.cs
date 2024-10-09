@@ -2,7 +2,7 @@
 using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input.InputListeners;
 
-namespace Hardware.Input
+namespace SoR.Hardware.Input
 {
     public class GamePadInput
     {

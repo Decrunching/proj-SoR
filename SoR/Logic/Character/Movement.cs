@@ -1,9 +1,9 @@
-﻿using Logic.GameMap;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
+using SoR.Logic.GameMap;
 using System;
 using System.Collections.Generic;
 
-namespace Logic.Entities.Character
+namespace SoR.Logic.Character
 {
     /*
      * This class handles player input and animation application.

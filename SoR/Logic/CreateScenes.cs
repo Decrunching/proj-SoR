@@ -1,10 +1,9 @@
-﻿using SoR;
-using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework;
-using Logic.GameMap.TiledScenery;
-using Logic.UI;
+using SoR.Logic.UI;
+using SoR.Logic.GameMap.TiledScenery;
 
-namespace Logic
+namespace SoR.Logic
 {
     /*
      * Create and position the elements of each map area, and remove them on scene transition.
