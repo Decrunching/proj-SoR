@@ -1,15 +1,9 @@
-﻿using SoR.Hardware.Input;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace SoR.Logic.Character.Player
 {
     internal partial class Player : Entity
     {
-        protected GamePadInput gamePadInput;
-        protected KeyboardInput keyboardInput;
-        protected string lastAnimation;
-        protected string movementAnimation;
-
         /*
          * Check whether player is idle.
          */
@@ -27,77 +21,6 @@ namespace SoR.Logic.Character.Player
                 {
                     direction = Vector2.Zero;
                 }
-            }
-        }
-
-        /*
-         * Process keyboard and gamepad x-axis movement inputs.
-         */
-        public void ProcessXMovementInput(int x)
-        {
-            switch (x)
-            {
-                case 0:
-                    if (CountDistance == 0)
-                    {
-                        direction.X = 0;
-                    }
-                    break;
-                case 1:
-                    MovementDirectionX(-1);
-                    idle = false;
-                    movementAnimation = "runleft";
-                    break;
-                case 2:
-                    MovementDirectionX(1);
-                    idle = false;
-                    movementAnimation = "runright";
-                    break;
-                case 3:
-                    direction.X = 0;
-                    movementAnimation = lastAnimation;
-                    break;
-                case 4:
-                    direction.X = 0;
-                    movementAnimation = "idlebattle";
-                    break;
-            }
-        }
-
-        /*
-         * Process keyboard and gamepad y-axis movement inputs.
-         */
-        public void ProcessYMovementInput(int y)
-        {
-            switch (y)
-            {
-                case 0:
-                    if (CountDistance == 0)
-                    {
-                        direction.Y = 0;
-                    }
-                    break;
-                case 1:
-                    MovementDirectionY(-1);
-                    movementAnimation = "runup";
-                    idle = false;
-                    break;
-                case 2:
-                    MovementDirectionY(1);
-                    movementAnimation = "rundown";
-                    idle = false;
-                    break;
-                case 3:
-                    direction.Y = 0;
-                    movementAnimation = lastAnimation;
-                    break;
-                case 4:
-                    direction.Y = 0;
-                    movementAnimation = "idlebattle";
-                    break;
-                case 5:
-                    direction.Y = 0;
-                    break;
             }
         }
 
@@ -120,6 +43,39 @@ namespace SoR.Logic.Character.Player
             if (changeDirection != 0)
             {
                 direction.Y = changeDirection;
+            }
+        }
+
+        /*
+         * Update entity position.
+         */
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
+        {
+            FrozenTimer(gameTime);
+
+            if (!Frozen)
+            {
+                CheckIdle();
+
+                if (gamePadInput.CurrentInputDevice)
+                {
+                    keyboardInput.CurrentInputDevice = false;
+                    ProcessXMovementInput(gamePadInput.CheckXMoveInput());
+                    ProcessYMovementInput(gamePadInput.CheckYMoveInput());
+                }
+
+                if (keyboardInput.CurrentInputDevice)
+                {
+                    gamePadInput.CurrentInputDevice = false;
+                    ProcessXMovementInput(keyboardInput.CheckXMoveInput());
+                    ProcessYMovementInput(keyboardInput.CheckYMoveInput());
+                }
+
+                BeMoved(gameTime);
+
+                AdjustPosition(gameTime, ImpassableArea);
+
+                lastAnimation = movementAnimation;
             }
         }
     }

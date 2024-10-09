@@ -90,7 +90,7 @@ namespace SoR.Hardware.Input
 
         /*
          * Check button input.
-         * A = Load. B = Save. Start = fullscreen/windowed. Back = exit. DPad = navigation.
+         * Down = Load. Up = Save. Start = fullscreen/windowed. Back = exit. DPad = navigation. B = switch skin.
          */
         public string CheckButtonInput()
         {
@@ -100,15 +100,18 @@ namespace SoR.Hardware.Input
             {
                 gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
 
-                if (gamePadState.Buttons.B == ButtonState.Pressed && lastGamePadState.Buttons.B != ButtonState.Pressed)
+                if (gamePadState.Buttons.B == ButtonState.Pressed &&
+                    lastGamePadState.Buttons.B != ButtonState.Pressed)
                 {
                     button = "B";
                 }
-                if (gamePadState.Buttons.A == ButtonState.Pressed && lastGamePadState.Buttons.A != ButtonState.Pressed)
+                if (gamePadState.Buttons.A == ButtonState.Pressed &&
+                    lastGamePadState.Buttons.A != ButtonState.Pressed)
                 {
                     button = "A";
                 }
-                if (gamePadState.Buttons.Start == ButtonState.Pressed && lastGamePadState.Buttons.Start != ButtonState.Pressed)
+                if (gamePadState.Buttons.Start == ButtonState.Pressed &&
+                    lastGamePadState.Buttons.Start != ButtonState.Pressed)
                 {
                     button = "Start";
                 }
