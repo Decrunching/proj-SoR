@@ -1,5 +1,6 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using Spine;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -12,6 +13,10 @@ namespace SoR.Logic.Character.Player
      */
     internal partial class Player : Entity
     {
+        private KeyboardState keyState;
+        private KeyboardState lastKeyState;
+        private bool switchSkin;
+
         [JsonConstructor]
         public Player(GraphicsDevice GraphicsDevice, List<Rectangle> impassableArea)
         {
@@ -78,16 +83,6 @@ namespace SoR.Logic.Character.Player
         }
 
         /*
-         * Define what happens on collision with an entity.
-         */
-        public override void EntityCollision(Entity entity, GameTime gameTime)
-        {
-            entity.TakeDamage(1);
-            entity.ChangeAnimation("hit");
-            RepelledFromEntity(4, entity);
-        }
-
-        /*
          * Placeholder function for handling battles.
          */
         public void Battle(Entity entity)
@@ -98,6 +93,46 @@ namespace SoR.Logic.Character.Player
                         player.Battle(entity);
                     }
              */
+        }
+
+        /*
+         * Check whether the skin has changed.
+         */
+        public void CheckForSkinChange()
+        {
+            keyState = Keyboard.GetState(); // Get the current keyboard state
+            switchSkin = false; // Space has not been pressed yet, the skin will not be switched
+
+            if (keyState.IsKeyDown(Keys.Space) & !lastKeyState.IsKeyDown(Keys.Space))
+            {
+                switchSkin = true; // Space was pressed, so switch skins
+            }
+            lastKeyState = keyState;
+        }
+
+        /*
+         * If the player pressed space, switch to the next skin.
+         */
+        public void UpdateSkin()
+        {
+            if (switchSkin)
+            {
+                switch (Skin)
+                {
+                    case "solarknight-0":
+                        skeleton.SetSkin(skeletonData.FindSkin("lunarknight-0"));
+                        Skin = "lunarknight-0";
+                        break;
+                    case "lunarknight-0":
+                        skeleton.SetSkin(skeletonData.FindSkin("knight-0"));
+                        Skin = "knight-0";
+                        break;
+                    case "knight-0":
+                        skeleton.SetSkin(skeletonData.FindSkin("solarknight-0"));
+                        Skin = "solarknight-0";
+                        break;
+                }
+            }
         }
 
         /*
@@ -124,14 +159,58 @@ namespace SoR.Logic.Character.Player
         }
 
         /*
+         * Define what happens on collision with an entity.
+         */
+        public override void EntityCollision(Entity entity, GameTime gameTime)
+        {
+            entity.TakeDamage(1);
+            entity.ChangeAnimation("hit");
+            RepelledFromEntity(4, entity);
+        }
+
+        /*
+         * Update entity position.
+         */
+        public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)
+        {
+            FrozenTimer(gameTime);
+
+            if (!Frozen)
+            {
+                CheckIdle();
+
+                if (gamePadInput.CurrentInputDevice)
+                {
+                    keyboardInput.CurrentInputDevice = false;
+                    ProcessXMovementInput(gamePadInput.CheckXMoveInput());
+                    ProcessYMovementInput(gamePadInput.CheckYMoveInput());
+                }
+
+                if (keyboardInput.CurrentInputDevice)
+                {
+                    gamePadInput.CurrentInputDevice = false;
+                    ProcessXMovementInput(keyboardInput.CheckXMoveInput());
+                    ProcessYMovementInput(keyboardInput.CheckYMoveInput());
+                }
+
+                BeMoved(gameTime);
+
+                AdjustPosition(gameTime, ImpassableArea);
+
+                lastAnimation = movementAnimation;
+            }
+        }
+
+        /*
          * Update the skeleton position, skin and animation state.
          */
         public override void UpdateAnimations(GameTime gameTime)
         {
-            SwitchSkin();
+            CheckForSkinChange();
+            UpdateSkin();
             ChangeAnimation(movementAnimation);
 
-            base.UpdateAnimations(gameTime); // Call the parent UpdateAnimations function
+            base.UpdateAnimations(gameTime);
         }
     }
 }

@@ -28,17 +28,13 @@ namespace SoR.Hardware.Input
 
         /*
          * Check keyboard input.
-         * F4 = toggle fullscreen. F8 = save. F9 = load. Esc = exit. Enter = select. Space = switch skin.
+         * F4 = toggle fullscreen. F8 = save. F9 = load. Esc = exit.
          */
             public string CheckKeyInput()
         {
             key = "none";
 
             keyState = KeyboardExtended.GetState(); // Get the current keyboard state
-            if (keyState.WasAnyKeyJustDown())
-            {
-                CurrentInputDevice = true;
-            }
 
             if (keyState.IsKeyDown(Keys.F4) && !lastKeyState.IsKeyDown(Keys.F4))
             {
@@ -65,10 +61,6 @@ namespace SoR.Hardware.Input
             if (keyState.IsKeyDown(Keys.Enter) && !lastKeyState.IsKeyDown(Keys.Enter))
             {
                 key = "Enter";
-            }
-            if (keyState.IsKeyDown(Keys.Space) && !lastKeyState.IsKeyDown(Keys.Space))
-            {
-                key = "Space";
             }
 
             lastKeyState = keyState; // Get the previous keyboard state
