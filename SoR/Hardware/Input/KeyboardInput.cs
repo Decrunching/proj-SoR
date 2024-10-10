@@ -10,12 +10,14 @@ namespace SoR.Hardware.Input
     {
         private KeyboardStateExtended keyState;
         private KeyboardStateExtended lastKeyState;
-        private string key;
         private bool up;
         private bool down;
         private bool left;
         private bool right;
         public bool CurrentInputDevice { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
+        public string Key { get; set; }
 
         public KeyboardInput()
         {
@@ -27,45 +29,68 @@ namespace SoR.Hardware.Input
         }
 
         /*
+         * Get input.
+         */
+        public void GetInput()
+        {
+            if (keyState.WasAnyKeyJustDown())
+            {
+                CurrentInputDevice = true;
+            }
+            else
+            {
+                CurrentInputDevice = false;
+            }
+
+            Key = CheckKeyInput();
+            X = CheckXMoveInput();
+            Y = CheckYMoveInput();
+        }
+
+        /*
          * Check keyboard input.
          * F4 = toggle fullscreen. F8 = save. F9 = load. Esc = exit.
          */
             public string CheckKeyInput()
         {
-            key = "none";
+            Key = "none";
 
             keyState = KeyboardExtended.GetState(); // Get the current keyboard state
 
             if (keyState.IsKeyDown(Keys.F4) && !lastKeyState.IsKeyDown(Keys.F4))
             {
-                key = "F4";
+                Key = "F4";
             }
             if (keyState.IsKeyDown(Keys.F8) && !lastKeyState.IsKeyDown(Keys.F8))
             {
-                key = "F8";
+                Key = "F8";
             }
             if (keyState.IsKeyDown(Keys.F9) && !lastKeyState.IsKeyDown(Keys.F9))
             {
-                key = "F9";
+                Key = "F9";
             }
             if (keyState.IsKeyDown(Keys.Down) && !lastKeyState.IsKeyDown(Keys.Down) ||
                 keyState.IsKeyDown(Keys.S) && !lastKeyState.IsKeyDown(Keys.S))
             {
-                key = "Down";
+                Key = "Down";
             }
             if (keyState.IsKeyDown(Keys.Up) && !lastKeyState.IsKeyDown(Keys.Up) ||
                 keyState.IsKeyDown(Keys.W) && !lastKeyState.IsKeyDown(Keys.W))
             {
-                key = "Up";
+                Key = "Up";
             }
             if (keyState.IsKeyDown(Keys.Enter) && !lastKeyState.IsKeyDown(Keys.Enter))
             {
-                key = "Enter";
+                Key = "Enter";
+            }
+            if (keyState.IsKeyDown(Keys.Space) & !lastKeyState.IsKeyDown(Keys.Space))
+            {
+                Key = "Space";
             }
 
-            lastKeyState = keyState; // Get the previous keyboard state
+                lastKeyState = keyState; // Get the previous keyboard state
 
-            return key;
+            return Key;
         }
 
         /*
@@ -75,30 +100,28 @@ namespace SoR.Hardware.Input
         {
             keyState = KeyboardExtended.GetState(); // Get the current keyboard state
 
-            int xAxisInput = 0;
+            X = 0;
 
             if (keyState.IsKeyDown(Keys.Left) ||
                 keyState.IsKeyDown(Keys.A))
             {
-                CurrentInputDevice = true;
                 left = true;
 
                 if (!lastKeyState.IsKeyDown(Keys.Left) ||
                     !lastKeyState.IsKeyDown(Keys.A))
                 {
-                    xAxisInput = 1;
+                    X = 1;
                 }
             }
             else if (keyState.IsKeyDown(Keys.Right) ||
                 keyState.IsKeyDown(Keys.D))
             {
-                CurrentInputDevice = true;
                 right = true;
 
                 if (!lastKeyState.IsKeyDown(Keys.Right) ||
                 !lastKeyState.IsKeyDown(Keys.D))
                 {
-                    xAxisInput = 2;
+                    X = 2;
                 }
             }
 
@@ -107,7 +130,7 @@ namespace SoR.Hardware.Input
             (keyState.IsKeyDown(Keys.Right) ||
             keyState.IsKeyDown(Keys.D)))
             {
-                xAxisInput = 4;
+                X = 4;
                 left = true;
                 right = true;
             }
@@ -130,12 +153,12 @@ namespace SoR.Hardware.Input
             }
             if (unpressedLeft || unpressedRight)
             {
-                xAxisInput = 3;
+                X = 3;
             }
 
             lastKeyState = keyState; // Get the previous keyboard state
 
-            return xAxisInput;
+            return X;
         }
 
         /*
@@ -145,30 +168,28 @@ namespace SoR.Hardware.Input
         {
             keyState = KeyboardExtended.GetState(); // Get the current keyboard state
 
-            int yAxisInput = 0;
+            Y = 0;
 
             if (keyState.IsKeyDown(Keys.Up) ||
                 keyState.IsKeyDown(Keys.W))
             {
-                CurrentInputDevice = true;
                 up = true;
 
                 if (!lastKeyState.IsKeyDown(Keys.Up) ||
                 !lastKeyState.IsKeyDown(Keys.W))
                 {
-                    yAxisInput = 1;
+                    Y = 1;
                 }
             }
             else if (keyState.IsKeyDown(Keys.Down) ||
                 keyState.IsKeyDown(Keys.S))
             {
-                CurrentInputDevice = true;
                 down = true;
 
                 if (!lastKeyState.IsKeyDown(Keys.Down) ||
                 !lastKeyState.IsKeyDown(Keys.S))
                 {
-                    yAxisInput = 2;
+                    Y = 2;
                 }
             }
 
@@ -182,11 +203,11 @@ namespace SoR.Hardware.Input
 
                 if (left || right)
                 {
-                    yAxisInput = 5;
+                    Y = 5;
                 }
                 else
                 {
-                    yAxisInput = 4;
+                    Y = 4;
                 }
             }
 
@@ -208,16 +229,16 @@ namespace SoR.Hardware.Input
             }
             if (unpressedUp || unpressedDown)
             {
-                yAxisInput = 3;
+                Y = 3;
             }
             if (!up && !down && !left && !right)
             {
-                yAxisInput = 4;
+                Y = 4;
             }
 
             lastKeyState = keyState; // Get the previous keyboard state
 
-            return yAxisInput;
+            return Y;
         }
     }
 }

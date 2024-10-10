@@ -10,82 +10,24 @@ namespace SoR.Hardware.Input
         private GamePadState gamePadState;
         private GamePadState lastGamePadState;
         private GamePadCapabilities gamePadCapabilities;
-        public bool CurrentInputDevice { get; set; }
+        public string Button { get; set; }
+        public int X { get; set; }
+        public int Y { get; set; }
 
         public GamePadInput()
         {
-            CurrentInputDevice = false;
-
             gamePadListener = new GamePadListener();
             gamePadCapabilities = GamePad.GetCapabilities(PlayerIndex.One);
         }
 
         /*
-         * Check for and process gamepad input.
+         * Get input.
          */
-        public int CheckXMoveInput()
+        public void GetInput()
         {
-            int xAxisInput = 0;
-
-            if (gamePadCapabilities.IsConnected) // If the gamepad is connected
-            {
-                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
-
-                if (gamePadState.ThumbSticks.Left.X < -0.5f)
-                {
-                    CurrentInputDevice = true;
-                    xAxisInput = 1;
-                }
-                else if (gamePadState.ThumbSticks.Left.X > 0.5f)
-                {
-                    CurrentInputDevice = true;
-                    xAxisInput = 2;
-                }
-
-                if (gamePadState.ThumbSticks.Left.X !< -0.5f &&
-                    gamePadState.ThumbSticks.Left.X !> 0.5f)
-                {
-                    xAxisInput = 0;
-                }
-
-                lastGamePadState = gamePadState;
-            }
-
-            return xAxisInput;
-        }
-
-        /*
-         * Check for and process gamepad input.
-         */
-        public int CheckYMoveInput()
-        {
-            int yAxisInput = 0;
-
-            if (gamePadCapabilities.IsConnected) // If the gamepad is connected
-            {
-                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
-
-                if (gamePadState.ThumbSticks.Left.Y < -0.5f)
-                {
-                    CurrentInputDevice = true;
-                    yAxisInput = 2;
-                }
-                else if (gamePadState.ThumbSticks.Left.Y > 0.5f)
-                {
-                    CurrentInputDevice = true;
-                    yAxisInput = 1;
-                }
-
-                if (gamePadState.ThumbSticks.Left.Y !< -0.5f &&
-                    gamePadState.ThumbSticks.Left.Y !> 0.5f)
-                {
-                    yAxisInput = 0;
-                }
-
-                lastGamePadState = gamePadState;
-            }
-
-            return yAxisInput;
+            Button = CheckButtonInput();
+            X = CheckXMoveInput();
+            Y = CheckYMoveInput();
         }
 
         /*
@@ -94,7 +36,7 @@ namespace SoR.Hardware.Input
          */
         public string CheckButtonInput()
         {
-            string button = "none";
+            Button = "none";
 
             if (gamePadCapabilities.IsConnected) // If the gamepad is connected
             {
@@ -102,31 +44,95 @@ namespace SoR.Hardware.Input
 
                 if (gamePadState.Buttons.B == ButtonState.Pressed && lastGamePadState.Buttons.B != ButtonState.Pressed)
                 {
-                    button = "B";
+                    Button = "B";
                 }
                 if (gamePadState.Buttons.A == ButtonState.Pressed && lastGamePadState.Buttons.A != ButtonState.Pressed)
                 {
-                    button = "A";
+                    Button = "A";
                 }
                 if (gamePadState.Buttons.Start == ButtonState.Pressed && lastGamePadState.Buttons.Start != ButtonState.Pressed)
                 {
-                    button = "Start";
+                    Button = "Start";
                 }
                 if (gamePadState.DPad.Up == ButtonState.Pressed &&
                     lastGamePadState.DPad.Up != ButtonState.Pressed)
                 {
-                    button = "Up";
+                    Button = "Up";
                 }
                 if (gamePadState.DPad.Down == ButtonState.Pressed &&
                     lastGamePadState.DPad.Down != ButtonState.Pressed)
                 {
-                    button = "Down";
+                    Button = "Down";
                 }
 
                 lastGamePadState = gamePadState;
             }
 
-            return button;
+            return Button;
+        }
+
+        /*
+         * Check for and process gamepad input.
+         */
+        public int CheckXMoveInput()
+        {
+            X = 0;
+
+            if (gamePadCapabilities.IsConnected) // If the gamepad is connected
+            {
+                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
+
+                if (gamePadState.ThumbSticks.Left.X < -0.5f)
+                {
+                    X = 1;
+                }
+                else if (gamePadState.ThumbSticks.Left.X > 0.5f)
+                {
+                    X = 2;
+                }
+
+                if (gamePadState.ThumbSticks.Left.X !< -0.5f &&
+                    gamePadState.ThumbSticks.Left.X !> 0.5f)
+                {
+                    X = 0;
+                }
+
+                lastGamePadState = gamePadState;
+            }
+
+            return X;
+        }
+
+        /*
+         * Check for and process gamepad input.
+         */
+        public int CheckYMoveInput()
+        {
+            Y = 0;
+
+            if (gamePadCapabilities.IsConnected) // If the gamepad is connected
+            {
+                gamePadState = GamePad.GetState(PlayerIndex.One); // Get the current gamepad state
+
+                if (gamePadState.ThumbSticks.Left.Y < -0.5f)
+                {
+                    Y = 2;
+                }
+                else if (gamePadState.ThumbSticks.Left.Y > 0.5f)
+                {
+                    Y = 1;
+                }
+
+                if (gamePadState.ThumbSticks.Left.Y !< -0.5f &&
+                    gamePadState.ThumbSticks.Left.Y !> 0.5f)
+                {
+                    Y = 0;
+                }
+
+                lastGamePadState = gamePadState;
+            }
+
+            return Y;
         }
     }
 }

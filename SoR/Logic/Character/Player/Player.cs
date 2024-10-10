@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using Spine;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -13,9 +12,10 @@ namespace SoR.Logic.Character.Player
      */
     internal partial class Player : Entity
     {
-        private KeyboardState keyState;
-        private KeyboardState lastKeyState;
-        private bool switchSkin;
+        protected GamePadInput gamePadInput;
+        protected KeyboardInput keyboardInput;
+        protected string lastAnimation;
+        protected string movementAnimation;
 
         [JsonConstructor]
         public Player(GraphicsDevice GraphicsDevice, List<Rectangle> impassableArea)
@@ -96,46 +96,6 @@ namespace SoR.Logic.Character.Player
         }
 
         /*
-         * Check whether the skin has changed.
-         */
-        public void CheckForSkinChange()
-        {
-            keyState = Keyboard.GetState(); // Get the current keyboard state
-            switchSkin = false; // Space has not been pressed yet, the skin will not be switched
-
-            if (keyState.IsKeyDown(Keys.Space) & !lastKeyState.IsKeyDown(Keys.Space))
-            {
-                switchSkin = true; // Space was pressed, so switch skins
-            }
-            lastKeyState = keyState;
-        }
-
-        /*
-         * If the player pressed space, switch to the next skin.
-         */
-        public void UpdateSkin()
-        {
-            if (switchSkin)
-            {
-                switch (Skin)
-                {
-                    case "solarknight-0":
-                        skeleton.SetSkin(skeletonData.FindSkin("lunarknight-0"));
-                        Skin = "lunarknight-0";
-                        break;
-                    case "lunarknight-0":
-                        skeleton.SetSkin(skeletonData.FindSkin("knight-0"));
-                        Skin = "knight-0";
-                        break;
-                    case "knight-0":
-                        skeleton.SetSkin(skeletonData.FindSkin("solarknight-0"));
-                        Skin = "solarknight-0";
-                        break;
-                }
-            }
-        }
-
-        /*
          * If something changes to trigger a new animation, apply the animation.
          * If the animation is already applied, do nothing.
          */
@@ -177,20 +137,20 @@ namespace SoR.Logic.Character.Player
 
             if (!Frozen)
             {
-                CheckIdle();
+                keyboardInput.GetInput();
+                gamePadInput.GetInput();
 
-                if (gamePadInput.CurrentInputDevice)
-                {
-                    keyboardInput.CurrentInputDevice = false;
-                    ProcessXMovementInput(gamePadInput.CheckXMoveInput());
-                    ProcessYMovementInput(gamePadInput.CheckYMoveInput());
-                }
+                CheckIdle();
 
                 if (keyboardInput.CurrentInputDevice)
                 {
-                    gamePadInput.CurrentInputDevice = false;
-                    ProcessXMovementInput(keyboardInput.CheckXMoveInput());
-                    ProcessYMovementInput(keyboardInput.CheckYMoveInput());
+                    ProcessXMovementInput(keyboardInput.X);
+                    ProcessYMovementInput(keyboardInput.Y);
+                }
+                else
+                {
+                    ProcessXMovementInput(gamePadInput.X);
+                    ProcessYMovementInput(gamePadInput.Y);
                 }
 
                 BeMoved(gameTime);
@@ -207,7 +167,6 @@ namespace SoR.Logic.Character.Player
         public override void UpdateAnimations(GameTime gameTime)
         {
             CheckForSkinChange();
-            UpdateSkin();
             ChangeAnimation(movementAnimation);
 
             base.UpdateAnimations(gameTime);

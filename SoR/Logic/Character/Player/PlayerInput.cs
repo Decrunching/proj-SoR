@@ -1,22 +1,43 @@
-﻿using SoR.Hardware.Input;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 
 namespace SoR.Logic.Character.Player
 {
     internal partial class Player : Entity
     {
-        protected GamePadInput gamePadInput;
-        protected KeyboardInput keyboardInput;
-        protected string lastAnimation;
-        protected string movementAnimation;
+        /*
+         * Check whether the skin has changed.
+         */
+        public void CheckForSkinChange()
+        {
+            if (gamePadInput.Button == "B" || keyboardInput.Key == "Space")
+            {
+                switch (Skin)
+                {
+                    case "solarknight-0":
+                        skeleton.SetSkin(skeletonData.FindSkin("lunarknight-0"));
+                        Skin = "lunarknight-0";
+                        break;
+                    case "lunarknight-0":
+                        skeleton.SetSkin(skeletonData.FindSkin("knight-0"));
+                        Skin = "knight-0";
+                        break;
+                    case "knight-0":
+                        skeleton.SetSkin(skeletonData.FindSkin("solarknight-0"));
+                        Skin = "solarknight-0";
+                        break;
+                }
+            }
+        }
 
         /*
          * Check whether player is idle.
          */
         public void CheckIdle()
         {
-            if (keyboardInput.CheckXMoveInput() == 0 && keyboardInput.CheckYMoveInput() == 0 |
-                gamePadInput.CheckXMoveInput() == 0 && gamePadInput.CheckYMoveInput() == 0)
+            if ((keyboardInput.CurrentInputDevice && 
+                keyboardInput.X == 0 && keyboardInput.Y == 0) ||
+                (!keyboardInput.CurrentInputDevice &&
+                gamePadInput.X == 0 && gamePadInput.Y == 0))
             {
                 if (!idle) // If idle animation is not currently playing
                 {
