@@ -103,31 +103,26 @@ namespace SoR.Hardware.Input
                 if (gamePadState.Buttons.B == ButtonState.Pressed &&
                     lastGamePadState.Buttons.B != ButtonState.Pressed)
                 {
-                    CurrentInputDevice = true;
                     button = "B";
                 }
                 if (gamePadState.Buttons.A == ButtonState.Pressed &&
                     lastGamePadState.Buttons.A != ButtonState.Pressed)
                 {
-                    CurrentInputDevice = true;
                     button = "A";
                 }
                 if (gamePadState.Buttons.Start == ButtonState.Pressed &&
                     lastGamePadState.Buttons.Start != ButtonState.Pressed)
                 {
-                    CurrentInputDevice = true;
                     button = "Start";
                 }
                 if (gamePadState.DPad.Up == ButtonState.Pressed &&
                     lastGamePadState.DPad.Up != ButtonState.Pressed)
                 {
-                    CurrentInputDevice = true;
                     button = "Up";
                 }
                 if (gamePadState.DPad.Down == ButtonState.Pressed &&
                     lastGamePadState.DPad.Down != ButtonState.Pressed)
                 {
-                    CurrentInputDevice = true;
                     button = "Down";
                 }
 

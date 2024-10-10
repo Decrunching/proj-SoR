@@ -2,7 +2,7 @@
 
 namespace SoR.Logic.Character.Player
 {
-    internal partial class Player : Entity
+    internal partial class Player
     {
         protected GamePadInput gamePadInput;
         protected KeyboardInput keyboardInput;
@@ -12,9 +12,9 @@ namespace SoR.Logic.Character.Player
         /*
          * Check whether the skin has changed.
          */
-        public void SwitchSkin(string switchSkin)
+        public void SwitchSkin()
         {
-            if (switchSkin == "B" || switchSkin == "Space")
+            if (gamePadInput.CheckButtonInput() == "B" || keyboardInput.CheckKeyInput() == "Space")
             {
                 switch (Skin)
                 {
