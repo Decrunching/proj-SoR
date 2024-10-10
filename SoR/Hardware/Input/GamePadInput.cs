@@ -32,7 +32,7 @@ namespace SoR.Hardware.Input
 
         /*
          * Check button input.
-         * A = Load. B = Save. Start = fullscreen/windowed. Back = exit. DPad = navigation.
+         * A = Load. B = Save. Start = fullscreen/windowed. Back = exit. DPad = navigation. B = change skin.
          */
         public string CheckButtonInput()
         {
@@ -65,7 +65,7 @@ namespace SoR.Hardware.Input
                     Button = "Down";
                 }
 
-                lastGamePadState = gamePadState;
+                lastGamePadState = gamePadState; // Get the previous gamepad state
             }
 
             return Button;

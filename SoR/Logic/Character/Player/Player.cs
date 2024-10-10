@@ -129,6 +129,28 @@ namespace SoR.Logic.Character.Player
         }
 
         /*
+         * Change the player x-axis direction according to keyboard input.
+         */
+        public void MovementDirectionX(int changeDirection)
+        {
+            if (changeDirection != 0)
+            {
+                direction.X = changeDirection;
+            }
+        }
+
+        /*
+         * Change the player y-axis direction according to keyboard input.
+         */
+        public void MovementDirectionY(int changeDirection)
+        {
+            if (changeDirection != 0)
+            {
+                direction.Y = changeDirection;
+            }
+        }
+
+        /*
          * Update entity position.
          */
         public override void UpdatePosition(GameTime gameTime, GraphicsDeviceManager graphics)

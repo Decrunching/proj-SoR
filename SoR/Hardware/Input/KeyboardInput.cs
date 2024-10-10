@@ -49,7 +49,8 @@ namespace SoR.Hardware.Input
 
         /*
          * Check keyboard input.
-         * F4 = toggle fullscreen. F8 = save. F9 = load. Esc = exit.
+         * F4 = toggle fullscreen. F8 = save. F9 = load. Esc = exit. Enter = select menu item.
+         * Space = change skin.
          */
             public string CheckKeyInput()
         {

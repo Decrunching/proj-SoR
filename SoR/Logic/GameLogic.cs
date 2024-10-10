@@ -25,6 +25,7 @@ namespace SoR.Logic
         private SceneryType sceneryType;
         private CurrentMap currentMapEnum;
         private MainMenu mainMenu;
+        private StartMenu startMenu;
         private Map map;
         private Render render;
         private Camera camera;

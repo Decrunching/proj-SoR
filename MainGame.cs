@@ -90,8 +90,6 @@ namespace SoR
 
             screens.UpdateGameState(gameTime, game, GraphicsDevice, graphics);
 
-
-
             base.Update(gameTime);
         }
 
