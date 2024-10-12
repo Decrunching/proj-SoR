@@ -16,8 +16,6 @@ namespace SoR.Logic.GameMap.TiledScenery
         private Texture2D floorTexture;
         private Texture2D floorDecorTexture;
         private Texture2D wallTexture;
-        private string floorTiles;
-        private string wallTiles;
         private int mapNumber;
         public string FloorSpriteSheet { get; set; }
         public string FloorDecorSpriteSheet { get; set; }

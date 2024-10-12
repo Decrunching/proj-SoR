@@ -12,6 +12,8 @@ using SoR.Logic.Character.Player;
 using SoR.Logic.Character.Mobs;
 using SoR.Logic.UI;
 using SoR.Logic.GameMap;
+using System;
+using System.IO;
 
 namespace SoR.Logic
 {
@@ -51,6 +53,7 @@ namespace SoR.Logic
         public Dictionary<string, Scenery> Scenery { get; set; }
         public string CurrentInputScreen { get; set; }
         public string CurrentMapString { get; set; }
+        public string SaveFile { get; set; }
         public bool FadingIn { get; set; }
         public bool CurtainUp { get; set; }
 
@@ -82,6 +85,9 @@ namespace SoR.Logic
             camera = new Camera(game.Window, GraphicsDevice, 800, 600);
             gamePadInput = new GamePadInput();
             keyboardInput = new KeyboardInput();
+
+            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+            SaveFile = Path.Combine(appData, "SoR\\saveFile.json");
 
             CurrentMapString = "mainMenu";
             CurrentInputScreen = "none";
@@ -129,22 +135,26 @@ namespace SoR.Logic
          */
         public void LoadGame(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
-            GameState gameState = GameState.LoadFile();
-
-            switch (gameState.CurrentMap)
+            if (File.Exists(SaveFile))
             {
-                case "village":
-                    Village(game, GraphicsDevice);
-                    break;
-                case "temple":
-                    Temple(game, GraphicsDevice);
-                    break;
-            }
+                GameState gameState = GameState.LoadFile();
 
-            player.Position = gameState.Position;
-            player.HitPoints = gameState.HitPoints;
-            player.Skin = gameState.Skin;
-            loadingGame = false;
+                switch (gameState.CurrentMap)
+                {
+                    case "village":
+                        Village(game, GraphicsDevice);
+                        break;
+                    case "temple":
+                        Temple(game, GraphicsDevice);
+                        break;
+                }
+
+                player.Position = gameState.Position;
+                player.HitPoints = gameState.HitPoints;
+                player.Skin = gameState.Skin;
+                loadingGame = false;
+            }
+            else System.Diagnostics.Debug.WriteLine("No save file found.");
         }
 
         /*
@@ -393,25 +403,43 @@ namespace SoR.Logic
                             }
                             break;
                         case 1:
-                            render.StartDrawingSpriteBatch(camera.GetCamera());
-                            render.MainMenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.GhostWhite, 1);
-                            render.FinishDrawingSpriteBatch();
-                            if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
+                            if (File.Exists(SaveFile))
                             {
-                                FadingIn = true;
-                                loadingGame = true;
-                                ScreenFadeIn(gameTime, game, GraphicsDevice);
+                                render.StartDrawingSpriteBatch(camera.GetCamera());
+                                render.MainMenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.GhostWhite, 1);
+                                render.FinishDrawingSpriteBatch();
+                                if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
+                                {
+                                    FadingIn = true;
+                                    loadingGame = true;
+                                    ScreenFadeIn(gameTime, game, GraphicsDevice);
+                                }
+                            }
+                            else
+                            {
+                                render.StartDrawingSpriteBatch(camera.GetCamera());
+                                render.MainMenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.LightCoral, 1);
+                                render.FinishDrawingSpriteBatch();
                             }
                             break;
                         case 2:
-                            render.StartDrawingSpriteBatch(camera.GetCamera());
-                            render.MainMenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.GhostWhite, 1);
-                            render.FinishDrawingSpriteBatch();
-                            if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
+                            if (File.Exists(SaveFile))
                             {
-                                FadingIn = true;
-                                loadingGame = true;
-                                ScreenFadeIn(gameTime, game, GraphicsDevice);
+                                render.StartDrawingSpriteBatch(camera.GetCamera());
+                                render.MainMenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.GhostWhite, 1);
+                                render.FinishDrawingSpriteBatch();
+                                if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
+                                {
+                                    FadingIn = true;
+                                    loadingGame = true;
+                                    ScreenFadeIn(gameTime, game, GraphicsDevice);
+                                }
+                            }
+                            else
+                            {
+                                render.StartDrawingSpriteBatch(camera.GetCamera());
+                                render.MainMenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.LightCoral, 1);
+                                render.FinishDrawingSpriteBatch();
                             }
                             break;
                         case 3:
