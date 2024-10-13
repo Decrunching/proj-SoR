@@ -61,6 +61,7 @@ namespace SoR.Logic
                     curtainTimer = 0f;
                     FadingIn = false;
                     CurtainUp = true;
+                    freezeGame = false;
                 }
             }
         }
