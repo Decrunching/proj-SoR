@@ -125,6 +125,7 @@ namespace SoR.Logic
          */
         public void GameMainMenu(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
+            menu = true;
             InGameScreen = "none";
             currentMapEnum = CurrentMap.MainMenu;
             mainMenu = new MainMenu(game, graphics);
@@ -136,7 +137,8 @@ namespace SoR.Logic
          */
         public void GameStartMenu(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            InGameScreen = "none";
+            menu = true;
+            InGameScreen = "game";
             startMenu = new StartMenu(game, graphics);
             LoadGameContent(GraphicsDevice, game);
         }
@@ -146,7 +148,7 @@ namespace SoR.Logic
          */
         public void Village(MainGame game, GraphicsDevice GraphicsDevice)
         {
-            mainMenu.MainMenuScreen = false;
+            menu = false;
             newGame = false;
             InGameScreen = "game";
 
@@ -186,7 +188,7 @@ namespace SoR.Logic
          */
         public void Temple(MainGame game, GraphicsDevice GraphicsDevice)
         {
-            mainMenu.MainMenuScreen = false;
+            menu = false;
             InGameScreen = "game";
 
             // Get the map to be used

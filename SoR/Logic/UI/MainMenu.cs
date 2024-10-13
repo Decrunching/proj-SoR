@@ -9,7 +9,6 @@ namespace SoR.Logic.UI
         public Vector2 ContinueGamePosition { get; set; }
         public Vector2 LoadGamePosition { get; set; }
         public Vector2 GameSettingsPosition { get; set; }
-        public bool MainMenuScreen { get; set; }
 
         public MainMenu(MainGame game, GraphicsDeviceManager graphics)
         {
@@ -22,8 +21,6 @@ namespace SoR.Logic.UI
             ContinueGamePosition = new Vector2(100, 320);
             LoadGamePosition = new Vector2(100, 340);
             GameSettingsPosition = new Vector2(100, 360);
-
-            MainMenuScreen = true;
         }
     }
 }

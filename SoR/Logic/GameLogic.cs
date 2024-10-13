@@ -43,6 +43,7 @@ namespace SoR.Logic
         private List<Vector2> positions;
         private List<Rectangle> impassableArea;
         private string currentMenuItem;
+        private bool menu;
         private bool freezeGame;
         private bool loadingGame;
         private bool newGame;
@@ -98,6 +99,7 @@ namespace SoR.Logic
             hasUpperWalls = false;
 
             currentMenuItem = "none";
+            menu = false;
             ExitGame = false;
             freezeGame = false;
             loadingGame = false;
@@ -284,45 +286,15 @@ namespace SoR.Logic
          */
         public void UpdateWorld(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
+            CheckInput(game, gameTime, GraphicsDevice);
+
             switch (freezeGame)
             {
                 case true:
-                    if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
-                    {
-                        if (currentMenuItem == startMenu.MenuOptions[0])
-                        {
-                            // TBD
-                        }
-                        if (currentMenuItem == startMenu.MenuOptions[1])
-                        {
-                            // TBD
-                        }
-                        if (currentMenuItem == startMenu.MenuOptions[2])
-                        {
-                            FadingIn = true;
-                            loadingGame = true;
-                            ScreenFadeIn(gameTime, game, GraphicsDevice);
-                        }
-                        if (currentMenuItem == startMenu.MenuOptions[3])
-                        {
-                            // Change later to add "Exit game?" before actually exiting
-
-                            ExitGame = true;
-                        }
-                    }
-
-                    if (gamePadInput.CheckButtonInput() == "Start" || keyboardInput.CheckKeyInput() == "Escape")
-                    {
-                        freezeGame = false;
-                    }
+                    // Do nothing until unfrozen
                     break;
-                case false:
-                    if (gamePadInput.CheckButtonInput() == "Start" || keyboardInput.CheckKeyInput() == "Escape")
-                    {
-                        ChangeScreen = "startMenu";
-                        freezeGame = true;
-                    }
 
+                case false:
                     foreach (var scenery in Scenery.Values)
                     {
                         // Update animations
@@ -470,13 +442,6 @@ namespace SoR.Logic
                             render.MenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.GhostWhite, 1);
                             render.FinishDrawingSpriteBatch();
                             currentMenuItem = mainMenu.MenuOptions[1];
-
-                            if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
-                            {
-                                FadingIn = true;
-                                newGame = true;
-                                ScreenFadeIn(gameTime, game, GraphicsDevice);
-                            }
                             break;
                         case 1:
                             if (File.Exists(SaveFile))
@@ -485,13 +450,6 @@ namespace SoR.Logic
                                 render.MenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.GhostWhite, 1);
                                 render.FinishDrawingSpriteBatch();
                                 currentMenuItem = mainMenu.MenuOptions[2];
-
-                                if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
-                                {
-                                    FadingIn = true;
-                                    loadingGame = true;
-                                    ScreenFadeIn(gameTime, game, GraphicsDevice);
-                                }
                             }
                             else
                             {
@@ -508,13 +466,6 @@ namespace SoR.Logic
                                 render.MenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.GhostWhite, 1);
                                 render.FinishDrawingSpriteBatch();
                                 currentMenuItem = mainMenu.MenuOptions[3];
-
-                                if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
-                                {
-                                    FadingIn = true;
-                                    loadingGame = true;
-                                    ScreenFadeIn(gameTime, game, GraphicsDevice);
-                                }
                             }
                             else
                             {
@@ -528,12 +479,7 @@ namespace SoR.Logic
                             render.StartDrawingSpriteBatch(camera.GetCamera());
                             render.MenuText(mainMenu.MenuOptions[4], mainMenu.GameSettingsPosition, font, Color.GhostWhite, 1);
                             render.FinishDrawingSpriteBatch();
-                            currentMenuItem = mainMenu.MenuOptions[1];
-
-                            if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
-                            {
-                                // TBD
-                            }
+                            currentMenuItem = mainMenu.MenuOptions[4];
                             break;
                     }
 
@@ -664,15 +610,89 @@ namespace SoR.Logic
         }
 
         /*
-         * 
+         * Check for player input.
          */
-        public void CheckInput()
+        public void CheckInput(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
-            if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
+            if (menu)
             {
-                switch (currentMenuItem)
+                if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                 {
+                    switch (currentMenuItem)
+                    {
+                        case "Start new game":
+                            FadingIn = true;
+                            newGame = true;
+                            ScreenFadeIn(gameTime, game, GraphicsDevice);
+                            break;
+                        case "Continue":
+                            FadingIn = true;
+                            loadingGame = true;
+                            ScreenFadeIn(gameTime, game, GraphicsDevice);
+                            break;
+                        case "Load game":
+                            FadingIn = true;
+                            loadingGame = true;
+                            ScreenFadeIn(gameTime, game, GraphicsDevice);
+                            break;
+                        case "Settings":
+                            break;
+                        case "Inventory":
+                            break;
+                        case "Exit game":
+                            // Change later to add "Exit game?" before actually exiting
+                            ExitGame = true;
+                            break;
+                    }
+                }
+            }
+            if (gamePadInput.CheckButtonInput() == "Start" || keyboardInput.CheckKeyInput() == "Escape")
+            {
+                switch (freezeGame)
+                {
+                    case true:
+                        freezeGame = false;
+                        menu = false;
+                        break;
+                    case false:
+                        ChangeScreen = "startMenu";
+                        freezeGame = true;
+                        break;
+                }
 
+            }
+            if (InGameScreen == "game")
+            {
+                switch (gamePadInput.CheckButtonInput())
+                {
+                    case "Up":
+                        SaveGame();
+                        break;
+                    case "Down":
+                        if (File.Exists(SaveFile))
+                        {
+                            loadingGame = true;
+                            FadingIn = true;
+                            ScreenFadeIn(gameTime, game, GraphicsDevice);
+                        }
+                        else System.Diagnostics.Debug.WriteLine("No save file found.");
+                        break;
+                }
+
+                switch (keyboardInput.CheckKeyInput())
+                {
+                    case "F8":
+                        SaveGame();
+                        break;
+                    case "F9":
+                        if (File.Exists(SaveFile))
+                        {
+                            loadingGame = true;
+                            FadingIn = true;
+                            ScreenFadeIn(gameTime, game, GraphicsDevice);
+                        }
+                        else System.Diagnostics.Debug.WriteLine("No save file found.");
+                        break;
                 }
             }
         }

@@ -8,7 +8,6 @@ namespace SoR.Logic.UI
         public Vector2 GameSettingsPosition { get; set; }
         public Vector2 LoadGamePosition { get; set; }
         public Vector2 ExitGamePosition { get; set; }
-        public bool StartMenuScreen { get; set; }
 
         public StartMenu(MainGame game, GraphicsDeviceManager graphics)
         {
@@ -23,8 +22,6 @@ namespace SoR.Logic.UI
             GameSettingsPosition = new Vector2(screenWidth * 0.1f, screenHeight * 0.4f);
             LoadGamePosition = new Vector2(screenWidth * 0.1f, screenHeight * 0.5f);
             ExitGamePosition = new Vector2(screenWidth * 0.1f, screenHeight * 0.6f);
-
-            StartMenuScreen = true;
         }
     }
 }
