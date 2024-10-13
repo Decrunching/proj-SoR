@@ -238,8 +238,8 @@ namespace SoR.Logic.Character
             skeleton.Y = Position.Y;
 
             hitbox.Update(skeleton, true);
-            animState.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            skeleton.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+            animState.Update(GameLogic.GetTime(gameTime));
+            skeleton.Update(GameLogic.GetTime(gameTime));
             animState.Apply(skeleton);
 
             // Update skeletal transformations

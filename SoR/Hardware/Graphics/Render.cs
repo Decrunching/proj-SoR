@@ -23,7 +23,6 @@ namespace SoR.Hardware.Graphics
         public Vector2 Origin { get; set; }
         public Vector2 Position { get; set; }
         public Vector2 CurtainScale { get; set; }
-        public Vector2 StartMenuScale { get; set; }
         public int ScreenWidth { get; set; }
         public int ScreenHeight { get; set; }
 
@@ -43,7 +42,6 @@ namespace SoR.Hardware.Graphics
             ScreenHeight = GraphicsDevice.Viewport.Height;
             Origin = new Vector2(ScreenWidth / 2, ScreenHeight / 2);
             CurtainScale = new Vector2(ScreenWidth, ScreenHeight);
-            StartMenuScale = new Vector2(ScreenWidth * 0.75f, ScreenHeight * 0.75f);
 
             ImpassableTiles = [];
         }
@@ -72,20 +70,19 @@ namespace SoR.Hardware.Graphics
         /*
          * Draw the StartMenu background.
          */
-        public void StartMenuBackground(GraphicsDevice GraphicsDevice, Texture2D Curtain, float fadeAlpha = 1f)
+        public void StartMenuBackground(GraphicsDevice GraphicsDevice, Texture2D Curtain, int screenWidth, int screenHeight)
         {
-            int positionX = ScreenWidth / 4;
-            int positionY = ScreenHeight / 4;
-            Rectangle destRect = new Rectangle(positionX, positionY, ScreenWidth, ScreenHeight);
+            //Vector2 position = new Vector2(ScreenWidth * 0.25f, ScreenHeight * 0.25f);
+            Rectangle destRect = new Rectangle(0, 0, screenWidth, screenHeight);
 
             spriteBatch.Draw(
                 Curtain,
                 Vector2.Zero,
                 destRect,
-                Color.White * fadeAlpha,
+                Color.White,
                 0f,
-                Origin,
-                StartMenuScale,
+                Vector2.Zero,
+                0.75f,
                 SpriteEffects.None,
                 0f);
         }

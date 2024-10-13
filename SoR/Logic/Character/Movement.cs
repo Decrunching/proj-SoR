@@ -173,7 +173,7 @@ namespace SoR.Logic.Character
          */
         public void FrozenTimer(GameTime gameTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float deltaTime = GameLogic.GetTime(gameTime);
             float freezeTime = 1f;
             sinceFreeze += deltaTime;
 
@@ -188,7 +188,7 @@ namespace SoR.Logic.Character
          */
         public void NonPlayerMovement(GameTime gameTime)
         {
-            float deltaTime = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float deltaTime = GameLogic.GetTime(gameTime);
             int newDirection;
             sinceLastChange += deltaTime;
             newPosition = Position;
@@ -215,7 +215,7 @@ namespace SoR.Logic.Character
         {
             newPosition = Position;
 
-            float newSpeed = (float)(Speed * 1.5) * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            float newSpeed = (float)(Speed * 1.5) * GameLogic.GetTime(gameTime);
 
             if (direction.X > 0 | direction.X < 0 && direction.Y > 0 | direction.Y < 0) // If moving diagonally
             {

@@ -13,14 +13,14 @@ namespace SoR.Hardware.Graphics
     {
         private OrthographicCamera camera;
         private BoxingViewportAdapter viewportAdapter;
-        private Vector2 playerPosition;
         private bool resolutionChanging;
         private int virtualWidth;
         private int virtualHeight;
-        private int newWidth;
-        private int newHeight;
         private int screenX;
         private int screenY;
+        public int NewWidth { get; set; }
+        public int NewHeight { get; set; }
+        public Vector2 PlayerPosition { get; set; }
 
         public Camera(GameWindow Window, GraphicsDevice GraphicsDevice, int virtualWidth, int virtualHeight)
             : base(Window, GraphicsDevice, virtualWidth, virtualHeight)
@@ -30,7 +30,7 @@ namespace SoR.Hardware.Graphics
             screenX = virtualWidth / 2;
             screenY = virtualHeight / 2;
 
-            playerPosition = new Vector2(screenX, screenY);
+            PlayerPosition = new Vector2(screenX, screenY);
 
             // Instantiate the camera
             viewportAdapter = new BoxingViewportAdapter(Window, GraphicsDevice, virtualWidth, virtualHeight);
@@ -46,10 +46,9 @@ namespace SoR.Hardware.Graphics
          */
         public void FollowPlayer(Vector2 position)
         {
-            playerPosition = position;
+            PlayerPosition = position;
 
-            camera.LookAt(playerPosition);
-            //camera.Move(camera.WorldToScreen(position.X - screenX, position.Y - screenY));
+            camera.LookAt(PlayerPosition);
         }
 
         /*
@@ -66,8 +65,8 @@ namespace SoR.Hardware.Graphics
          */
         public void GetResolutionUpdate(int width, int height)
         {
-            newWidth = width;
-            newHeight = height;
+            NewWidth = width;
+            NewHeight = height;
         }
 
         /*
@@ -77,7 +76,7 @@ namespace SoR.Hardware.Graphics
         {
             if (resolutionChanging)
             {
-                camera.LookAt(playerPosition);
+                camera.LookAt(PlayerPosition);
 
                 resolutionChanging = false;
             }

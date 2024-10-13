@@ -46,7 +46,7 @@ namespace SoR
         private int screenHeight;
 
         /*
-         * Constructor for the main game class. Initialises the graphics and mouse visibility.
+         * Initialise content manager and graphics device.
          */
         public MainGame()
         {
@@ -77,17 +77,13 @@ namespace SoR
         }
 
         /*
-         * Update game components.
+         * Update game elements.
          */
         protected override void Update(GameTime gameTime)
         {
-            // If the Y button on the gamepad or the tilde key on the keyboard are pressed, exit the game
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Y == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.OemTilde)) Exit();
             if (screens.ExitGame) Exit();
-
             KeyboardExtended.Update();
             UpdateResolution(graphicsSettings.CheckIfBorderlessToggled(graphics, Window));
-
             screens.UpdateGameState(gameTime, game, GraphicsDevice, graphics);
 
             base.Update(gameTime);
@@ -98,7 +94,7 @@ namespace SoR
          */
         public void UpdateResolution(Vector2 resolution)
         {
-            if (screenWidth != (int)resolution.X |
+            if (screenWidth != (int)resolution.X ||
                 screenHeight != (int)resolution.Y)
             {
                 screenWidth = (int)resolution.X;

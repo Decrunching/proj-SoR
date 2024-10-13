@@ -33,7 +33,7 @@ namespace SoR.Logic.Screens
                     gameLogic.GameMainMenu(game, GraphicsDevice, graphics);
                     break;
                 case "startMenu":
-                    gameLogic.GameStartMenu(game, GraphicsDevice, graphics);
+                    gameLogic.GameStartMenu(game, GraphicsDevice);
                     break;
                 case "game":
                     gameLogic.UpdateWorld(game, gameTime, GraphicsDevice, graphics);

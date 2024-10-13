@@ -246,6 +246,8 @@ namespace SoR.Logic
          */
         public void UpdateWorld(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
+            camera.FollowPlayer(player.Position);
+
             if (!freezeGame)
             {
                 foreach (var scenery in Scenery.Values)
@@ -261,8 +263,6 @@ namespace SoR.Logic
 
                     // Update animations
                     entity.UpdateAnimations(gameTime);
-
-                    camera.FollowPlayer(player.Position);
 
                     if (entity != player & player.CollidesWith(entity))
                     {
@@ -296,7 +296,7 @@ namespace SoR.Logic
         /*
          * Get the current game time.
          */
-        public float GetTime(GameTime gameTime)
+        public static float GetTime(GameTime gameTime)
         {
             return (float)gameTime.ElapsedGameTime.TotalSeconds;
         }
@@ -349,7 +349,7 @@ namespace SoR.Logic
         /*
          * Draw the MainMenu.
          */
-        public void RenderMainMenu(GameTime gameTime, GraphicsDevice GraphicsDevice)
+        public void DrawMainMenu(GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
             render.StartDrawingSpriteBatch(camera.GetCamera());
             render.Curtain(GraphicsDevice, mainMenu.Curtain);
@@ -412,27 +412,32 @@ namespace SoR.Logic
         /*
          * Draw the StartMenu.
          */
-        public void RenderStartMenu(GameTime gameTime, GraphicsDevice GraphicsDevice)
+        public void DrawStartMenu(GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
+            Vector2 inventoryPosition = new Vector2(camera.PlayerPosition.X - 280, camera.PlayerPosition.Y - 150);
+            Vector2 gameSettingsPosition = new Vector2(camera.PlayerPosition.X - 280, camera.PlayerPosition.Y - 120);
+            Vector2 loadGamePosition = new Vector2(camera.PlayerPosition.X - 280, camera.PlayerPosition.Y - 90);
+            Vector2 exitGamePosition = new Vector2(camera.PlayerPosition.X - 280, camera.PlayerPosition.Y - 60);
+
             render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.StartMenuBackground(GraphicsDevice, startMenu.Curtain);
-            render.MenuText(startMenu.MenuOptions[0], startMenu.InventoryPosition, font, Color.Gray, 1);
-            render.MenuText(startMenu.MenuOptions[1], startMenu.GameSettingsPosition, font, Color.Gray, 1);
-            render.MenuText(startMenu.MenuOptions[2], startMenu.LoadGamePosition, font, Color.Gray, 1);
-            render.MenuText(startMenu.MenuOptions[3], startMenu.ExitGamePosition, font, Color.Gray, 1);
+            render.StartMenuBackground(GraphicsDevice, startMenu.Curtain, camera.NewWidth, camera.NewHeight);
+            render.MenuText(startMenu.MenuOptions[0], inventoryPosition, font, Color.Gray, 1);
+            render.MenuText(startMenu.MenuOptions[1], gameSettingsPosition, font, Color.Gray, 1);
+            render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.Gray, 1);
+            render.MenuText(startMenu.MenuOptions[3], exitGamePosition, font, Color.Gray, 1);
             render.FinishDrawingSpriteBatch();
 
             switch (mainMenu.NavigateMenu(gameTime))
             {
                 case 0:
                     render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(startMenu.MenuOptions[0], startMenu.InventoryPosition, font, Color.GhostWhite, 1);
+                    render.MenuText(startMenu.MenuOptions[0], inventoryPosition, font, Color.GhostWhite, 1);
                     render.FinishDrawingSpriteBatch();
                     currentMenuItem = startMenu.MenuOptions[0];
                     break;
                 case 1:
                     render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(startMenu.MenuOptions[1], startMenu.GameSettingsPosition, font, Color.GhostWhite, 1);
+                    render.MenuText(startMenu.MenuOptions[1], gameSettingsPosition, font, Color.GhostWhite, 1);
                     render.FinishDrawingSpriteBatch();
                     currentMenuItem = startMenu.MenuOptions[1];
                     break;
@@ -440,21 +445,21 @@ namespace SoR.Logic
                     if (File.Exists(SaveFile))
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(startMenu.MenuOptions[2], startMenu.LoadGamePosition, font, Color.GhostWhite, 1);
+                        render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.GhostWhite, 1);
                         render.FinishDrawingSpriteBatch();
                         currentMenuItem = startMenu.MenuOptions[2];
                     }
                     else
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(startMenu.MenuOptions[2], startMenu.LoadGamePosition, font, Color.LightCoral, 1);
+                        render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.LightCoral, 1);
                         render.FinishDrawingSpriteBatch();
                         currentMenuItem = "none";
                     }
                     break;
                 case 3:
                     render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(startMenu.MenuOptions[3], startMenu.ExitGamePosition, font, Color.GhostWhite, 1);
+                    render.MenuText(startMenu.MenuOptions[3], exitGamePosition, font, Color.GhostWhite, 1);
                     render.FinishDrawingSpriteBatch();
                     currentMenuItem = startMenu.MenuOptions[3];
                     break;
@@ -471,7 +476,7 @@ namespace SoR.Logic
             switch (currentMapEnum)
             {
                 case CurrentMap.MainMenu:
-                    RenderMainMenu(gameTime, GraphicsDevice);
+                    DrawMainMenu(gameTime, GraphicsDevice);
                     ScreenFadeIn(gameTime, game, GraphicsDevice);
                     break;
 
@@ -548,7 +553,7 @@ namespace SoR.Logic
 
                     if (freezeGame)
                     {
-                        RenderStartMenu(gameTime, GraphicsDevice);
+                        DrawStartMenu(gameTime, GraphicsDevice);
                     }
 
                     ScreenFadeIn(gameTime, game, GraphicsDevice);

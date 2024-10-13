@@ -136,11 +136,11 @@ namespace SoR.Logic
         /*
          * Set up the main game menu.
          */
-        public void GameStartMenu(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
+        public void GameStartMenu(MainGame game, GraphicsDevice GraphicsDevice)
         {
             menu = true;
             InGameScreen = "game";
-            startMenu = new StartMenu(game, graphics);
+            startMenu = new StartMenu(game, GraphicsDevice);
             LoadGameContent(GraphicsDevice, game);
         }
 
