@@ -24,25 +24,19 @@ namespace SoR.Logic.Screens
          */
         public void UpdateGameState(GameTime gameTime, MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            switch (gameLogic.ChangeScreen)
+            gameLogic.CheckInput(game, gameTime, GraphicsDevice);
+            ExitGame = gameLogic.ExitGame;
+
+            switch (gameLogic.InGameScreen)
             {
                 case "mainMenu":
                     gameLogic.GameMainMenu(game, GraphicsDevice, graphics);
-                    gameLogic.ChangeScreen = "none";
                     break;
-                case "none":
-                    if (gameLogic.InGameScreen == "game")
-                    {
-                        ExitGame = gameLogic.ExitGame;
-
-                        gameLogic.UpdateWorld(game, gameTime, GraphicsDevice, graphics);
-                        if (gameLogic.ChangeScreen != "startMenu") goto default;
-
-                        gameLogic.GameStartMenu(game, GraphicsDevice, graphics);
-                        gameLogic.ChangeScreen = "none";
-                    }
+                case "startMenu":
+                    gameLogic.GameStartMenu(game, GraphicsDevice, graphics);
                     break;
-                default:
+                case "game":
+                    gameLogic.UpdateWorld(game, gameTime, GraphicsDevice, graphics);
                     foreach (var entity in gameLogic.Entities.Values)
                     {
                         if (gameLogic.Entities.TryGetValue("chara", out Entity chara))
@@ -59,7 +53,6 @@ namespace SoR.Logic.Screens
                     }
                     break;
             }
-            gameLogic.SaveLoadInput(game, gameTime, GraphicsDevice);
         }
     }
 }

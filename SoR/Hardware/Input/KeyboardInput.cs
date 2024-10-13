@@ -70,16 +70,6 @@ namespace SoR.Hardware.Input
             {
                 Key = "F9";
             }
-            if (keyState.IsKeyDown(Keys.Down) && !lastKeyState.IsKeyDown(Keys.Down) ||
-                keyState.IsKeyDown(Keys.S) && !lastKeyState.IsKeyDown(Keys.S))
-            {
-                Key = "Down";
-            }
-            if (keyState.IsKeyDown(Keys.Up) && !lastKeyState.IsKeyDown(Keys.Up) ||
-                keyState.IsKeyDown(Keys.W) && !lastKeyState.IsKeyDown(Keys.W))
-            {
-                Key = "Up";
-            }
             if (keyState.IsKeyDown(Keys.Enter) && !lastKeyState.IsKeyDown(Keys.Enter))
             {
                 Key = "Enter";

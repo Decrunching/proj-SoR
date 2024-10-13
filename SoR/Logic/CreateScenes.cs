@@ -127,8 +127,8 @@ namespace SoR.Logic
         {
             menu = true;
             InGameScreen = "none";
-            currentMapEnum = CurrentMap.MainMenu;
             mainMenu = new MainMenu(game, graphics);
+            currentMapEnum = CurrentMap.MainMenu;
             LoadGameContent(GraphicsDevice, game);
         }
 
