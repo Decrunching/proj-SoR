@@ -8,9 +8,9 @@ namespace SoR.Logic.Screens
     public partial class Screens
     {
         /*
-         * Currently the same every time the game is started, but will be updated later when file saving implemented.
+         * Starts the game on the main game menu.
          */
-        public void LoadGameState(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
+        public void LoadGame(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
             gameLogic.GameMainMenu(game, GraphicsDevice, graphics);
         }
@@ -26,9 +26,9 @@ namespace SoR.Logic.Screens
         /*
          * Draw the current state of the game to the screen.
          */
-        public void DrawGameState(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
+        public void DrawGame(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            gameLogic.Render(game, gameTime, GraphicsDevice);
+            gameLogic.Render(game, gameTime, GraphicsDevice, graphics);
         }
     }
 }

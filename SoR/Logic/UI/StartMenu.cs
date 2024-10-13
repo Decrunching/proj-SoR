@@ -15,11 +15,14 @@ namespace SoR.Logic.UI
             InitialiseInput(game);
             InitialiseMenu(game);
 
+            int screenWidth = graphics.PreferredBackBufferWidth;
+            int screenHeight = graphics.PreferredBackBufferHeight;
+
             MenuOptions = ["Inventory", "Settings", "Load game", "Exit game"];
-            InventoryPosition = new Vector2(graphics.PreferredBackBufferWidth / 2 - 125, 100);
-            GameSettingsPosition = new Vector2(100, 300);
-            LoadGamePosition = new Vector2(100, 340);
-            ExitGamePosition = new Vector2(100, 360);
+            InventoryPosition = new Vector2(screenWidth * 0.1f, screenHeight * 0.3f);
+            GameSettingsPosition = new Vector2(screenWidth * 0.1f, screenHeight * 0.4f);
+            LoadGamePosition = new Vector2(screenWidth * 0.1f, screenHeight * 0.5f);
+            ExitGamePosition = new Vector2(screenWidth * 0.1f, screenHeight * 0.6f);
 
             StartMenuScreen = true;
         }

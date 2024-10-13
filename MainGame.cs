@@ -73,7 +73,7 @@ namespace SoR
          */
         protected override void LoadContent()
         {
-            screens.LoadGameState(game, GraphicsDevice, graphics);
+            screens.LoadGame(game, GraphicsDevice, graphics);
         }
 
         /*
@@ -81,9 +81,9 @@ namespace SoR
          */
         protected override void Update(GameTime gameTime)
         {
-            // If the back button on the game pad or the escape key on the keyboard are pressed, exit the game
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+            // If the Y button on the gamepad or the tilde key on the keyboard are pressed, exit the game
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Y == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.OemTilde)) Exit();
+            if (screens.ExitGame) Exit();
 
             KeyboardExtended.Update();
             UpdateResolution(graphicsSettings.CheckIfBorderlessToggled(graphics, Window));
@@ -115,7 +115,7 @@ namespace SoR
          */
         protected override void Draw(GameTime gameTime)
         {
-            screens.DrawGameState(game, gameTime, GraphicsDevice);
+            screens.DrawGame(game, gameTime, GraphicsDevice, graphics);
 
             base.Draw(gameTime);
         }

@@ -50,7 +50,7 @@ namespace SoR.Hardware.Input
         /*
          * Check keyboard input.
          * F4 = toggle fullscreen. F8 = save. F9 = load. Esc = exit. Enter = select menu item.
-         * Space = change skin.
+         * Space = change skin. Escape = open start menu.
          */
             public string CheckKeyInput()
         {
@@ -88,8 +88,12 @@ namespace SoR.Hardware.Input
             {
                 Key = "Space";
             }
+            if (keyState.IsKeyDown(Keys.Escape) & !lastKeyState.IsKeyDown(Keys.Escape))
+            {
+                Key = "Escape";
+            }
 
-                lastKeyState = keyState; // Get the previous keyboard state
+            lastKeyState = keyState; // Get the previous keyboard state
 
             return Key;
         }

@@ -15,11 +15,17 @@ namespace SoR.Hardware.Graphics
     /*
      * Draw graphics to the screen, collect the impassable sections of the map, and convert map arrays into atlas positions for drawing tiles.
      */
-    internal partial class Render
+    internal class Render
     {
         private SpriteBatch spriteBatch;
         private SkeletonRenderer skeletonRenderer;
         public List<Rectangle> ImpassableTiles { get; private set; }
+        public Vector2 Origin { get; set; }
+        public Vector2 Position { get; set; }
+        public Vector2 CurtainScale { get; set; }
+        public Vector2 StartMenuScale { get; set; }
+        public int ScreenWidth { get; set; }
+        public int ScreenHeight { get; set; }
 
         /*
          * Initialise the SpriteBatch, SkeletonRenderer and ImpassableTiles collection.
@@ -33,22 +39,23 @@ namespace SoR.Hardware.Graphics
                 PremultipliedAlpha = true
             };
 
+            ScreenWidth = GraphicsDevice.Viewport.Width;
+            ScreenHeight = GraphicsDevice.Viewport.Height;
+            Origin = new Vector2(ScreenWidth / 2, ScreenHeight / 2);
+            CurtainScale = new Vector2(ScreenWidth, ScreenHeight);
+            StartMenuScale = new Vector2(ScreenWidth * 0.75f, ScreenHeight * 0.75f);
+
             ImpassableTiles = [];
         }
 
         /*
-         * Draw the MainMenu background and curtain for fading between scenes.
+         * Draw the curtain for fading between scenes and for use as the MainMenu background.
          */
-        public void MainMenuBackground(GraphicsDevice GraphicsDevice, Texture2D Curtain, float fadeAlpha = 1f)
+        public void Curtain(GraphicsDevice GraphicsDevice, Texture2D Curtain, float fadeAlpha = 1f)
         {
-            int screenWidth = GraphicsDevice.Viewport.Width;
-            int screenHeight = GraphicsDevice.Viewport.Height;
-            int positionX = screenWidth / 2;
-            int positionY = screenHeight / 2;
-            Rectangle destRect = new Rectangle(positionX, positionY, screenWidth, screenHeight);
-            Vector2 origin = new Vector2(screenWidth / 2, screenHeight / 2);
-            Vector2 scale = new Vector2(screenWidth, screenHeight);
-            Vector2 position = new Vector2(screenWidth / 2, screenHeight / 2);
+            int positionX = ScreenWidth / 2;
+            int positionY = ScreenHeight / 2;
+            Rectangle destRect = new Rectangle(positionX, positionY, ScreenWidth, ScreenHeight);
 
             spriteBatch.Draw(
                 Curtain,
@@ -56,8 +63,29 @@ namespace SoR.Hardware.Graphics
                 destRect,
                 Color.White * fadeAlpha,
                 0f,
-                origin,
-                scale,
+                Origin,
+                CurtainScale,
+                SpriteEffects.None,
+                0f);
+        }
+
+        /*
+         * Draw the StartMenu background.
+         */
+        public void StartMenuBackground(GraphicsDevice GraphicsDevice, Texture2D Curtain, float fadeAlpha = 1f)
+        {
+            int positionX = ScreenWidth / 4;
+            int positionY = ScreenHeight / 4;
+            Rectangle destRect = new Rectangle(positionX, positionY, ScreenWidth, ScreenHeight);
+
+            spriteBatch.Draw(
+                Curtain,
+                Vector2.Zero,
+                destRect,
+                Color.White * fadeAlpha,
+                0f,
+                Origin,
+                StartMenuScale,
                 SpriteEffects.None,
                 0f);
         }
@@ -119,7 +147,7 @@ namespace SoR.Hardware.Graphics
         /*
          * Draw the text for the main menu.
          */
-        public void MainMenuText(string menuItem, Vector2 position, SpriteFont font, Color colour, float scale)
+        public void MenuText(string menuItem, Vector2 position, SpriteFont font, Color colour, float scale)
         {
             // Entity text
             spriteBatch.DrawString(

@@ -125,9 +125,19 @@ namespace SoR.Logic
          */
         public void GameMainMenu(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            CurrentInputScreen = "none";
+            InGameScreen = "none";
             currentMapEnum = CurrentMap.MainMenu;
             mainMenu = new MainMenu(game, graphics);
+            LoadGameContent(GraphicsDevice, game);
+        }
+
+        /*
+         * Set up the main game menu.
+         */
+        public void GameStartMenu(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
+        {
+            InGameScreen = "none";
+            startMenu = new StartMenu(game, graphics);
             LoadGameContent(GraphicsDevice, game);
         }
 
@@ -138,7 +148,7 @@ namespace SoR.Logic
         {
             mainMenu.MainMenuScreen = false;
             newGame = false;
-            CurrentInputScreen = "game";
+            InGameScreen = "game";
 
             // Get the map to be used
             map = new Map(1);
@@ -177,7 +187,7 @@ namespace SoR.Logic
         public void Temple(MainGame game, GraphicsDevice GraphicsDevice)
         {
             mainMenu.MainMenuScreen = false;
-            CurrentInputScreen = "game";
+            InGameScreen = "game";
 
             // Get the map to be used
             map = new Map(0);
@@ -211,7 +221,7 @@ namespace SoR.Logic
 
             // Create scenery
             sceneryType = SceneryType.Campfire;
-            CreateObject(GraphicsDevice, 224, 160);
+            CreateScenery(GraphicsDevice, 224, 160);
         }
     }
 }

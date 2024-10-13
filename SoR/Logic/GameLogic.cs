@@ -42,6 +42,8 @@ namespace SoR.Logic
         private Dictionary<string, Vector2> mapFloorDecor;
         private List<Vector2> positions;
         private List<Rectangle> impassableArea;
+        private string currentMenuItem;
+        private bool freezeGame;
         private bool loadingGame;
         private bool newGame;
         private bool hasUpperWalls;
@@ -51,11 +53,12 @@ namespace SoR.Logic
         private float curtainTimer;
         public Dictionary<string, Entity> Entities { get; set; }
         public Dictionary<string, Scenery> Scenery { get; set; }
-        public string CurrentInputScreen { get; set; }
-        public string CurrentMapString { get; set; }
+        public string InGameScreen { get; set; }
+        public string ChangeScreen { get; set; }
         public string SaveFile { get; set; }
         public bool FadingIn { get; set; }
         public bool CurtainUp { get; set; }
+        public bool ExitGame { get; set; }
 
         /*
          * Differentiate between entities.
@@ -89,11 +92,14 @@ namespace SoR.Logic
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             SaveFile = Path.Combine(appData, "SoR\\saveFile.json");
 
-            CurrentMapString = "mainMenu";
-            CurrentInputScreen = "none";
+            ChangeScreen = "mainMenu";
+            InGameScreen = "none";
             hasFloorDecor = false;
             hasUpperWalls = false;
 
+            currentMenuItem = "none";
+            ExitGame = false;
+            freezeGame = false;
             loadingGame = false;
             FadingIn = false;
             CurtainUp = false;
@@ -120,14 +126,14 @@ namespace SoR.Logic
             switch (currentMapEnum)
             {
                 case CurrentMap.Village:
-                    CurrentMapString = "village";
+                    ChangeScreen = "village";
                     break;
                 case CurrentMap.Temple:
-                    CurrentMapString = "temple";
+                    ChangeScreen = "temple";
                     break;
             }
-            GameState.SaveFile(player, CurrentMapString);
-            CurrentMapString = "none";
+            GameState.SaveFile(player, ChangeScreen);
+            ChangeScreen = "none";
         }
 
         /*
@@ -135,26 +141,22 @@ namespace SoR.Logic
          */
         public void LoadGame(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
-            if (File.Exists(SaveFile))
+            GameState gameState = GameState.LoadFile();
+
+            switch (gameState.CurrentMap)
             {
-                GameState gameState = GameState.LoadFile();
-
-                switch (gameState.CurrentMap)
-                {
-                    case "village":
-                        Village(game, GraphicsDevice);
-                        break;
-                    case "temple":
-                        Temple(game, GraphicsDevice);
-                        break;
-                }
-
-                player.Position = gameState.Position;
-                player.HitPoints = gameState.HitPoints;
-                player.Skin = gameState.Skin;
-                loadingGame = false;
+                case "village":
+                    Village(game, GraphicsDevice);
+                    break;
+                case "temple":
+                    Temple(game, GraphicsDevice);
+                    break;
             }
-            else System.Diagnostics.Debug.WriteLine("No save file found.");
+
+            player.Position = gameState.Position;
+            player.HitPoints = gameState.HitPoints;
+            player.Skin = gameState.Skin;
+            loadingGame = false;
         }
 
         /*
@@ -162,7 +164,7 @@ namespace SoR.Logic
          */
         public void SaveLoadInput(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
         {
-            if (CurrentInputScreen == "game")
+            if (InGameScreen == "game")
             {
                 switch (gamePadInput.CheckButtonInput())
                 {
@@ -170,9 +172,13 @@ namespace SoR.Logic
                         SaveGame();
                         break;
                     case "Down":
-                        loadingGame = true;
-                        FadingIn = true;
-                        ScreenFadeIn(gameTime, game, GraphicsDevice);
+                        if (File.Exists(SaveFile))
+                        {
+                            loadingGame = true;
+                            FadingIn = true;
+                            ScreenFadeIn(gameTime, game, GraphicsDevice);
+                        }
+                        else System.Diagnostics.Debug.WriteLine("No save file found.");
                         break;
                 }
 
@@ -182,9 +188,13 @@ namespace SoR.Logic
                         SaveGame();
                         break;
                     case "F9":
-                        loadingGame = true;
-                        FadingIn = true;
-                        ScreenFadeIn(gameTime, game, GraphicsDevice);
+                        if (File.Exists(SaveFile))
+                        {
+                            loadingGame = true;
+                            FadingIn = true;
+                            ScreenFadeIn(gameTime, game, GraphicsDevice);
+                        }
+                        else System.Diagnostics.Debug.WriteLine("No save file found.");
                         break;
                 }
             }
@@ -255,7 +265,7 @@ namespace SoR.Logic
         /*
          * Choose interactable object to create.
          */
-        public void CreateObject(GraphicsDevice GraphicsDevice, float positionX, float positionY)
+        public void CreateScenery(GraphicsDevice GraphicsDevice, float positionX, float positionY)
         {
             switch (sceneryType)
             {
@@ -272,49 +282,90 @@ namespace SoR.Logic
         /*
          * Update world progress.
          */
-        public void UpdateWorld(GameTime gameTime, GraphicsDeviceManager graphics)
+        public void UpdateWorld(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
-            foreach (var scenery in Scenery.Values)
+            switch (freezeGame)
             {
-                // Update animations
-                scenery.UpdateAnimations(gameTime);
-            }
-
-            foreach (var entity in Entities.Values)
-            {
-                // Update position according to user input
-                entity.UpdatePosition(gameTime, graphics);
-
-                // Update animations
-                entity.UpdateAnimations(gameTime);
-
-                camera.FollowPlayer(player.Position);
-
-                if (entity != player & player.CollidesWith(entity))
-                {
-                    entity.StopMoving();
-
-                    player.EntityCollision(entity, gameTime);
-                    entity.EntityCollision(player, gameTime);
-                }
-                else if (!entity.IsMoving())
-                {
-                    entity.StartMoving();
-                }
-
-                foreach (var scenery in Scenery.Values)
-                {
-                    if (scenery.CollidesWith(entity))
+                case true:
+                    if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                     {
-                        entity.StopMoving();
+                        if (currentMenuItem == startMenu.MenuOptions[0])
+                        {
+                            // TBD
+                        }
+                        if (currentMenuItem == startMenu.MenuOptions[1])
+                        {
+                            // TBD
+                        }
+                        if (currentMenuItem == startMenu.MenuOptions[2])
+                        {
+                            FadingIn = true;
+                            loadingGame = true;
+                            ScreenFadeIn(gameTime, game, GraphicsDevice);
+                        }
+                        if (currentMenuItem == startMenu.MenuOptions[3])
+                        {
+                            // Change later to add "Exit game?" before actually exiting
 
-                        scenery.Collision(entity, gameTime);
+                            ExitGame = true;
+                        }
                     }
-                    else if (!entity.IsMoving())
+
+                    if (gamePadInput.CheckButtonInput() == "Start" || keyboardInput.CheckKeyInput() == "Escape")
                     {
-                        entity.StartMoving();
+                        freezeGame = false;
                     }
-                }
+                    break;
+                case false:
+                    if (gamePadInput.CheckButtonInput() == "Start" || keyboardInput.CheckKeyInput() == "Escape")
+                    {
+                        ChangeScreen = "startMenu";
+                        freezeGame = true;
+                    }
+
+                    foreach (var scenery in Scenery.Values)
+                    {
+                        // Update animations
+                        scenery.UpdateAnimations(gameTime);
+                    }
+
+                    foreach (var entity in Entities.Values)
+                    {
+                        // Update position according to user input
+                        entity.UpdatePosition(gameTime, graphics);
+
+                        // Update animations
+                        entity.UpdateAnimations(gameTime);
+
+                        camera.FollowPlayer(player.Position);
+
+                        if (entity != player & player.CollidesWith(entity))
+                        {
+                            entity.StopMoving();
+
+                            player.EntityCollision(entity, gameTime);
+                            entity.EntityCollision(player, gameTime);
+                        }
+                        else if (!entity.IsMoving())
+                        {
+                            entity.StartMoving();
+                        }
+
+                        foreach (var scenery in Scenery.Values)
+                        {
+                            if (scenery.CollidesWith(entity))
+                            {
+                                entity.StopMoving();
+
+                                scenery.Collision(entity, gameTime);
+                            }
+                            else if (!entity.IsMoving())
+                            {
+                                entity.StartMoving();
+                            }
+                        }
+                    }
+                    break;
             }
         }
 
@@ -367,34 +418,59 @@ namespace SoR.Logic
         public void DrawCurtain(GraphicsDevice GraphicsDevice, Texture2D Curtain, float fadeAlpha = 1f)
         {
             render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
+            render.Curtain(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
+            render.FinishDrawingSpriteBatch();
+        }
+
+        /*
+         * Draw the main menu.
+         */
+        public void DrawMainMenu(GraphicsDevice GraphicsDevice)
+        {
+            render.StartDrawingSpriteBatch(camera.GetCamera());
+            render.Curtain(GraphicsDevice, mainMenu.Curtain);
+            render.MenuText(mainMenu.MenuOptions[0], mainMenu.TitlePosition, font, Color.GhostWhite, 2.5f);
+            render.MenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.Gray, 1);
+            render.MenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.Gray, 1);
+            render.MenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.Gray, 1);
+            render.MenuText(mainMenu.MenuOptions[4], mainMenu.GameSettingsPosition, font, Color.Gray, 1);
+            render.FinishDrawingSpriteBatch();
+        }
+
+        /*
+         * Draw the StartMenu.
+         */
+        public void DrawStartMenu(GraphicsDevice GraphicsDevice)
+        {
+            render.StartDrawingSpriteBatch(camera.GetCamera());
+            render.StartMenuBackground(GraphicsDevice, startMenu.Curtain);
+            render.MenuText(startMenu.MenuOptions[0], startMenu.InventoryPosition, font, Color.Gray, 1);
+            render.MenuText(startMenu.MenuOptions[1], startMenu.GameSettingsPosition, font, Color.Gray, 1);
+            render.MenuText(startMenu.MenuOptions[2], startMenu.LoadGamePosition, font, Color.Gray, 1);
+            render.MenuText(startMenu.MenuOptions[3], startMenu.ExitGamePosition, font, Color.Gray, 1);
             render.FinishDrawingSpriteBatch();
         }
 
         /*
          * Render game elements in order of y-axis position.
          */
-        public void Render(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice)
+        public void Render(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
+            GraphicsDevice.Clear(backgroundColour); // Clear the graphics buffer and set the window background colour
+
             switch (currentMapEnum)
             {
                 case CurrentMap.MainMenu:
-                    GraphicsDevice.Clear(backgroundColour); // Clear the graphics buffer and set the window background colour
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MainMenuBackground(GraphicsDevice, mainMenu.Curtain);
-                    render.MainMenuText(mainMenu.MenuOptions[0], mainMenu.TitlePosition, font, Color.GhostWhite, 2.5f);
-                    render.MainMenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.Gray, 1);
-                    render.MainMenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.Gray, 1);
-                    render.MainMenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.Gray, 1);
-                    render.MainMenuText(mainMenu.MenuOptions[4], mainMenu.GameSettingsPosition, font, Color.Gray, 1);
-                    render.FinishDrawingSpriteBatch();
+                    DrawMainMenu(GraphicsDevice);
 
                     switch (mainMenu.NavigateMenu(gameTime))
                     {
                         case 0:
                             render.StartDrawingSpriteBatch(camera.GetCamera());
-                            render.MainMenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.GhostWhite, 1);
+                            render.MenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.GhostWhite, 1);
                             render.FinishDrawingSpriteBatch();
+                            currentMenuItem = mainMenu.MenuOptions[1];
+
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
                                 FadingIn = true;
@@ -406,8 +482,10 @@ namespace SoR.Logic
                             if (File.Exists(SaveFile))
                             {
                                 render.StartDrawingSpriteBatch(camera.GetCamera());
-                                render.MainMenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.GhostWhite, 1);
+                                render.MenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.GhostWhite, 1);
                                 render.FinishDrawingSpriteBatch();
+                                currentMenuItem = mainMenu.MenuOptions[2];
+
                                 if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                                 {
                                     FadingIn = true;
@@ -418,16 +496,19 @@ namespace SoR.Logic
                             else
                             {
                                 render.StartDrawingSpriteBatch(camera.GetCamera());
-                                render.MainMenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.LightCoral, 1);
+                                render.MenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.LightCoral, 1);
                                 render.FinishDrawingSpriteBatch();
+                                currentMenuItem = "none";
                             }
                             break;
                         case 2:
                             if (File.Exists(SaveFile))
                             {
                                 render.StartDrawingSpriteBatch(camera.GetCamera());
-                                render.MainMenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.GhostWhite, 1);
+                                render.MenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.GhostWhite, 1);
                                 render.FinishDrawingSpriteBatch();
+                                currentMenuItem = mainMenu.MenuOptions[3];
+
                                 if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                                 {
                                     FadingIn = true;
@@ -438,14 +519,17 @@ namespace SoR.Logic
                             else
                             {
                                 render.StartDrawingSpriteBatch(camera.GetCamera());
-                                render.MainMenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.LightCoral, 1);
+                                render.MenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.LightCoral, 1);
                                 render.FinishDrawingSpriteBatch();
+                                currentMenuItem = "none";
                             }
                             break;
                         case 3:
                             render.StartDrawingSpriteBatch(camera.GetCamera());
-                            render.MainMenuText(mainMenu.MenuOptions[4], mainMenu.GameSettingsPosition, font, Color.GhostWhite, 1);
+                            render.MenuText(mainMenu.MenuOptions[4], mainMenu.GameSettingsPosition, font, Color.GhostWhite, 1);
                             render.FinishDrawingSpriteBatch();
+                            currentMenuItem = mainMenu.MenuOptions[1];
+
                             if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
                             {
                                 // TBD
@@ -458,8 +542,6 @@ namespace SoR.Logic
                     break;
 
                 default:
-                    GraphicsDevice.Clear(backgroundColour); // Clear the graphics buffer and set the window background colour
-
                     foreach (var tileName in mapFloor)
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
@@ -530,11 +612,68 @@ namespace SoR.Logic
                         }
                     }
 
+                    if (freezeGame)
+                    {
+                        DrawStartMenu(GraphicsDevice);
+
+                        switch (mainMenu.NavigateMenu(gameTime))
+                        {
+                            case 0:
+                                render.StartDrawingSpriteBatch(camera.GetCamera());
+                                render.MenuText(startMenu.MenuOptions[0], startMenu.InventoryPosition, font, Color.GhostWhite, 1);
+                                render.FinishDrawingSpriteBatch();
+                                currentMenuItem = startMenu.MenuOptions[0];
+                                break;
+                            case 1:
+                                render.StartDrawingSpriteBatch(camera.GetCamera());
+                                render.MenuText(startMenu.MenuOptions[1], startMenu.GameSettingsPosition, font, Color.GhostWhite, 1);
+                                render.FinishDrawingSpriteBatch();
+                                currentMenuItem = startMenu.MenuOptions[1];
+                                break;
+                            case 2:
+                                if (File.Exists(SaveFile))
+                                {
+                                    render.StartDrawingSpriteBatch(camera.GetCamera());
+                                    render.MenuText(startMenu.MenuOptions[2], startMenu.LoadGamePosition, font, Color.GhostWhite, 1);
+                                    render.FinishDrawingSpriteBatch();
+                                    currentMenuItem = startMenu.MenuOptions[2];
+                                }
+                                else
+                                {
+                                    render.StartDrawingSpriteBatch(camera.GetCamera());
+                                    render.MenuText(startMenu.MenuOptions[2], startMenu.LoadGamePosition, font, Color.LightCoral, 1);
+                                    render.FinishDrawingSpriteBatch();
+                                    currentMenuItem = "none";
+                                }
+                                break;
+                            case 3:
+                                render.StartDrawingSpriteBatch(camera.GetCamera());
+                                render.MenuText(startMenu.MenuOptions[3], startMenu.ExitGamePosition, font, Color.GhostWhite, 1);
+                                render.FinishDrawingSpriteBatch();
+                                currentMenuItem = startMenu.MenuOptions[3];
+                                break;
+                        }
+                    }
+
                     ScreenFadeIn(gameTime, game, GraphicsDevice);
                     ScreenCurtainHold(gameTime, GraphicsDevice);
                     ScreenFadeOut(gameTime, GraphicsDevice);
                     break;
 
+            }
+        }
+
+        /*
+         * 
+         */
+        public void CheckInput()
+        {
+            if (gamePadInput.CheckButtonInput() == "A" || keyboardInput.CheckKeyInput() == "Enter")
+            {
+                switch (currentMenuItem)
+                {
+
+                }
             }
         }
     }

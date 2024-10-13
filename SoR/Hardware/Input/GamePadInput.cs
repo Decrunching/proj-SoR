@@ -32,7 +32,7 @@ namespace SoR.Hardware.Input
 
         /*
          * Check button input.
-         * A = Load. B = Save. Start = fullscreen/windowed. Back = exit. DPad = navigation. B = change skin.
+         * A = load. B = save. Start = open start menu. Back = toggle fullscreen. DPad = navigation. B = change skin.
          */
         public string CheckButtonInput()
         {
@@ -53,6 +53,10 @@ namespace SoR.Hardware.Input
                 if (gamePadState.Buttons.Start == ButtonState.Pressed && lastGamePadState.Buttons.Start != ButtonState.Pressed)
                 {
                     Button = "Start";
+                }
+                if (gamePadState.Buttons.Back == ButtonState.Pressed && lastGamePadState.Buttons.Back != ButtonState.Pressed)
+                {
+                    Button = "Back";
                 }
                 if (gamePadState.DPad.Up == ButtonState.Pressed &&
                     lastGamePadState.DPad.Up != ButtonState.Pressed)

@@ -44,7 +44,7 @@ namespace SoR.Hardware.Graphics
          */
         public Vector2 CheckIfBorderlessToggled(GraphicsDeviceManager graphics, GameWindow Window)
         {
-            if (gamePadInput.CheckButtonInput() == "Start" || keyboardInput.CheckKeyInput() == "F4")
+            if (gamePadInput.CheckButtonInput() == "Back" || keyboardInput.CheckKeyInput() == "F4")
             {
                 ToggleBorderlessMode(graphics, Window);
                 resolution = new Vector2(graphics.PreferredBackBufferWidth, graphics.PreferredBackBufferHeight);
