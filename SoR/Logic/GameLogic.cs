@@ -661,39 +661,46 @@ namespace SoR.Logic
                 }
 
             }
+
+
+
             if (InGameScreen == "game")
             {
-                switch (gamePadInput.CheckButtonInput())
-                {
-                    case "Up":
-                        SaveGame();
-                        break;
-                    case "Down":
-                        if (File.Exists(SaveFile))
-                        {
-                            loadingGame = true;
-                            FadingIn = true;
-                            ScreenFadeIn(gameTime, game, GraphicsDevice);
-                        }
-                        else System.Diagnostics.Debug.WriteLine("No save file found.");
-                        break;
-                }
+                currentMenuItem = "Up";
+                currentMenuItem = "Down";
+                currentMenuItem = "F8";
+                currentMenuItem = "F9";
+            }
+            switch (gamePadInput.CheckButtonInput())
+            {
+                case "Up":
+                    SaveGame();
+                    break;
+                case "Down":
+                    if (File.Exists(SaveFile))
+                    {
+                        loadingGame = true;
+                        FadingIn = true;
+                        ScreenFadeIn(gameTime, game, GraphicsDevice);
+                    }
+                    else System.Diagnostics.Debug.WriteLine("No save file found.");
+                    break;
+            }
 
-                switch (keyboardInput.CheckKeyInput())
-                {
-                    case "F8":
-                        SaveGame();
-                        break;
-                    case "F9":
-                        if (File.Exists(SaveFile))
-                        {
-                            loadingGame = true;
-                            FadingIn = true;
-                            ScreenFadeIn(gameTime, game, GraphicsDevice);
-                        }
-                        else System.Diagnostics.Debug.WriteLine("No save file found.");
-                        break;
-                }
+            switch (keyboardInput.CheckKeyInput())
+            {
+                case "F8":
+                    SaveGame();
+                    break;
+                case "F9":
+                    if (File.Exists(SaveFile))
+                    {
+                        loadingGame = true;
+                        FadingIn = true;
+                        ScreenFadeIn(gameTime, game, GraphicsDevice);
+                    }
+                    else System.Diagnostics.Debug.WriteLine("No save file found.");
+                    break;
             }
         }
     }
