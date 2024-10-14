@@ -339,20 +339,20 @@ namespace SoR.Logic
         /*
          * Draw the curtain.
          */
-        public void DrawCurtain(GraphicsDevice GraphicsDevice, Texture2D Curtain, float fadeAlpha = 1f)
+        public void DrawCurtain(float fadeAlpha = 1f)
         {
             render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.Curtain(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
+            render.Curtain(mainMenu.Curtain, fadeAlpha);
             render.FinishDrawingSpriteBatch();
         }
 
         /*
          * Draw the MainMenu.
          */
-        public void DrawMainMenu(GameTime gameTime, GraphicsDevice GraphicsDevice)
+        public void DrawMainMenu(GameTime gameTime)
         {
             render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.Curtain(GraphicsDevice, mainMenu.Curtain);
+            render.Curtain(mainMenu.Curtain);
             render.MenuText(mainMenu.MenuOptions[0], mainMenu.TitlePosition, font, Color.GhostWhite, 2.5f);
             render.MenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.Gray, 1);
             render.MenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.Gray, 1);
@@ -412,22 +412,24 @@ namespace SoR.Logic
         /*
          * Draw the StartMenu.
          */
-        public void DrawStartMenu(GameTime gameTime, GraphicsDevice GraphicsDevice)
+        public void DrawStartMenu(GameTime gameTime)
         {
-            Vector2 inventoryPosition = new Vector2(camera.PlayerPosition.X - 280, camera.PlayerPosition.Y - 150);
-            Vector2 gameSettingsPosition = new Vector2(camera.PlayerPosition.X - 280, camera.PlayerPosition.Y - 120);
-            Vector2 loadGamePosition = new Vector2(camera.PlayerPosition.X - 280, camera.PlayerPosition.Y - 90);
-            Vector2 exitGamePosition = new Vector2(camera.PlayerPosition.X - 280, camera.PlayerPosition.Y - 60);
+            // Use camera.PlayerPosition as point of reference for positioning since it's updated with screen resolution
+            Vector2 backgroundPosition = new Vector2(camera.PlayerPosition.X, camera.PlayerPosition.Y);
+            Vector2 inventoryPosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y - 156);
+            Vector2 gameSettingsPosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y - 56);
+            Vector2 loadGamePosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y + 44);
+            Vector2 exitGamePosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y + 144);
 
             render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.StartMenuBackground(GraphicsDevice, startMenu.Curtain, camera.NewWidth, camera.NewHeight);
+            render.StartMenuBackground(startMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition);
             render.MenuText(startMenu.MenuOptions[0], inventoryPosition, font, Color.Gray, 1);
             render.MenuText(startMenu.MenuOptions[1], gameSettingsPosition, font, Color.Gray, 1);
             render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.Gray, 1);
             render.MenuText(startMenu.MenuOptions[3], exitGamePosition, font, Color.Gray, 1);
             render.FinishDrawingSpriteBatch();
 
-            switch (mainMenu.NavigateMenu(gameTime))
+            switch (startMenu.NavigateMenu(gameTime))
             {
                 case 0:
                     render.StartDrawingSpriteBatch(camera.GetCamera());
@@ -475,12 +477,12 @@ namespace SoR.Logic
 
             switch (currentMapEnum)
             {
-                case CurrentMap.MainMenu:
-                    DrawMainMenu(gameTime, GraphicsDevice);
+                case CurrentMap.MainMenu: // If current screen is MainMenu
+                    DrawMainMenu(gameTime);
                     ScreenFadeIn(gameTime, game, GraphicsDevice);
                     break;
 
-                default:
+                default: // Otherwise default to drawing game
                     foreach (var tileName in mapFloor)
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
@@ -508,7 +510,6 @@ namespace SoR.Logic
                         {
                             if (entity.Position.Y == position.Y)
                             {
-                                // Draw skeletons
                                 render.StartDrawingSkeleton(GraphicsDevice, camera);
                                 render.DrawEntitySkeleton(entity);
                                 render.FinishDrawingSkeleton();
@@ -520,7 +521,6 @@ namespace SoR.Logic
                         {
                             if (scenery.GetPosition().Y == position.Y)
                             {
-                                // Draw skeletons
                                 render.StartDrawingSkeleton(GraphicsDevice, camera);
                                 render.DrawScenerySkeleton(scenery);
                                 render.FinishDrawingSkeleton();
@@ -553,12 +553,12 @@ namespace SoR.Logic
 
                     if (freezeGame)
                     {
-                        DrawStartMenu(gameTime, GraphicsDevice);
+                        DrawStartMenu(gameTime);
                     }
 
                     ScreenFadeIn(gameTime, game, GraphicsDevice);
-                    ScreenCurtainHold(gameTime, GraphicsDevice);
-                    ScreenFadeOut(gameTime, GraphicsDevice);
+                    ScreenCurtainHold(gameTime);
+                    ScreenFadeOut(gameTime);
                     break;
 
             }
@@ -618,35 +618,35 @@ namespace SoR.Logic
             {
                 if (input == "Up" || input == "F8")
                 {
-                    SaveGame();
+                    SaveGame(); // Save the current game state
                 }
                 if (input == "Down" || input == "F9")
                 {
                     if (File.Exists(SaveFile))
                     {
                         // *** TO DO *** Change later to add "Load game?" before actually loading *** TO DO ***
-                        loadingGame = true;
-                        FadingIn = true;
-                        ScreenFadeIn(gameTime, game, GraphicsDevice);
+                        loadingGame = true; // Game data is being loaded from file
+                        FadingIn = true; // The curtain will start fading in
+                        ScreenFadeIn(gameTime, game, GraphicsDevice); // Start fading in the curtain
                     }
-                    else System.Diagnostics.Debug.WriteLine("No save file found.");
+                    else System.Diagnostics.Debug.WriteLine("No save file found."); // Otherwise write to debug console "No save file found."
                 }
             }
 
             if (input == "Start" || input == "Escape")
             {
-                switch (freezeGame)
+                switch (freezeGame) // Freeze the game whilst the menu is open
                 {
-                    case true:
-                        InGameScreen = "game";
-                        freezeGame = false;
-                        menu = false;
+                    case true: // If the game is currently frozen (ie. the menu is already open)
+                        InGameScreen = "game"; // Go back to the game screen
+                        freezeGame = false; // Unfreeze the game
+                        menu = false; // Exit the menu
                         break;
                     case false:
-                        if (!menu)
+                        if (!menu) // Otherwise
                         {
-                            InGameScreen = "startMenu";
-                            freezeGame = true;
+                            InGameScreen = "startMenu"; // Switch to the StartMenu screen
+                            freezeGame = true; // Freeze the game
                         }
                         break;
                 }

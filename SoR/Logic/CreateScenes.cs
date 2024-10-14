@@ -41,12 +41,12 @@ namespace SoR.Logic
                         fadeAlpha = 1f;
                     }
 
-                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
+                    DrawCurtain(fadeAlpha);
                 }
 
                 if (curtainTimer >= fadeInTime)
                 {
-                    DrawCurtain(GraphicsDevice, mainMenu.Curtain);
+                    DrawCurtain();
 
                     if (newGame && FadingIn)
                     {
@@ -69,7 +69,7 @@ namespace SoR.Logic
         /*
          * Hold the curtain in place.
          */
-        public void ScreenCurtainHold(GameTime gameTime, GraphicsDevice GraphicsDevice)
+        public void ScreenCurtainHold(GameTime gameTime)
         {
             if (CurtainUp)
             {
@@ -77,7 +77,7 @@ namespace SoR.Logic
                 float curtainTime = 0.5f;
                 curtainTimer += deltaTime;
 
-                DrawCurtain(GraphicsDevice, mainMenu.Curtain);
+                DrawCurtain();
 
                 if (curtainTimer >= curtainTime)
                 {
@@ -91,7 +91,7 @@ namespace SoR.Logic
         /*
          * Fade out the curtain.
          */
-        public void ScreenFadeOut(GameTime gameTime, GraphicsDevice GraphicsDevice)
+        public void ScreenFadeOut(GameTime gameTime)
         {
             if (fadingOut)
             {
@@ -107,12 +107,12 @@ namespace SoR.Logic
                         fadeAlpha = 0f;
                     }
 
-                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, fadeAlpha);
+                    DrawCurtain(fadeAlpha);
                 }
 
                 if (curtainTimer >= fadeOutTime)
                 {
-                    DrawCurtain(GraphicsDevice, mainMenu.Curtain, 0f);
+                    DrawCurtain(0f);
 
                     fadeAlpha = 0f;
                     curtainTimer = 0f;

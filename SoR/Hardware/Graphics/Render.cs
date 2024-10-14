@@ -49,7 +49,7 @@ namespace SoR.Hardware.Graphics
         /*
          * Draw the curtain for fading between scenes and for use as the MainMenu background.
          */
-        public void Curtain(GraphicsDevice GraphicsDevice, Texture2D Curtain, float fadeAlpha = 1f)
+        public void Curtain(Texture2D Curtain, float fadeAlpha = 1f)
         {
             int positionX = ScreenWidth / 2;
             int positionY = ScreenHeight / 2;
@@ -70,19 +70,20 @@ namespace SoR.Hardware.Graphics
         /*
          * Draw the StartMenu background.
          */
-        public void StartMenuBackground(GraphicsDevice GraphicsDevice, Texture2D Curtain, int screenWidth, int screenHeight)
+        public void StartMenuBackground(Texture2D Curtain, int screenWidth, int screenHeight, Vector2 backgroundPosition)
         {
-            //Vector2 position = new Vector2(ScreenWidth * 0.25f, ScreenHeight * 0.25f);
-            Rectangle destRect = new Rectangle(0, 0, screenWidth, screenHeight);
+            Vector2 scale = new Vector2(screenWidth, screenHeight);
+            Vector2 position = new Vector2(backgroundPosition.X - (screenWidth / 2), backgroundPosition.Y - (screenHeight / 2));
+            //Rectangle destRect = new Rectangle((int)backgroundPosition.X, (int)backgroundPosition.Y, screenWidth, screenHeight);
 
             spriteBatch.Draw(
                 Curtain,
-                Vector2.Zero,
-                destRect,
-                Color.White,
+                position,
+                null,
+                Color.White * 0.85f,
                 0f,
                 Vector2.Zero,
-                0.75f,
+                scale,
                 SpriteEffects.None,
                 0f);
         }

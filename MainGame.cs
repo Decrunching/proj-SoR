@@ -1,7 +1,6 @@
 ﻿using SoR.Hardware.Graphics;
 using SoR.Logic.Screens;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Input;
 using MonoGame.Extended.Input;
 
 namespace SoR

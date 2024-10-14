@@ -74,12 +74,7 @@ namespace SoR.Hardware.Graphics
          */
         public void OnClientSizeChanged(object sender, EventArgs e)
         {
-            if (resolutionChanging)
-            {
-                camera.LookAt(PlayerPosition);
-
-                resolutionChanging = false;
-            }
+            camera.LookAt(PlayerPosition);
         }
 
         /*
