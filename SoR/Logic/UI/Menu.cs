@@ -16,16 +16,18 @@ namespace SoR.Logic.UI
         protected GamePadListener gamePadListener;
         protected KeyboardInput keyboardInput;
         protected KeyboardListener keyboardListener;
-        protected int select;
         public Texture2D Curtain { get; set; }
         public List<string> MenuOptions { get; set; }
+        public int Select { get; set; }
+        public int ItemCount { get; set; }
 
         /*
          * Initialise the generic menu fields.
          */
         public void InitialiseMenu(MainGame game)
         {
-            select = 0;
+            Select = 0;
+            ItemCount = 3;
             Curtain = game.Content.Load<Texture2D>(Globals.GetPath("Content\\SoR Resources\\Screens\\Screen Transitions\\curtain"));
         }
 
@@ -76,17 +78,17 @@ namespace SoR.Logic.UI
             if (e.Key == Keys.Down ||
                 e.Key == Keys.S)
             {
-                if (select < 3)
+                if (Select < ItemCount)
                 {
-                    select++;
+                    Select++;
                 }
             }
             else if (e.Key == Keys.Up ||
                 e.Key == Keys.W)
             {
-                if (select > 0)
+                if (Select > 0)
                 {
-                    select--;
+                    Select--;
                 }
             }
         }
@@ -98,16 +100,16 @@ namespace SoR.Logic.UI
         {
             if (e.Button == Buttons.DPadDown)
             {
-                if (select < 3)
+                if (Select < ItemCount)
                 {
-                    select++;
+                    Select++;
                 }
             }
             else if (e.Button == Buttons.DPadUp)
             {
-                if (select > 0)
+                if (Select > 0)
                 {
-                    select--;
+                    Select--;
                 }
             }
         }
@@ -119,7 +121,7 @@ namespace SoR.Logic.UI
         {
             UpdateInput(gameTime);
 
-            return select;
+            return Select;
         }
     }
 }

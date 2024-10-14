@@ -4,6 +4,9 @@ namespace SoR.Logic.UI
 {
     internal class MainMenu : Menu
     {
+        /*
+         * Set up the main menu.
+         */
         public Vector2 TitlePosition { get; set; }
         public Vector2 NewGamePosition { get; set; }
         public Vector2 ContinueGamePosition { get; set; }

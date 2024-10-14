@@ -14,7 +14,6 @@ using SoR.Logic.UI;
 using SoR.Logic.GameMap;
 using System;
 using System.IO;
-using MonoGame.Extended.Timers;
 
 namespace SoR.Logic
 {
@@ -45,13 +44,14 @@ namespace SoR.Logic
         private List<Rectangle> impassableArea;
         private string currentMenuItem;
         private bool menu;
+        private bool exitMenu;
         private bool freezeGame;
         private bool loadingGame;
         private bool newGame;
         private bool hasUpperWalls;
         private bool hasFloorDecor;
         private bool fadingOut;
-        private float fadeAlpha;
+        private float curtainOpacity;
         private float curtainTimer;
         public Dictionary<string, Entity> Entities { get; set; }
         public Dictionary<string, Scenery> Scenery { get; set; }
@@ -94,20 +94,21 @@ namespace SoR.Logic
             string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             SaveFile = Path.Combine(appData, "SoR\\saveFile.json");
 
-            ChangeScreen = "mainMenu";
-            InGameScreen = "none";
+            ChangeScreen = "none";
+            InGameScreen = "mainMenu";
             hasFloorDecor = false;
             hasUpperWalls = false;
 
             currentMenuItem = "none";
             menu = false;
+            exitMenu = false;
             ExitGame = false;
             freezeGame = false;
             loadingGame = false;
             FadingIn = false;
             CurtainUp = false;
             fadingOut = false;
-            fadeAlpha = 0f;
+            curtainOpacity = 0f;
             curtainTimer = 0f;
             backgroundColour = new Color(0, 11, 8);
 
@@ -341,18 +342,24 @@ namespace SoR.Logic
          */
         public void DrawCurtain(float fadeAlpha = 1f)
         {
+            Vector2 backgroundPosition = new Vector2(camera.PlayerPosition.X, camera.PlayerPosition.Y);
+
             render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.Curtain(mainMenu.Curtain, fadeAlpha);
+            render.Curtain(mainMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition, fadeAlpha);
             render.FinishDrawingSpriteBatch();
         }
 
         /*
          * Draw the MainMenu.
+         * 
+         * *** TO DO *** Reposition *** TO DO ***
          */
         public void DrawMainMenu(GameTime gameTime)
         {
+            Vector2 backgroundPosition = new Vector2(camera.PlayerPosition.X, camera.PlayerPosition.Y);
+
             render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.Curtain(mainMenu.Curtain);
+            render.Curtain(mainMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition);
             render.MenuText(mainMenu.MenuOptions[0], mainMenu.TitlePosition, font, Color.GhostWhite, 2.5f);
             render.MenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.Gray, 1);
             render.MenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.Gray, 1);
@@ -420,51 +427,80 @@ namespace SoR.Logic
             Vector2 gameSettingsPosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y - 56);
             Vector2 loadGamePosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y + 44);
             Vector2 exitGamePosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y + 144);
+            Vector2 toMainMenuPosition = new Vector2(camera.PlayerPosition.X - 50, camera.PlayerPosition.Y - 56);
+            Vector2 toDesktopPosition = new Vector2(camera.PlayerPosition.X - 50, camera.PlayerPosition.Y + 44);
 
             render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.StartMenuBackground(startMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition);
+            render.Curtain(startMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition, 0.75f);
             render.MenuText(startMenu.MenuOptions[0], inventoryPosition, font, Color.Gray, 1);
             render.MenuText(startMenu.MenuOptions[1], gameSettingsPosition, font, Color.Gray, 1);
             render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.Gray, 1);
             render.MenuText(startMenu.MenuOptions[3], exitGamePosition, font, Color.Gray, 1);
             render.FinishDrawingSpriteBatch();
 
-            switch (startMenu.NavigateMenu(gameTime))
+            if (!exitMenu)
             {
-                case 0:
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(startMenu.MenuOptions[0], inventoryPosition, font, Color.GhostWhite, 1);
-                    render.FinishDrawingSpriteBatch();
-                    currentMenuItem = startMenu.MenuOptions[0];
-                    break;
-                case 1:
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(startMenu.MenuOptions[1], gameSettingsPosition, font, Color.GhostWhite, 1);
-                    render.FinishDrawingSpriteBatch();
-                    currentMenuItem = startMenu.MenuOptions[1];
-                    break;
-                case 2:
-                    if (File.Exists(SaveFile))
-                    {
+                switch (startMenu.NavigateMenu(gameTime))
+                {
+                    case 0:
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.GhostWhite, 1);
+                        render.MenuText(startMenu.MenuOptions[0], inventoryPosition, font, Color.GhostWhite, 1);
                         render.FinishDrawingSpriteBatch();
-                        currentMenuItem = startMenu.MenuOptions[2];
-                    }
-                    else
-                    {
+                        currentMenuItem = startMenu.MenuOptions[0];
+                        break;
+                    case 1:
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.LightCoral, 1);
+                        render.MenuText(startMenu.MenuOptions[1], gameSettingsPosition, font, Color.GhostWhite, 1);
                         render.FinishDrawingSpriteBatch();
-                        currentMenuItem = "none";
-                    }
-                    break;
-                case 3:
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(startMenu.MenuOptions[3], exitGamePosition, font, Color.GhostWhite, 1);
-                    render.FinishDrawingSpriteBatch();
-                    currentMenuItem = startMenu.MenuOptions[3];
-                    break;
+                        currentMenuItem = startMenu.MenuOptions[1];
+                        break;
+                    case 2:
+                        if (File.Exists(SaveFile))
+                        {
+                            render.StartDrawingSpriteBatch(camera.GetCamera());
+                            render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.GhostWhite, 1);
+                            render.FinishDrawingSpriteBatch();
+                            currentMenuItem = startMenu.MenuOptions[2];
+                        }
+                        else
+                        {
+                            render.StartDrawingSpriteBatch(camera.GetCamera());
+                            render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.LightCoral, 1);
+                            render.FinishDrawingSpriteBatch();
+                            currentMenuItem = "none";
+                        }
+                        break;
+                    case 3:
+                        render.StartDrawingSpriteBatch(camera.GetCamera());
+                        render.MenuText(startMenu.MenuOptions[3], exitGamePosition, font, Color.GhostWhite, 1);
+                        render.FinishDrawingSpriteBatch();
+                        currentMenuItem = startMenu.MenuOptions[3];
+                        break;
+                }
+            }
+            else
+            {
+                render.StartDrawingSpriteBatch(camera.GetCamera());
+                render.Curtain(startMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition, 0.15f);
+                render.MenuText(startMenu.MenuOptions[4], toMainMenuPosition, font, Color.Gray, 1.25f);
+                render.MenuText(startMenu.MenuOptions[5], toDesktopPosition, font, Color.Gray, 1.25f);
+                render.FinishDrawingSpriteBatch();
+
+                switch (startMenu.NavigateMenu(gameTime))
+                {
+                    case 0:
+                        render.StartDrawingSpriteBatch(camera.GetCamera());
+                        render.MenuText(startMenu.MenuOptions[4], toMainMenuPosition, font, Color.GhostWhite, 1.25f);
+                        render.FinishDrawingSpriteBatch();
+                        currentMenuItem = startMenu.MenuOptions[4];
+                        break;
+                    case 1:
+                        render.StartDrawingSpriteBatch(camera.GetCamera());
+                        render.MenuText(startMenu.MenuOptions[5], toDesktopPosition, font, Color.GhostWhite, 1.25f);
+                        render.FinishDrawingSpriteBatch();
+                        currentMenuItem = startMenu.MenuOptions[5];
+                        break;
+                }
             }
         }
 
@@ -608,7 +644,14 @@ namespace SoR.Logic
                         case "Inventory":
                             break;
                         case "Exit game":
-                            // *** TO DO *** Change later to add "Exit game?" before actually exiting *** TO DO ***
+                            exitMenu = true;
+                            startMenu.Select = 0;
+                            startMenu.ItemCount = 1;
+                            break;
+                        case "Exit to main menu":
+                            InGameScreen = "mainMenu";
+                            break;
+                        case "Exit to desktop":
                             ExitGame = true;
                             break;
                     }
@@ -637,13 +680,21 @@ namespace SoR.Logic
             {
                 switch (freezeGame) // Freeze the game whilst the menu is open
                 {
-                    case true: // If the game is currently frozen (ie. the menu is already open)
-                        InGameScreen = "game"; // Go back to the game screen
-                        freezeGame = false; // Unfreeze the game
-                        menu = false; // Exit the menu
+                    case true: // If the menu is open
+                        switch (exitMenu)
+                        {
+                            case true: // If in the exitMenu
+                                exitMenu = false; // Leave the exitMenu
+                                break;
+                            case false: // Otherwise
+                                InGameScreen = "game"; // Go back to the game screen
+                                freezeGame = false; // Unfreeze the game
+                                menu = false; // Exit the StartMenu
+                                break;
+                        }
                         break;
-                    case false:
-                        if (!menu) // Otherwise
+                    case false: // Otherwise
+                        if (!menu)
                         {
                             InGameScreen = "startMenu"; // Switch to the StartMenu screen
                             freezeGame = true; // Freeze the game

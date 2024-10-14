@@ -12,7 +12,7 @@ namespace SoR.Logic.UI
             InitialiseInput(game);
             InitialiseMenu(game);
 
-            MenuOptions = ["Inventory", "Settings", "Load game", "Exit game"];
+            MenuOptions = ["Inventory", "Settings", "Load game", "Exit game", "Exit to main menu", "Exit to desktop"];
         }
     }
 }

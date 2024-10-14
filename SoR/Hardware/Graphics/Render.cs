@@ -20,11 +20,11 @@ namespace SoR.Hardware.Graphics
         private SpriteBatch spriteBatch;
         private SkeletonRenderer skeletonRenderer;
         public List<Rectangle> ImpassableTiles { get; private set; }
-        public Vector2 Origin { get; set; }
+        /*public Vector2 Origin { get; set; }
         public Vector2 Position { get; set; }
         public Vector2 CurtainScale { get; set; }
         public int ScreenWidth { get; set; }
-        public int ScreenHeight { get; set; }
+        public int ScreenHeight { get; set; }*/
 
         /*
          * Initialise the SpriteBatch, SkeletonRenderer and ImpassableTiles collection.
@@ -38,10 +38,10 @@ namespace SoR.Hardware.Graphics
                 PremultipliedAlpha = true
             };
 
-            ScreenWidth = GraphicsDevice.Viewport.Width;
+            /*ScreenWidth = GraphicsDevice.Viewport.Width;
             ScreenHeight = GraphicsDevice.Viewport.Height;
             Origin = new Vector2(ScreenWidth / 2, ScreenHeight / 2);
-            CurtainScale = new Vector2(ScreenWidth, ScreenHeight);
+            CurtainScale = new Vector2(ScreenWidth, ScreenHeight);*/
 
             ImpassableTiles = [];
         }
@@ -49,7 +49,7 @@ namespace SoR.Hardware.Graphics
         /*
          * Draw the curtain for fading between scenes and for use as the MainMenu background.
          */
-        public void Curtain(Texture2D Curtain, float fadeAlpha = 1f)
+        /*public void Curtain(Texture2D Curtain, float fadeAlpha = 1f)
         {
             int positionX = ScreenWidth / 2;
             int positionY = ScreenHeight / 2;
@@ -65,22 +65,21 @@ namespace SoR.Hardware.Graphics
                 CurtainScale,
                 SpriteEffects.None,
                 0f);
-        }
+        }*/
 
         /*
          * Draw the StartMenu background.
          */
-        public void StartMenuBackground(Texture2D Curtain, int screenWidth, int screenHeight, Vector2 backgroundPosition)
+        public void Curtain(Texture2D Curtain, int screenWidth, int screenHeight, Vector2 backgroundPosition, float fadeAlpha = 1f)
         {
             Vector2 scale = new Vector2(screenWidth, screenHeight);
             Vector2 position = new Vector2(backgroundPosition.X - (screenWidth / 2), backgroundPosition.Y - (screenHeight / 2));
-            //Rectangle destRect = new Rectangle((int)backgroundPosition.X, (int)backgroundPosition.Y, screenWidth, screenHeight);
 
             spriteBatch.Draw(
                 Curtain,
                 position,
                 null,
-                Color.White * 0.85f,
+                Color.White * fadeAlpha,
                 0f,
                 Vector2.Zero,
                 scale,

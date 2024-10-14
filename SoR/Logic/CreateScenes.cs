@@ -28,40 +28,39 @@ namespace SoR.Logic
             if (FadingIn)
             {
                 float deltaTime = GetTime(gameTime);
-                float fadeInTime = 0.3f;
-                curtainTimer += deltaTime;
-                fadeAlpha += deltaTime * 3.33f;
+                float timeLength = 0.3f; // For 0.3 of a second
+                curtainOpacity += deltaTime * 3.33f; // Increment the curtain opacity
 
-                if (curtainTimer < fadeInTime)
+                if (curtainTimer < timeLength) // If the curtainTimer hasn't reached the total timeLength
                 {
-                    curtainTimer += deltaTime;
+                    curtainTimer += deltaTime; // Increment the curtainTimer
 
-                    if (fadeAlpha > 1f)
+                    if (curtainOpacity > 1f)
                     {
-                        fadeAlpha = 1f;
+                        curtainOpacity = 1f; // Make sure fadeAlpha is never more than 1f (fully opaque)
                     }
 
-                    DrawCurtain(fadeAlpha);
+                    DrawCurtain(curtainOpacity); // Draw the curtain with the current opacity
                 }
 
-                if (curtainTimer >= fadeInTime)
+                if (curtainTimer >= timeLength) // If the curtainTimer has reached or exceeded timeLength
                 {
-                    DrawCurtain();
+                    DrawCurtain(); // Draw the curtain at full opacity
 
-                    if (newGame && FadingIn)
+                    if (newGame) // If starting a new game
                     {
-                        Village(game, GraphicsDevice);
+                        Village(game, GraphicsDevice); // Load the starting area
                     }
-                    if (loadingGame && FadingIn)
+                    if (loadingGame) // If loading from save file
                     {
-                        LoadGame(game, gameTime, GraphicsDevice);
+                        LoadGame(game, gameTime, GraphicsDevice); // Load the save data
                     }
 
-                    fadeAlpha = 1f;
+                    curtainOpacity = 1f;
                     curtainTimer = 0f;
-                    FadingIn = false;
-                    CurtainUp = true;
                     freezeGame = false;
+                    FadingIn = false;
+                    CurtainUp = true; // Reset variables, unfreeze game, curtain is now up
                 }
             }
         }
@@ -74,16 +73,16 @@ namespace SoR.Logic
             if (CurtainUp)
             {
                 float deltaTime = GetTime(gameTime);
-                float curtainTime = 0.5f;
-                curtainTimer += deltaTime;
+                float timeLength = 0.5f; // For half a second
+                curtainTimer += deltaTime; // Increment the curtainTimer
 
-                DrawCurtain();
+                DrawCurtain(); // Draw the curtain
 
-                if (curtainTimer >= curtainTime)
+                if (curtainTimer >= timeLength) // If the max curtainTime has reached or exceeded timeLength
                 {
                     curtainTimer = 0f;
                     CurtainUp = false;
-                    fadingOut = true;
+                    fadingOut = true; // Reset variables, curtain is now fadingOut
                 }
             }
         }
@@ -96,27 +95,25 @@ namespace SoR.Logic
             if (fadingOut)
             {
                 float deltaTime = GetTime(gameTime);
-                float fadeOutTime = 1f;
-                curtainTimer += deltaTime;
-                fadeAlpha -= deltaTime;
+                float timeLength = 1f; // For 1 second
+                curtainTimer += deltaTime; // Increment the curtainTimer
+                curtainOpacity -= deltaTime; // Decrement the opacity
 
-                if (curtainTimer < fadeOutTime)
+                if (curtainTimer < timeLength) // If curtainTimer is less than total timeLength
                 {
-                    if (fadeAlpha < 0f)
+                    if (curtainOpacity < 0f)
                     {
-                        fadeAlpha = 0f;
+                        curtainOpacity = 0f; // Ensure opacity is never less than 0f
                     }
 
-                    DrawCurtain(fadeAlpha);
+                    DrawCurtain(curtainOpacity); // Draw curtain at current opacity
                 }
 
-                if (curtainTimer >= fadeOutTime)
+                if (curtainTimer >= timeLength) // If the max curtainTime has reached or exceeded timeLength
                 {
-                    DrawCurtain(0f);
-
-                    fadeAlpha = 0f;
+                    curtainOpacity = 0f;
                     curtainTimer = 0f;
-                    fadingOut = false;
+                    fadingOut = false; // Reset variables, the curtain is finished with
                 }
             }
         }
@@ -128,6 +125,7 @@ namespace SoR.Logic
         {
             menu = true;
             InGameScreen = "none";
+            ChangeScreen = "none";
             mainMenu = new MainMenu(game, graphics);
             currentMapEnum = CurrentMap.MainMenu;
             LoadGameContent(GraphicsDevice, game);
@@ -141,6 +139,7 @@ namespace SoR.Logic
             menu = true;
             InGameScreen = "game";
             startMenu = new StartMenu(game, GraphicsDevice);
+            startMenu.ItemCount = 3; // Reset the number of StartMenu items to 3
             LoadGameContent(GraphicsDevice, game);
         }
 
