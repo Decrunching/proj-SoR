@@ -356,22 +356,30 @@ namespace SoR.Logic
          */
         public void DrawMainMenu(GameTime gameTime)
         {
+            // Use camera.PlayerPosition as point of reference for positioning since it's updated with screen resolution
             Vector2 backgroundPosition = new Vector2(camera.PlayerPosition.X, camera.PlayerPosition.Y);
+            Vector2 titlePosition = new Vector2(camera.PlayerPosition.X - 125, camera.PlayerPosition.Y - 156);
+            Vector2 newGamePosition = new Vector2(camera.PlayerPosition.X - 250, camera.PlayerPosition.Y + 20);
+            Vector2 continueGamePosition = new Vector2(camera.PlayerPosition.X - 250, camera.PlayerPosition.Y + 50);
+            Vector2 loadGamePosition = new Vector2(camera.PlayerPosition.X - 250, camera.PlayerPosition.Y + 80);
+            Vector2 gameSettingsPosition = new Vector2(camera.PlayerPosition.X - 250, camera.PlayerPosition.Y+ 110);
+            Vector2 toDesktopPosition = new Vector2(camera.PlayerPosition.X - 250, camera.PlayerPosition.Y + 140);
 
             render.StartDrawingSpriteBatch(camera.GetCamera());
             render.Curtain(mainMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition);
-            render.MenuText(mainMenu.MenuOptions[0], mainMenu.TitlePosition, font, Color.GhostWhite, 2.5f);
-            render.MenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.Gray, 1);
-            render.MenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.Gray, 1);
-            render.MenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.Gray, 1);
-            render.MenuText(mainMenu.MenuOptions[4], mainMenu.GameSettingsPosition, font, Color.Gray, 1);
+            render.MenuText(mainMenu.MenuOptions[0], titlePosition, font, Color.GhostWhite, 2.5f);
+            render.MenuText(mainMenu.MenuOptions[1], newGamePosition, font, Color.Gray, 1);
+            render.MenuText(mainMenu.MenuOptions[2], continueGamePosition, font, Color.Gray, 1);
+            render.MenuText(mainMenu.MenuOptions[3], loadGamePosition, font, Color.Gray, 1);
+            render.MenuText(mainMenu.MenuOptions[4], gameSettingsPosition, font, Color.Gray, 1);
+            render.MenuText(mainMenu.MenuOptions[5], toDesktopPosition, font, Color.Gray, 1);
             render.FinishDrawingSpriteBatch();
 
             switch (mainMenu.NavigateMenu(gameTime))
             {
                 case 0:
                     render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(mainMenu.MenuOptions[1], mainMenu.NewGamePosition, font, Color.GhostWhite, 1);
+                    render.MenuText(mainMenu.MenuOptions[1], newGamePosition, font, Color.GhostWhite, 1);
                     render.FinishDrawingSpriteBatch();
                     currentMenuItem = mainMenu.MenuOptions[1];
                     break;
@@ -379,14 +387,14 @@ namespace SoR.Logic
                     if (File.Exists(SaveFile))
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.GhostWhite, 1);
+                        render.MenuText(mainMenu.MenuOptions[2], continueGamePosition, font, Color.GhostWhite, 1);
                         render.FinishDrawingSpriteBatch();
                         currentMenuItem = mainMenu.MenuOptions[2];
                     }
                     else
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(mainMenu.MenuOptions[2], mainMenu.ContinueGamePosition, font, Color.LightCoral, 1);
+                        render.MenuText(mainMenu.MenuOptions[2], continueGamePosition, font, Color.LightCoral, 1);
                         render.FinishDrawingSpriteBatch();
                         currentMenuItem = "none";
                     }
@@ -395,23 +403,29 @@ namespace SoR.Logic
                     if (File.Exists(SaveFile))
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.GhostWhite, 1);
+                        render.MenuText(mainMenu.MenuOptions[3], loadGamePosition, font, Color.GhostWhite, 1);
                         render.FinishDrawingSpriteBatch();
                         currentMenuItem = mainMenu.MenuOptions[3];
                     }
                     else
                     {
                         render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(mainMenu.MenuOptions[3], mainMenu.LoadGamePosition, font, Color.LightCoral, 1);
+                        render.MenuText(mainMenu.MenuOptions[3], loadGamePosition, font, Color.LightCoral, 1);
                         render.FinishDrawingSpriteBatch();
                         currentMenuItem = "none";
                     }
                     break;
                 case 3:
                     render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(mainMenu.MenuOptions[4], mainMenu.GameSettingsPosition, font, Color.GhostWhite, 1);
+                    render.MenuText(mainMenu.MenuOptions[4], gameSettingsPosition, font, Color.GhostWhite, 1);
                     render.FinishDrawingSpriteBatch();
                     currentMenuItem = mainMenu.MenuOptions[4];
+                    break;
+                case 4:
+                    render.StartDrawingSpriteBatch(camera.GetCamera());
+                    render.MenuText(mainMenu.MenuOptions[5], toDesktopPosition, font, Color.GhostWhite, 1);
+                    render.FinishDrawingSpriteBatch();
+                    currentMenuItem = mainMenu.MenuOptions[5];
                     break;
             }
         }
@@ -649,6 +663,7 @@ namespace SoR.Logic
                             startMenu.ItemCount = 1;
                             break;
                         case "Exit to main menu":
+                            exitMenu = false;
                             InGameScreen = "mainMenu";
                             break;
                         case "Exit to desktop":
