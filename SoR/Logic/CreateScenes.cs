@@ -125,7 +125,7 @@ namespace SoR.Logic
         {
             menu = true;
             InGameScreen = "none";
-            ChangeScreen = "none";
+            PlayerLocation = "none";
             mainMenu = new MainMenu(game, graphics);
             mainMenu.ItemCount = 4; // Reset the number of StartMenu items to 4
             currentMapEnum = CurrentMap.MainMenu;

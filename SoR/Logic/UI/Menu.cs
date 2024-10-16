@@ -28,7 +28,7 @@ namespace SoR.Logic.UI
         {
             Select = 0;
             ItemCount = 3;
-            Curtain = game.Content.Load<Texture2D>(Globals.GetPath("Content\\SoR Resources\\Screens\\Screen Transitions\\curtain"));
+            Curtain = game.Content.Load<Texture2D>(Globals.GetResourcePath("Content\\SoR Resources\\Screens\\Screen Transitions\\curtain"));
         }
 
         /*

@@ -56,7 +56,7 @@ namespace SoR.Logic
         public Dictionary<string, Entity> Entities { get; set; }
         public Dictionary<string, Scenery> Scenery { get; set; }
         public string InGameScreen { get; set; }
-        public string ChangeScreen { get; set; }
+        public string PlayerLocation { get; set; }
         public string SaveFile { get; set; }
         public bool FadingIn { get; set; }
         public bool CurtainUp { get; set; }
@@ -91,10 +91,9 @@ namespace SoR.Logic
             gamePadInput = new GamePadInput();
             keyboardInput = new KeyboardInput();
 
-            string appData = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-            SaveFile = Path.Combine(appData, "SoR\\saveFile.json");
+            SaveFile = Globals.GetSavePath("SoR\\saveFile.json");
 
-            ChangeScreen = "none";
+            PlayerLocation = "none";
             InGameScreen = "mainMenu";
             hasFloorDecor = false;
             hasUpperWalls = false;
@@ -130,14 +129,14 @@ namespace SoR.Logic
             switch (currentMapEnum)
             {
                 case CurrentMap.Village:
-                    ChangeScreen = "village";
+                    PlayerLocation = "village";
                     break;
                 case CurrentMap.Temple:
-                    ChangeScreen = "temple";
+                    PlayerLocation = "temple";
                     break;
             }
-            GameState.SaveFile(player, ChangeScreen);
-            ChangeScreen = "none";
+            GameState.SaveFile(player, PlayerLocation);
+            PlayerLocation = "none";
         }
 
         /*

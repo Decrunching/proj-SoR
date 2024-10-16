@@ -19,14 +19,14 @@ namespace SoR.Hardware.Data
         /*
          * Save the current game state to a JSON file.
          */
-        public static void SaveFile(Entity player, string currentMap)
+        public static void SaveFile(Entity player, string playerLocation)
         {
             GameState save = new()
             {
                 Position = player.Position,
                 HitPoints = player.HitPoints,
                 Skin = player.Skin,
-                CurrentMap = currentMap
+                CurrentMap = playerLocation
             };
 
             var jsonSettings = new JsonSerializerSettings
@@ -37,9 +37,9 @@ namespace SoR.Hardware.Data
 
             string jsonData = JsonConvert.SerializeObject(save, Formatting.Indented, jsonSettings);
 
-            Directory.CreateDirectory(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SoR"));
+            Directory.CreateDirectory(Globals.GetSavePath("SoR"));
 
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SoR\\saveFile.json");
+            string filePath = Globals.GetSavePath("SoR\\saveFile.json");
 
             File.WriteAllText(filePath, jsonData);
         }
@@ -49,7 +49,7 @@ namespace SoR.Hardware.Data
          */
         public static GameState LoadFile()
         {
-            string filePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "SoR\\saveFile.json");
+            string filePath = Globals.GetSavePath("SoR\\saveFile.json");
 
             try
             {
