@@ -118,6 +118,14 @@ namespace SoR.Logic.Character
         }
 
         /*
+         * Update skin after loading game or changing screens.
+         */
+        public void UpdateSkin(string skin)
+        {
+            skeleton.SetSkin(skeletonData.FindSkin(skin));
+        }
+
+        /*
          * Choose a method for playing the animation according to Player.ChangeAnimation(eventTrigger)
          * animType.
          * 

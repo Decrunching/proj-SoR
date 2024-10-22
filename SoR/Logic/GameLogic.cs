@@ -12,8 +12,9 @@ using SoR.Logic.Character.Player;
 using SoR.Logic.Character.Mobs;
 using SoR.Logic.UI;
 using SoR.Logic.GameMap;
-using System;
 using System.IO;
+using Spine;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SoR.Logic
 {
@@ -159,6 +160,7 @@ namespace SoR.Logic
             player.Position = gameState.Position;
             player.HitPoints = gameState.HitPoints;
             player.Skin = gameState.Skin;
+            player.UpdateSkin(gameState.Skin);
             loadingGame = false;
         }
 
