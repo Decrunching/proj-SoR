@@ -51,6 +51,7 @@ namespace SoR.Logic.Character
         protected string prevTrigger;
         protected string animOne;
         protected string animTwo;
+        protected string isFacing;
         public List<Rectangle> ImpassableArea { get; protected set; }
         public Vector2 Position { get; set; }
         public bool Player { get; set; }
@@ -123,10 +124,12 @@ namespace SoR.Logic.Character
         public void UpdateSkin(string skin)
         {
             skeleton.SetSkin(skeletonData.FindSkin(skin));
+            skeleton.SetSlotsToSetupPose();
+            animState.Apply(skeleton);
         }
 
         /*
-         * Choose a method for playing the animation according to Player.ChangeAnimation(eventTrigger)
+         * Choose a method for playing the animation according to ChangeAnimation(eventTrigger)
          * animType.
          * 
          * 1 = rapidly transition to next animation

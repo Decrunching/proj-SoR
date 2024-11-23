@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Spine;
 
 namespace SoR.Logic.Character.Player
 {
@@ -7,26 +8,26 @@ namespace SoR.Logic.Character.Player
         /*
          * Check whether the skin has changed.
          */
-        public void CheckForSkinChange()
+        public void SkinChange()
         {
-            if (gamePadInput.Button == "B" || keyboardInput.Key == "Space")
+            switch (isFacing)
             {
-                switch (Skin)
-                {
-                    case "solarknight-0":
-                        skeleton.SetSkin(skeletonData.FindSkin("lunarknight-0"));
-                        Skin = "lunarknight-0";
-                        break;
-                    case "lunarknight-0":
-                        skeleton.SetSkin(skeletonData.FindSkin("knight-0"));
-                        Skin = "knight-0";
-                        break;
-                    case "knight-0":
-                        skeleton.SetSkin(skeletonData.FindSkin("solarknight-0"));
-                        Skin = "solarknight-0";
-                        break;
-                }
+                case "idleup":
+                    skeleton.SetSkin(skeletonData.FindSkin("up"));
+                    break;
+                case "idledown":
+                    skeleton.SetSkin(skeletonData.FindSkin("down"));
+                    break;
+                case "idleleft":
+                    skeleton.SetSkin(skeletonData.FindSkin("side"));
+                    break;
+                case "idleright":
+                    skeleton.SetSkin(skeletonData.FindSkin("side"));
+                    break;
             }
+
+            skeleton.SetSlotsToSetupPose();
+            animState.Apply(skeleton);
         }
 
         /*
@@ -42,8 +43,10 @@ namespace SoR.Logic.Character.Player
                 if (!idle) // If idle animation is not currently playing
                 {
                     idle = true; // Idle is now playing
-                    movementAnimation = "idlebattle"; // Set idle animation
+                    movementAnimation = isFacing; // Set idle animation according to direction player is facing
+                    SkinChange();
                 }
+
                 if (CountDistance == 0)
                 {
                     direction = Vector2.Zero;
@@ -68,11 +71,15 @@ namespace SoR.Logic.Character.Player
                     MovementDirectionX(-1);
                     idle = false;
                     movementAnimation = "runleft";
+                    isFacing = "idleleft";
+                    SkinChange();
                     break;
                 case 2:
                     MovementDirectionX(1);
                     idle = false;
                     movementAnimation = "runright";
+                    isFacing = "idleright";
+                    SkinChange();
                     break;
                 case 3:
                     direction.X = 0;
@@ -80,7 +87,9 @@ namespace SoR.Logic.Character.Player
                     break;
                 case 4:
                     direction.X = 0;
-                    movementAnimation = "idlebattle";
+                    movementAnimation = "idledown";
+                    isFacing = "idledown";
+                    SkinChange();
                     break;
             }
         }
@@ -101,11 +110,15 @@ namespace SoR.Logic.Character.Player
                 case 1:
                     MovementDirectionY(-1);
                     movementAnimation = "runup";
+                    isFacing = "idleup";
+                    SkinChange();
                     idle = false;
                     break;
                 case 2:
                     MovementDirectionY(1);
                     movementAnimation = "rundown";
+                    isFacing = "idledown";
+                    SkinChange();
                     idle = false;
                     break;
                 case 3:
@@ -114,7 +127,7 @@ namespace SoR.Logic.Character.Player
                     break;
                 case 4:
                     direction.Y = 0;
-                    movementAnimation = "idlebattle";
+                    movementAnimation = isFacing;
                     break;
                 case 5:
                     direction.Y = 0;

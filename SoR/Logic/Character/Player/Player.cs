@@ -23,7 +23,10 @@ namespace SoR.Logic.Character.Player
             // The possible animations to play as a string and the method to use for playing them as an int
             animations = new Dictionary<string, int>()
             {
-                { "idlebattle", 1 },
+                { "idleup", 1 },
+                { "idledown", 1 },
+                { "idleleft", 1 },
+                { "idleright", 1 },
                 { "runup", 3 },
                 { "rundown", 3 },
                 { "runleft", 3 },
@@ -31,7 +34,7 @@ namespace SoR.Logic.Character.Player
             };
 
             // Load texture atlas and attachment loader
-            atlas = new Atlas(Globals.GetResourcePath("Content\\SoR Resources\\Entities\\Player\\Char sprites.atlas"), new XnaTextureLoader(GraphicsDevice));
+            atlas = new Atlas(Globals.GetResourcePath("Content\\SoR Resources\\Entities\\Player\\MC.atlas"), new XnaTextureLoader(GraphicsDevice));
             atlasAttachmentLoader = new AtlasAttachmentLoader(atlas);
             json = new SkeletonJson(atlasAttachmentLoader);
 
@@ -40,17 +43,17 @@ namespace SoR.Logic.Character.Player
             skeleton = new Skeleton(skeletonData);
 
             // Set the skin
-            skeleton.SetSkin(skeletonData.FindSkin("solarknight-0"));
-            Skin = "solarknight-0";
+            skeleton.SetSkin(skeletonData.FindSkin("down"));
+            Skin = "down";
 
             // Setup animation
             animStateData = new AnimationStateData(skeleton.Data);
             animState = new AnimationState(animStateData);
             animState.Apply(skeleton);
-            animStateData.DefaultMix = 0.1f;
+            animStateData.DefaultMix = 0.3f;
 
             // Set the "fidle" animation on track 1 and leave it looping forever
-            trackEntry = animState.SetAnimation(0, "idlebattle", true);
+            trackEntry = animState.SetAnimation(0, "idledown", true);
 
             // Create hitbox
             slot = skeleton.FindSlot("hitbox");
@@ -73,6 +76,7 @@ namespace SoR.Logic.Character.Player
             direction = new Vector2(0, 0); // The direction of movement
             BeenPushed = false;
             sinceFreeze = 0; // Time since entity movement was frozen
+            isFacing = "idledown";
 
             Player = true;
 
@@ -110,7 +114,7 @@ namespace SoR.Logic.Character.Player
                     if (eventTrigger == animation)
                     {
                         prevTrigger = animOne = reaction = animation;
-                        animTwo = "idlebattle";
+                        animTwo = isFacing;
 
                         React(reaction, animations[animation]);
                     }
@@ -188,7 +192,6 @@ namespace SoR.Logic.Character.Player
          */
         public override void UpdateAnimations(GameTime gameTime)
         {
-            CheckForSkinChange();
             ChangeAnimation(movementAnimation);
 
             base.UpdateAnimations(gameTime);
