@@ -42,13 +42,15 @@ namespace SoR.Hardware.Graphics
         }
 
         /*
-         * Draw the StartMenu background.
+         * Draw the curtain.
          */
-        public void CreateCurtain(Texture2D Curtain, int screenWidth, int screenHeight, Vector2 backgroundPosition, float fadeAlpha = 1f)
+        public void DrawCurtain(float positionX, float positionY, OrthographicCamera camera, int width, int height, Texture2D curtain, float fadeAlpha = 1f)
         {
-            Vector2 scale = new Vector2(screenWidth, screenHeight);
-            Vector2 position = new Vector2(backgroundPosition.X - (screenWidth / 2), backgroundPosition.Y - (screenHeight / 2));
+            Vector2 backgroundPosition = new Vector2(positionX, positionY);
+            Vector2 scale = new Vector2(width, height);
+            Vector2 position = new Vector2(backgroundPosition.X - (width / 2), backgroundPosition.Y - (height / 2));
 
+            StartDrawingSpriteBatch(camera);
             spriteBatch.Draw(
                 Curtain,
                 position,
@@ -59,17 +61,6 @@ namespace SoR.Hardware.Graphics
                 scale,
                 SpriteEffects.None,
                 0f);
-        }
-
-        /*
-         * Draw the curtain.
-         */
-        public void DrawCurtain(float positionX, float positionY, OrthographicCamera camera, int width, int height, Texture2D curtain, float fadeAlpha = 1f)
-        {
-            Vector2 backgroundPosition = new Vector2(positionX, positionY);
-
-            StartDrawingSpriteBatch(camera);
-            CreateCurtain(curtain, width, height, backgroundPosition, fadeAlpha);
             FinishDrawingSpriteBatch();
         }
         
@@ -107,8 +98,9 @@ namespace SoR.Hardware.Graphics
             Vector2 gameSettingsPosition = new Vector2(positionX - 250, positionY + 110);
             Vector2 toDesktopPosition = new Vector2(positionX - 250, positionY + 140);
 
+            DrawCurtain(positionX, positionY, camera, width, height, curtain);
+
             StartDrawingSpriteBatch(camera);
-            CreateCurtain(curtain, width, height, backgroundPosition);
             MenuText(title, titlePosition, font, Color.GhostWhite, 2.5f);
             MenuText(newGame, newGamePosition, font, Color.Gray, 1);
             MenuText(continueGame, continueGamePosition, font, Color.Gray, 1);
@@ -207,8 +199,9 @@ namespace SoR.Hardware.Graphics
             Vector2 toMainMenuPosition = new Vector2(positionX - 50, positionY - 56);
             Vector2 toDesktopPosition = new Vector2(positionX - 50, positionY + 44);
 
+            DrawCurtain(positionX, positionY, camera, width, height, curtain, 0.75f);
+
             StartDrawingSpriteBatch(camera);
-            CreateCurtain(curtain, width, height, backgroundPosition, 0.75f);
             MenuText(inventory, inventoryPosition, font, Color.Gray, 1);
             MenuText(settings, gameSettingsPosition, font, Color.Gray, 1);
             MenuText(loadGame, loadGamePosition, font, Color.Gray, 1);
@@ -257,8 +250,9 @@ namespace SoR.Hardware.Graphics
             }
             else
             {
+                DrawCurtain(positionX, positionY, camera, width, height, curtain, 0.15f);
+
                 StartDrawingSpriteBatch(camera);
-                CreateCurtain(curtain, width, height, backgroundPosition, 0.15f);
                 MenuText(toMain, toMainMenuPosition, font, Color.Gray, 1.25f);
                 MenuText(toDesktop, toDesktopPosition, font, Color.Gray, 1.25f);
                 FinishDrawingSpriteBatch();

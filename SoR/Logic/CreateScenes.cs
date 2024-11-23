@@ -151,9 +151,19 @@ namespace SoR.Logic
         public void GameMainMenu(MainGame game, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
         {
             menu = true;
+            Entities = [];
+            Scenery = [];
+            mapLowerWalls = [];
+            mapUpperWalls = [];
+            mapFloor = [];
+            mapFloorDecor = [];
+            positions = [];
+            impassableArea = [];
             InGameScreen = "none";
             PlayerLocation = "none";
+            currentMenuItem = "none";
             camera = new Camera(game.Window, GraphicsDevice, 800, 600);
+            camera.UpdateViewportAdapter(game.Window);
             mainMenu = new MainMenu(game, graphics);
             mainMenu.ItemCount = 4; // Reset the number of StartMenu items to 4
             currentMapEnum = CurrentMap.MainMenu;

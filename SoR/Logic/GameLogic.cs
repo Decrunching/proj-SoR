@@ -94,28 +94,16 @@ namespace SoR.Logic
             InGameScreen = "mainMenu";
             hasFloorDecor = false;
             hasUpperWalls = false;
-
-            currentMenuItem = "none";
-            menu = false;
-            exitMenu = false;
-            ExitGame = false;
             freezeGame = false;
             loadingGame = false;
             FadingIn = false;
             CurtainUp = false;
             fadingOut = false;
+            exitMenu = false;
+            ExitGame = false;
             curtainOpacity = 0f;
             curtainTimer = 0f;
             backgroundColour = new Color(0, 11, 8);
-
-            Entities = [];
-            Scenery = [];
-            mapLowerWalls = [];
-            mapUpperWalls = [];
-            mapFloor = [];
-            mapFloorDecor = [];
-            positions = [];
-            impassableArea = [];
         }
 
         /*
@@ -361,7 +349,10 @@ namespace SoR.Logic
                         mainMenu.MenuOptions[5],
                         mainMenu.NavigateMenu(gameTime),
                         SaveFile);
+
                     ScreenFadeIn(gameTime, game, GraphicsDevice);
+                    ScreenCurtainHold(gameTime);
+                    ScreenFadeOut(gameTime);
                     break;
 
                 default: // Otherwise default to drawing game

@@ -13,7 +13,6 @@ namespace SoR.Hardware.Graphics
     {
         private OrthographicCamera camera;
         private BoxingViewportAdapter viewportAdapter;
-        private bool resolutionChanging;
         private int virtualWidth;
         private int virtualHeight;
         private int screenX;
