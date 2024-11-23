@@ -16,7 +16,6 @@ namespace SoR.Logic.UI
         protected GamePadListener gamePadListener;
         protected KeyboardInput keyboardInput;
         protected KeyboardListener keyboardListener;
-        public Texture2D Curtain { get; set; }
         public List<string> MenuOptions { get; set; }
         public int Select { get; set; }
         public int ItemCount { get; set; }
@@ -28,7 +27,6 @@ namespace SoR.Logic.UI
         {
             Select = 0;
             ItemCount = 3;
-            Curtain = game.Content.Load<Texture2D>(Globals.GetResourcePath("Content\\SoR Resources\\Screens\\Screen Transitions\\curtain"));
         }
 
         /*

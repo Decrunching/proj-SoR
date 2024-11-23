@@ -86,13 +86,11 @@ namespace SoR.Logic
          */
         public GameLogic(MainGame game, GraphicsDevice GraphicsDevice)
         {
-            camera = new Camera(game.Window, GraphicsDevice, 800, 600);
             gamePadInput = new GamePadInput();
             keyboardInput = new KeyboardInput();
 
             SaveFile = Globals.GetSavePath("SoR\\saveFile.json");
 
-            PlayerLocation = "none";
             InGameScreen = "mainMenu";
             hasFloorDecor = false;
             hasUpperWalls = false;
@@ -167,7 +165,7 @@ namespace SoR.Logic
          */
         public void LoadGameContent(GraphicsDevice GraphicsDevice, MainGame game)
         {
-            render = new Render(GraphicsDevice);
+            render = new Render(game, GraphicsDevice);
 
             // Font used for drawing text
             font = game.Content.Load<SpriteFont>("Fonts/File");
@@ -353,7 +351,7 @@ namespace SoR.Logic
                         camera.GetCamera(),
                         camera.NewWidth,
                         camera.NewHeight,
-                        mainMenu.Curtain,
+                        render.Curtain,
                         font,
                         mainMenu.MenuOptions[0],
                         mainMenu.MenuOptions[1],
@@ -444,7 +442,7 @@ namespace SoR.Logic
                             camera.GetCamera(),
                             camera.NewWidth,
                             camera.NewHeight,
-                            startMenu.Curtain,
+                            render.Curtain,
                             font,
                             startMenu.MenuOptions[0],
                             startMenu.MenuOptions[1],
