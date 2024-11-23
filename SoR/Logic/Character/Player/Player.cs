@@ -50,7 +50,7 @@ namespace SoR.Logic.Character.Player
             animStateData = new AnimationStateData(skeleton.Data);
             animState = new AnimationState(animStateData);
             animState.Apply(skeleton);
-            animStateData.DefaultMix = 0.3f;
+            animStateData.DefaultMix = 0.2f;
 
             // Set the "fidle" animation on track 1 and leave it looping forever
             trackEntry = animState.SetAnimation(0, "idledown", true);

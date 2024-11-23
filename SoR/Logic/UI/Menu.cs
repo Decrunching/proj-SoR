@@ -55,8 +55,6 @@ namespace SoR.Logic.UI
             keyboardListener = new KeyboardListener(keyboardListenerSettings);
             gamePadListener = new GamePadListener(gamePadListenerSettings);
 
-            // Debugging - shows the pressed key is being registered
-            keyboardListener.KeyPressed += (sender, args) => { game.Window.Title = $"Key {args.Key} Pressed"; };
             keyboardListener.KeyPressed += OnKeyPressed;
             gamePadListener.ButtonRepeated += OnButtonPressed;
         }

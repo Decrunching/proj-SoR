@@ -19,10 +19,10 @@ namespace SoR.Logic.Character.Player
                     skeleton.SetSkin(skeletonData.FindSkin("down"));
                     break;
                 case "idleleft":
-                    skeleton.SetSkin(skeletonData.FindSkin("side"));
+                    skeleton.SetSkin(skeletonData.FindSkin("left"));
                     break;
                 case "idleright":
-                    skeleton.SetSkin(skeletonData.FindSkin("side"));
+                    skeleton.SetSkin(skeletonData.FindSkin("right"));
                     break;
             }
 

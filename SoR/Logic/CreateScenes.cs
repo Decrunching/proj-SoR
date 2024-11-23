@@ -40,12 +40,12 @@ namespace SoR.Logic
                         curtainOpacity = 1f; // Make sure fadeAlpha is never more than 1f (fully opaque)
                     }
 
-                    DrawCurtain(curtainOpacity); // Draw the curtain with the current opacity
+                    render.DrawCurtain(camera.PlayerPosition.X, camera.PlayerPosition.Y, camera.GetCamera(), camera.NewWidth, camera.NewHeight, mainMenu.Curtain, curtainOpacity); // Draw the curtain with the current opacity
                 }
 
                 if (curtainTimer >= timeLength) // If the curtainTimer has reached or exceeded timeLength
                 {
-                    DrawCurtain(); // Draw the curtain at full opacity
+                    render.DrawCurtain(camera.PlayerPosition.X, camera.PlayerPosition.Y, camera.GetCamera(), camera.NewWidth, camera.NewHeight, mainMenu.Curtain); // Draw the curtain at full opacity
 
                     if (newGame) // If starting a new game
                     {
@@ -76,7 +76,7 @@ namespace SoR.Logic
                 float timeLength = 0.5f; // For half a second
                 curtainTimer += deltaTime; // Increment the curtainTimer
 
-                DrawCurtain(); // Draw the curtain
+                render.DrawCurtain(camera.PlayerPosition.X, camera.PlayerPosition.Y, camera.GetCamera(), camera.NewWidth, camera.NewHeight, mainMenu.Curtain); // Draw the curtain
 
                 if (curtainTimer >= timeLength) // If the max curtainTime has reached or exceeded timeLength
                 {
@@ -106,7 +106,7 @@ namespace SoR.Logic
                         curtainOpacity = 0f; // Ensure opacity is never less than 0f
                     }
 
-                    DrawCurtain(curtainOpacity); // Draw curtain at current opacity
+                    render.DrawCurtain(camera.PlayerPosition.X, camera.PlayerPosition.Y, camera.GetCamera(), camera.NewWidth, camera.NewHeight, mainMenu.Curtain, curtainOpacity); // Draw curtain at current opacity
                 }
 
                 if (curtainTimer >= timeLength) // If the max curtainTime has reached or exceeded timeLength

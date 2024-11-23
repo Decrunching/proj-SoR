@@ -13,8 +13,6 @@ using SoR.Logic.Character.Mobs;
 using SoR.Logic.UI;
 using SoR.Logic.GameMap;
 using System.IO;
-using Spine;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace SoR.Logic
 {
@@ -339,187 +337,6 @@ namespace SoR.Logic
         }
 
         /*
-         * Draw the curtain.
-         */
-        public void DrawCurtain(float fadeAlpha = 1f)
-        {
-            Vector2 backgroundPosition = new Vector2(camera.PlayerPosition.X, camera.PlayerPosition.Y);
-
-            render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.Curtain(mainMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition, fadeAlpha);
-            render.FinishDrawingSpriteBatch();
-        }
-
-        /*
-         * Draw the MainMenu.
-         * 
-         * *** TO DO *** Reposition *** TO DO ***
-         */
-        public void DrawMainMenu(GameTime gameTime)
-        {
-            // Use camera.PlayerPosition as point of reference for positioning since it's updated with screen resolution
-            Vector2 backgroundPosition = new Vector2(camera.PlayerPosition.X, camera.PlayerPosition.Y);
-            Vector2 titlePosition = new Vector2(camera.PlayerPosition.X - 125, camera.PlayerPosition.Y - 156);
-            Vector2 newGamePosition = new Vector2(camera.PlayerPosition.X - 250, camera.PlayerPosition.Y + 20);
-            Vector2 continueGamePosition = new Vector2(camera.PlayerPosition.X - 250, camera.PlayerPosition.Y + 50);
-            Vector2 loadGamePosition = new Vector2(camera.PlayerPosition.X - 250, camera.PlayerPosition.Y + 80);
-            Vector2 gameSettingsPosition = new Vector2(camera.PlayerPosition.X - 250, camera.PlayerPosition.Y+ 110);
-            Vector2 toDesktopPosition = new Vector2(camera.PlayerPosition.X - 250, camera.PlayerPosition.Y + 140);
-
-            render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.Curtain(mainMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition);
-            render.MenuText(mainMenu.MenuOptions[0], titlePosition, font, Color.GhostWhite, 2.5f);
-            render.MenuText(mainMenu.MenuOptions[1], newGamePosition, font, Color.Gray, 1);
-            render.MenuText(mainMenu.MenuOptions[2], continueGamePosition, font, Color.Gray, 1);
-            render.MenuText(mainMenu.MenuOptions[3], loadGamePosition, font, Color.Gray, 1);
-            render.MenuText(mainMenu.MenuOptions[4], gameSettingsPosition, font, Color.Gray, 1);
-            render.MenuText(mainMenu.MenuOptions[5], toDesktopPosition, font, Color.Gray, 1);
-            render.FinishDrawingSpriteBatch();
-
-            switch (mainMenu.NavigateMenu(gameTime))
-            {
-                case 0:
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(mainMenu.MenuOptions[1], newGamePosition, font, Color.GhostWhite, 1);
-                    render.FinishDrawingSpriteBatch();
-                    currentMenuItem = mainMenu.MenuOptions[1];
-                    break;
-                case 1:
-                    if (File.Exists(SaveFile))
-                    {
-                        render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(mainMenu.MenuOptions[2], continueGamePosition, font, Color.GhostWhite, 1);
-                        render.FinishDrawingSpriteBatch();
-                        currentMenuItem = mainMenu.MenuOptions[2];
-                    }
-                    else
-                    {
-                        render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(mainMenu.MenuOptions[2], continueGamePosition, font, Color.LightCoral, 1);
-                        render.FinishDrawingSpriteBatch();
-                        currentMenuItem = "none";
-                    }
-                    break;
-                case 2:
-                    if (File.Exists(SaveFile))
-                    {
-                        render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(mainMenu.MenuOptions[3], loadGamePosition, font, Color.GhostWhite, 1);
-                        render.FinishDrawingSpriteBatch();
-                        currentMenuItem = mainMenu.MenuOptions[3];
-                    }
-                    else
-                    {
-                        render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(mainMenu.MenuOptions[3], loadGamePosition, font, Color.LightCoral, 1);
-                        render.FinishDrawingSpriteBatch();
-                        currentMenuItem = "none";
-                    }
-                    break;
-                case 3:
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(mainMenu.MenuOptions[4], gameSettingsPosition, font, Color.GhostWhite, 1);
-                    render.FinishDrawingSpriteBatch();
-                    currentMenuItem = mainMenu.MenuOptions[4];
-                    break;
-                case 4:
-                    render.StartDrawingSpriteBatch(camera.GetCamera());
-                    render.MenuText(mainMenu.MenuOptions[5], toDesktopPosition, font, Color.GhostWhite, 1);
-                    render.FinishDrawingSpriteBatch();
-                    currentMenuItem = mainMenu.MenuOptions[5];
-                    break;
-            }
-        }
-
-        /*
-         * Draw the StartMenu.
-         */
-        public void DrawStartMenu(GameTime gameTime)
-        {
-            // Use camera.PlayerPosition as point of reference for positioning since it's updated with screen resolution
-            Vector2 backgroundPosition = new Vector2(camera.PlayerPosition.X, camera.PlayerPosition.Y);
-            Vector2 inventoryPosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y - 156);
-            Vector2 gameSettingsPosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y - 56);
-            Vector2 loadGamePosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y + 44);
-            Vector2 exitGamePosition = new Vector2(camera.PlayerPosition.X - 350, camera.PlayerPosition.Y + 144);
-            Vector2 toMainMenuPosition = new Vector2(camera.PlayerPosition.X - 50, camera.PlayerPosition.Y - 56);
-            Vector2 toDesktopPosition = new Vector2(camera.PlayerPosition.X - 50, camera.PlayerPosition.Y + 44);
-
-            render.StartDrawingSpriteBatch(camera.GetCamera());
-            render.Curtain(startMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition, 0.75f);
-            render.MenuText(startMenu.MenuOptions[0], inventoryPosition, font, Color.Gray, 1);
-            render.MenuText(startMenu.MenuOptions[1], gameSettingsPosition, font, Color.Gray, 1);
-            render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.Gray, 1);
-            render.MenuText(startMenu.MenuOptions[3], exitGamePosition, font, Color.Gray, 1);
-            render.FinishDrawingSpriteBatch();
-
-            if (!exitMenu)
-            {
-                switch (startMenu.NavigateMenu(gameTime))
-                {
-                    case 0:
-                        render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(startMenu.MenuOptions[0], inventoryPosition, font, Color.GhostWhite, 1);
-                        render.FinishDrawingSpriteBatch();
-                        currentMenuItem = startMenu.MenuOptions[0];
-                        break;
-                    case 1:
-                        render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(startMenu.MenuOptions[1], gameSettingsPosition, font, Color.GhostWhite, 1);
-                        render.FinishDrawingSpriteBatch();
-                        currentMenuItem = startMenu.MenuOptions[1];
-                        break;
-                    case 2:
-                        if (File.Exists(SaveFile))
-                        {
-                            render.StartDrawingSpriteBatch(camera.GetCamera());
-                            render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.GhostWhite, 1);
-                            render.FinishDrawingSpriteBatch();
-                            currentMenuItem = startMenu.MenuOptions[2];
-                        }
-                        else
-                        {
-                            render.StartDrawingSpriteBatch(camera.GetCamera());
-                            render.MenuText(startMenu.MenuOptions[2], loadGamePosition, font, Color.LightCoral, 1);
-                            render.FinishDrawingSpriteBatch();
-                            currentMenuItem = "none";
-                        }
-                        break;
-                    case 3:
-                        render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(startMenu.MenuOptions[3], exitGamePosition, font, Color.GhostWhite, 1);
-                        render.FinishDrawingSpriteBatch();
-                        currentMenuItem = startMenu.MenuOptions[3];
-                        break;
-                }
-            }
-            else
-            {
-                render.StartDrawingSpriteBatch(camera.GetCamera());
-                render.Curtain(startMenu.Curtain, camera.NewWidth, camera.NewHeight, backgroundPosition, 0.15f);
-                render.MenuText(startMenu.MenuOptions[4], toMainMenuPosition, font, Color.Gray, 1.25f);
-                render.MenuText(startMenu.MenuOptions[5], toDesktopPosition, font, Color.Gray, 1.25f);
-                render.FinishDrawingSpriteBatch();
-
-                switch (startMenu.NavigateMenu(gameTime))
-                {
-                    case 0:
-                        render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(startMenu.MenuOptions[4], toMainMenuPosition, font, Color.GhostWhite, 1.25f);
-                        render.FinishDrawingSpriteBatch();
-                        currentMenuItem = startMenu.MenuOptions[4];
-                        break;
-                    case 1:
-                        render.StartDrawingSpriteBatch(camera.GetCamera());
-                        render.MenuText(startMenu.MenuOptions[5], toDesktopPosition, font, Color.GhostWhite, 1.25f);
-                        render.FinishDrawingSpriteBatch();
-                        currentMenuItem = startMenu.MenuOptions[5];
-                        break;
-                }
-            }
-        }
-
-        /*
          * Render game elements in order of y-axis position.
          */
         public void Render(MainGame game, GameTime gameTime, GraphicsDevice GraphicsDevice, GraphicsDeviceManager graphics)
@@ -529,7 +346,23 @@ namespace SoR.Logic
             switch (currentMapEnum)
             {
                 case CurrentMap.MainMenu: // If current screen is MainMenu
-                    DrawMainMenu(gameTime);
+                    currentMenuItem = render.DrawMainMenu(
+                        gameTime,
+                        camera.PlayerPosition.X,
+                        camera.PlayerPosition.Y,
+                        camera.GetCamera(),
+                        camera.NewWidth,
+                        camera.NewHeight,
+                        mainMenu.Curtain,
+                        font,
+                        mainMenu.MenuOptions[0],
+                        mainMenu.MenuOptions[1],
+                        mainMenu.MenuOptions[2],
+                        mainMenu.MenuOptions[3],
+                        mainMenu.MenuOptions[4],
+                        mainMenu.MenuOptions[5],
+                        mainMenu.NavigateMenu(gameTime),
+                        SaveFile);
                     ScreenFadeIn(gameTime, game, GraphicsDevice);
                     break;
 
@@ -604,7 +437,24 @@ namespace SoR.Logic
 
                     if (freezeGame)
                     {
-                        DrawStartMenu(gameTime);
+                        currentMenuItem = render.DrawStartMenu(
+                            gameTime,
+                            camera.PlayerPosition.X,
+                            camera.PlayerPosition.Y,
+                            camera.GetCamera(),
+                            camera.NewWidth,
+                            camera.NewHeight,
+                            startMenu.Curtain,
+                            font,
+                            startMenu.MenuOptions[0],
+                            startMenu.MenuOptions[1],
+                            startMenu.MenuOptions[2],
+                            startMenu.MenuOptions[3],
+                            startMenu.MenuOptions[4],
+                            startMenu.MenuOptions[5],
+                            startMenu.NavigateMenu(gameTime),
+                            SaveFile,
+                            exitMenu);
                     }
 
                     ScreenFadeIn(gameTime, game, GraphicsDevice);
