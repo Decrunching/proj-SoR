@@ -6,7 +6,9 @@ namespace SoR.Logic.Screens
 {
     /*
      * Tell GameLogic which aspects of the game it should currently be rendering and/or utilising
-     * depending on the current game state.
+     * depending on the current game state. Probably should stick it all back in GameLogic,
+     * since... it only calls things from GameLogic. But. Everyone else seemed to have a separate
+     * class for this stuff. So I just copied. I will un-copy later, probably.
      */
     public partial class Screens
     {

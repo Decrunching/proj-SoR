@@ -52,6 +52,8 @@ namespace SoR.Logic
         private bool fadingOut;
         private float curtainOpacity;
         private float curtainTimer;
+        private int screenWidth;
+        private int screenHeight;
         public Dictionary<string, Entity> Entities { get; set; }
         public Dictionary<string, Scenery> Scenery { get; set; }
         public string InGameScreen { get; set; }
@@ -104,6 +106,8 @@ namespace SoR.Logic
             curtainOpacity = 0f;
             curtainTimer = 0f;
             backgroundColour = new Color(0, 11, 8);
+            screenWidth = 0;
+            screenHeight = 0;
         }
 
         /*
@@ -351,8 +355,6 @@ namespace SoR.Logic
                         SaveFile);
 
                     ScreenFadeIn(gameTime, game, GraphicsDevice);
-                    ScreenCurtainHold(gameTime);
-                    ScreenFadeOut(gameTime);
                     break;
 
                 default: // Otherwise default to drawing game
@@ -505,6 +507,8 @@ namespace SoR.Logic
                         case "Exit to main menu":
                             exitMenu = false;
                             InGameScreen = "mainMenu";
+                            screenWidth = camera.NewWidth;
+                            screenHeight = camera.NewHeight;
                             break;
                         case "Exit to desktop":
                             ExitGame = true;

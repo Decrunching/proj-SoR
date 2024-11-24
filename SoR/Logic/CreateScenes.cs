@@ -164,6 +164,8 @@ namespace SoR.Logic
             currentMenuItem = "none";
             camera = new Camera(game.Window, GraphicsDevice, 800, 600);
             camera.UpdateViewportAdapter(game.Window);
+            camera.NewWidth = screenWidth;
+            camera.NewHeight = screenHeight;
             mainMenu = new MainMenu(game, graphics);
             mainMenu.ItemCount = 4; // Reset the number of StartMenu items to 4
             currentMapEnum = CurrentMap.MainMenu;
